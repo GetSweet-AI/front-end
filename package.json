@@ -1,5 +1,6 @@
 {
   "name": "creative-react",
+  "description": "hah",
   "version": "0.1.0",
   "scripts": {
     "dev": "vite",
