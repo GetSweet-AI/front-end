@@ -11,7 +11,8 @@ const initialState = {
   clientsecret: "",
   code:"",
   email:"",
-  authData:""
+  authData:"",
+  token:""
 };
 const authSlice = createSlice({
   name: "auth",
@@ -24,8 +25,9 @@ const authSlice = createSlice({
     setUserData : (state,{payload})=>{
       state.user = payload
     },
-    switchLoginStatus:(state,payload)=>{
+    switchLoginStatus:(state,{payload})=>{
      state.isLoggedIn = true;
+     state.token = payload;
     },
     setSubscription: (state,payload)=>{
       state.subscription = payload

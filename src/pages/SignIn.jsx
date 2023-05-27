@@ -33,7 +33,7 @@ function SignIn() {
       const { user, token, location } = data;
       console.log("Data : " + data)
       navigate('/brand-engagements')
-      dispatch(switchLoginStatus())
+      dispatch(switchLoginStatus(token))
     } catch (error) {
       // alert(error.response.data.msg)
       setMessage(error.response.data.msg)

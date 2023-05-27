@@ -9,6 +9,7 @@ import PaginationNumeric from '../partials/PaginationNumeric';
 
 import Image01 from '../images/user-28-01.jpg';
 import Image02 from '../images/user-28-02.jpg';
+import DashboardHeader from '../partials/DashboardHeader';
 
 function BrandEngagements() {
 
@@ -68,7 +69,8 @@ function BrandEngagements() {
             <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
 
                 {/*  Site header */}
-
+                {/*  Site header */}
+                <DashboardHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
                 <main>
                     <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
