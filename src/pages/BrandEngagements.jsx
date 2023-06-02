@@ -4,7 +4,7 @@ import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import SearchForm from '../partials/SearchForm';
 import FilterButton from '../components/DropdownFilter';
-import CampaignsCard from '../partials/CampaignsCard';
+import BrandEngagementCard from '../partials/BrandEngagementCard';
 import PaginationNumeric from '../partials/PaginationNumeric';
 
 import Image01 from '../images/user-28-01.jpg';
@@ -80,7 +80,7 @@ function BrandEngagements() {
 
                             {/* Left: Title */}
                             <div className="mb-4 sm:mb-0">
-                                <h1 className="text-2xl md:text-3xl text-slate-800 font-bold">Brand Engagements ✨</h1>
+                                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">Brand Engagements</h1>
                             </div>
 
                             {/* Right: Actions */}
@@ -105,7 +105,7 @@ function BrandEngagements() {
                             {
                                 items.map(item => {
                                     return (
-                                        <CampaignsCard
+                                        <BrandEngagementCard
                                             key={item.id}
                                             id={item.id}
                                             category={item.category}

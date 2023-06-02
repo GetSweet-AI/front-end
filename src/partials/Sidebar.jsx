@@ -5,7 +5,6 @@ import logo from "../images/logoflowbots2.png";
 // import { useSelector } from "react-redux";
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
-
   const location = useLocation();
   const { pathname } = location;
 
@@ -60,8 +59,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
     <div>
       {/* Sidebar backdrop (mobile only) */}
       <div
-        className={`fixed inset-0  bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-          }`}
+        className={`fixed inset-0  bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${
+          sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
         aria-hidden="true"
       ></div>
 
@@ -69,8 +69,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
       <div
         id="sidebar"
         ref={sidebar}
-        className={`flex bg-[#F7FAFC] flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 lg:w-20 lg:sidebar-expanded:!w-64 2xl:!w-64 shrink-0 p-4 pr-0 transition-all duration-200 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-64"
-          }`}
+        className={`flex bg-blue-500 flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-72 lg:w-20 lg:sidebar-expanded:!w-72 2xl:!w-68 shrink-0 p-4 pr-0 transition-all duration-200 ease-in-out ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-72"
+        }`}
       >
         {/* Sidebar header */}
         <div className="">
@@ -78,7 +79,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             {/* Close button */}
             <button
               ref={trigger}
-              className="lg:hidden text-slate-500 hover:text-slate-400"
+              className="lg:hidden text-slate-500 hover:text-white"
               onClick={() => setSidebarOpen(!sidebarOpen)}
               aria-controls="sidebar"
               aria-expanded={sidebarOpen}
@@ -96,12 +97,12 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             <NavLink end to="/" className="block mt-4">
               {/* <img className={`hidden 2xl:block`} alt-"" /> */}
               {sidebarExpanded === true ? (
-                <img className={`2xl:hidden`} src={logo} alt='logo' />
+                <img className={`2xl:hidden`} src={logo} alt="logo" />
               ) : (
                 <img
                   className={`2xl:hidden sidebar-expandded:hidden`}
                   src={logo}
-                  alt='short logo'
+                  alt="short logo"
                 />
               )}
             </NavLink>
@@ -113,22 +114,35 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           {/* Pages group */}
           <div>
             <ul className="">
-
-
               {/* Home */}
               <li
-                className={`px-3 py-3 last:mb-0 ${pathname === "/brand-engagements" ? "bg-white rounded-l-full" : ""
-                  }`}
+                className={`px-3 py-3 last:mb-0 ${
+                  pathname === "/brand-engagement-builder"
+                    ? "bg-white rounded-l-full"
+                    : ""
+                }`}
               >
                 <NavLink
                   end
-                  to="/brand-engagements"
-                  className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/brand-engagements" && "hover:text-white"
-                    }`}
+                  to="/brand-engagement-builder"
+                  className={`block flex text-white hover:text-white truncate transition duration-150 ${
+                    pathname === "/brand-engagement-builder" &&
+                    "hover:text-white"
+                  }`}
                 >
                   <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home-2" width="24px"
-                      height="24px" viewBox="0 0 24 24" stroke-width="1.5" stroke="#4446e4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="icon icon-tabler icon-tabler-home-2"
+                      width="24px"
+                      height="24px"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke={pathname === "/brand-engagement-builder" ? "#3b82f6" : "#fff"}
+                      fill="none"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
                       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                       <polyline points="5 12 3 12 12 3 21 12 19 12" />
                       <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
@@ -137,27 +151,87 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </div>
                   <div className="flex items-center overflow-hidden">
                     <span
-                      className={`text-slate-400 text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/" && " text-[#4446e4]"
-                        }`}
+                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${
+                        pathname === "/brand-engagement-builder" &&
+                        "text-[#3b82f6]"
+                      }`}
                     >
-                      Brand engagements
+                      Brand Engagements Builder
                     </span>
                   </div>
                 </NavLink>
               </li>
               {/* Home */}
               <li
-                className={`px-3 py-3 last:mb-0 ${pathname === "/profile" ? "bg-white rounded-l-full" : ""
+                className={`px-3 py-3 last:mb-0 ${
+                  pathname === "/brand-engagements"
+                    ? "bg-white rounded-l-full"
+                    : ""
+                }`}
+              >
+                <NavLink
+                  end
+                  to="/brand-engagements"
+                  className={`block flex text-white hover:text-white truncate transition duration-150 ${
+                    pathname === "/brand-engagements" && "hover:text-white"
                   }`}
+                >
+                  <div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="icon icon-tabler icon-tabler-home-2"
+                      width="24px"
+                      height="24px"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke={pathname === "/brand-engagements" ? "#3b82f6" : "#fff"}
+                      fill="none"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <polyline points="5 12 3 12 12 3 21 12 19 12" />
+                      <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+                      <rect x="10" y="12" width="4" height="4" />
+                    </svg>
+                  </div>
+                  <div className="flex items-center overflow-hidden">
+                    <span
+                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${
+                        pathname === "/brand-engagements" && "text-[#3b82f6]"
+                      }`}
+                    >
+                      Brand Engagements
+                    </span>
+                  </div>
+                </NavLink>
+              </li>
+              {/* Home */}
+              <li
+                className={`px-3 py-3 last:mb-0 ${
+                  pathname === "/profile" ? "bg-white rounded-l-full" : ""
+                }`}
               >
                 <NavLink
                   end
                   to="/profile"
-                  className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/profile" && "hover:text-white"
-                    }`}
+                  className={`block flex text-white hover:text-white truncate transition duration-150 ${
+                    pathname === "/profile" && "hover:text-white"
+                  }`}
                 >
                   <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#4446e4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="icon icon-tabler icon-tabler-user-edit"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke={pathname === "/profile" ? "#3b82f6" : "#fff"}
+                      fill="none"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
                       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                       <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
                       <path d="M6 21v-2a4 4 0 0 1 4 -4h3.5" />
@@ -166,8 +240,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </div>
                   <div className="flex items-center overflow-hidden">
                     <span
-                      className={`text-slate-400 text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/" && " text-[#4446e4]"
-                        }`}
+                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${
+                        pathname === "/profile" && "text-[#3b82f6]"
+                      }`}
                     >
                       Profile
                     </span>
@@ -175,11 +250,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 </NavLink>
               </li>
 
-
-
-              <li
-                className={`px-3 py-3 rounded-sm last:mb-0 bg-[#F7FAFC]`}
-              ></li>
+              <li className={`px-3 py-3 rounded-sm last:mb-0 bg-blue-500`}></li>
             </ul>
           </div>
         </div>
@@ -194,7 +265,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 viewBox="0 0 24 24"
               >
                 <path
-                  className="text-slate-400"
+                  className="text-white"
                   d="M19.586 11l-5-5L16 4.586 23.414 12 16 19.414 14.586 18l5-5H7v-2z"
                 />
                 <path className="text-[#ADB5CC]" d="M3 23H1V1h2z" />

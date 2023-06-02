@@ -12,6 +12,7 @@ import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
 import BrandEngagements from './pages/BrandEngagements';
+import BrandEngagementBuilder from './pages/BrandEngagementBuilder';
 import BrandEngagementCard from './pages/BrandEngagementCard';
 import Profile from './pages/profile';
 
@@ -40,6 +41,7 @@ function App() {
         <Route exact path="/" element={<Home />} />
         {/* <Route path="/workflows" element={<Dashboard />} /> */}
         <Route path="/brand-engagements" element={<BrandEngagements />} />
+        <Route path="/brand-engagement-builder" element={<BrandEngagementBuilder />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/workflows/:id" element={<BrandEngagementCard />} />
         <Route path="/signin" element={<SignIn />} />
