@@ -249,7 +249,7 @@ function BrandEngagementBuilder() {
                         Time Zone
                       </label>
                       <Select
-                        id="select1"
+                        id="timeZone"
                         className="w-full"
                         placeholder="Time Zone"
                         value={values.timeZone}
@@ -276,9 +276,30 @@ function BrandEngagementBuilder() {
                           handleSelectChange("companySector", selectedOption)
                         }
                         options={[
-                          { value: "option1", label: "Option 1" },
-                          { value: "option2", label: "Option 2" },
-                          { value: "option3", label: "Option 3" },
+                          {
+                            value: "E-commerce and Online Retail",
+                            label: "E-commerce and Online Retail",
+                          },
+                          {
+                            value: "Health and Wellness",
+                            label: "Health and Wellness",
+                          },
+                          {
+                            value: "Technology and Software Development",
+                            label: "Technology and Software Development",
+                          },
+                          {
+                            value: "Digital Marketing and Social Media",
+                            label: "Digital Marketing and Social Media",
+                          },
+                          {
+                            value: "Food and Beverage",
+                            label: "Food and Beverage",
+                          },
+                          {
+                            value: "Social Enterprise and Impact Investing",
+                            label: "Social Enterprise and Impact Investing",
+                          },
                         ]}
                       />
                     </div>
