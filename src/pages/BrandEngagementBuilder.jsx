@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import Sidebar from "../partials/Sidebar";
 import Header from "../partials/Header";
 import SearchForm from "../partials/SearchForm";
@@ -14,56 +13,23 @@ import Select from "react-select";
 import axios from "axios";
 import ReactHtmlParser from "react-html-parser";
 import { faL } from "@fortawesome/free-solid-svg-icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { targetAudienceOptions } from "../constants/objects";
+import brandTones from "../constants/brandTones";
+import postTypeOptions from "../constants/postTypeOtions";
+import { clearMessage, setMessage } from "../redux/message";
 
 function BrandEngagementBuilder() {
-  const items = [
-    {
-      id: 0,
-      category: "1",
-      members: [
-        {
-          name: "User 01",
-          image: Image01,
-          link: "#0",
-        },
-      ],
-      title: "Brand Engagement 1",
-      link: "/BrandEngagement/1",
-      content:
-        "Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts.",
-      dates: {
-        from: "Jan 20",
-      },
-      type: "draft",
-    },
-    {
-      id: 1,
-      category: "2",
-      members: [
-        {
-          name: "User 04",
-          image: Image02,
-          link: "#0",
-        },
-      ],
-      title: "Brand Engagement 2",
-      link: "/BrandEngagEment/2",
-      content:
-        "Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts.",
-      dates: {
-        from: "Jan 20",
-        // to: 'Jan 27'
-      },
-      type: "published",
-    },
-  ];
+
+
+  const dispatch = useDispatch()
 
   const [previewLoading, setPreviewLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [engagements, setEngagements] = useState([]);
   const [result, setResult] = useState(null);
   const { token } = useSelector((state) => state.auth)
+  const { message } = useSelector((state) => state.message)
 
   const [values, setValues] = useState({
     brandName: "",
@@ -72,6 +38,7 @@ function BrandEngagementBuilder() {
     companySector: null,
     brandTone: null,
     targetAudience: null,
+    postType: ""
   });
 
   const handleInputChange = (e) => {
@@ -89,39 +56,61 @@ function BrandEngagementBuilder() {
     }));
   };
 
-  const handlePreview = (e) => {
-    e.preventDefault();
-    setResult(null);
-    setPreviewLoading(true);
-    axios
-      .post(
-        "http://localhost:5000/api/v1/generate-blog-post",
-        {
-          targetAudience: values.targetAudience,
-          platform: values.websiteUrl,
-          question: "Inspirational quote",
-          tone: values.brandTone,
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        setPreviewLoading(false);
-        setResult(res.data.postContent);
-      })
-      .catch((err) => {
-        console.log(err);
-        setPreviewLoading(false);
-      });
+  const postData = {
+    Timezone: values.timeZone?.value,
+    CompanySector: values.companySector?.value,
+    BrandTone: values.brandTone?.value,
+    TargetAudience: values.targetAudience?.value,
+    PostType: values.postType?.value,
+    postContent: result,
+    WebSite: values.websiteUrl,
+    BrandName: values.brandName
   };
 
-  const postData = {
-    Timezone: 'UTC+3 Test',
-    CompanySector: 'E-commerce and Online Retail',
-    BrandTone: 'Friendly',
-    TargetAudience: 'Young professionals',
-    PostType: 'Quotes',
-    postContent: '<h1>Attention Young Professionals!</h1><p>Are you feeling stuck in your career? Remember, success is not final, failure is not fatal: it is the courage to continue that counts.</p><p>Don'
+  const handlePreview = (e) => {
+    e.preventDefault();
+    const { brandName, brandTone, postType, timeZone, targetAudience, companySector, websiteUrl } = values
+    if (!brandTone | !postType | !targetAudience | !websiteUrl) {
+      dispatch(setMessage("Please provide all values "))
+    } else {
+      setResult(null);
+      setPreviewLoading(true);
+      axios
+        .post(
+          "http://localhost:5000/api/v1/generate-blog-post",
+          {
+            targetAudience: values.targetAudience,
+            platform: values.websiteUrl,
+            question: values.postType?.value,
+            tone: values.brandTone?.value,
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          setPreviewLoading(false);
+          setResult(res.data.postContent);
+          console.log("res.data.postContent :" + res.data.postContent)
+        })
+        .catch((err) => {
+          console.log(err);
+          setPreviewLoading(false);
+          dispatch(err)
+        });
+    }
+
+    // alert(JSON.stringify(postData))
+
   };
+
+
+  // const postData = {
+  //   Timezone: 'UTC+3 Test',
+  //   CompanySector: 'E-commerce and Online Retail',
+  //   BrandTone: 'Friendly',
+  //   TargetAudience: 'Young professionals',
+  //   PostType: 'Quotes',
+  //   postContent: '<h1>Attention Young Professionals!</h1><p>Are you feeling stuck in your career? Remember, success is not final, failure is not fatal: it is the courage to continue that counts.</p><p>Don'
+  // };
 
   const handleSave = async () => {
     setSaveLoading(true);
@@ -139,10 +128,12 @@ function BrandEngagementBuilder() {
         setSaveLoading(false);
         console.log(res.data);
         fetchEngagements();
+        handleReset()
       })
       .catch((err) => {
         setSaveLoading(false);
         console.log(err);
+        dispatch(setMessage(err.data))
       });
   };
 
@@ -176,11 +167,16 @@ function BrandEngagementBuilder() {
       });
   };
 
+
   useEffect(() => {
     fetchEngagements();
   }, []);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(clearMessage())
+  }, [])
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -256,15 +252,23 @@ function BrandEngagementBuilder() {
                       <Select
                         id="timeZone"
                         className="w-full"
+                        // name="timeZone"
                         placeholder="Time Zone"
                         value={values.timeZone}
                         onChange={(selectedOption) =>
                           handleSelectChange("timeZone", selectedOption)
                         }
                         options={[
-                          { value: "option1", label: "Option 1" },
-                          { value: "option2", label: "Option 2" },
-                          { value: "option3", label: "Option 3" },
+
+                          { value: "UTC (Coordinated Universal Time)", label: "UTC (Coordinated Universal Time)" },
+                          { value: "BST (British Summer Time)", label: "BST (British Summer Time)" },
+                          { value: "JST (Japan Standard Time)", label: "JST (Japan Standard Time)" },
+                          { value: "IST (Indian Standard Time)", label: "IST (Indian Standard Time)" },
+                          { value: "PST (Pacific Standard Time)", label: "PST (Pacific Standard Time)" },
+                          { value: "MST (Mountain Standard Time)", label: "MST (Mountain Standard Time)" },
+                          { value: "CST (Central Standard Time)", label: "CST (Central Standard Time)" },
+                          { value: "EST (Eastern Standard Time)", label: "EST (Eastern Standard Time)" },
+                          { value: "GMT (Greenwich Mean Time)", label: "GMT (Greenwich Mean Time)" },
                         ]}
                       />
                     </div>
@@ -275,6 +279,7 @@ function BrandEngagementBuilder() {
                       <Select
                         id="select2"
                         className="w-full"
+                        name="companySector"
                         placeholder="Company Sector"
                         value={values.companySector}
                         onChange={(selectedOption) =>
@@ -308,7 +313,7 @@ function BrandEngagementBuilder() {
                         ]}
                       />
                     </div>
-                    <div className="w-full p-2">
+                    <div className="w-full md:w-1/2 p-2">
                       <label htmlFor="select3" className="block mb-1">
                         Brand Tone
                       </label>
@@ -316,15 +321,27 @@ function BrandEngagementBuilder() {
                         id="select3"
                         className="w-full"
                         placeholder="Brand Tone"
+                        name="brandTone"
                         value={values.brandTone}
                         onChange={(selectedOption) =>
                           handleSelectChange("brandTone", selectedOption)
                         }
-                        options={[
-                          { value: "option1", label: "Option 1" },
-                          { value: "option2", label: "Option 2" },
-                          { value: "option3", label: "Option 3" },
-                        ]}
+                        options={brandTones}
+                      />
+                    </div>
+                    <div className="w-full md:w-1/2 p-2">
+                      <label className="block mb-1">
+                        Post type
+                      </label>
+                      <Select
+                        id="select3"
+                        className="w-full"
+                        placeholder="Post Type"
+                        value={values.postType}
+                        onChange={(selectedOption) =>
+                          handleSelectChange("postType", selectedOption)
+                        }
+                        options={postTypeOptions}
                       />
                     </div>
                     <div className="w-full p-2">
@@ -334,17 +351,19 @@ function BrandEngagementBuilder() {
                       <Select
                         id="select4"
                         className="w-full"
+                        name="targetAudience"
                         placeholder="Target Audience"
                         value={values.targetAudience}
                         onChange={(selectedOption) =>
                           handleSelectChange("targetAudience", selectedOption)
                         }
-                        options={[
-                          { value: "option1", label: "Option 1" },
-                          { value: "option2", label: "Option 2" },
-                          { value: "option3", label: "Option 3" },
-                        ]}
+                        options={targetAudienceOptions}
                       />
+                    </div>
+                    <div className="flex w-full justify-center items-center">
+                      <p className="text-red-500 text-sm my-2  text-center">
+                        {message ? message : ""}
+                      </p>
                     </div>
                     <div className="md:flex w-full p-2">
                       <button
@@ -409,13 +428,14 @@ function BrandEngagementBuilder() {
                       <BrandEngagementCard
                         key={item._id}
                         id={item._id}
-                        brandName="Brand Name (static)"
-                        website="www.website.com/static"
-                        timeZone={item.timeZone}
+                        brandName={item?.BrandName}
+                        website={item.WebSite}
+                        timeZone={item.Timezone}
                         companySector={item.CompanySector}
                         brandTone={item.BrandTone}
                         targetAudience={item.TargetAudience}
                         postType={item.PostType}
+                        fetchEngagements={fetchEngagements}
                       />
                     );
                   })}
