@@ -31,7 +31,7 @@ function SignUp() {
       const { data } = await axios.post("https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/register", currentUser);
       const { user, token } = data;
       console.log("Data : " + data)
-      navigate('/brand-engagements')
+      navigate('/brand-engagement-builder')
       dispatch(switchLoginStatus(token))
     } catch (error) {
       // alert(error.response.data.msg)
