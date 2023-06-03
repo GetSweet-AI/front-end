@@ -14,6 +14,7 @@ import Select from "react-select";
 import axios from "axios";
 import ReactHtmlParser from "react-html-parser";
 import { faL } from "@fortawesome/free-solid-svg-icons";
+import { useSelector } from "react-redux";
 
 function BrandEngagementBuilder() {
   const items = [
@@ -58,12 +59,12 @@ function BrandEngagementBuilder() {
     },
   ];
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDdhMDJjNjFhZGViYjM2OTU5YTk4ODIiLCJpYXQiOjE2ODU3MTc4NDQsImV4cCI6MTY4NTgwNDI0NH0.E3zP-kzcs2BLOsv99rhcYMhpqgrlkTPOara0Ne0Y5IA";
   const [previewLoading, setPreviewLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [engagements, setEngagements] = useState([]);
   const [result, setResult] = useState(null);
+  const { token } = useSelector((state) => state.auth)
+
   const [values, setValues] = useState({
     brandName: "",
     websiteUrl: "",
@@ -94,7 +95,7 @@ function BrandEngagementBuilder() {
     setPreviewLoading(true);
     axios
       .post(
-        "https://seashell-app-8amlb.ondigitalocean.app/api/v1/generate-blog-post",
+        "http://localhost:5000/api/v1/generate-blog-post",
         {
           targetAudience: values.targetAudience,
           platform: values.websiteUrl,
@@ -113,21 +114,25 @@ function BrandEngagementBuilder() {
       });
   };
 
-  const handleSave = () => {
+  const postData = {
+    Timezone: 'UTC+3 Test',
+    CompanySector: 'E-commerce and Online Retail',
+    BrandTone: 'Friendly',
+    TargetAudience: 'Young professionals',
+    PostType: 'Quotes',
+    postContent: '<h1>Attention Young Professionals!</h1><p>Are you feeling stuck in your career? Remember, success is not final, failure is not fatal: it is the courage to continue that counts.</p><p>Don'
+  };
+
+  const handleSave = async () => {
     setSaveLoading(true);
-    axios
+    await axios
       .post(
-        "https://seashell-app-8amlb.ondigitalocean.app/api/v1/save-brand-engagement",
-        {
-          targetAudience: "old professionals",
-          platform: "Facebook",
-          question: "Inspirational quote",
-          tone: "inspiring",
-        },
+        "http://localhost:5000/api/v1/save-brand-engagement",
+        postData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-          },
+            Authorization: `Bearer ${token}`
+          }
         }
       )
       .then((res) => {
@@ -156,7 +161,7 @@ function BrandEngagementBuilder() {
   const fetchEngagements = () => {
     axios
       .get(
-        "https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements",
+        "http://localhost:5000/api/v1/brand-engagements",
         {
           headers: {
             Authorization: `Bearer ${token}`,

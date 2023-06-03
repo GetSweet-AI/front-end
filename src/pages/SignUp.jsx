@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { switchLoginStatus } from "../redux/auth";
+import { useDispatch } from "react-redux";
 
 
 const initialState = {
@@ -13,6 +15,7 @@ const initialState = {
 function SignUp() {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const [values, setValues] = useState(initialState);
   const [loading, setLoading] = useState(false);
@@ -25,10 +28,11 @@ function SignUp() {
 
   const registerUser = async (currentUser) => {
     try {
-      const { data } = await axios.post("https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/register", currentUser);
-      const { user, token, location } = data;
+      const { data } = await axios.post("http://localhost:5000/api/v1/auth/register", currentUser);
+      const { user, token } = data;
       console.log("Data : " + data)
       navigate('/brand-engagements')
+      dispatch(switchLoginStatus(token))
     } catch (error) {
       // alert(error.response.data.msg)
       setMessage(error.response.data.msg)
@@ -38,17 +42,9 @@ function SignUp() {
   const onSubmit = async (e) => {
     e.preventDefault();
     const { email, password } = values;
-    // if (!email || !password) {
-    // alert(JSON.stringify(values))
-    // await axios.post("https://seahorse-app-l4hnt.ondigitalocean.app//api/v1/auth/login", values).then((res) => {
-    //     navigate('/onboarding')
-    // }).catch((error) => {
-    //     alert(error)
-    // })
 
     registerUser(values)
     console.log(JSON.stringify(values))
-    // }>
 
   }
 
