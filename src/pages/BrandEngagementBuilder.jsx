@@ -79,7 +79,7 @@ function BrandEngagementBuilder() {
         .post(
           "https://seashell-app-8amlb.ondigitalocean.app/api/v1/generate-blog-post",
           {
-            targetAudience: values.targetAudience,
+            targetAudience: values.targetAudience?.value,
             platform: values.websiteUrl,
             question: values.postType?.value,
             tone: values.brandTone?.value,
