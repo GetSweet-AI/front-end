@@ -22,13 +22,14 @@ function SignUp() {
   const [visible, setIsVisible] = useState(false)
   const [message, setMessage] = useState(false)
 
+
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
   const registerUser = async (currentUser) => {
     try {
-      const { data } = await axios.post("https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/register", currentUser);
+      const { data } = await axios.post("http://localhost:5000/api/v1/auth/register", currentUser);
       const { user, token } = data;
       console.log("Data : " + data)
       navigate('/brand-engagement-builder')

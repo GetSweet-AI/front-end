@@ -77,7 +77,7 @@ function BrandEngagementBuilder() {
       setPreviewLoading(true);
       axios
         .post(
-          "https://seashell-app-8amlb.ondigitalocean.app/api/v1/generate-blog-post",
+          "http://localhost:5000/api/v1/generate-blog-post",
           {
             targetAudience: values.targetAudience?.value,
             platform: values.websiteUrl,
@@ -114,27 +114,36 @@ function BrandEngagementBuilder() {
 
   const handleSave = async () => {
     setSaveLoading(true);
-    await axios
-      .post(
-        "https://seashell-app-8amlb.ondigitalocean.app/api/v1/save-brand-engagement",
-        postData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
+    const { brandName, brandTone, postType, timeZone, targetAudience, companySector, websiteUrl } = values
+    if (!brandTone | !postType | !targetAudience | !websiteUrl | !timeZone | !companySector | !brandName) {
+      dispatch(setMessage("Please provide all values "))
+      setSaveLoading(false);
+    } else {
+      await axios
+        .post(
+          "http://localhost:5000/api/v1/save-brand-engagement",
+          postData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-        }
-      )
-      .then((res) => {
-        setSaveLoading(false);
-        console.log(res.data);
-        fetchEngagements();
-        handleReset()
-      })
-      .catch((err) => {
-        setSaveLoading(false);
-        console.log(err);
-        dispatch(setMessage(err.data))
-      });
+        )
+        .then((res) => {
+          setSaveLoading(false);
+          console.log(res.data);
+          fetchEngagements();
+          handleReset()
+          dispatch("")
+        })
+        .catch((err) => {
+          setSaveLoading(false);
+          console.log(err);
+          dispatch(setMessage(err.data))
+        });
+    }
+    setSaveLoading(false);
+
   };
 
   const handleReset = () => {
@@ -152,7 +161,7 @@ function BrandEngagementBuilder() {
   const fetchEngagements = () => {
     axios
       .get(
-        "https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements",
+        "http://localhost:5000/api/v1/brand-engagements",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -177,6 +186,8 @@ function BrandEngagementBuilder() {
   useEffect(() => {
     dispatch(clearMessage())
   }, [])
+
+  console.log("Token " + token)
 
   return (
     <div className="flex h-screen overflow-hidden">
