@@ -28,7 +28,7 @@ function BrandEngagementBuilder() {
   const [saveLoading, setSaveLoading] = useState(false);
   const [engagements, setEngagements] = useState([]);
   const [result, setResult] = useState(null);
-  const { token } = useSelector((state) => state.auth)
+  const { token, user } = useSelector((state) => state.auth)
   const { message } = useSelector((state) => state.message)
 
   const [values, setValues] = useState({
@@ -121,13 +121,8 @@ function BrandEngagementBuilder() {
     } else {
       await axios
         .post(
-          "https://seashell-app-8amlb.ondigitalocean.app/api/v1/save-brand-engagement",
-          postData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
+          `https://seashell-app-8amlb.ondigitalocean.app/api/v1/save-brand-engagement/${user?._id}`,
+          postData
         )
         .then((res) => {
           setSaveLoading(false);
@@ -157,19 +152,16 @@ function BrandEngagementBuilder() {
     });
     setResult(null);
   };
+  console.log("_id :" + user?._id)
 
-  const fetchEngagements = () => {
-    axios
+  const fetchEngagements = async () => {
+    await axios
       .get(
-        "https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${user?._id}`
       )
       .then((res) => {
-        setEngagements(res.data.brandManagements);
+        setEngagements(res.data?.brandEngagements);
+        console.log("res?.data :" + JSON.stringify(res?.data))
       })
       .catch((err) => {
         console.log(err);
@@ -428,7 +420,7 @@ function BrandEngagementBuilder() {
               </div>
             </div>
 
-            {engagements.length > 0 && (
+            {engagements?.length > 0 && (
               <>
                 <h5 className="text-2xl font-bold mt-16 mb-6">
                   Your saved brand engagements

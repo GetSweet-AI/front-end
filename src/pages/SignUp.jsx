@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { switchLoginStatus } from "../redux/auth";
+import { setUserData, switchLoginStatus } from "../redux/auth";
 import { useDispatch } from "react-redux";
 
 
@@ -34,6 +34,8 @@ function SignUp() {
       console.log("Data : " + data)
       navigate('/brand-engagement-builder')
       dispatch(switchLoginStatus(token))
+      dispatch(switchLoginStatus(token))
+      dispatch(setUserData(user))
     } catch (error) {
       // alert(error.response.data.msg)
       setMessage(error.response.data.msg)
