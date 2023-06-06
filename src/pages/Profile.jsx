@@ -36,7 +36,7 @@ function Profile() {
     };
 
     const updateUserInfo = async (currentUser) => {
-        await axios.patch("https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/update-profile", currentUser, { headers })
+        await axios.patch("http://localhost:5000/api/v1/auth/update-profile", currentUser, { headers })
             .then(response => {
                 // Handle the response
                 console.log(response.data);

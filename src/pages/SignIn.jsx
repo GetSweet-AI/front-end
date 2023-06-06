@@ -29,7 +29,7 @@ function SignIn() {
 
   const loginUser = async (currentUser) => {
     try {
-      const { data } = await axios.post("https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/login", currentUser);
+      const { data } = await axios.post("http://localhost:5000/api/v1/auth/login", currentUser);
       const { user, token } = data;
       console.log("Data : " + data)
       navigate('/brand-engagement-builder')
