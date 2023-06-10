@@ -19,3 +19,24 @@
     }
 }
 
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: orange;
+}
+
+/* Chrome, Edge, and Safari */
+/* *::-webkit-scrollbar {
+    width: 5px;
+} */
+
+*::-webkit-scrollbar-track {
+    background: white;
+    border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: white;
+    border-radius: 14px;
+    border: 1px solid orange;
+}

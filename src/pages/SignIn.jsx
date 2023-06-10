@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { setUserData, switchLoginStatus } from "../redux/auth";
-
+import { Puff } from "react-loader-spinner";
+import { clearMessage } from "../redux/message";
 
 const initialState = {
   email: "",
@@ -20,7 +21,6 @@ function SignIn() {
   const [message, setMessage] = useState(false)
 
 
-
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
@@ -28,8 +28,9 @@ function SignIn() {
   const dispatch = useDispatch()
 
   const loginUser = async (currentUser) => {
+    setLoading(true)
     try {
-      const { data } = await axios.post("http://localhost:5000/api/v1/auth/login", currentUser);
+      const { data } = await axios.post("https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/login", currentUser);
       const { user, token } = data;
       console.log("Data : " + data)
       navigate('/brand-engagement-builder')
@@ -39,6 +40,7 @@ function SignIn() {
       // alert(error.response.data.msg)
       setMessage(error.response.data.msg)
     }
+    setLoading(false)
   };
 
   const onSubmit = async (e) => {
@@ -50,7 +52,9 @@ function SignIn() {
 
   }
 
-
+  useEffect(() => {
+    dispatch(clearMessage())
+  }, [])
   return (
     <div className="flex flex-col min-h-screen  relative overflow-hidden ">
       {/*  Site header */}
@@ -103,7 +107,7 @@ function SignIn() {
                         />
                       </div>
                     </div>
-                    <div className="flex flex-wrap -mx-3 mb-4">
+                    <div className="flex flex-wrap -mx-3 ">
                       <div className="w-full px-3">
                         <label
                           className="block text-gray-700 text-sm font-medium mb-1"
@@ -122,13 +126,15 @@ function SignIn() {
                         />
                       </div>
                     </div>
-                    <p className="flex justify-center items-center text-red-600">
+                    <p className="flex text-sm my-1 justify-center items-center text-red-600">
                       {message}
                     </p>
 
-                    <div className="flex flex-wrap -mx-3 mt-6">
+                    <div className="flex flex-col flex-wrap -mx-3 mt-6">
                       <div className="w-full px-3">
-                        {/* <Link to="/services"> */}
+                        <div className="text-sm mb-4  cursor-pointer" onClick={() => navigate("/send-email")}>
+                          Forget password?
+                        </div>  {/* <Link to="/services"> */}
                         <button
 
                           type="submit"
@@ -136,8 +142,21 @@ function SignIn() {
 
                           Sign in
                         </button>
+                        {loading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"> <Puff
+                          height="100"
+                          width="100"
+                          color="#4446e4"
+                          secondaryColor='#4446e4'
+                          radius='12.5'
+                          ariaLabel="mutating-dots-loading"
+                          wrapperStyle={{}}
+                          wrapperClass=""
+                          visible={true}
+                        />
+                        </div>}
                         {/* </Link> */}
                       </div>
+
                     </div>
                   </form>
 

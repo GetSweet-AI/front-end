@@ -16,6 +16,9 @@ import BrandEngagementBuilder from './pages/BrandEngagementBuilder';
 import BrandEngagementCard from './pages/BrandEngagementCard';
 import Profile from './pages/profile';
 import { useSelector } from 'react-redux';
+import ResetPassword from './pages/ResetPassword';
+import VerifyEmail from './pages/VerifyEmail';
+import SendEmail from './pages/SendEmail';
 
 function App() {
 
@@ -49,6 +52,9 @@ function App() {
         <Route path="/workflows/:id" element={isLoggedIn ? <BrandEngagementCard /> : <SignIn />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/send-email" element={<SendEmail />} />
       </Routes>
     </>
   );

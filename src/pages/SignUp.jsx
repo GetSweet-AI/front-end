@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { setUserData, switchLoginStatus } from "../redux/auth";
 import { useDispatch } from "react-redux";
+import { Puff } from "react-loader-spinner";
 
 
 const initialState = {
@@ -28,18 +29,19 @@ function SignUp() {
   };
 
   const registerUser = async (currentUser) => {
+    setLoading(true)
     try {
-      const { data } = await axios.post("http://localhost:5000/api/v1/auth/register", currentUser);
+      const { data } = await axios.post("https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/register", currentUser);
       const { user, token } = data;
       console.log("Data : " + data)
       navigate('/brand-engagement-builder')
-      dispatch(switchLoginStatus(token))
       dispatch(switchLoginStatus(token))
       dispatch(setUserData(user))
     } catch (error) {
       // alert(error.response.data.msg)
       setMessage(error.response.data.msg)
     }
+    setLoading(false)
   };
 
   const onSubmit = async (e) => {
@@ -105,7 +107,6 @@ function SignUp() {
                       <div className="w-full px-3">
                         <label
                           className="block text-gray-700 text-sm font-medium mb-1"
-                          htmlFor="email"
                         >
                           Full name
                         </label>
@@ -172,6 +173,18 @@ function SignUp() {
                         </button>
                         {/* </Link> */}
                       </div>
+                      {loading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"> <Puff
+                        height="100"
+                        width="100"
+                        color="#4446e4"
+                        secondaryColor='#4446e4'
+                        radius='12.5'
+                        ariaLabel="mutating-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                      />
+                      </div>}
                     </div>
                   </form>
 
