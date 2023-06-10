@@ -3,8 +3,12 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import DashboardHeader from "../partials/DashboardHeader";
 import Sidebar from "../partials/Sidebar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Puff } from "react-loader-spinner";
+import { clearMessage, setMessage } from "../redux/message";
 // import Sidebar from "../partials/Sidebar";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const initialState = {
@@ -17,37 +21,41 @@ const initialState = {
 function Profile() {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.auth)
+    const { message } = useSelector((state) => state.message)
 
     const [values, setValues] = useState(initialState);
     const [loading, setLoading] = useState(false);
-    const [visible, setIsVisible] = useState(false)
-    const [message, setMessage] = useState(false)
 
-    const { token } = useSelector((state) => state.auth)
 
     const handleChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
     };
 
 
-    // Set the Authorization header with the token
-    const headers = {
-        Authorization: `Bearer ${token}`
-    };
+    useEffect(() => {
+        dispatch(clearMessage())
+    }, [])
 
     const updateUserInfo = async (currentUser) => {
-        await axios.patch("https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/update-profile", currentUser, { headers })
-            .then(response => {
-                // Handle the response
-                console.log(response.data);
-                alert("User Infos updated")
+        setLoading(true)
 
-            })
-            .catch(error => {
-                // Handle the error
-                console.error(error);
-                setMessage(error.response.data.msg)
-            });
+        try {
+            await axios.put(`http://localhost:5000/api/v1/auth/update/${user?._id}`, currentUser);
+            console.log("User info updated");
+            // alert("");
+            // alert("User info updated")
+            // Show a toast message
+            toast.success('User info updated');
+        } catch (error) {
+            console.error("Error updating user info:", error);
+            // alert("Failed to update user info");
+            dispatch(setMessage(error.response.data.msg))
+            setLoading(false)
+        }
+
+        setLoading(false)
     };
 
     const onSubmit = async (e) => {
@@ -86,85 +94,102 @@ function Profile() {
                         </div>
 
                         <div >
+                            <div
+                                className="max-w-7xl md:mx-auto px-4 md:px-6 ">
+                                <div className="pt-10 pb-10 md:translate-y-[20%]  lg:translate-y-0   lg:pb-16 
+            flex justify-center items-center">
+                                    <div className="bg-white bg-opacity-10 px-2 shadow-2xl py-5 opacity-90 md:w-[70%] lg:w-[45%] w-full rounded-xl">
 
+                                        <form onSubmit={onSubmit} className="max-w-sm mx-auto md:mt-8 ">
+                                            <div className="flex flex-wrap -mx-3 mb-4">
+                                                <div className="w-full px-3">
+                                                    <label
+                                                        className="block text-gray-700 text-sm font-medium mb-1"
+                                                        htmlFor="email"
+                                                    >
+                                                        Work email address
+                                                    </label>
+                                                    <input
+                                                        type="email"
+                                                        name="email"
+                                                        value={values.email}
+                                                        onChange={handleChange}
+                                                        className="form-input w-full rounded-full text-gray-700"
+                                                        placeholder="Enter your email "
+                                                        required
+                                                    />
+                                                </div>
+                                                <div className="w-full px-3">
+                                                    <label
+                                                        className="block text-gray-700 text-sm font-medium mb-1"
+                                                        htmlFor="email"
+                                                    >
+                                                        Full name
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="fullName"
+                                                        value={values.fullName}
+                                                        onChange={handleChange}
+                                                        className="form-input w-full rounded-full text-gray-700"
+                                                        placeholder="Enter your fullName "
+                                                        required
+                                                    />
+                                                </div>
+                                                <div className="w-full px-3">
+                                                    <label
+                                                        className="block text-gray-700 text-sm font-medium mb-1"
+                                                        htmlFor="email"
+                                                    >
+                                                        Company or Brand name
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="company"
+                                                        value={values.company}
+                                                        onChange={handleChange}
+                                                        className="form-input w-full rounded-full text-gray-700"
+                                                        placeholder="Enter your company "
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
 
-                            <form onSubmit={onSubmit} className="max-w-sm mx-auto md:mt-8 ">
-                                <div className="flex flex-wrap -mx-3 mb-4">
-                                    <div className="w-full px-3">
-                                        <label
-                                            className="block text-gray-700 text-sm font-medium mb-1"
-                                            htmlFor="email"
-                                        >
-                                            Work email address
-                                        </label>
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={values.email}
-                                            onChange={handleChange}
-                                            className="form-input w-full rounded-full text-gray-700"
-                                            placeholder="Enter your email "
-                                            required
-                                        />
-                                    </div>
-                                    <div className="w-full px-3">
-                                        <label
-                                            className="block text-gray-700 text-sm font-medium mb-1"
-                                            htmlFor="email"
-                                        >
-                                            Full name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="fullName"
-                                            value={values.fullName}
-                                            onChange={handleChange}
-                                            className="form-input w-full rounded-full text-gray-700"
-                                            placeholder="Enter your fullName "
-                                            required
-                                        />
-                                    </div>
-                                    <div className="w-full px-3">
-                                        <label
-                                            className="block text-gray-700 text-sm font-medium mb-1"
-                                            htmlFor="email"
-                                        >
-                                            Company or Brand name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="company"
-                                            value={values.company}
-                                            onChange={handleChange}
-                                            className="form-input w-full rounded-full text-gray-700"
-                                            placeholder="Enter your company "
-                                            required
-                                        />
-                                    </div>
-                                </div>
+                                            <p className="flex justify-center items-center text-red-600">
+                                                {message}
+                                            </p>
 
-                                <p className="flex justify-center items-center text-red-600">
-                                    {message}
-                                </p>
+                                            <div className="flex flex-wrap -mx-3 mt-6">
+                                                <div className="w-full px-3">
+                                                    {/* <Link to="/services"> */}
+                                                    <button
 
-                                <div className="flex flex-wrap -mx-3 mt-6">
-                                    <div className="w-full px-3">
-                                        {/* <Link to="/services"> */}
-                                        <button
+                                                        type="submit"
+                                                        className="font-bold text-white bg-gradient-to-r from-[#9394d2] to-[#4446e4] py-3 w-full">
 
-                                            type="submit"
-                                            className="font-bold text-white bg-gradient-to-r from-[#9394d2] to-[#4446e4] py-3 w-full">
-
-                                            Update User Info
-                                        </button>
-                                        {/* </Link> */}
-                                    </div>
-                                </div>
-                            </form>
-
+                                                        Update User Info
+                                                    </button>
+                                                    {loading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"> <Puff
+                                                        height="100"
+                                                        width="100"
+                                                        color="#4446e4"
+                                                        secondaryColor='#4446e4'
+                                                        radius='12.5'
+                                                        ariaLabel="mutating-dots-loading"
+                                                        wrapperStyle={{}}
+                                                        wrapperClass=""
+                                                        visible={true}
+                                                    />
+                                                    </div>}
+                                                    {/* </Link> */}
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div></div></div>
 
                         </div>
-
+                        {/* Toast container */}
+                        <ToastContainer />
 
 
                     </div>

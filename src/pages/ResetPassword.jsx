@@ -1,83 +1,149 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { clearMessage, setMessage } from '../redux/message';
+import { Puff } from 'react-loader-spinner';
+import axios from 'axios';
 
 
+const initialState = {
+  password: "",
+  confirmPassword: ""
+}
 
 function ResetPassword() {
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
+
+  const { message } = useSelector((state) => state.message)
+  const { email } = useSelector((state) => state.auth)
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const [values, setValues] = useState(initialState);
+  const handleChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
+
+  const resetPassword = async () => {
+    setIsLoading(true)
+    try {
+      await axios.post("http://localhost:5000/api/v1/auth/reset-password", {
+        email: email,
+        newPassword: values.password
+      });
+      navigate('/signin')
+    } catch (error) {
+      dispatch(setMessage(error.response.data.error))
+    }
+    setIsLoading(false)
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const { password, confirmPassword } = values;
+
+    // Verify if the password and confirmPassword meet the requirements
+    if (password.trim() === '' || confirmPassword.trim() === '') {
+      // Handle the empty password or confirmPassword error
+      console.log('Password and confirmPassword cannot be empty');
+      dispatch(setMessage('Password and confirmPassword cannot be empty'));
+      return; // Stop further execution
+    }
+
+    if (password.length < 6 || confirmPassword.length < 6) {
+      // Handle the password length error
+      dispatch(setMessage('Password and confirmPassword must have a minimum length of 6 characters'));
+      return; // Stop further execution
+    }
+
+    // Verify if the password matches the confirmPassword
+    if (password !== confirmPassword) {
+      // Handle the password mismatch error
+      dispatch(setMessage('Password and confirmPassword do not match'));
+      return; // Stop further execution
+    }
+
+    // Passwords meet the requirements, proceed with the password reset
+    resetPassword();
+  };
+
+  useEffect(() => {
+    dispatch(clearMessage())
+  }, [])
+
+
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden">
+    <div className="flex flex-col min-h-screen  relative overflow-hidden ">
       {/* Site header */}
-      <header className="absolute w-full z-30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Site branding */}
-            <div className="shrink-0 mr-4">
-              {/* Logo */}
-              <Link className="block group" to="/" aria-label="Cruip">
-                <svg
-                  className="fill-blue-500 group-hover:fill-blue-600 transition duration-150 ease-in-out w-8 h-8"
-                  width="32"
-                  height="32"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="m7.799 4.47.325.434a19.264 19.264 0 0 0 4.518 4.204l.27.175-.013.257a17.638 17.638 0 0 1-.437 2.867l-.144.564a18.082 18.082 0 0 1-2.889 5.977c2.272.245 4.492.88 6.5 1.886 1.601.788 3.062 1.798 4.344 2.972l.142.135-.017.232a17.034 17.034 0 0 0 1.227 7.504l-.724.323c-1.555-2.931-4.113-5.287-7.19-6.632-3.075-1.351-6.602-1.622-9.857-.844-.822.194-1.532.094-2.146-.183a3.138 3.138 0 0 1-1.29-1.146l-.076-.133-.078-.154-.085-.201a2.893 2.893 0 0 1-.095-1.694c.174-.624.55-1.2 1.239-1.67 2.734-1.85 4.883-4.537 5.944-7.68.704-2.076.925-4.32.633-6.545l-.101-.647Zm4.674-.284.16.2a15.87 15.87 0 0 0 5.629 4.322c3.752 1.76 8.363 2.075 12.488.665.419-.14.78-.044 1.002.158l.106.12.066.11.026.063c.125.33.024.751-.4.994-3.404 1.905-5.92 5.05-6.98 8.573a13.967 13.967 0 0 0 .727 10.055l.241.484-.724.323c-.913-2.227-2.326-4.302-4.12-6.05l-.28-.262.026-.305a16.667 16.667 0 0 1 1.121-4.652l.206-.488c1.05-2.443 2.676-4.59 4.664-6.293-3.064.442-6.273.17-9.243-.858a19.036 19.036 0 0 1-4.072-1.93l-.204-.132.017-.322a18.337 18.337 0 0 0-.415-4.605l-.04-.17ZM10.957 0a18.125 18.125 0 0 1 1.424 3.792l.092.394-.174-.219A14.803 14.803 0 0 1 10.235.322L10.957 0ZM7.046 1.746c.277.725.494 1.463.653 2.206l.1.519-.012-.016a17.99 17.99 0 0 1-1.203-1.891l-.262-.495.724-.323Z" />
-                </svg>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+
       {/* Page content */}
-      <main className="grow bg-gray-50">
+      <main className="grow ">
         <section>
-          <div className="max-w-6xl mx-auto px-4 sm:px-6">
-            <div className="pt-32 pb-12 md:pt-40 md:pb-20">
-              {/* Page header */}
-              <div className="max-w-sm mx-auto text-start pb-12">
-                <h1 className="h4 font-cabinet-grotesk">Forgotten your password?</h1>
-                <h1 className=" font-cabinet-grotesk">No problem, we’ll send you a link to reset is</h1>
-              </div>
-              {/* Form */}
-              <div className="max-w-sm mx-auto">
-                <form>
-                  <div className="flex flex-wrap mb-4">
-                    <div className="w-full">
-                      <label className="block text-gray-500 text-sm font-medium mb-1" htmlFor="email">
-                        Your email address
-                      </label>
-                      <input id="email" type="email" className="form-input w-full text-gray-800" defaultValue="markhooker@gmail.com" required />
+          <div
+            className="max-w-7xl md:mx-auto px-4 md:px-6 ">
+            <div className="pt-32 pb-10 md:translate-y-[20%]  lg:translate-y-0   lg:pb-16 
+            flex justify-center items-center">
+              <div className="bg-white bg-opacity-10 px-2 shadow-2xl py-5 opacity-90 md:w-[70%] lg:w-[45%] w-full rounded-xl">
+                {/* <div className="bg-white bg-opacity-10 px-2 shadow-2xl py-5 opacity-90 md:w-[70%] lg:w-[45%] w-full rounded-xl"> */}
+                {/* Page header */}
+                <div className="max-w-sm mx-auto text-start pb-12">
+                  <h1 className="h4 font-cabinet-grotesk text-[#6366F1]">Reset password</h1>
+                  <h1 className=" font-cabinet-grotesk">Please enter a new password</h1>
+                </div>
+                {/* Form */}
+                <div className="max-w-sm mx-auto">
+                  <form onSubmit={onSubmit}>
+                    <div className="flex flex-wrap mb-4">
+                      <div className="w-full">
+                        <label className="block text-gray-500 text-sm font-medium mb-1" htmlFor="email">
+                          Password
+                        </label>
+                        <input id="email" name="password" onChange={handleChange} type="password" className="form-input w-full text-gray-800" required />
+                      </div>
                     </div>
-                  </div>
-
-
-
-
-                </form>
-
-                <form>
-                  <div className="flex flex-wrap my-2">
-                    <div className="w-full">
-                      <button className="
-                      font-medium inline-flex items-center justify-center rounded-md  leading-normal transition duration-150 ease-in-out
-                      text-white bg-[#1D9BF0] hover:bg-[#1A90DF] w-full relative py-1.5">
-
-                        Send me a password reset link
-                      </button>
+                    <div className="flex flex-wrap mb-4">
+                      <div className="w-full">
+                        <label className="block text-gray-500 text-sm font-medium mb-1" htmlFor="password">
+                          Confirm password
+                        </label>
+                        <input id="password" name="confirmPassword" onChange={handleChange} type="password" className="form-input w-full text-gray-800" required />
+                      </div>
                     </div>
-                  </div>
-                </form>  <div className="mt-5">
-                  <label className="flex items-start">
-                    {/* <input type="checkbox" className="form-checkbox mt-0.5" defaultChecked /> */}
-                    <span className="text-xs text-gray-500 ml-3">
-                      Please allow-1-2 minutes for the email to arrive and if necessary check your junk folder.
 
 
-                    </span>
-                  </label>
+
+                    <p className="flex text-sm my-1 justify-center items-center text-red-600">
+                      {message}
+                    </p>
+
+                    <div className="flex flex-wrap my-2">
+                      <div className="w-full">
+                        <button type='submit' className="font-bold text-white bg-gradient-to-r from-[#9394d2] to-[#4446e4] py-3 w-full">
+
+                          Reset password
+                        </button>
+                      </div>
+                    </div>     </form>
+                  {isLoading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"> <Puff
+                    height="100"
+                    width="100"
+                    color="#4446e4"
+                    secondaryColor='#4446e4'
+                    radius='12.5'
+                    ariaLabel="mutating-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                    visible={true}
+                  />
+                  </div>}
+
+
                 </div>
               </div>
-            </div>
-          </div>
+            </div></div>
         </section>
       </main>
     </div>

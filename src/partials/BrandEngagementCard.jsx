@@ -1,9 +1,21 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
 import React from "react";
 import { Link } from "react-router-dom";
 
-function BrandEngagementCard({id, brandName, website, timeZone, companySector, brandTone, targetAudience, postType}) {
+function BrandEngagementCard({ id, brandName, website, timeZone, companySector, brandTone, targetAudience, postType, fetchEngagements }) {
+
+  const deleteBrandEngagement = async (brandEngagementId) => {
+    try {
+      const response = await axios.delete(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${brandEngagementId}`);
+      console.log(response.data); // Success message or response data
+      fetchEngagements()
+      // Perform any additional actions after successful deletion
+    } catch (error) {
+      console.log(error); // Handle error
+    }
+  };
   return (
     <div className="col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-lg rounded-sm hover:bg-gray-50 hover:translate-y-1 hover:translate-x-1 border border-slate-200">
       <div className="flex flex-col h-full p-5">
@@ -36,13 +48,14 @@ function BrandEngagementCard({id, brandName, website, timeZone, companySector, b
         </div>
         <footer className="mt-2">
           <div className="flex justify-between items-center">
-            <div className="text-sm cursor-pointer">
+            <div className="text-sm text-white rounded  p-2 cursor-pointer">
+              {/* Not Active */}
+            </div>
+            <div className="text-sm text-white rounded bg-[#d7364b] p-2 cursor-pointer" onClick={() => deleteBrandEngagement(id)}>
               <FontAwesomeIcon className="mr-1" icon={faTrash} />
               Delete
             </div>
-            <div className="text-sm text-white rounded bg-[#d7364b] p-2 cursor-pointer">
-              Not Active
-            </div>
+
           </div>
         </footer>
       </div>
