@@ -119,10 +119,11 @@ function BrandEngagementBuilder() {
       .post(
         "https://seashell-app-8amlb.ondigitalocean.app/api/v1/save-brand-engagement",
         {
-          targetAudience: "old professionals",
-          platform: "Facebook",
-          question: "Inspirational quote",
-          tone: "inspiring",
+          Timezone: "UTC+3 Test",
+          CompanySector: "E-commerce and Online Retail",
+          BrandTone: "Friendly",
+          TargetAudience: "Young professionals",
+          PostType: "Quotes",
         },
         {
           headers: {
@@ -175,7 +176,7 @@ function BrandEngagementBuilder() {
     fetchEngagements();
   }, []);
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -363,7 +364,7 @@ function BrandEngagementBuilder() {
                         )}
                       </button>
                     </div>
-                    {result !== null && (
+                    {result == null && (
                       <div className="w-full px-2">
                         <button
                           type="button"
