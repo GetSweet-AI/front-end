@@ -19,6 +19,7 @@ import { useSelector } from 'react-redux';
 import ResetPassword from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
 import SendEmail from './pages/SendEmail';
+import Users from './pages/Users';
 
 function App() {
 
@@ -55,6 +56,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/send-email" element={<SendEmail />} />
+        <Route path="/users" element={<Users />} />
       </Routes>
     </>
   );
