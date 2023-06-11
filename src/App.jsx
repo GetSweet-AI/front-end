@@ -66,7 +66,7 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/send-email" element={<SendEmail />} />
         <Route path="*" element={<NotFound />} />
-        {user.role === "admin" && <Route path="/users" element={<Users />} />}
+        {user?.role === "admin" && <Route path="/users" element={<Users />} />}
       </Routes>
     </>
   );

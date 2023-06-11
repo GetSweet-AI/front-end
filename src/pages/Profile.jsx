@@ -9,6 +9,7 @@ import { clearMessage, setMessage } from "../redux/message";
 // import Sidebar from "../partials/Sidebar";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { logoutUser, setUserData } from "../redux/auth";
 
 
 const initialState = {
@@ -42,20 +43,36 @@ function Profile() {
         setLoading(true)
 
         try {
-            await axios.put(`http://localhost:5000/api/v1/auth/update/${user?._id}`, currentUser);
+            await axios.put(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/update/${user?._id}`, currentUser);
             console.log("User info updated");
             // alert("");
             // alert("User info updated")
             // Show a toast message
             toast.success('User info updated');
+            dispatch(setUserData({ ...user, company: values.company, fullName: values.fullName, email: values.email }))
         } catch (error) {
-            console.error("Error updating user info:", error);
+            // console.log("Error updating user info:", error.response.data.msg);
             // alert("Failed to update user info");
-            dispatch(setMessage(error.response.data.msg))
+            dispatch(setMessage(error.response.data.error))
             setLoading(false)
         }
 
         setLoading(false)
+    };
+    const deleteUser = (userId) => {
+        axios
+            .delete(
+                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${userId}`
+            )
+            .then((res) => {
+                toast.success('User deleted successfully');
+                dispatch(logoutUser())
+
+            })
+            .catch((err) => {
+                console.log(err);
+                toast.error(error);
+            });
     };
 
     const onSubmit = async (e) => {
@@ -165,10 +182,11 @@ function Profile() {
                                                     <button
 
                                                         type="submit"
-                                                        className="font-bold text-white bg-gradient-to-r from-[#9394d2] to-[#4446e4] py-3 w-full">
+                                                        className="font-bold  text-white bg-gradient-to-r from-[#9394d2] to-[#4446e4] py-3 w-full">
 
                                                         Update User Info
                                                     </button>
+
                                                     {loading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"> <Puff
                                                         height="100"
                                                         width="100"
@@ -184,8 +202,18 @@ function Profile() {
                                                     {/* </Link> */}
                                                 </div>
                                             </div>
-                                        </form>
-                                    </div></div></div>
+                                        </form>  <div className="max-w-sm mx-auto"><button
+                                            onClick={() => deleteUser(user?._id)}
+                                            className="font-bold w-full text-white mt-3 bg-[#ef3717] py-3">
+
+                                            Delete my account
+                                        </button></div>
+
+
+
+
+                                    </div>
+                                </div></div>
 
                         </div>
                         {/* Toast container */}

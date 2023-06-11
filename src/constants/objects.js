@@ -14,6 +14,7 @@ export const targetAudienceOptions = [
     { value: "adventureTravelers", label: "Adventure travelers" },
     { value: "musicLovers", label: "Music lovers" },
     { value: "environmentalActivists", label: "Environmental activists" },
+    {value:'other', label:'other'}
   ];
 
   export const timeZoneOptions = [

@@ -24,7 +24,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function BrandEngagementBuilder() {
 
-
   const dispatch = useDispatch()
 
   const [previewLoading, setPreviewLoading] = useState(false);
@@ -41,7 +40,8 @@ function BrandEngagementBuilder() {
     companySector: null,
     brandTone: null,
     targetAudience: null,
-    postType: ""
+    postType: "",
+    other: ""
   });
 
   const handleInputChange = (e) => {
@@ -96,7 +96,7 @@ function BrandEngagementBuilder() {
           {
             targetAudience: values.targetAudience?.value,
             platform: values.websiteUrl,
-            question: values.postType?.value,
+            question: values.postType?.value === "other" ? values.other : values.postType?.value,
             tone: values.brandTone?.value,
           }
         )
@@ -115,16 +115,6 @@ function BrandEngagementBuilder() {
     // alert(JSON.stringify(postData))
 
   };
-
-
-  // const postData = {
-  //   Timezone: 'UTC+3 Test',
-  //   CompanySector: 'E-commerce and Online Retail',
-  //   BrandTone: 'Friendly',
-  //   TargetAudience: 'Young professionals',
-  //   PostType: 'Quotes',
-  //   postContent: '<h1>Attention Young Professionals!</h1><p>Are you feeling stuck in your career? Remember, success is not final, failure is not fatal: it is the courage to continue that counts.</p><p>Don'
-  // };
 
   const handleSave = async () => {
     setSaveLoading(true);
@@ -166,7 +156,7 @@ function BrandEngagementBuilder() {
     });
     setResult(null);
   };
-  console.log("_id :" + user?._id)
+  // console.log("_id :" + user?._id)
 
   const fetchEngagements = async () => {
     await axios
@@ -181,7 +171,6 @@ function BrandEngagementBuilder() {
         console.log(err);
       });
   };
-
 
   useEffect(() => {
     fetchEngagements();
@@ -206,6 +195,9 @@ function BrandEngagementBuilder() {
     // Show a toast message
     toast.success('Text copied successfully!');
   };
+
+  console.log("Post type :" + JSON.stringify(values.postType))
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -223,13 +215,14 @@ function BrandEngagementBuilder() {
         <main>
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
             {/* Page header */}
-            <div className="h-screen mb-8">
+            <div className="md:h-screen mb-8">
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0">
                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
                   Brand Engagement Builder
                 </h1>
               </div>
+
               <div className="my-4 sm:mb-0">
                 <p className="text-slate-800">
                   Engagement Builder is a powerful product designed to help you
@@ -238,7 +231,7 @@ function BrandEngagementBuilder() {
                   ensure that all of your soaical content aligns with your
                   brand's messaging and value.
                 </p>
-              </div><div className="flex flex-wrap   bg-white p-4 rounded-lg">
+              </div><div className="flex flex-wrap   bg-white md:p-4 rounded-lg">
                 <div className="w-full md:w-1/2">
                   <form className="rounded px-4" onSubmit={handlePreview}>
                     <div className="flex flex-wrap">
@@ -355,21 +348,6 @@ function BrandEngagementBuilder() {
                         />
                       </div>
                       <div className="w-full md:w-1/2 p-2">
-                        <label className="block mb-1">
-                          Post type
-                        </label>
-                        <Select
-                          id="select3"
-                          className="w-full"
-                          placeholder="Post Type"
-                          value={values.postType}
-                          onChange={(selectedOption) =>
-                            handleSelectChange("postType", selectedOption)
-                          }
-                          options={postTypeOptions}
-                        />
-                      </div>
-                      <div className="w-full p-2">
                         <label htmlFor="select4" className="block mb-1">
                           Target Audience
                         </label>
@@ -385,6 +363,44 @@ function BrandEngagementBuilder() {
                           options={targetAudienceOptions}
                         />
                       </div>
+                      <div className="w-full md:w-1/2 p-2">
+                        <label className="block mb-1">
+                          Post type
+                        </label>
+                        <Select
+                          id="select3"
+                          className="w-full"
+                          placeholder="Post Type"
+                          value={values.postType}
+                          onChange={(selectedOption) =>
+                            handleSelectChange("postType", selectedOption)
+                          }
+                          options={postTypeOptions}
+                        />
+                      </div>
+                      {values.postType?.value === "other" && <div className="w-full md:w-1/2 p-2">
+                        <label className="block mb-1">
+                          Enter a post type
+                        </label>   <input
+                          id="input2"
+                          className="w-full border-gray-300 rounded p-2"
+                          type="text"
+                          name="other"
+                          placeholder="Enter another post type"
+                          value={values.other}
+                          onChange={handleInputChange}
+                        />
+                        {/* <Select
+                          id="select3"
+                          className="w-full"
+                          placeholder="Post Type"
+                          value={values.postType}
+                          onChange={(selectedOption) =>
+                            handleSelectChange("postType", selectedOption)
+                          }
+                          options={postTypeOptions}
+                        /> */}
+                      </div>}
                       <div className="flex w-full justify-center items-center">
                         <p className="text-red-500 text-sm my-2  text-center">
                           {message ? message : ""}
@@ -435,7 +451,7 @@ function BrandEngagementBuilder() {
                     </div>
                   </form>
                 </div>
-                <div className="w-full flex-col text-white md:w-1/2 bg-[#333333] rounded-lg p-4">
+                <div className="w-full flex-col  text-white md:w-1/2 bg-[#333333] rounded-lg p-4">
                   {result && <div onClick={handleCopyText} className=" flex justify-end text-end "><p className="bg-slate-600 w-[15%] cursor-pointer text-center rounded-lg py-1 ">  Copy</p>
                   </div>}
                   <div className="ove">{result !== null
@@ -444,6 +460,8 @@ function BrandEngagementBuilder() {
                   </div>
                 </div>
               </div>
+
+
             </div>
 
 
@@ -451,8 +469,8 @@ function BrandEngagementBuilder() {
             {/* Toast container */}
             <ToastContainer />
             {engagements?.length > 0 && (
-              <>
-                <h5 className="text-2xl font-bold mt-16 mb-6">
+              <div className="">
+                <h5 className="md:text-2xl text-xl md:mb-0 mb-2 font-bold ">
                   Your saved brand engagements
                 </h5>
                 <div className="grid grid-cols-12 gap-6">
@@ -473,7 +491,7 @@ function BrandEngagementBuilder() {
                     );
                   })}
                 </div>
-              </>
+              </div>
             )}
           </div>
         </main>

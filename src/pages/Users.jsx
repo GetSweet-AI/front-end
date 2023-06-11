@@ -12,50 +12,51 @@ import DashboardHeader from "../partials/DashboardHeader";
 import Select from "react-select";
 import axios from "axios";
 import ReactHtmlParser from "react-html-parser";
-import { faArrowsRotate, faL } from "@fortawesome/free-solid-svg-icons";
+import { faArrowsRotate, faL, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { targetAudienceOptions } from "../constants/objects";
 import brandTones from "../constants/brandTones";
 import postTypeOptions from "../constants/postTypeOtions";
 import { clearMessage, setMessage } from "../redux/message";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Users() {
   const dispatch = useDispatch();
 
-  const [previewLoading, setPreviewLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [engagements, setEngagements] = useState([]);
   const [result, setResult] = useState(null);
   const { token, user } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
 
-  const [values, setValues] = useState({
-    brandName: "",
-    websiteUrl: "",
-    timeZone: null,
-    companySector: null,
-    brandTone: null,
-    targetAudience: null,
-    postType: "",
-  });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
-  };
+  // const [values, setValues] = useState({
+  //   brandName: "",
+  //   websiteUrl: "",
+  //   timeZone: null,
+  //   companySector: null,
+  //   brandTone: null,
+  //   targetAudience: null,
+  //   postType: "",
+  // });
 
-  const handleSelectChange = (name, selectedOption) => {
-    setValues((prevValues) => ({
-      ...prevValues,
-      [name]: selectedOption,
-    }));
-  };
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setValues((prevValues) => ({
+  //     ...prevValues,
+  //     [name]: value,
+  //   }));
+  // };
+
+  // const handleSelectChange = (name, selectedOption) => {
+  //   setValues((prevValues) => ({
+  //     ...prevValues,
+  //     [name]: selectedOption,
+  //   }));
+  // };
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -84,9 +85,24 @@ function Users() {
       )
       .then((res) => {
         fetchUsers();
+        toast.success('User role updated');
       })
       .catch((err) => {
         console.log(err);
+      });
+  };
+  const deleteUser = (userId) => {
+    axios
+      .delete(
+        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${userId}`
+      )
+      .then((res) => {
+        fetchUsers();
+        toast.success('User deleted successfully');
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(error);
       });
   };
 
@@ -123,33 +139,48 @@ function Users() {
                       </th>
                       <th className="py-3 px-6 text-left">Email</th>
                       <th className="py-3 px-6 text-left">Company</th>
-                      <th className="py-3 px-6 text-left rounded-tr-lg">
+                      <th className="py-3 px-6 text-left ">
                         Role
+                      </th>
+                      <th className="py-3 px-6 text-left rounded-tr-lg">
+                        Action
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {users.map((user, index) => (
+                    {users.filter((client) => client._id !== user?._id).map((client, index) => (
                       <tr
-                        key={user.id}
+                        key={client._id}
                         className={
                           index % 2 === 0
                             ? "bg-white"
                             : "bg-blue-100 rounded-full"
                         }
                       >
-                        <td className="py-4 px-6 border-b">{user.fullName}</td>
-                        <td className="py-4 px-6 border-b">{user.email}</td>
-                        <td className="py-4 px-6 border-b">{user.company}</td>
+                        <td className="py-4 px-6 border-b">{client.fullName}</td>
+                        <td className="py-4 px-6 border-b">{client.email}</td>
+                        <td className="py-4 px-6 border-b">{client.company}</td>
                         <td className="py-4 px-6 border-b">
                           <span
-                            onClick={() => updateRole(user._id)}
+                            onClick={() => updateRole(client._id)}
                             className="bg-blue-500 flex items-center w-fit px-4 py-2 rounded-xl text-white uppercase text-sm cursor-pointer"
                           >
-                            {user.role}{" "}
+                            {client.role}{" "}
                             <FontAwesomeIcon
-                              className="ml-2"
+                              className="ml-2 mb-1"
                               icon={faArrowsRotate}
+                            />
+                          </span>
+                        </td>
+                        <td className="py-4 px-6 border-b">
+                          <span
+                            onClick={() => deleteUser(client._id)}
+                            className="bg-red-500 flex items-center w-fit px-4 py-2 rounded-xl text-white uppercase text-sm cursor-pointer"
+                          >
+                            Delete
+                            <FontAwesomeIcon
+                              className="ml-2 mb-1"
+                              icon={faTrashAlt}
                             />
                           </span>
                         </td>
@@ -162,6 +193,19 @@ function Users() {
           </div>
         </main>
       </div>
+      {/* Toast container */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }
