@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../images/logoflowbots2.png'
+import logo from '../images/logogetsweet.png'
 
 function Header() {
   return (
@@ -12,8 +12,12 @@ function Header() {
             {/* Logo */}
             <Link className="block group" to="/" aria-label="Cruip">
 
-              <div className='flex justify-center items-center'>
+              {/* <div className='flex justify-center items-center'>
                 <img src={logo} alt="logo" className='' width="100" />
+              </div> */}
+              <div className="flex w-full h-20 items-center justify-center">
+                <img className={` w-full h-full`} src={logo} alt="logo" />
+                <p className="text-gray-900 font-medium mt-1 -ml-3">GetSweet.AI</p>
               </div>
             </Link>
           </div>
