@@ -92,7 +92,7 @@ function BrandEngagementBuilder() {
       setPreviewLoading(true);
       axios
         .post(
-          "https://seashell-app-8amlb.ondigitalocean.app/api/v1/generate-blog-post",
+          "http://localhost:5000/api/v1/generate-blog-post",
           {
             targetAudience: values.targetAudience?.value,
             platform: values.websiteUrl,
@@ -125,7 +125,7 @@ function BrandEngagementBuilder() {
     } else {
       await axios
         .post(
-          `https://seashell-app-8amlb.ondigitalocean.app/api/v1/save-brand-engagement/${user?._id}`,
+          `http://localhost:5000/api/v1/save-brand-engagement/${user?._id}`,
           postData
         )
         .then((res) => {
@@ -161,7 +161,7 @@ function BrandEngagementBuilder() {
   const fetchEngagements = async () => {
     await axios
       .get(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${user?._id}`
+        `http://localhost:5000/api/v1/brand-engagements/${user?._id}`
       )
       .then((res) => {
         setEngagements(res.data?.brandEngagements);

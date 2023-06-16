@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { setUserData, switchLoginStatus } from "../redux/auth";
 import { useDispatch } from "react-redux";
 import { Puff } from "react-loader-spinner";
+import EmailSentModal from "../partials/EmailSentModal";
+import { clearMessage } from "../redux/message";
 
 
 const initialState = {
@@ -23,19 +25,39 @@ function SignUp() {
   const [visible, setIsVisible] = useState(false)
   const [message, setMessage] = useState(false)
 
+  let [isOpen, setIsOpen] = useState(false)
+
+  function closeModal() {
+    setIsOpen(false)
+  }
+
+  function openModal() {
+    setIsOpen(true)
+  }
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  useEffect(() => {
+    dispatch(clearMessage())
+  }, [])
+
   const registerUser = async (currentUser) => {
     setLoading(true)
     try {
-      const { data } = await axios.post("https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/register", currentUser);
+      const { data } = await axios.post("http://localhost:5000/api/v1/auth/register", currentUser);
       const { user, token } = data;
       console.log("Data : " + data)
-      navigate('/brand-engagement-builder')
-      dispatch(switchLoginStatus(token))
+      axios.post(`http://localhost:5000/api/v1/auth/users/${user?._id}/send-email-verification`, {
+        email: user?.email
+      }).then((re) => {
+        setIsOpen(true)
+        setValues(initialState)
+
+      })
+      // navigate('/brand-engagement-builder')
+      // dispatch(switchLoginStatus(token))
       dispatch(setUserData(user))
     } catch (error) {
       // alert(error.response.data.msg)
@@ -195,6 +217,11 @@ function SignUp() {
             </div>
           </div>
         </section>
+        <EmailSentModal
+          isOpen={isOpen}
+          closeModal={closeModal}
+          title=" Email confirmation sent"
+          desc=' A confirmation email has been sent to your gmail' />
       </main>
     </div>
   );

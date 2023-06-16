@@ -10,6 +10,7 @@ import { clearMessage, setMessage } from "../redux/message";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { logoutUser, setUserData } from "../redux/auth";
+import MyModal from "../partials/Modal";
 
 
 const initialState = {
@@ -20,6 +21,16 @@ const initialState = {
 };
 
 function Profile() {
+
+    let [isOpen, setIsOpen] = useState(false)
+
+    function closeModal() {
+        setIsOpen(false)
+    }
+
+    function openModal() {
+        setIsOpen(true)
+    }
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -34,17 +45,48 @@ function Profile() {
         setValues({ ...values, [e.target.name]: e.target.value });
     };
 
+    const [userData, setUser] = useState([]);
+    const fetchUserData = async () => {
+        await axios
+            .get(
+                `http://localhost:5000/api/v1/auth/users/${user?._id}`
+            )
+            .then((res) => {
+                setUser(res.data);
+                // dispatch(setUserData(res?.data.user))
+                console.log("res?.data :" + JSON.stringify(res?.data));
+                if (res.data) {
+                    const { email, password, company, fullName } = res.data?.user;
+                    setValues({ email, password, company, fullName });
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
     useEffect(() => {
         dispatch(clearMessage())
+        fetchUserData()
     }, [])
 
     const updateUserInfo = async (currentUser) => {
         setLoading(true)
 
         try {
-            await axios.put(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/update/${user?._id}`, currentUser);
-            console.log("User info updated");
+            if (isChecked) {
+                await axios.put(`http://localhost:5000/api/v1/auth/update/${user?._id}`, currentUser).then((res) => {
+                    axios.post("http://localhost:5000/api/v1/auth/reset-password", {
+                        email: res?.data.user?.email,
+                        newPassword: values.password
+                    });
+                })
+            } else {
+                await axios.put(`http://localhost:5000/api/v1/auth/update/${user?._id}`, currentUser)
+            }
+
+
+            setLoading(false)
             // alert("");
             // alert("User info updated")
             // Show a toast message
@@ -62,12 +104,12 @@ function Profile() {
     const deleteUser = (userId) => {
         axios
             .delete(
-                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${userId}`
+                `http://localhost:5000/api/v1/auth/users/${userId}`
             )
             .then((res) => {
                 toast.success('User deleted successfully');
                 dispatch(logoutUser())
-
+                navigate('/')
             })
             .catch((err) => {
                 console.log(err);
@@ -86,6 +128,12 @@ function Profile() {
 
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    const [isChecked, setIsChecked] = useState(false);
+
+    const handleCheckboxChange = () => {
+        setIsChecked(!isChecked);
+    };
 
     return (
         <div className="flex h-screen overflow-hidden">
@@ -170,6 +218,39 @@ function Profile() {
                                                         required
                                                     />
                                                 </div>
+                                                <div className="w-full my-4 flex px-3">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={isChecked}
+                                                        onChange={handleCheckboxChange}
+                                                        className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
+                                                    />
+                                                    <label
+                                                        className="block ml-2 text-gray-700 text-sm font-medium mb-1"
+                                                        htmlFor="email"
+                                                    > Reset password
+                                                    </label>
+
+
+
+                                                </div>
+                                                {isChecked && <div className="w-full px-3">
+                                                    <label
+                                                        className="block text-gray-700 text-sm font-medium mb-1"
+                                                        htmlFor="email"
+                                                    >
+                                                        Password
+                                                    </label>
+                                                    <input
+                                                        type="password"
+                                                        name="password"
+                                                        value={values.password}
+                                                        onChange={handleChange}
+                                                        className="form-input w-full rounded-full text-gray-700"
+                                                        placeholder="Password"
+
+                                                    />
+                                                </div>}
                                             </div>
 
                                             <p className="flex justify-center items-center text-red-600">
@@ -202,15 +283,15 @@ function Profile() {
                                                     {/* </Link> */}
                                                 </div>
                                             </div>
-                                        </form>  <div className="max-w-sm mx-auto"><button
-                                            onClick={() => deleteUser(user?._id)}
+                                        </form>
+
+                                        <div className="max-w-sm mx-auto"><button
+                                            onClick={openModal}
                                             className="font-bold w-full text-white mt-3 bg-[#ef3717] py-3">
 
                                             Delete my account
-                                        </button></div>
-
-
-
+                                        </button>
+                                        </div>
 
                                     </div>
                                 </div></div>
@@ -219,7 +300,7 @@ function Profile() {
                         {/* Toast container */}
                         <ToastContainer />
 
-
+                        <MyModal isOpen={isOpen} openModal={openModal} closeModal={closeModal} deleteAccount={() => deleteUser(user?._id)} />
                     </div>
                 </main>
 

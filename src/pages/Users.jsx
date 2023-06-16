@@ -61,10 +61,11 @@ function Users() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const [users, setUsers] = useState([]);
+
   const fetchUsers = async () => {
     await axios
       .get(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}`
+        `http://localhost:5000/api/v1/admin/users?userId=${user?._id}`
       )
       .then((res) => {
         setUsers(res.data);
@@ -74,6 +75,7 @@ function Users() {
         console.log(err);
       });
   };
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -81,7 +83,7 @@ function Users() {
   const updateRole = (userId) => {
     axios
       .put(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users/${userId}/update-role`
+        `http://localhost:5000/api/v1/admin/users/${userId}/update-role`
       )
       .then((res) => {
         fetchUsers();
@@ -94,7 +96,7 @@ function Users() {
   const deleteUser = (userId) => {
     axios
       .delete(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${userId}`
+        `http://localhost:5000/api/v1/auth/users/${userId}`
       )
       .then((res) => {
         fetchUsers();
@@ -148,7 +150,7 @@ function Users() {
                     </tr>
                   </thead>
                   <tbody>
-                    {users.filter((client) => client._id !== user?._id).map((client, index) => (
+                    {users.filter((client) => (client._id !== user?._id) && client?.isEmailConfirmed === true).map((client, index) => (
                       <tr
                         key={client._id}
                         className={

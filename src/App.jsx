@@ -17,6 +17,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import SendEmail from "./pages/SendEmail";
 import Users from "./pages/Users";
 import NotFound from "./pages/NotFound";
+import EmailConfirmed from "./pages/EmailConfirmed";
 
 function App() {
   const location = useLocation();
@@ -37,7 +38,7 @@ function App() {
   }, [location.pathname]); // triggered on route change
 
   const { isLoggedIn, user } = useSelector((state) => state.auth);
-  console.log(user);
+  // console.log(user);
 
   return (
     <>
@@ -65,6 +66,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/send-email" element={<SendEmail />} />
+        <Route path="/confirm-email/:userId" element={<EmailConfirmed />} />
         <Route path="*" element={<NotFound />} />
         {user?.role === "admin" && <Route path="/users" element={<Users />} />}
       </Routes>

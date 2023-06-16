@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import logo from "../images/logoflowbots2.png";
+import logo from "../images/logogetsweet.png";
 // import shortLogo from "../images/logo.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import { setUserData } from "../redux/auth";
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const location = useLocation();
@@ -14,11 +16,28 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const trigger = useRef(null);
   const sidebar = useRef(null);
 
+  const dispatch = useDispatch()
+
   const storedSidebarExpanded = localStorage.getItem("sidebar-expanded");
   const [sidebarExpanded, setSidebarExpanded] = useState(
     storedSidebarExpanded === null ? false : storedSidebarExpanded === "true"
   );
 
+  const [userData, setUser] = useState([]);
+  const fetchUserData = async () => {
+    await axios
+      .get(
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
+      )
+      .then((res) => {
+        setUser(res.data);
+        dispatch(setUserData(res?.data.user))
+        console.log("res?.data :" + JSON.stringify(res?.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }) => {
@@ -58,13 +77,15 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
     sidebarOpen && !sidebarExpanded && setSidebarExpanded(true);
   }, [sidebarOpen]);
 
+  useEffect(() => {
+    fetchUserData()
+  }, [])
   return (
     <div>
       {/* Sidebar backdrop (mobile only) */}
       <div
-        className={`fixed inset-0  bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${
-          sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed inset-0  bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
         aria-hidden="true"
       ></div>
 
@@ -72,9 +93,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
       <div
         id="sidebar"
         ref={sidebar}
-        className={`flex bg-blue-500 flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-72 lg:w-20 lg:sidebar-expanded:!w-72 2xl:!w-68 shrink-0 p-4 pr-0 transition-all duration-200 ease-in-out ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-72"
-        }`}
+        className={`flex bg-blue-500 flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-72 lg:w-20 lg:sidebar-expanded:!w-72 2xl:!w-68 shrink-0 p-4 pr-0 transition-all duration-200 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-72"
+          }`}
       >
         {/* Sidebar header */}
         <div className="">
@@ -97,13 +117,16 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               </svg>
             </button>
             {/* Logo */}
-            <NavLink end to="/" className="block mt-4">
-              {/* <img className={`hidden 2xl:block`} alt-"" /> */}
+            <NavLink end to="/" className="flex items-center justify-center  px-3">
+              {/* <img src={logo} className={`hidden 2xl:block`} alt="" /> */}
               {sidebarExpanded === true ? (
-                <img className={`2xl:hidden`} src={logo} alt="logo" />
+                <div className="flex w-full h-20 items-center justify-center">
+                  <img className={` w-full h-full`} src={logo} alt="logo" />
+                  <p className="text-white font-bold -ml-3">GetSweet.AI</p>
+                </div>
               ) : (
                 <img
-                  className={`2xl:hidden sidebar-expandded:hidden`}
+                  className={`hidden bg-red-400  sidebar-expandded:hidden`}
                   src={logo}
                   alt="short logo"
                 />
@@ -113,25 +136,23 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         </div>
 
         {/* Links */}
-        <div className="space-y-8 mt-20">
+        <div className="space-y-8 mt-12">
           {/* Pages group */}
           <div>
             <ul className="">
               {/* Home */}
               <li
-                className={`px-3 py-3 last:mb-0 ${
-                  pathname === "/brand-engagement-builder"
-                    ? "bg-white rounded-l-full"
-                    : ""
-                }`}
+                className={`px-3 py-3 last:mb-0 ${pathname === "/brand-engagement-builder"
+                  ? "bg-white rounded-l-full"
+                  : ""
+                  }`}
               >
                 <NavLink
                   end
                   to="/brand-engagement-builder"
-                  className={`block flex text-white hover:text-white truncate transition duration-150 ${
-                    pathname === "/brand-engagement-builder" &&
+                  className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/brand-engagement-builder" &&
                     "hover:text-white"
-                  }`}
+                    }`}
                 >
                   <div>
                     <svg
@@ -158,10 +179,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </div>
                   <div className="flex items-center overflow-hidden">
                     <span
-                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${
-                        pathname === "/brand-engagement-builder" &&
+                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/brand-engagement-builder" &&
                         "text-[#3b82f6]"
-                      }`}
+                        }`}
                     >
                       Brand Engagements Builder
                     </span>
@@ -215,16 +235,14 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               </li> */}
               {/* Home */}
               <li
-                className={`px-3 py-3 last:mb-0 ${
-                  pathname === "/profile" ? "bg-white rounded-l-full" : ""
-                }`}
+                className={`px-3 py-3 last:mb-0 ${pathname === "/profile" ? "bg-white rounded-l-full" : ""
+                  }`}
               >
                 <NavLink
                   end
                   to="/profile"
-                  className={`block flex text-white hover:text-white truncate transition duration-150 ${
-                    pathname === "/profile" && "hover:text-white"
-                  }`}
+                  className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/profile" && "hover:text-white"
+                    }`}
                 >
                   <div>
                     <svg
@@ -247,36 +265,32 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </div>
                   <div className="flex items-center overflow-hidden">
                     <span
-                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${
-                        pathname === "/profile" && "text-[#3b82f6]"
-                      }`}
+                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/profile" && "text-[#3b82f6]"
+                        }`}
                     >
-                      Profile
+                      Account settings
                     </span>
                   </div>
                 </NavLink>
               </li>
               {user?.role === "admin" && (
                 <li
-                  className={`px-3 py-3 last:mb-0 ${
-                    pathname === "/users" ? "bg-white rounded-l-full" : ""
-                  }`}
+                  className={`px-3 py-3 last:mb-0 ${pathname === "/users" ? "bg-white rounded-l-full" : ""
+                    }`}
                 >
                   <NavLink
                     end
                     to="/users"
-                    className={`block flex text-white hover:text-white truncate transition duration-150 ${
-                      pathname === "/users" && "hover:text-white"
-                    }`}
+                    className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/users" && "hover:text-white"
+                      }`}
                   >
                     <div>
                       <FontAwesomeIcon className={pathname === "/users" ? "text-[#3b82f6]" : "text-[#fff]"} icon={faUsers} />
                     </div>
                     <div className="flex items-center overflow-hidden">
                       <span
-                        className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${
-                          pathname === "/users" && "text-[#3b82f6]"
-                        }`}
+                        className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/users" && "text-[#3b82f6]"
+                          }`}
                       >
                         Users
                       </span>
