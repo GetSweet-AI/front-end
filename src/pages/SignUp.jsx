@@ -25,15 +25,15 @@ function SignUp() {
   const [visible, setIsVisible] = useState(false)
   const [message, setMessage] = useState(false)
 
-  let [isOpen, setIsOpen] = useState(false)
+  // let [isOpen, setIsOpen] = useState(false)
 
-  function closeModal() {
-    setIsOpen(false)
-  }
+  // function closeModal() {
+  //   setIsOpen(false)
+  // }
 
-  function openModal() {
-    setIsOpen(true)
-  }
+  // function openModal() {
+  //   setIsOpen(true)
+  // }
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -52,7 +52,7 @@ function SignUp() {
       axios.post(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${user?._id}/send-email-verification`, {
         email: user?.email
       }).then((re) => {
-        setIsOpen(true)
+        navigate('/check-email')
         setValues(initialState)
 
       })
@@ -217,11 +217,11 @@ function SignUp() {
             </div>
           </div>
         </section>
-        <EmailSentModal
+        {/* <EmailSentModal
           isOpen={isOpen}
           closeModal={closeModal}
           title=" Email confirmation sent"
-          desc=' A confirmation email has been sent to your gmail' />
+          desc=' A confirmation email has been sent to your gmail' /> */}
       </main>
     </div>
   );

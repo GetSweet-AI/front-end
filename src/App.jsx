@@ -18,6 +18,7 @@ import SendEmail from "./pages/SendEmail";
 import Users from "./pages/Users";
 import NotFound from "./pages/NotFound";
 import EmailConfirmed from "./pages/EmailConfirmed";
+import CheckEmail from "./pages/CheckEmail";
 
 function App() {
   const location = useLocation();
@@ -66,6 +67,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/send-email" element={<SendEmail />} />
+        <Route path="/check-email" element={<CheckEmail />} />
         <Route path="/confirm-email/:userId" element={<EmailConfirmed />} />
         <Route path="*" element={<NotFound />} />
         {user?.role === "admin" && <Route path="/users" element={<Users />} />}

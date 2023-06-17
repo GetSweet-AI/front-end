@@ -66,7 +66,7 @@ export default function EmailConfirmed() {
 
                                         type="submit"
                                         className="font-bold  text-white bg-gradient-to-r from-[#9394d2] to-[#4446e4] py-3 w-[50%]">
-                                        Go to SignIn
+                                        Go to Sign in
                                     </button>
                                 </div></Link>}
                                 {/* Form */}
