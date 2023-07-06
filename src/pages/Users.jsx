@@ -65,7 +65,7 @@ function Users() {
   const fetchUsers = async () => {
     await axios
       .get(
-        `http://localhost:5000/api/v1/admin/users?userId=${user?._id}`
+        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}`
       )
       .then((res) => {
         setUsers(res.data);
@@ -83,7 +83,7 @@ function Users() {
   const updateRole = (userId) => {
     axios
       .put(
-        `http://localhost:5000/api/v1/admin/users/${userId}/update-role`
+        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users/${userId}/update-role`
       )
       .then((res) => {
         fetchUsers();
@@ -96,7 +96,7 @@ function Users() {
   const deleteUser = (userId) => {
     axios
       .delete(
-        `http://localhost:5000/api/v1/auth/users/${userId}`
+        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${userId}`
       )
       .then((res) => {
         fetchUsers();
