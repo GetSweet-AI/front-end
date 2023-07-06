@@ -14,7 +14,26 @@ import MyModal from "../partials/Modal";
 import PostCard from "../partials/PostCard";
 import Video from "../partials/Video";
 
+async function downloadVideo(url) {
+    try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const filename = getFilenameFromUrl(url);
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+        return true;
+    } catch (error) {
+        console.error('Error downloading video:', error);
+        return false;
+    }
+}
 
+function getFilenameFromUrl(url) {
+    const parts = url.split('/');
+    return parts[parts.length - 1];
+}
 
 function PostsFeed() {
 
@@ -48,6 +67,15 @@ function PostsFeed() {
                 console.log(err);
             });
     };
+
+    // const handleDownload = (MediaUrl) => {
+    //     const link = document.createElement('a');
+    //     link.href = MediaUrl;
+    //     link.download = url.substring(url.lastIndexOf('/') + 1);
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+    // };
 
     useEffect(() => {
         fetchEngagements();
@@ -108,6 +136,7 @@ function PostsFeed() {
                                                     Date={item.Date}
                                                     handleCopyText={handleCopyText}
                                                     Accounts={item.Accounts}
+                                                    DownloadButton={downloadVideo}
                                                 />
                                             );
                                         })}

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import ReactPlayer from 'react-player'
 import Video from "./Video";
 
-function PostCard({ id, MediaUrl, Caption, Date, deleteFeedPost, handleCopyText, Accounts }) {
+function PostCard({ id, MediaUrl, Caption, Date, deleteFeedPost, handleCopyText, Accounts, DownloadButton }) {
 
     return (
         <div className="col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-lg rounded-sm hover:bg-gray-50 hover:translate-y-1 hover:translate-x-1 border border-slate-200">
@@ -37,8 +37,8 @@ function PostCard({ id, MediaUrl, Caption, Date, deleteFeedPost, handleCopyText,
                     </div>
 
                 </div>
-                <div className="my-3 bg-red-400 h-[60%] relative">
-                    <ReactPlayer controls={true} width="100%" url="https://brandable.cldportal.com/c84d3214-9b5d-41ed-ad30-d9badbe4edbd" />
+                <div className="my-3 h-[60%] relative">
+                    <ReactPlayer controls={true} width="100%" url={MediaUrl} />
                 </div>
 
                 <div className="my-2">
@@ -50,7 +50,7 @@ function PostCard({ id, MediaUrl, Caption, Date, deleteFeedPost, handleCopyText,
                             {/* Not Active */}
                             <FontAwesomeIcon className="px-2" icon={faTrash} />
                         </div>
-                        <div className="text-sm text-white rounded bg-[#36d74b] p-2 cursor-pointer" >
+                        <div onClick={() => DownloadButton(MediaUrl)} className="text-sm text-white rounded bg-[#36d74b] p-2 cursor-pointer" >
 
                             <FontAwesomeIcon className=" px-2" icon={faDownload} />
                         </div>
