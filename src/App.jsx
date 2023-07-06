@@ -19,6 +19,9 @@ import Users from "./pages/Users";
 import NotFound from "./pages/NotFound";
 import EmailConfirmed from "./pages/EmailConfirmed";
 import CheckEmail from "./pages/CheckEmail";
+import PostsFeed from "./pages/PostsFeed";
+import Payment from "./pages/Payment";
+import Success from "./pages/Success";
 
 function App() {
   const location = useLocation();
@@ -41,6 +44,10 @@ function App() {
   const { isLoggedIn, user } = useSelector((state) => state.auth);
   // console.log(user);
 
+
+  // Check if the referrer starts with "https://checkout.stripe.com/"
+
+
   return (
     <>
       <Routes>
@@ -59,6 +66,16 @@ function App() {
           element={isLoggedIn ? <Profile /> : <SignIn />}
         />
         <Route
+          path="/payment"
+          element={isLoggedIn ? <Payment /> : <SignIn />}
+        />
+
+
+        <Route
+          path="/success"
+          element={isLoggedIn ? <Success /> : <SignIn />}
+        />
+        <Route
           path="/workflows/:id"
           element={isLoggedIn ? <BrandEngagementCard /> : <SignIn />}
         />
@@ -67,6 +84,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/send-email" element={<SendEmail />} />
+        <Route path="/posts-feed" element={<PostsFeed />} />
         <Route path="/check-email" element={<CheckEmail />} />
         <Route path="/confirm-email/:userId" element={<EmailConfirmed />} />
         <Route path="*" element={<NotFound />} />

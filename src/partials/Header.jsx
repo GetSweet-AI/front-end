@@ -58,7 +58,7 @@ function Header() {
   // }, [darkMode]);
 
   return (
-    <header className=" shadow-xl shadow-gray-100 fixed  opacity-90   w-full z-30">
+    <header className=" shadow-xl shadow-gray-100 fixed     w-full z-30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-20">
 
@@ -108,7 +108,7 @@ function Header() {
             >
               <span className="sr-only">Menu</span>
               <svg
-                className="w-6 h-6 fill-current text-primary-600 hover:animate-pulse dark:text-gray-300 dark:hover:text-gray-100 transition duration-150 ease-in-out"
+                className="w-6 h-6 fill-current text-primary-600 hover:animate-pulse text-gray-600 dark:hover:text-gray-700 transition duration-150 ease-in-out"
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >
@@ -122,7 +122,7 @@ function Header() {
             <Transition
               show={mobileNavOpen}
               tag="ul"
-              className="fixed top-0 h-screen z-20 left-0 w-full  -ml-16 overflow-scroll   shadow-lg"
+              className="fixed top-0 h-screen -50 left-0 w-full  -ml-16 overflow-scroll   shadow-lg"
               enter="transition ease-out duration-200 transform"
               enterStart="opacity-0 -translate-x-full"
               enterEnd="opacity-100 translate-x-0"
@@ -133,7 +133,7 @@ function Header() {
               <nav
                 id="mobile-nav"
                 ref={mobileNav}
-                className="fixed top-0 h-screen z-0 left-0 w-full opacity-100  -ml-16   dark:bg-gray-900 shadow-lg no-scrollbar"
+                className="fixed top-0 h-screen z-10 left-0 w-full   -ml-16   bg-gray-900 shadow-lg no-scrollbar"
               >
 
                 <div className="py-6  pl-[64px]">
