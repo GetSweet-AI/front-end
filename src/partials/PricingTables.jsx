@@ -18,11 +18,11 @@ function PricingTables() {
 
   const handleClick = async () => {
     setIsLoading(true)
-    // const result = await fetch(`http://localhost:5000/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`, {
+    // const result = await fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`, {
     //   method: 'POST',
     //   body: JSON.stringify(payload)
     // });
-    const result = await axios.post(`http://localhost:5000/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`,
+    const result = await axios.post(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`,
       {
         name: user?.fullName,
         phone: '123456789',
@@ -30,7 +30,7 @@ function PricingTables() {
         userId: user?._id
       }
     )
-    //  await fetch.post(`http://localhost:5000/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`, {
+    //  await fetch.post(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`, {
     //       payload,
     //     });
     setIsLoading(false)
@@ -45,7 +45,7 @@ function PricingTables() {
 
   // Check if the user has already a subscription
   const getHasSubscription = async () => {
-    await axios.get(`http://localhost:5000/api/v1/has-subscription/${user?.customerId}`).then((res) => {
+    await axios.get(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/has-subscription/${user?.customerId}`).then((res) => {
       dispatch(setHasSubscription(res.data?.hasSubscription))
     })
   }
