@@ -44,7 +44,7 @@ function PostsFeed() {
     const fetchEngagements = async () => {
         await axios
             .get(
-                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/feed-posts/${user?._id}`
+                `http://localhost:5000/api/v1/feed-posts/${user?._id}`
             )
             .then((res) => {
                 setEngagements(res.data?.feedPosts);
@@ -57,7 +57,7 @@ function PostsFeed() {
     const deletePostFeed = async (id) => {
         await axios
             .delete(
-                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/feed-posts/${id}`
+                `http://localhost:5000/api/v1/feed-posts/${id}`
             )
             .then((res) => {
                 console.log("Post feed deleted")

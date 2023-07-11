@@ -12,7 +12,8 @@ const initialState = {
   code:"",
   email:"",
   authData:"",
-  token:""
+  token:"",
+  hasSubscription:false
 };
 const authSlice = createSlice({
   name: "auth",
@@ -45,9 +46,11 @@ const authSlice = createSlice({
     setAuthData : (state,{payload})=>{
       state.authData = payload
     },
-    
+    setHasSubscription : (state,{payload})=>{
+      state.hasSubscription = payload
+    },
   }
 });
 
-export const {logoutUser,setUserData,setCode,settEmail, switchLoginStatus,setClientSecret, setAuthData } = authSlice.actions;
+export const {setHasSubscription,logoutUser,setUserData,setCode,settEmail, switchLoginStatus,setClientSecret, setAuthData } = authSlice.actions;
 export const authReducer = authSlice.reducer;

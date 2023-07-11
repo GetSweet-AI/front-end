@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { setUserData } from "../redux/auth";
+import AvailableTokens from "./AvailableTokens";
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
@@ -28,7 +29,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         setUser(res.data);
@@ -81,6 +82,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   useEffect(() => {
     fetchUserData()
   }, [])
+
+
   return (
     <div>
       {/* Sidebar backdrop (mobile only) */}
@@ -141,6 +144,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           {/* Pages group */}
           <div>
             <ul className="">
+              <li>
+                <AvailableTokens availableTokens={user?.availableTokens} />
+              </li>
               {/* Home */}
               <li
                 className={`px-3 py-3 last:mb-0 ${pathname === "/brand-engagement-builder"
@@ -190,50 +196,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 </NavLink>
               </li>
               {/* Home */}
-              {/* <li
-                className={`px-3 py-3 last:mb-0 ${
-                  pathname === "/brand-engagements"
-                    ? "bg-white rounded-l-full"
-                    : ""
-                }`}
-              >
-                <NavLink
-                  end
-                  to="/brand-engagements"
-                  className={`block flex text-white hover:text-white truncate transition duration-150 ${
-                    pathname === "/brand-engagements" && "hover:text-white"
-                  }`}
-                >
-                  <div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="icon icon-tabler icon-tabler-home-2"
-                      width="24px"
-                      height="24px"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke={pathname === "/brand-engagements" ? "#3b82f6" : "#fff"}
-                      fill="none"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                      <polyline points="5 12 3 12 12 3 21 12 19 12" />
-                      <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
-                      <rect x="10" y="12" width="4" height="4" />
-                    </svg>
-                  </div>
-                  <div className="flex items-center overflow-hidden">
-                    <span
-                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${
-                        pathname === "/brand-engagements" && "text-[#3b82f6]"
-                      }`}
-                    >
-                      Brand Engagements
-                    </span>
-                  </div>
-                </NavLink>
-              </li> */}
+
               {/* Home */}
               <li
                 className={`px-3 py-3 last:mb-0 ${pathname === "/profile" ? "bg-white rounded-l-full" : ""

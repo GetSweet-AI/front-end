@@ -34,7 +34,7 @@ function SendEmail() {
     const sendVerificationCode = async (currentUser) => {
         setLoading(true)
         try {
-            const { data } = await axios.post("https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/send-verification-code", {
+            const { data } = await axios.post("http://localhost:5000/api/v1/auth/send-verification-code", {
                 email: values.email
             });
             // const { user, token } = data;

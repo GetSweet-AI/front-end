@@ -1,34 +1,58 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Puff } from 'react-loader-spinner';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setHasSubscription } from '../redux/auth';
 
 function PricingTables() {
-  const { user } = useSelector((state) => state.auth)
+  const { user, hasSubscription } = useSelector((state) => state.auth)
   const [isLoading, setIsLoading] = useState(false)
 
   const payload = {
-    userId: user?._id,
+
     name: user?.fullName,
-    number: '123456789',
+    phone: '123456789',
     email: user?.email,
+    userId: user?._id
   };
 
   const handleClick = async () => {
     setIsLoading(true)
-    const result = await fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`, {
-      method: 'POST',
-      body: payload
-    });
-    //  await fetch.post(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`, {
+    // const result = await fetch(`http://localhost:5000/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`, {
+    //   method: 'POST',
+    //   body: JSON.stringify(payload)
+    // });
+    const result = await axios.post(`http://localhost:5000/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`,
+      {
+        name: user?.fullName,
+        phone: '123456789',
+        email: user?.email,
+        userId: user?._id
+      }
+    )
+    //  await fetch.post(`http://localhost:5000/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`, {
     //       payload,
     //     });
-
-    const json = await result.json();
-    console.log('RESULT: ', json);
-    window.location.href = json.session.url;
     setIsLoading(false)
+
+    // const json = await result.json();
+    console.log('RESULT: ', JSON.stringify(result.data));
+    window.location.href = result.data.session.url;
+
   };
+
+  const dispatch = useDispatch()
+
+  // Check if the user has already a subscription
+  const getHasSubscription = async () => {
+    await axios.get(`http://localhost:5000/api/v1/has-subscription/${user?.customerId}`).then((res) => {
+      dispatch(setHasSubscription(res.data?.hasSubscription))
+    })
+  }
+
+  useEffect(() => {
+    getHasSubscription()
+  })
 
   return (
     <section className="relative  bg-gray-900 border-t border-transparent ">
@@ -40,12 +64,12 @@ function PricingTables() {
 
           {/* Section header */}
           <div className="max-w-3xl mx-auto text-center pb-12">
-            <h2 className="h3 font-red-hat-display mb-4 text-gray-100">Start building for free, then add a plan to go live</h2>
+            <h2 className="h3 font-red-hat-display mb-4 text-gray-100">{hasSubscription ? "You already have an active subscription.   Enjoy access to premium features!" : "Start building for free, then upgrade to a plan to unleash your content."}</h2>
             {/* <p className="text-xl text-gray-400">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit laborum — semper quis lectus nulla.</p> */}
           </div>
 
           {/* Pricing tables */}
-          <div className="max-w-xs mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-4 items-start sm:max-w-none md:max-w-2xl lg:max-w-none">
+          {!hasSubscription && <div className="max-w-xs mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-4 items-start sm:max-w-none md:max-w-2xl lg:max-w-none">
 
             {/* Pricing table 1 */}
             <div className="flex flex-col h-full p-6 bg-gray-800 shadow border-2 border-[#3b82f6]" data-aos="fade-down">
@@ -112,7 +136,7 @@ function PricingTables() {
               </ul>
             </div>
 
-          </div>
+          </div>}
 
         </div>
       </div>
