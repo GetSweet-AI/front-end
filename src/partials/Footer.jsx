@@ -80,11 +80,9 @@ function Footer() {
           </div>
           {/* Bottom notes */}
           <div className="text-xs text-gray-400 text-center md:text-left">
-            Some of our posts may contain affiliate links to partner brands. We earn a small commission if you click the link and make a purchase.
-            There is no extra cost to you, so it's just a nice way to help support the site. All images, videos, and other content posted on the site
-            is attributed to their creators and original sources. If you see something wrong here or you would like to have it removed, please{' '}
+            For help, please contact us at{' '}
             <a className="font-medium text-blue-500 decoration-blue-500 underline-offset-2 hover:underline" href="#0">
-              contact us
+              sales@getsweet.ai
             </a>
             .
           </div>

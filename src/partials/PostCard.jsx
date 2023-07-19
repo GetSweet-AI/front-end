@@ -27,7 +27,7 @@ function PostCard({ id, MediaUrl, Caption, Date, deleteFeedPost, handleCopyText,
                 </header>
                 <div className="grow mt-2">
                     <div className="text-sm mb-2">
-                        <span className="font-medium">Ponsting on</span> :{" "}
+                        <span className="font-medium">Scheduled for</span> {" "}
                         <a className="underline text-blue-500" target="_blank">
                             {Date}
                         </a>
