@@ -135,7 +135,7 @@ function Users() {
               <div className="w-full h-[700px] mt-10 overflow-x-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-blue-300 overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
                 <table className="min-w-full">
                   <thead>
-                    <tr className="bg-blue-500 text-white">
+                    <tr className="bg-purple-500 text-white">
                       <th className="py-3 px-6 text-left rounded-tl-lg">
                         Name
                       </th>
@@ -165,7 +165,7 @@ function Users() {
                         <td className="py-4 px-6 border-b">
                           <span
                             onClick={() => updateRole(client._id)}
-                            className="bg-blue-500 flex items-center w-fit px-4 py-2 rounded-xl text-white uppercase text-sm cursor-pointer"
+                            className="bg-purple-500 flex items-center w-fit px-4 py-2 rounded-xl text-white uppercase text-sm cursor-pointer"
                           >
                             {client.role}{" "}
                             <FontAwesomeIcon

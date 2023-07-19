@@ -97,7 +97,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
       <div
         id="sidebar"
         ref={sidebar}
-        className={`flex bg-blue-500 flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-72 lg:w-20 lg:sidebar-expanded:!w-72 2xl:!w-68 shrink-0 p-4 pr-0 transition-all duration-200 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-72"
+        className={`flex bg-purple-500 flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-72 lg:w-20 lg:sidebar-expanded:!w-72 2xl:!w-68 shrink-0 p-4 pr-0 transition-all duration-200 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-72"
           }`}
       >
         {/* Sidebar header */}
@@ -318,7 +318,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 </li>
               )}
 
-              <li className={`px-3 py-3 rounded-sm last:mb-0 bg-blue-500`}></li>
+              <li className={`px-3 py-3 rounded-sm last:mb-0 bg-purple-500`}></li>
             </ul>
           </div>
         </div>

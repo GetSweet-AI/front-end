@@ -438,7 +438,7 @@ function BrandEngagementBuilder() {
                           </button>
                           <button
                             type={!previewLoading ? "submit" : "button"}
-                            className="md:w-[80%] flex justify-center items-center w-full bg-blue-500 text-white rounded p-2 mt-2 md:mt-0 md:ml-2"
+                            className="md:w-[80%] flex justify-center items-center w-full bg-purple-500 text-white rounded p-2 mt-2 md:mt-0 md:ml-2"
                           >
                             {previewLoading ? (
                               <>

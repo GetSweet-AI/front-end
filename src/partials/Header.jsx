@@ -88,7 +88,7 @@ function Header() {
                 </Link>
               </li>
               <li className="ml-3">
-                <Link className="btn-sm text-white bg-blue-500 hover:bg-blue-600 w-full shadow-sm" to="/signup">
+                <Link className="btn-sm text-white bg-purple-500 hover:bg-blue-600 w-full shadow-sm" to="/signup">
                   Create Account
                 </Link>
               </li>

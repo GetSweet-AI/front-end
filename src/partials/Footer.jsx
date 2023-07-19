@@ -33,7 +33,7 @@ function Footer() {
             <ul className="inline-flex mb-4 md:order-2 md:ml-4 md:mb-0">
               <li>
                 <a
-                  className="flex justify-center items-center text-blue-500 bg-blue-100 hover:text-white hover:bg-blue-500 rounded-full transition duration-150 ease-in-out"
+                  className="flex justify-center items-center text-blue-500 bg-blue-100 hover:text-white hover:bg-purple-500 rounded-full transition duration-150 ease-in-out"
                   href="#0"
                   aria-label="Twitter"
                 >
@@ -44,7 +44,7 @@ function Footer() {
               </li>
               <li className="ml-4">
                 <a
-                  className="flex justify-center items-center text-blue-500 bg-blue-100 hover:text-white hover:bg-blue-500 rounded-full transition duration-150 ease-in-out"
+                  className="flex justify-center items-center text-blue-500 bg-blue-100 hover:text-white hover:bg-purple-500 rounded-full transition duration-150 ease-in-out"
                   href="#0"
                   aria-label="Github"
                 >
@@ -55,7 +55,7 @@ function Footer() {
               </li>
               <li className="ml-4">
                 <a
-                  className="flex justify-center items-center text-blue-500 bg-blue-100 hover:text-white hover:bg-blue-500 rounded-full transition duration-150 ease-in-out"
+                  className="flex justify-center items-center text-blue-500 bg-blue-100 hover:text-white hover:bg-purple-500 rounded-full transition duration-150 ease-in-out"
                   href="#0"
                   aria-label="Telegram"
                 >
