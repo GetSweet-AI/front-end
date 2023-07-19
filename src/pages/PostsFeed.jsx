@@ -61,7 +61,7 @@ function PostsFeed() {
     const fetchAllFeedPosts = async () => {
         await axios
             .get(
-                `http://localhost:5000/api/v1/admin/feedposts?userId=${user?._id}`
+                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}`
             )
             .then((res) => {
                 setAdminFeedPosts(res.data);
