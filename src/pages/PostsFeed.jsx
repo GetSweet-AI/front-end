@@ -13,6 +13,7 @@ import { logoutUser, setUserData } from "../redux/auth";
 import MyModal from "../partials/Modal";
 import PostCard from "../partials/PostCard";
 import Video from "../partials/Video";
+import SwitchButton from "../partials/SwitchButton";
 
 async function downloadVideo(url) {
     try {
@@ -39,16 +40,32 @@ function PostsFeed() {
 
     const { token, user } = useSelector((state) => state.auth)
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [engagements, setEngagements] = useState([]);
+    const [feedPosts, setFeedPosts] = useState([]);
+    const [adminFeedPosts, setAdminFeedPosts] = useState([]);
 
-    const fetchEngagements = async () => {
+    const [isAdmin, setIsAdmin] = useState(false)
+
+    const fetchUserFeedPosts = async () => {
         await axios
             .get(
                 `https://seashell-app-8amlb.ondigitalocean.app/api/v1/feed-posts/${user?._id}`
             )
             .then((res) => {
-                setEngagements(res.data?.feedPosts);
-                console.log("res?.data :" + JSON.stringify(res?.data))
+                setFeedPosts(res.data?.feedPosts);
+                // console.log("res?.data :" + JSON.stringify(res?.data))
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+    const fetchAllFeedPosts = async () => {
+        await axios
+            .get(
+                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}`
+            )
+            .then((res) => {
+                setAdminFeedPosts(res.data);
+                console.log("AdminFeedPosts :" + JSON.stringify(res?.data))
             })
             .catch((err) => {
                 console.log(err);
@@ -61,24 +78,16 @@ function PostsFeed() {
             )
             .then((res) => {
                 console.log("Post feed deleted")
-                fetchEngagements()
+                fetchUserFeedPosts()
             })
             .catch((err) => {
                 console.log(err);
             });
     };
 
-    // const handleDownload = (MediaUrl) => {
-    //     const link = document.createElement('a');
-    //     link.href = MediaUrl;
-    //     link.download = url.substring(url.lastIndexOf('/') + 1);
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     document.body.removeChild(link);
-    // };
-
     useEffect(() => {
-        fetchEngagements();
+        fetchUserFeedPosts();
+        fetchAllFeedPosts();
     }, []);
 
 
@@ -94,7 +103,10 @@ function PostsFeed() {
 
         // Show a toast message
         toast.success('Text copied successfully!');
+
     };
+
+    const [enabled, setEnabled] = useState(false)
 
     return (
         <div className="flex h-screen overflow-hidden">
@@ -113,36 +125,66 @@ function PostsFeed() {
                     <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
 
                         {/* Page header */}
-                        <div className="sm:flex sm:justify-between sm:items-center mb-8">
+                        <div className="flex justify-between items-center mb-8">
                             <div className="mb-4 sm:mb-0">
-                                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">Posts Feed</h1>
+                                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">{enabled ? "Admin" : "User"} Feed Posts</h1>
+                            </div>
+                            <div>
+                                {user?.role === "admin" ? <SwitchButton enabled={enabled} setEnabled={setEnabled} /> : <></>}
                             </div>
 
                         </div>
 
                         <div >
                             <ToastContainer />
-                            {engagements?.length > 0 && (
-                                <div className="">
-                                    <div className="grid grid-cols-12 gap-6">
-                                        {engagements.map((item) => {
-                                            return (
-                                                <PostCard
-                                                    key={item._id}
-                                                    id={item._id}
-                                                    MediaUrl={item.MediaUrl}
-                                                    deleteFeedPost={deletePostFeed}
-                                                    Caption={item.Caption}
-                                                    Date={item.Date}
-                                                    handleCopyText={handleCopyText}
-                                                    Accounts={item.Accounts}
-                                                    DownloadButton={downloadVideo}
-                                                />
-                                            );
-                                        })}
+
+
+                            {enabled ?
+                                adminFeedPosts?.length > 0 && (
+                                    <div className="">
+                                        <div className="grid grid-cols-12 gap-6">
+                                            {adminFeedPosts.map((item) => {
+                                                return (
+                                                    <PostCard
+                                                        key={item._id}
+                                                        id={item._id}
+                                                        MediaUrl={item.MediaUrl}
+                                                        deleteFeedPost={deletePostFeed}
+                                                        Caption={item.Caption}
+                                                        Date={item.Date}
+                                                        handleCopyText={handleCopyText}
+                                                        Accounts={item.Accounts}
+                                                        DownloadButton={downloadVideo}
+                                                    />
+                                                );
+                                            })}
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )
+                                :
+                                feedPosts?.length > 0 && (
+                                    <div className="">
+                                        <div className="grid grid-cols-12 gap-6">
+                                            {feedPosts.map((item) => {
+                                                return (
+                                                    <PostCard
+                                                        key={item._id}
+                                                        id={item._id}
+                                                        MediaUrl={item.MediaUrl}
+                                                        deleteFeedPost={deletePostFeed}
+                                                        Caption={item.Caption}
+                                                        Date={item.Date}
+                                                        handleCopyText={handleCopyText}
+                                                        Accounts={item.Accounts}
+                                                        DownloadButton={downloadVideo}
+                                                    />
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                )
+
+                            }
                         </div>
                         {/* Toast container */}
 
