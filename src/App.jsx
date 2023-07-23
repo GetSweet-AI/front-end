@@ -22,6 +22,7 @@ import CheckEmail from "./pages/CheckEmail";
 import PostsFeed from "./pages/PostsFeed";
 import Payment from "./pages/Payment";
 import Success from "./pages/Success";
+import ManageSubscription from "./pages/ManageSubscriprion";
 
 function App() {
   const location = useLocation();
@@ -68,6 +69,10 @@ function App() {
         <Route
           path="/payment"
           element={isLoggedIn ? <Payment /> : <SignIn />}
+        />
+        <Route
+          path="/payment/manage-subscription"
+          element={isLoggedIn ? <ManageSubscription /> : <SignIn />}
         />
 
 

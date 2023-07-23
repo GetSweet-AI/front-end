@@ -147,7 +147,7 @@ function BrandEngagementBuilder() {
           // console.log(res.data);
           fetchEngagements();
           handleReset()
-
+          dispatch(clearMessage())
           // dispatch("")
         })
         .catch((err) => {
@@ -170,6 +170,7 @@ function BrandEngagementBuilder() {
       targetAudience: null,
     });
     setResult(null);
+    dispatch(clearMessage())
   };
   // console.log("_id :" + user?._id)
 
