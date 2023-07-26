@@ -125,7 +125,7 @@ function PostsFeed() {
                     <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
 
                         {/* Page header */}
-                        <div className="flex justify-between items-center mb-8">
+                        <div className="flex justify-between items-center ">
                             <div className="mb-4 sm:mb-0">
                                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">{enabled ? "Admin" : "User"} Feed Posts</h1>
                             </div>

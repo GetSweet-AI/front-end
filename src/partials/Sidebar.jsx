@@ -4,7 +4,7 @@ import logo from "../images/logogetsweet.png";
 // import shortLogo from "../images/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faBlog, faUsers } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { setUserData } from "../redux/auth";
 import AvailableTokens from "./AvailableTokens";
@@ -316,6 +316,57 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </div>
                 </NavLink>
               </li>
+              {user?.role === "admin" && (
+                <li
+                  className={`px-3 py-3 last:mb-0 ${pathname === "/users" ? "bg-white rounded-l-full" : ""
+                    }`}
+                >
+                  <NavLink
+                    end
+                    to="/users"
+                    className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/users" && "hover:text-white"
+                      }`}
+                  >
+                    <div>
+                      <FontAwesomeIcon className={pathname === "/users" ? "text-[#3b82f6]" : "text-[#fff]"} icon={faUsers} />
+                    </div>
+                    <div className="flex items-center overflow-hidden">
+                      <span
+                        className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/users" && "text-[#3b82f6]"
+                          }`}
+                      >
+                        Users
+                      </span>
+                    </div>
+                  </NavLink>
+                </li>
+              )}
+              {user?.role === "admin" && (
+                <li
+                  className={`px-3 py-3 last:mb-0 ${pathname === "/brand-engagements" ? "bg-white rounded-l-full" : ""
+                    }`}
+                >
+                  <NavLink
+                    end
+                    to="/brand-engagements"
+                    className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/brand-engagements" && "hover:text-white"
+                      }`}
+                  >
+                    <div>
+                      <FontAwesomeIcon className={pathname === "/brand-engagements" ? "text-[#3b82f6]" : "text-[#fff]"} icon={faBlog} />
+                    </div>
+                    <div className="flex items-center overflow-hidden">
+                      <span
+                        className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/brand-engagements" && "text-[#3b82f6]"
+                          }`}
+                      >
+                        Brand engagements
+                      </span>
+                    </div>
+                  </NavLink>
+                </li>
+              )}
+
 
               <li className={`px-3 py-3 rounded-sm last:mb-0 bg-purple-500`}></li>
             </ul>
