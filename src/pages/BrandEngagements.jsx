@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
@@ -10,6 +10,9 @@ import PaginationNumeric from '../partials/PaginationNumeric';
 import Image01 from '../images/user-28-01.jpg';
 import Image02 from '../images/user-28-02.jpg';
 import DashboardHeader from '../partials/DashboardHeader';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { MutatingDots } from 'react-loader-spinner';
 
 function BrandEngagements() {
 
@@ -59,6 +62,31 @@ function BrandEngagements() {
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
+    const [engagements, setEngagements] = useState([]);
+    const [isLoading, setIsLoading] = useState(false)
+    const [result, setResult] = useState(null);
+    const { token, user } = useSelector((state) => state.auth)
+
+    const fetchEngagements = async () => {
+        setIsLoading(true)
+        await axios
+            .get(
+                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}`
+            )
+            .then((res) => {
+                setEngagements(res.data?.brandEngagements);
+                console.log("brandEngagements" + JSON.stringify(res?.data))
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        setIsLoading(false)
+    };
+
+    useEffect(() => {
+        fetchEngagements();
+    }, []);
+
     return (
         <div className="flex h-screen overflow-hidden">
 
@@ -86,44 +114,61 @@ function BrandEngagements() {
                             {/* Right: Actions */}
                             <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
                                 {/* Search form */}
-                                <SearchForm />
+                                {/* <SearchForm /> */}
                                 {/* Filter button */}
-                                <FilterButton align="right" />
+                                {/* <FilterButton align="right" /> */}
                                 {/* Create campaign button */}
-                                <button className="btn bg-indigo-500 hover:bg-indigo-600 ">
+                                {/* <button className="btn bg-indigo-500 hover:bg-indigo-600 ">
                                     <svg className="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
                                         <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                                     </svg>
                                     <span className="hidden xs:block ml-2">Create Worflow</span>
-                                </button>
+                                </button> */}
                             </div>
 
                         </div>
 
                         {/* Cards */}
-                        <div className="grid grid-cols-12 gap-6">
-                            {
-                                items.map(item => {
-                                    return (
-                                        <BrandEngagementCard
-                                            key={item.id}
-                                            id={item.id}
-                                            category={item.category}
-                                            members={item.members}
-                                            title={item.title}
-                                            link={item.link}
-                                            content={item.content}
-                                            dates={item.dates}
-                                            type={item.type}
-                                        />
-                                    )
-                                })
-                            }
-                        </div>
+                        {isLoading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
+                            <MutatingDots
+                                height="100"
+                                width="100"
+                                color="#1c7aed"
+                                secondaryColor='#3078fd'
+                                radius='12.5'
+                                ariaLabel="mutating-dots-loading"
+                                wrapperStyle={{}}
+                                wrapperClass=""
+                                visible={true}
+                            />
+                        </div>}
+                        {engagements?.length > 0 && (
+                            <div className="">
+
+                                <div className="grid grid-cols-12 gap-6">
+                                    {engagements.map((item) => {
+                                        return (
+                                            <BrandEngagementCard
+                                                key={item._id}
+                                                id={item._id}
+                                                brandName={item?.BrandName}
+                                                website={item.WebSite}
+                                                timeZone={item.Timezone}
+                                                companySector={item.CompanySector}
+                                                brandTone={item.BrandTone}
+                                                targetAudience={item.TargetAudience}
+                                                postType={item.PostType}
+                                                fetchEngagements={fetchEngagements}
+                                            />
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Pagination */}
                         <div className="mt-8">
-                            <PaginationNumeric />
+                            {/* <PaginationNumeric /> */}
                         </div>
 
                     </div>
