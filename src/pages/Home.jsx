@@ -21,8 +21,8 @@ import {
 import { CheckIcon, PlusIcon } from '@heroicons/react/20/solid'
 
 const navigation = [
-  { name: 'Register', href: '#' },
-  { name: 'Log in', href: '#' },
+  { name: 'Register', href: '/signup' },
+  { name: 'Log in', href: '/signin' },
 ]
 const features = [
   {
@@ -200,14 +200,14 @@ export default function Home() {
                     </a>
                   ))}
                 </div>
-                <div className="py-6">
+{/*                <div className="py-6">
                   <a
                     href="#"
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                   >
                     Log in
                   </a>
-                </div>
+                </div>*/}
               </div>
             </div>
           </Dialog.Panel>
@@ -233,10 +233,10 @@ export default function Home() {
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <div className="mx-auto max-w-2xl text-center">
                 <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-                  100% Automate your social media with AI
+                  100% Automate your <span className="text-pink-600">social media</span> with AI
                 </h1>
                 <p className="mt-6 text-lg leading-8 text-gray-600">
-                  Replace ChatGPT and other tools you use for social media with GetSweet.AI to 100% automate your content creation and social posting schedule.
+                  Replace ChatGPT and other tools you use for social media with GetSweet.AI to 100% automate your content creation and posting.
                 </p>
                 <div className="mt-10 flex items-center justify-center gap-x-6">
                   <a
