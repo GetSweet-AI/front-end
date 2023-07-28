@@ -21,8 +21,8 @@ import {
 import { CheckIcon, PlusIcon } from '@heroicons/react/20/solid'
 
 const navigation = [
-  { name: 'Register', href: '/signup' },
-  { name: 'Log in', href: '/signin' },
+  { name: 'Sign up', href: '/signup' },
+  { name: 'Sign in', href: '/signin' },
 ]
 const features = [
   {
@@ -205,7 +205,7 @@ export default function Home() {
                     href="#"
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                   >
-                    Log in
+                    Sign in
                   </a>
                 </div>*/}
               </div>
