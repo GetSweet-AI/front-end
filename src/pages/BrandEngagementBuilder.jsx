@@ -231,7 +231,7 @@ function BrandEngagementBuilder() {
         <main>
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
             {/* Page header */}
-            <div className="md:h-screen mb-8">
+            <div className="md mb-8">
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0">
                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
