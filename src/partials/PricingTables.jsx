@@ -100,7 +100,22 @@ function PricingTables() {
                     <span className="h3 text-white">9.99</span>
                     <span className="font-medium text-gray-500 "> / month</span>
                   </div>
-                  <div className="text-gray-300 ">- Generate 10 posts.</div>
+                  {isLoading && (
+                    <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
+                      {" "}
+                      <Puff
+                        height="100"
+                        width="100"
+                        color="#4446e4"
+                        secondaryColor="#4446e4"
+                        radius="12.5"
+                        ariaLabel="mutating-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div onClick={() => handleClick("basic")} className="mt-24">
                   <a
@@ -198,24 +213,7 @@ function PricingTables() {
                     Go Premium
                   </a>
                 </div>
-                {isLoading && (
-                  <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
-                    {" "}
-                    <Puff
-                      height="100"
-                      width="100"
-                      color="#4446e4"
-                      secondaryColor="#4446e4"
-                      radius="12.5"
-                      ariaLabel="mutating-dots-loading"
-                      wrapperStyle={{}}
-                      wrapperClass=""
-                      visible={true}
-                    />
-                  </div>
-                )}
               </div>
-
               {/* Pricing features */}
               <div className="sm:order-first">
                 <div className="text-right hidden sm:block">

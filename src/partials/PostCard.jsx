@@ -47,7 +47,7 @@ function PostCard({
         </header>
         <div className="grow mt-2">
           <div className="text-sm mb-2">
-            <span className="font-medium">Posting on</span> :{" "}
+            <span className="font-medium">Scheduled for</span>{" "}
             <a className="underline text-blue-500" target="_blank">
               {Date}
             </a>
@@ -67,9 +67,6 @@ function PostCard({
             >
               {/* Not Active */}
               <FontAwesomeIcon className="px-2" icon={faTrash} />
-            </div>
-            <div className="mt-2">
-              <p className="text-sm text-gray-500">Are you sure ?</p>
             </div>
             <div
               onClick={() => DownloadButton(MediaUrl)}
