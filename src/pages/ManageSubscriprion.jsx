@@ -58,13 +58,21 @@ function ManageSubscription() {
                             <div className="flex justify-between mt-6">
                                 <div className="md:w-[200px]">
                                     <a
+                                        href={user?.invoiceUrl}
+                                        target="_blank"
+                                    >
+                                        <button className="flex px-2 items-center justify-center w-full bg-[green] font-semibold py-[6px] text-white rounded-md text-sm">
+                                            Download Invoice
+                                        </button>
+                                    </a>
+                                    {/* <a
                                         href="https://billing.stripe.com/p/login/test_00g7vnfPXaLh6zu288"
                                         target="_blank"
                                     >
                                         <button className="flex px-2 items-center justify-center w-full bg-[green] font-semibold py-[6px] text-white rounded-md text-sm">
                                             Manage Subscription
                                         </button>
-                                    </a>
+                                    </a> */}
                                 </div>
                             </div>
                         </div>

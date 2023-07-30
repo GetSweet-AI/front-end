@@ -29,7 +29,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         setUser(res.data);
@@ -145,7 +145,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           <div>
             <ul className="">
               <li>
-                <AvailableTokens availableTokens={user?.availableTokens} />
+                <AvailableTokens sideBarOpen={sidebarExpanded} availableTokens={user?.availableTokens} />
               </li>
               {/* Home */}
               <li
@@ -224,7 +224,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </div>
                 </NavLink>
               </li>
-              {user?.role === "admin" && (
+              {/* {user?.role === "admin" && (
                 <li
                   className={`px-3 py-3 last:mb-0 ${pathname === "/users" ? "bg-white rounded-l-full" : ""
                     }`}
@@ -248,7 +248,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     </div>
                   </NavLink>
                 </li>
-              )}
+              )} */}
               {/* Home */}
               <li
                 className={`px-3 py-3 last:mb-0 ${pathname === "/payment" ? "bg-white rounded-l-full" : ""
@@ -343,21 +343,21 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               )}
               {user?.role === "admin" && (
                 <li
-                  className={`px-3 py-3 last:mb-0 ${pathname === "/brand-engagements" ? "bg-white rounded-l-full" : ""
+                  className={`px-3 py-3 last:mb-0 ${pathname.startsWith("/brand-engagements") ? "bg-white rounded-l-full" : ""
                     }`}
                 >
                   <NavLink
                     end
                     to="/brand-engagements"
-                    className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/brand-engagements" && "hover:text-white"
+                    className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname.startsWith("/brand-engagements") && "hover:text-white"
                       }`}
                   >
                     <div>
-                      <FontAwesomeIcon className={pathname === "/brand-engagements" ? "text-[#3b82f6]" : "text-[#fff]"} icon={faBlog} />
+                      <FontAwesomeIcon className={pathname.startsWith("/brand-engagements") ? "text-[#3b82f6]" : "text-[#fff]"} icon={faBlog} />
                     </div>
                     <div className="flex items-center overflow-hidden">
                       <span
-                        className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/brand-engagements" && "text-[#3b82f6]"
+                        className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname.startsWith("/brand-engagements") && "text-[#3b82f6]"
                           }`}
                       >
                         Brand engagements

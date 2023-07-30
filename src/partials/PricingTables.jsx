@@ -18,7 +18,7 @@ function PricingTables() {
 
   const handleClick = async (plan) => {
     setIsLoading(true)
-    const result = await axios.post(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`,
+    const result = await axios.post("http://localhost:5000/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp",
       {
         name: user?.fullName,
         phone: '123456789',
@@ -64,10 +64,18 @@ function PricingTables() {
             <h2 className="h3 font-red-hat-display mb-4 text-gray-100">{hasSubscription ? "You already have an active subscription.   Enjoy access to premium features!" : "Start building for free, then upgrade to a plan to unleash your content."}</h2>
             {/* <p className="text-xl text-gray-400">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit laborum — semper quis lectus nulla.</p> */}
           </div>
-          {hasSubscription && <div className='flex justify-center'>
-            <div className='mb-2 rounded-md font-bold text-center z-6 text-white bg-gradient-to-r from-[#6366ff] to-[#373afd] py-3  w-1/2' > <a href="https://billing.stripe.com/p/login/test_00g7vnfPXaLh6zu288">Manage subscription
-            </a></div>
-          </div>}
+          {hasSubscription &&
+            <div className='flex flex-col justify-center'>
+              <div className='flex md:flex-row flex-col md:space-x-3'>
+                <div className='mb-2 rounded-md  font-bold text-center z-6 text-white bg-gradient-to-r from-[#6366ff] to-[#373afd] py-3 w-full md:w-1/2' >
+                  <a href={user?.invoiceUrl}>Download Invoice
+                  </a>
+                </div>
+                <div className='mb-2 rounded-md  cursor-pointer  font-bold text-center z-6 text-white bg-gradient-to-r from-[#f22323] to-[#e61911] py-3  w-full md:w-1/2' >
+                  Cancel Subscription
+                </div>
+              </div>
+            </div>}
 
           {/* Pricing tables */}
           {!hasSubscription && <div className="max-w-xs mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-4 items-start sm:max-w-none md:max-w-2xl lg:max-w-none">

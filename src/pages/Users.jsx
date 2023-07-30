@@ -21,6 +21,7 @@ import { clearMessage, setMessage } from "../redux/message";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { MutatingDots } from "react-loader-spinner";
 
 function Users() {
   const dispatch = useDispatch();
@@ -32,7 +33,7 @@ function Users() {
   const { token, user } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
 
-
+  const [isLoading, setIsLoading] = useState(false)
   // const [values, setValues] = useState({
   //   brandName: "",
   //   websiteUrl: "",
@@ -63,9 +64,10 @@ function Users() {
   const [users, setUsers] = useState([]);
 
   const fetchUsers = async () => {
+    setIsLoading(true)
     await axios
       .get(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}`
+        `http://localhost:5000/api/v1/admin/users?userId=${user?._id}`
       )
       .then((res) => {
         setUsers(res.data);
@@ -74,6 +76,7 @@ function Users() {
       .catch((err) => {
         console.log(err);
       });
+    setIsLoading(false)
   };
 
   useEffect(() => {
@@ -83,7 +86,7 @@ function Users() {
   const updateRole = (userId) => {
     axios
       .put(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users/${userId}/update-role`
+        `http://localhost:5000/api/v1/admin/users/${userId}/update-role`
       )
       .then((res) => {
         fetchUsers();
@@ -96,7 +99,7 @@ function Users() {
   const deleteUser = (userId) => {
     axios
       .delete(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${userId}`
+        `http://localhost:5000/api/v1/auth/users/${userId}`
       )
       .then((res) => {
         fetchUsers();
@@ -123,6 +126,19 @@ function Users() {
         />
 
         <main>
+          {isLoading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
+            <MutatingDots
+              height="100"
+              width="100"
+              color="#1c7aed"
+              secondaryColor='#3078fd'
+              radius='12.5'
+              ariaLabel="mutating-dots-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+          </div>}
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
             {/* Page header */}
             <div className="h-screen mb-8">

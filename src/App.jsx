@@ -23,6 +23,7 @@ import PostsFeed from "./pages/PostsFeed";
 import Payment from "./pages/Payment";
 import Success from "./pages/Success";
 import ManageSubscription from "./pages/ManageSubscriprion";
+import BrandEngagementDetails from "./pages/BrandEngagementDetails";
 
 function App() {
   const location = useLocation();
@@ -80,9 +81,10 @@ function App() {
           path="/success"
           element={isLoggedIn ? <Success /> : <SignIn />}
         />
+
         <Route
-          path="/workflows/:id"
-          element={isLoggedIn ? <BrandEngagementCard /> : <SignIn />}
+          path="/brand-engagements/:id"
+          element={isLoggedIn ? <BrandEngagementDetails /> : <SignIn />}
         />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />

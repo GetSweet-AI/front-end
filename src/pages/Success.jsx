@@ -8,7 +8,7 @@ export default function Success() {
     const dispatch = useDispatch()
     const updateTokens = async () => {
         try {
-            const response = await fetch('https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/update-available-tokens/64a58d8481e0231585e5f2f0', {
+            const response = await fetch('http://localhost:5000/api/v1/auth/update-available-tokens/64a58d8481e0231585e5f2f0', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ export default function Success() {
     const { user } = useSelector((state) => state.auth)
 
     const getUserData = async () => {
-        await axios.get(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${user?._id}`).then(() => {
+        await axios.get(`http://localhost:5000/api/v1/auth/users/${user?._id}`).then(() => {
             dispatch(setUserData(res?.data.user))
         })
     }
