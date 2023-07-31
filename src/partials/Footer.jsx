@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../images/logogetsweet.png'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBlog, faUsers, faCoffee } from "@fortawesome/free-solid-svg-icons";
 
 /*
   This example requires some changes to your config:
