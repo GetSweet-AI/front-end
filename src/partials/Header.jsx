@@ -4,6 +4,9 @@ import Dropdown from '../utils/Dropdown';
 import Transition from '../utils/Transition';
 import logo from '../images/logogetsweet.png'
 import { useDispatch, useSelector } from 'react-redux';
+import GAHandler from '../partials/ga_gtm_handler'
+const handleLinkClick = GAHandler();
+
 function Header() {
 
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -81,6 +84,8 @@ function Header() {
             {!isLoggedIn && <ul className="flex md:justify-end md:flex-wrap items-center">
               <li>
                 <Link
+                  // GA code
+                  onClick={() => gaHandler.handleLinkClick('header_sign_in_btn')}
                   className="font-medium text-gray-600 decoration-blue-500 decoration-2 underline-offset-2 hover:underline px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
                   to="/signin"
                 >
@@ -88,7 +93,10 @@ function Header() {
                 </Link>
               </li>
               <li className="ml-3">
-                <Link className="btn-sm text-white bg-purple-500 hover:bg-blue-600 w-full shadow-sm" to="/signup">
+                <Link 
+                  // GA code
+                  onClick={() => gaHandler.handleLinkClick('header_create_account_btn')}
+                  className="btn-sm text-white bg-purple-500 hover:bg-blue-600 w-full shadow-sm" to="/signup">
                   Create Account
                 </Link>
               </li>
@@ -96,7 +104,10 @@ function Header() {
             {isLoggedIn && <ul className="flex md:justify-end md:flex-wrap items-center">
 
               <li className="ml-3">
-                <Link className="btn-sm text-white bg-blue-500 hover:bg-blue-600 w-full shadow-sm" to="/brand-engagement-builder">
+                <Link
+                  // GA code
+                  onClick={() => gaHandler.handleLinkClick('header_get_started_btn')}
+                  className="btn-sm text-white bg-blue-500 hover:bg-blue-600 w-full shadow-sm" to="/brand-engagement-builder">
                   Get started
                 </Link>
               </li>
@@ -153,6 +164,7 @@ function Header() {
                   <ul className='space-y-4'>
                     <li>
                       <Link
+                        onClick={() => gaHandler.handleLinkClick('mobile_header_sign_in_btn')}
                         className="text-sm flex font-medium ml-3 text-gray-200 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 py-2"
                         to="/signin"
                       >
@@ -160,7 +172,9 @@ function Header() {
                       </Link>
                     </li>
                     <li className="ml-3">
-                      <Link className="text-sm flex font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 py-2" to="/signup">
+                      <Link
+                        onClick={() => gaHandler.handleLinkClick('mobile_header_create_account_btn')}
+                        className="text-sm flex font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 py-2" to="/signup">
                         Create Account
                       </Link>
                     </li>
