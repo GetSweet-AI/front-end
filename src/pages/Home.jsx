@@ -251,6 +251,7 @@ export default function Home() {
           <div id="elfsight-app" className="elfsight-app-ae14bbe7-ba3e-4362-b034-71b263e84eba"></div>
         </div>
       </main>
+      <Footer />
 
     </div>
   )
