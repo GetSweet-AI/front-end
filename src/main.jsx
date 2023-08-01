@@ -5,9 +5,13 @@ import App from './App';
 import { store } from './redux/store';
 import { Provider } from 'react-redux';
 import ReactGA from "react-ga4";
+import TagManager from 'react-gtm-module';
+const tagManagerArgs = {
+    gtmId: 'GTM-W22KL25B' // replace with your GTM ID
+}
 
-// Initialize GA4
-ReactGA.initialize('G-RXSQ0HH7M8');
+TagManager.initialize(tagManagerArgs);
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -18,14 +22,3 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </Router>
   </React.StrictMode>
 );
-// GA4 Code
-const SendAnalytics = ()=> {
-  ReactGA.send({
-    hitType: "pageview",
-    page: window.location.pathname,
-  });
-}
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals(SendAnalytics);
