@@ -3,6 +3,8 @@ import Header from "../partials/Header";
 import Footer from "../partials/Footer";
 import logo from "../images/logogetsweet.png";
 import { Helmet } from "react-helmet";
+import GAHandler from "../partials/ga_gtm_handler";
+const handleLinkClick = GAHandler();
 
 // import the library
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -258,6 +260,8 @@ export default function Home() {
                 </p>
                 <div className="mt-6 flex items-center justify-center gap-x-6">
                   <a
+                    // GA code
+                    onClick={() => handleLinkClick("home_get_started_btn")}
                     href="/signup"
                     className="rounded-md bg-indigo-600 px-12 py-2.5 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
