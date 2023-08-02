@@ -1,5 +1,4 @@
 const GAHandler = () => {
-  
   // Track button clicks
   const handleLinkClick = (buttonName) => {
     window.dataLayer = window.dataLayer || [];

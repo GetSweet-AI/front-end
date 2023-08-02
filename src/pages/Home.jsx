@@ -24,8 +24,8 @@ import {
 import { CheckIcon, PlusIcon } from '@heroicons/react/20/solid'
 
 const navigation = [
-  { name: 'Sign up', href: '/signup' },
-  { name: 'Sign in', href: '/signin' },
+  { name: 'Sign up', href: '/signup', gtmtrigger: 'header_create_account_btn' },
+  { name: 'Sign in', href: '/signin', gtmtrigger: 'header_sign_in_btn' },
 ]
 const features = [
   {
@@ -167,7 +167,15 @@ export default function Home() {
           </div>
           <div className="hidden lg:flex lg:gap-x-12">
             {navigation.map((item) => (
-              <a key={item.name} href={item.href} className="text-sm font-semibold leading-6 text-gray-900">
+              <a 
+                key={item.name} 
+                href={item.href}
+                className="text-sm font-semibold leading-6 text-gray-900"
+                // GA code
+                onClick={(e) => {
+                  handleLinkClick(item.gtmtrigger);
+                }}
+              >
                 {item.name}
               </a>
             ))}
@@ -202,6 +210,10 @@ export default function Home() {
                       key={item.name}
                       href={item.href}
                       className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                      // GA code
+                      onClick={(e) => {
+                        handleLinkClick('mobile_' + item.gtmtrigger);
+                      }}
                     >
                       {item.name}
                     </a>
@@ -246,7 +258,6 @@ export default function Home() {
                   >
                     Get started for free
                   </a>
-
                 </div>
               </div>
 
