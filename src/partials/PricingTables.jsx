@@ -3,13 +3,16 @@ import React, { useEffect, useState } from 'react';
 import { Puff } from 'react-loader-spinner';
 import { useDispatch, useSelector } from 'react-redux';
 import { setHasSubscription } from '../redux/auth';
+import { useNavigate, useNavigation } from 'react-router-dom';
+import { RadioGroup } from '@headlessui/react';
 
-function PricingTables() {
+function PricingTables({ planInfos }) {
+
   const { user, hasSubscription } = useSelector((state) => state.auth)
   const [isLoading, setIsLoading] = useState(false)
+  const [isPlansLoading, setIsPlansLoading] = useState(false)
 
   const payload = {
-
     name: user?.fullName,
     phone: '123456789',
     email: user?.email,
@@ -40,6 +43,7 @@ function PricingTables() {
 
   const dispatch = useDispatch()
 
+  const navigate = useNavigate()
   // Check if the user has already a subscription
   const getHasSubscription = async () => {
     await axios.get(`http://localhost:5000/api/v1/has-subscription/${user?.customerId}`).then((res) => {
@@ -47,8 +51,46 @@ function PricingTables() {
     })
   }
 
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null)
+  const [cancelMessage, setCancelMessage] = useState(null)
+
+  const getSubscriptionStatus = async () => {
+    await axios.get(`http://localhost:5000/api/v1/subscriptions/customer/${user?.customerId}`)
+      .then((res) => {
+        axios.get(`http://localhost:5000/api/v1/${res.data?.subscriptionIds[0]}/status`)
+          .then((response) => {
+            setSubscriptionStatus(response.data?.status)
+          })
+      })
+  }
+  const cancelSubscription = async () => {
+    await axios.get(`http://localhost:5000/api/v1/subscriptions/customer/${user?.customerId}`)
+      .then((res) => {
+        axios.post(`http://localhost:5000/api/v1/cancel-subscription`, {
+          subscriptionId: res.data?.subscriptionIds[0]
+        })
+          .then((response) => {
+            setCancelMessage(response.data?.message)
+          })
+      })
+  }
+
+
+
+
+  function handleDownloadInvoice() {
+    // Check if the user object exists and contains the invoiceUrl property
+    if (user?.invoiceUrl) {
+      // Navigate to user?.invoiceUrl
+      window.location.href = user.invoiceUrl;
+    }
+  }
+
+
+
   useEffect(() => {
     getHasSubscription()
+    getSubscriptionStatus()
   }, [])
 
   return (
@@ -61,24 +103,30 @@ function PricingTables() {
 
           {/* Section header */}
           <div className="max-w-3xl mx-auto text-center pb-12">
-            <h2 className="h3 font-red-hat-display mb-4 text-gray-100">{hasSubscription ? "You already have an active subscription.   Enjoy access to premium features!" : "Start building for free, then upgrade to a plan to unleash your content."}</h2>
+            <h2 className="h3 font-red-hat-display mb-4 text-gray-100">{hasSubscription ? `You're now on ${user?.Plan} plan. Your subscription is ${subscriptionStatus}` : "Start building for free, then upgrade to a plan to unleash your content."}</h2>
+            {/* <h2 className="h3 font-red-hat-display mb-4 text-gray-100">{subscriptionStatus}</h2> */}
             {/* <p className="text-xl text-gray-400">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit laborum — semper quis lectus nulla.</p> */}
           </div>
           {hasSubscription &&
             <div className='flex flex-col justify-center'>
-              <div className='flex md:flex-row flex-col md:space-x-3'>
-                <div className='mb-2 rounded-md  font-bold text-center z-6 text-white bg-gradient-to-r from-[#6366ff] to-[#373afd] py-3 w-full md:w-1/2' >
-                  <a href={user?.invoiceUrl}>Download Invoice
-                  </a>
+              <div className='flex flex-col justify-center'>
+                <div className='flex md:flex-row flex-col md:space-x-3'>
+                  <div onClick={handleDownloadInvoice} className='mb-2 rounded-md  font-bold text-center z-6 text-white bg-gradient-to-r from-[#6366ff] to-[#373afd] py-3 w-full md:w-1/2' >
+                    Download Invoice
+
+                  </div>
+                  <div onClick={cancelSubscription} className='mb-2 rounded-md  cursor-pointer  font-bold text-center z-6 text-white bg-gradient-to-r from-[#f22323] to-[#e61911] py-3  w-full md:w-1/2' >
+                    {cancelMessage !== null ? cancelMessage : " Cancel Subscription"}
+                  </div>
                 </div>
-                <div className='mb-2 rounded-md  cursor-pointer  font-bold text-center z-6 text-white bg-gradient-to-r from-[#f22323] to-[#e61911] py-3  w-full md:w-1/2' >
-                  Cancel Subscription
-                </div>
+              </div>
+              <div className='flex flex-col justify-center'>
+
               </div>
             </div>}
 
           {/* Pricing tables */}
-          {!hasSubscription && <div className="max-w-xs mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-4 items-start sm:max-w-none md:max-w-2xl lg:max-w-none">
+          {(!hasSubscription && !isPlansLoading) && <div className="max-w-xs mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-4 items-start sm:max-w-none md:max-w-2xl lg:max-w-none">
 
             {/* Pricing table 1 */}
             <div className="flex flex-col h-full p-6 bg-gray-800 shadow border-2 border-[#3b82f6]" data-aos="fade-down">
@@ -89,7 +137,7 @@ function PricingTables() {
                 </div>
                 <div className="font-red-hat-display inline-flex items-baseline mb-b mt-6">
                   <span className="h4 text-gray-400">$</span>
-                  <span className="h3 text-white">9.99</span>
+                  <span className="h3 text-white">{(planInfos[2]?.amount / 100).toFixed(2)}</span>
                   <span className="font-medium text-gray-500 "> / month</span>
                 </div>
                 <div className="text-gray-300 ">- Generate 10 posts.</div>
@@ -119,7 +167,7 @@ function PricingTables() {
                 </div>
                 <div className="font-red-hat-display inline-flex items-baseline mb-2">
                   <span className="h4 text-gray-400">$</span>
-                  <span className="h3 text-white">18.99</span>
+                  <span className="h3 text-white">{(planInfos[1]?.amount / 100).toFixed(2)}</span>
                   <span className="font-medium text-gray-500 "> / month</span>
                 </div>
                 <div className="text-gray-300 ">- Generate 20 posts.</div>
@@ -149,7 +197,7 @@ function PricingTables() {
                 </div>
                 <div className="font-red-hat-display inline-flex items-baseline mb-2">
                   <span className="h4 text-gray-400">$</span>
-                  <span className="h3 text-white">44.99</span>
+                  <span className="h3 text-white">{(planInfos[0]?.amount / 100).toFixed(2)}</span>
                   <span className="font-medium text-gray-500 "> / month</span>
                 </div>
                 <div className="text-gray-300 ">- Generate 50 posts.</div>
@@ -212,6 +260,7 @@ function PricingTables() {
             </div>
 
           </div>}
+          {/* {isPlansLoading && "Loading payment page..."} */}
 
         </div>
       </div>
@@ -221,3 +270,19 @@ function PricingTables() {
 }
 
 export default PricingTables;
+
+
+function CheckIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" {...props}>
+      <circle cx={12} cy={12} r={12} fill="#fff" opacity="0.2" />
+      <path
+        d="M7 13l3 3 7-7"
+        stroke="#fff"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}

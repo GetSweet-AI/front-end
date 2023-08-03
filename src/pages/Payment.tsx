@@ -1,35 +1,40 @@
-import axios from "axios";
+import axios, { Axios } from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import DashboardHeader from "../partials/DashboardHeader";
 import Sidebar from "../partials/Sidebar";
 // import Sidebar from "../partials/Sidebar";
 import PricingTables from "../partials/PricingTables";
+import PlansCheckBox from "../partials/PlansCheckBox";
 
-
-const initialState = {
-    email: "",
-    password: "",
-    company: "",
-    fullName: ''
-};
 
 function Payment() {
 
-    let [isOpen, setIsOpen] = useState(false)
+    // let [isOpen, setIsOpen] = useState(false)
 
-    function closeModal() {
-        setIsOpen(false)
-    }
+    // function closeModal() {
+    //     setIsOpen(false)
+    // }
 
-    function openModal() {
-        setIsOpen(true)
-    }
+    // function openModal() {
+    //     setIsOpen(true)
+    // }
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
-
-
+    const [planInfos, setPlanInfos] = useState([])
+    const getPlanInfos = async () => {
+        //   setIsPlansLoading(true)
+        await axios.get(`http://localhost:5000/api/v1/plans`)
+            .then((res) => {
+                setPlanInfos(res?.data.planInfos)
+            })
+        //   setIsPlansLoading(false)
+    }
+    const [selected, setSelected] = useState(null)
+    useEffect(() => {
+        getPlanInfos()
+    }, [])
     return (
         <div className="flex h-screen overflow-hidden">
 
@@ -54,7 +59,14 @@ function Payment() {
                         </div>
 
                         <div >
-                            <PricingTables />
+                            <PricingTables planInfos={planInfos} />
+                            <h2 className="my-4 text-xl text-blue-500 font-bold">Update plan</h2>
+                            <PlansCheckBox selected={selected} setSelected={setSelected} plans={planInfos} />
+                            <div className="mx-auto w-full max-w-md mb-2 rounded-md  cursor-pointer  font-bold text-center z-6 text-white bg-blue-500 py-3">
+                                <button>
+                                    Switch plan
+                                </button>
+                            </div>
 
                         </div>
                         {/* Toast container */}
