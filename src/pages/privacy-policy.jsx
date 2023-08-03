@@ -125,12 +125,18 @@ export default function PrivacyPolicy() {
           <div className="py-8 sm:py-16">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <div>
-                <h1>Privacy Policy</h1>
+                <h1 className="text-center text-3xl font-bold">
+                  Privacy Policy
+                </h1>
+                <br />
                 {docPrivacy.sections.map((section, index) => (
                   <div key={index}>
-                    <h2>{section.header}</h2>
-                    <p>{section.body}</p>
+                    <h2 className="text-2xl text-pink-600 font-bold">
+                      {section.header}
+                    </h2>
 
+                    <p>{section.body}</p>
+                    <br />
                     {section.list && section.list.length > 0 && (
                       <>
                         {section.list.map((item, index) => (
@@ -145,6 +151,7 @@ export default function PrivacyPolicy() {
                         {section.body1.map((item, index) => (
                           <p key={index}>{item}</p>
                         ))}
+                        <br />
                       </div>
                     )}
 
