@@ -6,26 +6,19 @@ import Sidebar from "../partials/Sidebar";
 // import Sidebar from "../partials/Sidebar";
 import PricingTables from "../partials/PricingTables";
 import PlansCheckBox from "../partials/PlansCheckBox";
-
+import { useSelector } from "react-redux";
+import { Fragment } from 'react'
+import { Dialog, Transition } from '@headlessui/react'
 
 function Payment() {
 
-    // let [isOpen, setIsOpen] = useState(false)
-
-    // function closeModal() {
-    //     setIsOpen(false)
-    // }
-
-    // function openModal() {
-    //     setIsOpen(true)
-    // }
-
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [message, setMessage] = useState(false)
 
     const [planInfos, setPlanInfos] = useState([])
     const getPlanInfos = async () => {
         //   setIsPlansLoading(true)
-        await axios.get(`http://localhost:5000/api/v1/plans`)
+        await axios.get(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/plans`)
             .then((res) => {
                 setPlanInfos(res?.data.planInfos)
             })
@@ -35,6 +28,45 @@ function Payment() {
     useEffect(() => {
         getPlanInfos()
     }, [])
+
+
+
+    const { plan } = useSelector((state) => state.uiSlice)
+    const { user } = useSelector((state) => state.auth)
+
+
+    let [isOpen, setIsOpen] = useState(false)
+
+    function closeModal() {
+        setIsOpen(false)
+    }
+
+    function openModal() {
+        setIsOpen(true)
+    }
+
+
+    const [isSwitching, setSwitching] = useState(false)
+    const handleSwitchPlan = async () => {
+        setSwitching(true)
+        try {
+            const response = await axios.post("https://seashell-app-8amlb.ondigitalocean.app/api/v1/update-subscription", {
+                customerId: user?.customerId,
+                currentSubscriptionId: user?.subscriptionId,
+                newPlanId: plan.id
+            });
+
+            // Handle success response if needed
+            setIsOpen(true)
+            console.log("Success:", response.data);
+        } catch (error) {
+            // Handle error
+            setMessage(error.response ? error.response.data : error.message)
+            console.error("Error:", error.response ? error.response.data : error.message);
+        }
+        setSwitching(false)
+    }
+
     return (
         <div className="flex h-screen overflow-hidden">
 
@@ -62,11 +94,66 @@ function Payment() {
                             <PricingTables planInfos={planInfos} />
                             <h2 className="my-4 text-xl text-blue-500 font-bold">Update plan</h2>
                             <PlansCheckBox selected={selected} setSelected={setSelected} plans={planInfos} />
-                            <div className="mx-auto w-full max-w-md mb-2 rounded-md  cursor-pointer  font-bold text-center z-6 text-white bg-blue-500 py-3">
-                                <button>
-                                    Switch plan
+                            <p className="my-3 text-red-600">{message ? message : ""}</p>
+                            <div onClick={handleSwitchPlan} className="mx-auto w-full max-w-md mb-2 rounded-md
+                              cursor-pointer  font-bold text-center z-6 text-white bg-blue-500 py-3">
+                                <button >
+                                    {isSwitching ? "Switching..." : "Switch plan"}
                                 </button>
                             </div>
+                            <Transition appear show={isOpen} as={Fragment}>
+                                <Dialog as="div" className="relative z-10" onClose={closeModal}>
+                                    <Transition.Child
+                                        as={Fragment}
+                                        enter="ease-out duration-300"
+                                        enterFrom="opacity-0"
+                                        enterTo="opacity-100"
+                                        leave="ease-in duration-200"
+                                        leaveFrom="opacity-100"
+                                        leaveTo="opacity-0"
+                                    >
+                                        <div className="fixed inset-0 bg-black bg-opacity-25" />
+                                    </Transition.Child>
+
+                                    <div className="fixed inset-0 overflow-y-auto">
+                                        <div className="flex min-h-full items-center justify-center p-4 text-center">
+                                            <Transition.Child
+                                                as={Fragment}
+                                                enter="ease-out duration-300"
+                                                enterFrom="opacity-0 scale-95"
+                                                enterTo="opacity-100 scale-100"
+                                                leave="ease-in duration-200"
+                                                leaveFrom="opacity-100 scale-100"
+                                                leaveTo="opacity-0 scale-95"
+                                            >
+                                                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                                                    <Dialog.Title
+                                                        as="h3"
+                                                        className="text-lg font-medium leading-6 text-gray-900"
+                                                    >
+                                                        Plan Switched
+                                                    </Dialog.Title>
+                                                    <div className="mt-2">
+                                                        <p className="text-sm text-gray-500">
+                                                            Your plan has been switched successfully
+                                                        </p>
+                                                    </div>
+
+                                                    <div className="mt-4">
+                                                        <button
+                                                            type="button"
+                                                            className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                                            onClick={closeModal}
+                                                        >
+                                                            Close
+                                                        </button>
+                                                    </div>
+                                                </Dialog.Panel>
+                                            </Transition.Child>
+                                        </div>
+                                    </div>
+                                </Dialog>
+                            </Transition>
 
                         </div>
                         {/* Toast container */}

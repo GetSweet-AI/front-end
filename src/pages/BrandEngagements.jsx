@@ -71,7 +71,7 @@ function BrandEngagements() {
         setIsLoading(true)
         await axios
             .get(
-                `http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}`
+                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}`
             )
             .then((res) => {
                 setEngagements(res.data?.brandEngagements);

@@ -51,7 +51,7 @@ function PostsFeed() {
         setIsUserDataLoading(true)
         await axios
             .get(
-                `http://localhost:5000/api/v1/feed-posts/${user?._id}`
+                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/feed-posts/${user?._id}`
             )
             .then((res) => {
                 setFeedPosts(res.data?.feedPosts);
@@ -67,7 +67,7 @@ function PostsFeed() {
 
         await axios
             .get(
-                `http://localhost:5000/api/v1/admin/feedposts?userId=${user?._id}`
+                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}`
             )
             .then((res) => {
                 setAdminFeedPosts(res.data);
@@ -81,7 +81,7 @@ function PostsFeed() {
     const deletePostFeed = async (id) => {
         await axios
             .delete(
-                `http://localhost:5000/api/v1/feed-posts/${id}`
+                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/feed-posts/${id}`
             )
             .then((res) => {
                 console.log("Post feed deleted")

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { RadioGroup } from '@headlessui/react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { setPlan } from '../redux/ui-slice'
 
 // const plans = [
 
@@ -31,6 +32,8 @@ import { useSelector } from 'react-redux'
 export default function PlansCheckBox({ plans, selected, setSelected }) {
     const { user } = useSelector((state) => state.auth)
 
+    const dispatch = useDispatch()
+
     return (
         <div className="w-full px-4 py-4">
             <div className="mx-auto w-full max-w-md">
@@ -53,8 +56,8 @@ export default function PlansCheckBox({ plans, selected, setSelected }) {
                             >
                                 {({ active, checked }) => (
                                     <>
-                                        <div className="flex w-full items-center justify-between">
-                                            <div className="flex items-center">
+                                        <div className="flex w-full items-center justify-between" onClick={() => dispatch(setPlan(plan))}>
+                                            <div className="flex items-center" >
                                                 <div className="text-sm">
                                                     <RadioGroup.Label
                                                         as="p"
