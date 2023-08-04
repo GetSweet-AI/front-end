@@ -3,8 +3,6 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
-import BrandEngagementCard from "./BrandEngagementCard";
 
 export default function PopupDelCard({ deleteBrandEngagement, id }) {
   const [show, setShow] = useState(false);
@@ -36,7 +34,7 @@ export default function PopupDelCard({ deleteBrandEngagement, id }) {
           </Button>
 
           <Button variant="danger" onClick={handleDelete}>
-            Delete
+            Yes, Delete
           </Button>
         </Modal.Footer>
       </Modal>

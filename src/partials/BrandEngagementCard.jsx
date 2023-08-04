@@ -79,10 +79,6 @@ function BrandEngagementCard({
               <FontAwesomeIcon className="mr-2" icon={faTrash} />
               Delete
             </div>
-            <PopupDelCard
-              deleteBrandEngagement={deleteBrandEngagement}
-              id={id}
-            />
           </div>
         </footer>
       </div>
