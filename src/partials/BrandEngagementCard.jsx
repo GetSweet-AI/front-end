@@ -1,9 +1,8 @@
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React from "react";
-import { Link } from "react-router-dom";
-import PopupDelCard from "./PopupDeleteCard";
+import { Link, useNavigate } from "react-router-dom";
 
 function BrandEngagementCard({
   id,
@@ -16,6 +15,7 @@ function BrandEngagementCard({
   postType,
   fetchEngagements,
 }) {
+  const navigate = useNavigate();
   const deleteBrandEngagement = async (brandEngagementId) => {
     try {
       const response = await axios.delete(
@@ -64,10 +64,21 @@ function BrandEngagementCard({
         </div>
         <footer className="mt-2">
           <div className="flex justify-between items-center">
-            <div className="text-sm text-white rounded  p-2 cursor-pointer">
+            <div
+              onClick={() => navigate(`/brand-engagements/${id}`)}
+              className="text-sm font-medium bg-slate-200 text-blue-700 rounded  p-2 cursor-pointer"
+            >
               {/* Not Active */}
+              <FontAwesomeIcon className="mr-2" icon={faEye} />
+              View
             </div>
-
+            <div
+              className="text-sm text-white rounded bg-[#d7364b] p-2 cursor-pointer"
+              onClick={() => deleteBrandEngagement(id)}
+            >
+              <FontAwesomeIcon className="mr-2" icon={faTrash} />
+              Delete
+            </div>
             <PopupDelCard
               deleteBrandEngagement={deleteBrandEngagement}
               id={id}

@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import DashboardHeader from "../partials/DashboardHeader";
 import Sidebar from "../partials/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
-import { Puff } from "react-loader-spinner";
+import { MutatingDots, Puff } from "react-loader-spinner";
 import { clearMessage, setMessage } from "../redux/message";
 // import Sidebar from "../partials/Sidebar";
 import { toast, ToastContainer } from 'react-toastify';
@@ -42,10 +42,13 @@ function PostsFeed() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [feedPosts, setFeedPosts] = useState([]);
     const [adminFeedPosts, setAdminFeedPosts] = useState([]);
+    const [isLoading, setIsLoading] = useState(false)
+    const [isUserDataLoading, setIsUserDataLoading] = useState(false)
 
     const [isAdmin, setIsAdmin] = useState(false)
 
     const fetchUserFeedPosts = async () => {
+        setIsUserDataLoading(true)
         await axios
             .get(
                 `https://seashell-app-8amlb.ondigitalocean.app/api/v1/feed-posts/${user?._id}`
@@ -57,8 +60,11 @@ function PostsFeed() {
             .catch((err) => {
                 console.log(err);
             });
+        setIsUserDataLoading(false)
     };
     const fetchAllFeedPosts = async () => {
+        setIsLoading(true)
+
         await axios
             .get(
                 `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}`
@@ -70,6 +76,7 @@ function PostsFeed() {
             .catch((err) => {
                 console.log(err);
             });
+        setIsLoading(false)
     };
     const deletePostFeed = async (id) => {
         await axios
@@ -122,6 +129,32 @@ function PostsFeed() {
                 <DashboardHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
                 <main>
+                    {isLoading && enabled && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
+                        <MutatingDots
+                            height="100"
+                            width="100"
+                            color="#1c7aed"
+                            secondaryColor='#3078fd'
+                            radius='12.5'
+                            ariaLabel="mutating-dots-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                            visible={true}
+                        />
+                    </div>}
+                    {isUserDataLoading && !enabled && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
+                        <MutatingDots
+                            height="100"
+                            width="100"
+                            color="#1c7aed"
+                            secondaryColor='#3078fd'
+                            radius='12.5'
+                            ariaLabel="mutating-dots-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                            visible={true}
+                        />
+                    </div>}
                     <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
 
                         {/* Page header */}

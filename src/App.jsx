@@ -25,6 +25,7 @@ import Success from "./pages/Success";
 import ManageSubscription from "./pages/ManageSubscriprion";
 import PrivacyPolicy from "./pages/privacy-policy";
 import TermsOfService from "./pages/terms-of-service";
+import BrandEngagementDetails from "./pages/BrandEngagementDetails";
 
 function App() {
   const location = useLocation();
@@ -79,9 +80,10 @@ function App() {
           path="/success"
           element={isLoggedIn ? <Success /> : <SignIn />}
         />
+
         <Route
-          path="/workflows/:id"
-          element={isLoggedIn ? <BrandEngagementCard /> : <SignIn />}
+          path="/brand-engagements/:id"
+          element={isLoggedIn ? <BrandEngagementDetails /> : <SignIn />}
         />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
