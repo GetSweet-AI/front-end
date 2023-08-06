@@ -18,31 +18,33 @@ import { targetAudienceOptions } from "../constants/objects";
 import brandTones from "../constants/brandTones";
 import postTypeOptions from "../constants/postTypeOtions";
 import { clearMessage, setMessage } from "../redux/message";
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { setUserData } from "../redux/auth";
 
-
 function BrandEngagementBuilder() {
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const [previewLoading, setPreviewLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [engagements, setEngagements] = useState([]);
   const [result, setResult] = useState(null);
-  const { token, user } = useSelector((state) => state.auth)
-  const { message } = useSelector((state) => state.message)
+  const { token, user } = useSelector((state) => state.auth);
+  const { message } = useSelector((state) => state.message);
 
   const getUserData = async () => {
-    await axios.get(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${user?._id}`).then(() => {
-      dispatch(setUserData(res?.data.user))
-    })
-  }
+    await axios
+      .get(
+        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+      )
+      .then(() => {
+        dispatch(setUserData(res?.data.user));
+      });
+  };
 
   useEffect(() => {
-    getUserData()
-  }, [])
+    getUserData();
+  }, []);
 
   const [values, setValues] = useState({
     brandName: "",
@@ -52,7 +54,7 @@ function BrandEngagementBuilder() {
     brandTone: null,
     targetAudience: null,
     postType: "",
-    other: ""
+    other: "",
   });
 
   const handleInputChange = (e) => {
@@ -78,12 +80,20 @@ function BrandEngagementBuilder() {
     PostType: values.postType?.value,
     postContent: result,
     WebSite: values.websiteUrl,
-    BrandName: values.brandName
+    BrandName: values.brandName,
   };
 
   const handlePreview = (e) => {
     e.preventDefault();
-    const { brandName, brandTone, postType, timeZone, targetAudience, companySector, websiteUrl } = values
+    const {
+      brandName,
+      brandTone,
+      postType,
+      timeZone,
+      targetAudience,
+      companySector,
+      websiteUrl,
+    } = values;
     if (!brandTone) {
       dispatch(setMessage("Please provide the brand tone"));
     } else if (!postType) {
@@ -107,7 +117,10 @@ function BrandEngagementBuilder() {
           {
             targetAudience: values.targetAudience?.value,
             platform: values.websiteUrl,
-            question: values.postType?.value === "other" ? values.other : values.postType?.value,
+            question:
+              values.postType?.value === "other"
+                ? values.other
+                : values.postType?.value,
             tone: values.brandTone?.value,
           }
         )
@@ -124,16 +137,29 @@ function BrandEngagementBuilder() {
     }
 
     // alert(JSON.stringify(postData))
-
   };
-
-
 
   const handleSave = async () => {
     setSaveLoading(true);
-    const { brandName, brandTone, postType, timeZone, targetAudience, companySector, websiteUrl } = values
-    if (!brandTone | !postType | !targetAudience | !websiteUrl | !timeZone | !companySector | !brandName) {
-      dispatch(setMessage("Please provide all values "))
+    const {
+      brandName,
+      brandTone,
+      postType,
+      timeZone,
+      targetAudience,
+      companySector,
+      websiteUrl,
+    } = values;
+    if (
+      !brandTone |
+      !postType |
+      !targetAudience |
+      !websiteUrl |
+      !timeZone |
+      !companySector |
+      !brandName
+    ) {
+      dispatch(setMessage("Please provide all values "));
       setSaveLoading(false);
     } else {
       await axios
@@ -142,12 +168,13 @@ function BrandEngagementBuilder() {
           postData
         )
         .then((res) => {
-          getUserData()
+          getUserData();
           setSaveLoading(false);
           // console.log(res.data);
           fetchEngagements();
-          handleReset()
-          dispatch(clearMessage())
+
+          handleReset();
+          dispatch(clearMessage());
           // dispatch("")
         })
         .catch((err) => {
@@ -157,7 +184,6 @@ function BrandEngagementBuilder() {
         });
     }
     setSaveLoading(false);
-
   };
 
   const handleReset = () => {
@@ -170,7 +196,7 @@ function BrandEngagementBuilder() {
       targetAudience: null,
     });
     setResult(null);
-    dispatch(clearMessage())
+    dispatch(clearMessage());
   };
   // console.log("_id :" + user?._id)
 
@@ -181,7 +207,7 @@ function BrandEngagementBuilder() {
       )
       .then((res) => {
         setEngagements(res.data?.brandEngagements);
-        console.log("res?.data :" + JSON.stringify(res?.data))
+        console.log("res?.data :" + JSON.stringify(res?.data));
       })
       .catch((err) => {
         console.log(err);
@@ -195,13 +221,13 @@ function BrandEngagementBuilder() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
-    dispatch(clearMessage())
-  }, [])
+    dispatch(clearMessage());
+  }, []);
 
   // console.log("Token " + token)
   const handleCopyText = () => {
     // Convert HTML to plain text
-    const tempElement = document.createElement('div');
+    const tempElement = document.createElement("div");
     tempElement.innerHTML = result;
     const plainText = tempElement.innerText;
 
@@ -209,10 +235,10 @@ function BrandEngagementBuilder() {
     navigator.clipboard.writeText(plainText);
 
     // Show a toast message
-    toast.success('Text copied successfully!');
+    toast.success("Text copied successfully!");
   };
 
-  console.log("Post type :" + JSON.stringify(values.postType))
+  console.log("Post type :" + JSON.stringify(values.postType));
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -247,15 +273,14 @@ function BrandEngagementBuilder() {
                   ensure that all of your soaical content aligns with your
                   brand's messaging and value.
                 </p>
-
-
               </div>
-              {user?.availableTokens === 0 ? <div className="flex justify-center items-center md:text-xl p-3 text-red-600 my-4">No tokens remaining. Purchase more to continue.</div> :
+              {user?.availableTokens === 0 ? (
+                <div className="flex justify-center items-center md:text-xl p-3 text-red-600 my-4">
+                  No tokens remaining. Purchase more to continue.
+                </div>
+              ) : (
                 <div className="flex flex-wrap   bg-white md:p-4 rounded-lg">
                   <div className="w-full md:w-1/2">
-
-
-
                     <form className="rounded px-4" onSubmit={handlePreview}>
                       <div className="flex flex-wrap">
                         <div className="w-full md:w-1/2 p-2">
@@ -300,16 +325,42 @@ function BrandEngagementBuilder() {
                               handleSelectChange("timeZone", selectedOption)
                             }
                             options={[
-
-                              { value: "UTC (Coordinated Universal Time)", label: "UTC (Coordinated Universal Time)" },
-                              { value: "BST (British Summer Time)", label: "BST (British Summer Time)" },
-                              { value: "JST (Japan Standard Time)", label: "JST (Japan Standard Time)" },
-                              { value: "IST (Indian Standard Time)", label: "IST (Indian Standard Time)" },
-                              { value: "PST (Pacific Standard Time)", label: "PST (Pacific Standard Time)" },
-                              { value: "MST (Mountain Standard Time)", label: "MST (Mountain Standard Time)" },
-                              { value: "CST (Central Standard Time)", label: "CST (Central Standard Time)" },
-                              { value: "EST (Eastern Standard Time)", label: "EST (Eastern Standard Time)" },
-                              { value: "GMT (Greenwich Mean Time)", label: "GMT (Greenwich Mean Time)" },
+                              {
+                                value: "UTC (Coordinated Universal Time)",
+                                label: "UTC (Coordinated Universal Time)",
+                              },
+                              {
+                                value: "BST (British Summer Time)",
+                                label: "BST (British Summer Time)",
+                              },
+                              {
+                                value: "JST (Japan Standard Time)",
+                                label: "JST (Japan Standard Time)",
+                              },
+                              {
+                                value: "IST (Indian Standard Time)",
+                                label: "IST (Indian Standard Time)",
+                              },
+                              {
+                                value: "PST (Pacific Standard Time)",
+                                label: "PST (Pacific Standard Time)",
+                              },
+                              {
+                                value: "MST (Mountain Standard Time)",
+                                label: "MST (Mountain Standard Time)",
+                              },
+                              {
+                                value: "CST (Central Standard Time)",
+                                label: "CST (Central Standard Time)",
+                              },
+                              {
+                                value: "EST (Eastern Standard Time)",
+                                label: "EST (Eastern Standard Time)",
+                              },
+                              {
+                                value: "GMT (Greenwich Mean Time)",
+                                label: "GMT (Greenwich Mean Time)",
+                              },
                             ]}
                           />
                         </div>
@@ -324,7 +375,10 @@ function BrandEngagementBuilder() {
                             placeholder="Company Sector"
                             value={values.companySector}
                             onChange={(selectedOption) =>
-                              handleSelectChange("companySector", selectedOption)
+                              handleSelectChange(
+                                "companySector",
+                                selectedOption
+                              )
                             }
                             options={[
                               {
@@ -381,15 +435,16 @@ function BrandEngagementBuilder() {
                             placeholder="Target Audience"
                             value={values.targetAudience}
                             onChange={(selectedOption) =>
-                              handleSelectChange("targetAudience", selectedOption)
+                              handleSelectChange(
+                                "targetAudience",
+                                selectedOption
+                              )
                             }
                             options={targetAudienceOptions}
                           />
                         </div>
                         <div className="w-full md:w-1/2 p-2">
-                          <label className="block mb-1">
-                            Post type
-                          </label>
+                          <label className="block mb-1">Post type</label>
                           <Select
                             id="select3"
                             className="w-full"
@@ -401,19 +456,21 @@ function BrandEngagementBuilder() {
                             options={postTypeOptions}
                           />
                         </div>
-                        {values.postType?.value === "other" && <div className="w-full md:w-1/2 p-2">
-                          <label className="block mb-1">
-                            Enter a post type
-                          </label>   <input
-                            id="input2"
-                            className="w-full border-gray-300 rounded p-2"
-                            type="text"
-                            name="other"
-                            placeholder="Enter another post type"
-                            value={values.other}
-                            onChange={handleInputChange}
-                          />
-                          {/* <Select
+                        {values.postType?.value === "other" && (
+                          <div className="w-full md:w-1/2 p-2">
+                            <label className="block mb-1">
+                              Enter a post type
+                            </label>{" "}
+                            <input
+                              id="input2"
+                              className="w-full border-gray-300 rounded p-2"
+                              type="text"
+                              name="other"
+                              placeholder="Enter another post type"
+                              value={values.other}
+                              onChange={handleInputChange}
+                            />
+                            {/* <Select
                           id="select3"
                           className="w-full"
                           placeholder="Post Type"
@@ -423,7 +480,8 @@ function BrandEngagementBuilder() {
                           }
                           options={postTypeOptions}
                         /> */}
-                        </div>}
+                          </div>
+                        )}
                         <div className="flex w-full justify-center items-center">
                           <p className="text-red-500 text-sm my-2  text-center">
                             {message ? message : ""}
@@ -443,7 +501,11 @@ function BrandEngagementBuilder() {
                           >
                             {previewLoading ? (
                               <>
-                                <img className="mr-2" width={20} src={rolling} />
+                                <img
+                                  className="mr-2"
+                                  width={20}
+                                  src={rolling}
+                                />
                                 Generating...
                               </>
                             ) : (
@@ -462,7 +524,11 @@ function BrandEngagementBuilder() {
                             >
                               {saveLoading ? (
                                 <>
-                                  <img className="mr-2" width={20} src={rolling} />
+                                  <img
+                                    className="mr-2"
+                                    width={20}
+                                    src={rolling}
+                                  />
                                   Saving...
                                 </>
                               ) : (
@@ -473,23 +539,28 @@ function BrandEngagementBuilder() {
                         )}
                       </div>
                     </form>
-
-
                   </div>
                   <div className="w-full flex-col  text-white md:w-1/2 bg-[#333333] rounded-lg p-4">
-                    {result && <div onClick={handleCopyText} className=" flex justify-end text-end "><p className="bg-slate-600 w-[15%] cursor-pointer text-center rounded-lg py-1 ">  Copy</p>
-                    </div>}
-                    <div className="ove">{result !== null
-                      ? ReactHtmlParser(result)
-                      : "Results will be added here."}
+                    {result && (
+                      <div
+                        onClick={handleCopyText}
+                        className=" flex justify-end text-end "
+                      >
+                        <p className="bg-slate-600 w-[15%] cursor-pointer text-center rounded-lg py-1 ">
+                          {" "}
+                          Copy
+                        </p>
+                      </div>
+                    )}
+                    <div className="ove">
+                      {result !== null
+                        ? ReactHtmlParser(result)
+                        : "Results will be added here."}
                     </div>
                   </div>
                 </div>
-              }
-
+              )}
             </div>
-
-
 
             {/* Toast container */}
             <ToastContainer />
