@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const uiSlice = createSlice({
   name: 'ui',
-  initialState: { notification: null , taskId: null,plan:null },
+  initialState: { notification: null , taskId: null,plan:{} },
   reducers: {
     showNotification(state, action) {
       state.notification = {
@@ -17,8 +17,11 @@ const uiSlice = createSlice({
     setPlan(state, action) {
       state.plan = action.payload
     },
+    clearPlan(state, action) {
+      state.plan = action.payload
+    },
   },
 });
 
-export const {showNotification,setTaskId,setPlan} = uiSlice.actions;
+export const {showNotification,setTaskId,setPlan,clearPlan} = uiSlice.actions;
 export const uiReducer = uiSlice.reducer;

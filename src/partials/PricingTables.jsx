@@ -76,8 +76,6 @@ function PricingTables({ planInfos }) {
   }
 
 
-
-
   function handleDownloadInvoice() {
     // Check if the user object exists and contains the invoiceUrl property
     if (user?.invoiceUrl) {
@@ -85,7 +83,6 @@ function PricingTables({ planInfos }) {
       window.location.href = user.invoiceUrl;
     }
   }
-
 
 
   useEffect(() => {
@@ -137,7 +134,7 @@ function PricingTables({ planInfos }) {
                 </div>
                 <div className="font-red-hat-display inline-flex items-baseline mb-b mt-6">
                   <span className="h4 text-gray-400">$</span>
-                  <span className="h3 text-white">{(planInfos[2]?.amount / 100).toFixed(2)}</span>
+                  <span className="h3 text-white">{(planInfos[2]?.price)}</span>
                   <span className="font-medium text-gray-500 "> / month</span>
                 </div>
                 <div className="text-gray-300 ">- Generate 10 posts.</div>
@@ -167,7 +164,7 @@ function PricingTables({ planInfos }) {
                 </div>
                 <div className="font-red-hat-display inline-flex items-baseline mb-2">
                   <span className="h4 text-gray-400">$</span>
-                  <span className="h3 text-white">{(planInfos[1]?.amount / 100).toFixed(2)}</span>
+                  <span className="h3 text-white">{planInfos[1]?.price}</span>
                   <span className="font-medium text-gray-500 "> / month</span>
                 </div>
                 <div className="text-gray-300 ">- Generate 20 posts.</div>
@@ -197,7 +194,7 @@ function PricingTables({ planInfos }) {
                 </div>
                 <div className="font-red-hat-display inline-flex items-baseline mb-2">
                   <span className="h4 text-gray-400">$</span>
-                  <span className="h3 text-white">{(planInfos[0]?.amount / 100).toFixed(2)}</span>
+                  <span className="h3 text-white">{planInfos[0]?.price}</span>
                   <span className="font-medium text-gray-500 "> / month</span>
                 </div>
                 <div className="text-gray-300 ">- Generate 50 posts.</div>

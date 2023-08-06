@@ -6,9 +6,11 @@ import Sidebar from "../partials/Sidebar";
 // import Sidebar from "../partials/Sidebar";
 import PricingTables from "../partials/PricingTables";
 import PlansCheckBox from "../partials/PlansCheckBox";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
+import { clearPlan } from "../redux/ui-slice";
+import { TailSpin } from "react-loader-spinner";
 
 function Payment() {
 
@@ -16,35 +18,37 @@ function Payment() {
     const [message, setMessage] = useState(false)
 
     const [planInfos, setPlanInfos] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
     const getPlanInfos = async () => {
         //   setIsPlansLoading(true)
+        setIsLoading(true)
         await axios.get(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/plans`)
             .then((res) => {
                 setPlanInfos(res?.data.planInfos)
+                console.table(res?.data.planInfos)
+
             })
         //   setIsPlansLoading(false)
+        setIsLoading(false)
     }
     const [selected, setSelected] = useState(null)
     useEffect(() => {
         getPlanInfos()
     }, [])
 
-
-
     const { plan } = useSelector((state) => state.uiSlice)
-    const { user } = useSelector((state) => state.auth)
-
+    const { user, hasSubscription } = useSelector((state) => state.auth)
 
     let [isOpen, setIsOpen] = useState(false)
 
     function closeModal() {
         setIsOpen(false)
+        location.reload();
     }
 
     function openModal() {
         setIsOpen(true)
     }
-
 
     const [isSwitching, setSwitching] = useState(false)
     const handleSwitchPlan = async () => {
@@ -56,8 +60,11 @@ function Payment() {
                 newPlanId: plan.id
             });
 
+
             // Handle success response if needed
             setIsOpen(true)
+            dispatch(clearPlan({}))
+
             console.log("Success:", response.data);
         } catch (error) {
             // Handle error
@@ -66,6 +73,13 @@ function Payment() {
         }
         setSwitching(false)
     }
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(clearPlan({}))
+    }, [])
+
 
     return (
         <div className="flex h-screen overflow-hidden">
@@ -92,15 +106,30 @@ function Payment() {
 
                         <div >
                             <PricingTables planInfos={planInfos} />
-                            <h2 className="my-4 text-xl text-blue-500 font-bold">Update plan</h2>
-                            <PlansCheckBox selected={selected} setSelected={setSelected} plans={planInfos} />
-                            <p className="my-3 text-red-600">{message ? message : ""}</p>
-                            <div onClick={handleSwitchPlan} className="mx-auto w-full max-w-md mb-2 rounded-md
-                              cursor-pointer  font-bold text-center z-6 text-white bg-blue-500 py-3">
-                                <button >
-                                    {isSwitching ? "Switching..." : "Switch plan"}
-                                </button>
-                            </div>
+                            {hasSubscription && <>
+                                <h2 className="my-4 text-xl text-blue-500 font-bold">Update plan</h2>
+                                <PlansCheckBox selected={selected} setSelected={setSelected} plans={planInfos} />
+                                <p className="my-3 text-red-600">{message ? message : ""}</p>
+                                <div className="flex flex-col justify-center items-center">
+                                    <button disabled={plan === null}
+                                        onClick={handleSwitchPlan}
+                                        className="mx-auto w-full max-w-md mb-2 rounded-md cursor-pointer  font-bold text-center z-6 text-white bg-blue-500 py-3">
+                                        {isSwitching ? "Switching..." : "Switch plan"}
+                                    </button>
+                                    <p className="text-red-600 text-center">{message}</p>
+                                    {isLoading && <TailSpin
+                                        height="80"
+                                        width="80"
+                                        color="#1b54f0"
+                                        ariaLabel="tail-spin-loading"
+                                        radius="1"
+                                        wrapperStyle={{}}
+                                        wrapperClass=""
+                                        visible={true}
+                                    />}
+                                </div>
+                            </>}
+
                             <Transition appear show={isOpen} as={Fragment}>
                                 <Dialog as="div" className="relative z-10" onClose={closeModal}>
                                     <Transition.Child
