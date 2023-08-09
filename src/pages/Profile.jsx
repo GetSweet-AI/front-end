@@ -46,7 +46,7 @@ function Profile() {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         setUser(res.data);
@@ -74,12 +74,12 @@ function Profile() {
       if (isChecked) {
         await axios
           .put(
-            `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
+            `http://localhost:5000/api/v1/auth/update/${user?._id}`,
             currentUser
           )
           .then((res) => {
             axios.post(
-              "https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/reset-password",
+              "http://localhost:5000/api/v1/auth/reset-password",
               {
                 email: res?.data.user?.email,
                 newPassword: values.password,
@@ -88,7 +88,7 @@ function Profile() {
           });
       } else {
         await axios.put(
-          `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
+          `http://localhost:5000/api/v1/auth/update/${user?._id}`,
           currentUser
         );
       }
@@ -118,7 +118,7 @@ function Profile() {
   const deleteUser = (userId) => {
     axios
       .delete(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${userId}`
+        `http://localhost:5000/api/v1/auth/users/${userId}`
       )
       .then((res) => {
         toast.success("User deleted successfully");

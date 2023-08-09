@@ -1,43 +1,49 @@
 import React from 'react';
 
-function PaginationNumeric() {
+function PaginationNumeric({ itemsPerPage, totalItems, currentPage, onPageChange }) {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const handlePageClick = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      onPageChange(pageNumber);
+    }
+  };
+
   return (
     <div className="flex justify-center">
-      <nav className="flex" role="navigation" aria-label="Navigation">
-        <div className="mr-2">
-          <span className="inline-flex items-center justify-center rounded leading-5 px-2.5 py-2 bg-white border border-slate-200 text-slate-300">
-            <span className="sr-only">Previous</span><wbr />
-            <svg className="h-4 w-4 fill-current" viewBox="0 0 16 16">
-              <path d="M9.4 13.4l1.4-1.4-4-4 4-4-1.4-1.4L4 8z" />
-            </svg>
-          </span>
-        </div>
-        <ul className="inline-flex text-sm font-medium -space-x-px shadow-sm">
-          <li>
-            <span className="inline-flex items-center justify-center rounded-l leading-5 px-3.5 py-2 bg-white border border-slate-200 text-indigo-500">1</span>
+      <ul className="flex space-x-2">
+        <li>
+          <button
+            onClick={() => handlePageClick(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`px-2 py-1 rounded ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+              }`}
+          >
+            Previous
+          </button>
+        </li>
+        {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+          <li key={pageNumber}>
+            <button
+              onClick={() => handlePageClick(pageNumber)}
+              className={`px-2 py-1 rounded ${currentPage === pageNumber ? 'bg-blue-500 text-white' : 'bg-gray-300 hover:bg-blue-500 hover:text-white'
+                }`}
+            >
+              {pageNumber}
+            </button>
           </li>
-          <li>
-            <a className="inline-flex items-center justify-center leading-5 px-3.5 py-2 bg-white hover:bg-indigo-500 border border-slate-200 text-slate-600 hover:text-white" href="#0">2</a>
-          </li>
-          <li>
-            <a className="inline-flex items-center justify-center leading-5 px-3.5 py-2 bg-white hover:bg-indigo-500 border border-slate-200 text-slate-600 hover:text-white" href="#0">3</a>
-          </li>
-          <li>
-            <span className="inline-flex items-center justify-center leading-5 px-3.5 py-2 bg-white border border-slate-200 text-slate-400">…</span>
-          </li>
-          <li>
-            <a className="inline-flex items-center justify-center rounded-r leading-5 px-3.5 py-2 bg-white hover:bg-indigo-500 border border-slate-200 text-slate-600 hover:text-white" href="#0">9</a>
-          </li>
-        </ul>
-        <div className="ml-2">
-          <a href="#0" className="inline-flex items-center justify-center rounded leading-5 px-2.5 py-2 bg-white hover:bg-indigo-500 border border-slate-200 text-slate-600 hover:text-white shadow-sm">
-            <span className="sr-only">Next</span><wbr />
-            <svg className="h-4 w-4 fill-current" viewBox="0 0 16 16">
-              <path d="M6.6 13.4L5.2 12l4-4-4-4 1.4-1.4L12 8z" />
-            </svg>
-          </a>
-        </div>
-      </nav>
+        ))}
+        <li>
+          <button
+            onClick={() => handlePageClick(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`px-2 py-1 rounded ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+              }`}
+          >
+            Next
+          </button>
+        </li>
+      </ul>
     </div>
   );
 }

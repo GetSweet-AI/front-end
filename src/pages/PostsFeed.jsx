@@ -51,7 +51,7 @@ function PostsFeed() {
         setIsUserDataLoading(true)
         await axios
             .get(
-                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/feed-posts/${user?._id}`
+                `http://localhost:5000/api/v1/feed-posts/${user?._id}`
             )
             .then((res) => {
                 setFeedPosts(res.data?.feedPosts);
@@ -67,7 +67,7 @@ function PostsFeed() {
 
         await axios
             .get(
-                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}`
+                `http://localhost:5000/api/v1/admin/feedposts?userId=${user?._id}`
             )
             .then((res) => {
                 setAdminFeedPosts(res.data);
@@ -81,7 +81,7 @@ function PostsFeed() {
     const deletePostFeed = async (id) => {
         await axios
             .delete(
-                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/feed-posts/${id}`
+                `http://localhost:5000/api/v1/feed-posts/${id}`
             )
             .then((res) => {
                 console.log("Post feed deleted")
@@ -92,10 +92,10 @@ function PostsFeed() {
             });
     };
 
-    useEffect(() => {
-        fetchUserFeedPosts();
-        fetchAllFeedPosts();
-    }, []);
+    // useEffect(() => {
+    //     fetchUserFeedPosts();
+    //     fetchAllFeedPosts();
+    // }, []);
 
 
     // console.log("Token " + token)
@@ -114,6 +114,52 @@ function PostsFeed() {
     };
 
     const [enabled, setEnabled] = useState(false)
+
+
+    const [pageNumber, setPageNumber] = useState(0);
+    const [numberOfPages, setNumberOfPages] = useState(0);
+
+    const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
+
+    const [adminPageNumber, setAdminPageNumber] = useState(0);
+    const [adminNumberOfPages, setAdminNumberOfPages] = useState(0);
+
+    const AdminPages = new Array(adminNumberOfPages).fill(null).map((v, i) => i);
+
+
+    useEffect(() => {
+        fetch(`http://localhost:5000/api/v1/feed-posts/${user?._id}?page=${pageNumber}`)
+            .then((response) => response.json())
+            .then(({ totalPages, feedPosts }) => {
+                setFeedPosts(feedPosts);
+                setNumberOfPages(totalPages);
+            });
+    }, [pageNumber]);
+    useEffect(() => {
+        fetch(`http://localhost:5000/api/v1/admin/feedposts?userId=${user?._id}&page=${adminPageNumber}`)
+            .then((response) => response.json())
+            .then(({ totalPages, feedPosts }) => {
+                setAdminFeedPosts(feedPosts);
+                setAdminNumberOfPages(totalPages);
+            });
+    }, [adminPageNumber]);
+    // Fetch data when the currentPage changes
+
+
+    const gotoPrevious = () => {
+        setPageNumber(Math.max(0, pageNumber - 1));
+    };
+
+    const gotoNext = () => {
+        setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
+    };
+    const gotoPreviousAdmin = () => {
+        setPageNumber(Math.max(0, adminPageNumber - 1));
+    };
+
+    const gotoNextAdmin = () => {
+        setPageNumber(Math.min(adminNumberOfPages - 1, adminPageNumber + 1));
+    };
 
     return (
         <div className="flex h-screen overflow-hidden">
@@ -218,6 +264,69 @@ function PostsFeed() {
                                 )
 
                             }
+
+                            {enabled ?
+
+                                <div className="mt-8">
+                                    <div class="flex items-center md:mt-4 justify-center space-x-2">
+                                        <button
+                                            className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                                            onClick={gotoPreviousAdmin}
+                                        >
+                                            Previous
+                                        </button>
+
+                                        {AdminPages.map((pageIndex) => (
+                                            <button
+                                                key={pageIndex}
+                                                className={`${adminPageNumber === pageIndex
+                                                    ? 'bg-blue-500 text-white'
+                                                    : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
+                                                    } px-3 py-1 rounded-lg`}
+                                                onClick={() => setAdminPageNumber(pageIndex)}
+                                            >
+                                                {pageIndex + 1}
+                                            </button>
+                                        ))}
+
+                                        <button
+                                            className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                                            onClick={gotoNextAdmin}
+                                        >
+                                            Next
+                                        </button>
+                                    </div>
+                                </div>
+                                : <div className="mt-8">
+                                    <div class="flex items-center md:mt-4 justify-center space-x-2">
+                                        <button
+                                            className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                                            onClick={gotoPrevious}
+                                        >
+                                            Previous
+                                        </button>
+
+                                        {pages.map((pageIndex) => (
+                                            <button
+                                                key={pageIndex}
+                                                className={`${pageNumber === pageIndex
+                                                    ? 'bg-blue-500 text-white'
+                                                    : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
+                                                    } px-3 py-1 rounded-lg`}
+                                                onClick={() => setPageNumber(pageIndex)}
+                                            >
+                                                {pageIndex + 1}
+                                            </button>
+                                        ))}
+
+                                        <button
+                                            className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                                            onClick={gotoNext}
+                                        >
+                                            Next
+                                        </button>
+                                    </div>
+                                </div>}
                         </div>
                         {/* Toast container */}
 

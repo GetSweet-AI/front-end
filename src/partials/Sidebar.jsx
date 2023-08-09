@@ -30,7 +30,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         setUser(res.data);
@@ -88,9 +88,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
     <div>
       {/* Sidebar backdrop (mobile only) */}
       <div
-        className={`fixed inset-0  bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${
-          sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed inset-0  bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
         aria-hidden="true"
       ></div>
 
@@ -98,9 +97,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
       <div
         id="sidebar"
         ref={sidebar}
-        className={`flex bg-purple-500 flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-72 lg:w-20 lg:sidebar-expanded:!w-72 2xl:!w-68 shrink-0 p-4 pr-0 transition-all duration-200 ease-in-out ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-72"
-        }`}
+        className={`flex bg-purple-500 flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-72 lg:w-20 lg:sidebar-expanded:!w-72 2xl:!w-68 shrink-0 p-4 pr-0 transition-all duration-200 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-72"
+          }`}
       >
         {/* Sidebar header */}
         <div className="">
@@ -154,19 +152,17 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               </li>
               {/* Home */}
               <li
-                className={`px-3 py-3 last:mb-0 ${
-                  pathname === "/brand-engagement-builder"
+                className={`px-3 py-3 last:mb-0 ${pathname === "/brand-engagement-builder"
                     ? "bg-white rounded-l-full"
                     : ""
-                }`}
+                  }`}
               >
                 <NavLink
                   end
                   to="/brand-engagement-builder"
-                  className={`block flex text-white hover:text-white truncate transition duration-150 ${
-                    pathname === "/brand-engagement-builder" &&
+                  className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/brand-engagement-builder" &&
                     "hover:text-white"
-                  }`}
+                    }`}
                 >
                   <div>
                     <svg
@@ -193,10 +189,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </div>
                   <div className="flex items-center overflow-hidden">
                     <span
-                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${
-                        pathname === "/brand-engagement-builder" &&
+                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/brand-engagement-builder" &&
                         "text-[#3b82f6]"
-                      }`}
+                        }`}
                     >
                       Brand Builder
                     </span>
@@ -204,16 +199,14 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 </NavLink>
               </li>
               <li
-                className={`px-3 py-3 last:mb-0 ${
-                  pathname === "/posts-feed" ? "bg-white rounded-l-full" : ""
-                }`}
+                className={`px-3 py-3 last:mb-0 ${pathname === "/posts-feed" ? "bg-white rounded-l-full" : ""
+                  }`}
               >
                 <NavLink
                   end
                   to="/posts-feed"
-                  className={`block flex text-white hover:text-white truncate transition duration-150 ${
-                    pathname === "/profile" && "hover:text-white"
-                  }`}
+                  className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/profile" && "hover:text-white"
+                    }`}
                 >
                   <div>
                     <svg
@@ -237,9 +230,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </div>
                   <div className="flex items-center overflow-hidden">
                     <span
-                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${
-                        pathname === "/posts-feed" && "text-[#3b82f6]"
-                      }`}
+                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/posts-feed" && "text-[#3b82f6]"
+                        }`}
                     >
                       Posts Feed
                     </span>
@@ -273,16 +265,14 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               )} */}
               {/* Home */}
               <li
-                className={`px-3 py-3 last:mb-0 ${
-                  pathname === "/payment" ? "bg-white rounded-l-full" : ""
-                }`}
+                className={`px-3 py-3 last:mb-0 ${pathname === "/payment" ? "bg-white rounded-l-full" : ""
+                  }`}
               >
                 <NavLink
                   end
                   to="/payment"
-                  className={`block flex text-white hover:text-white truncate transition duration-150 ${
-                    pathname === "/payment" && "hover:text-white"
-                  }`}
+                  className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/payment" && "hover:text-white"
+                    }`}
                 >
                   <div>
                     <svg
@@ -303,9 +293,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </div>
                   <div className="flex items-center overflow-hidden">
                     <span
-                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${
-                        pathname === "/payment" && "text-[#3b82f6]"
-                      }`}
+                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/payment" && "text-[#3b82f6]"
+                        }`}
                     >
                       Payment
                     </span>
@@ -314,16 +303,14 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               </li>
               {/* Home */}
               <li
-                className={`px-3 py-3 last:mb-0 ${
-                  pathname === "/profile" ? "bg-white rounded-l-full" : ""
-                }`}
+                className={`px-3 py-3 last:mb-0 ${pathname === "/profile" ? "bg-white rounded-l-full" : ""
+                  }`}
               >
                 <NavLink
                   end
                   to="/profile"
-                  className={`block flex text-white hover:text-white truncate transition duration-150 ${
-                    pathname === "/profile" && "hover:text-white"
-                  }`}
+                  className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/profile" && "hover:text-white"
+                    }`}
                 >
                   <div>
                     <svg
@@ -346,9 +333,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </div>
                   <div className="flex items-center overflow-hidden">
                     <span
-                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${
-                        pathname === "/profile" && "text-[#3b82f6]"
-                      }`}
+                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/profile" && "text-[#3b82f6]"
+                        }`}
                     >
                       Account settings
                     </span>
@@ -357,16 +343,14 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               </li>
               {user?.role === "admin" && (
                 <li
-                  className={`px-3 py-3 last:mb-0 ${
-                    pathname === "/users" ? "bg-white rounded-l-full" : ""
-                  }`}
+                  className={`px-3 py-3 last:mb-0 ${pathname === "/users" ? "bg-white rounded-l-full" : ""
+                    }`}
                 >
                   <NavLink
                     end
                     to="/users"
-                    className={`block flex text-white hover:text-white truncate transition duration-150 ${
-                      pathname === "/users" && "hover:text-white"
-                    }`}
+                    className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/users" && "hover:text-white"
+                      }`}
                   >
                     <div>
                       <FontAwesomeIcon
@@ -380,9 +364,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     </div>
                     <div className="flex items-center overflow-hidden">
                       <span
-                        className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${
-                          pathname === "/users" && "text-[#3b82f6]"
-                        }`}
+                        className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/users" && "text-[#3b82f6]"
+                          }`}
                       >
                         Users
                       </span>
@@ -392,19 +375,17 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               )}
               {user?.role === "admin" && (
                 <li
-                  className={`px-3 py-3 last:mb-0 ${
-                    pathname.startsWith("/brand-engagements")
+                  className={`px-3 py-3 last:mb-0 ${pathname.startsWith("/brand-engagements")
                       ? "bg-white rounded-l-full"
                       : ""
-                  }`}
+                    }`}
                 >
                   <NavLink
                     end
                     to="/brand-engagements"
-                    className={`block flex text-white hover:text-white truncate transition duration-150 ${
-                      pathname.startsWith("/brand-engagements") &&
+                    className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname.startsWith("/brand-engagements") &&
                       "hover:text-white"
-                    }`}
+                      }`}
                   >
                     <div>
                       <FontAwesomeIcon
@@ -418,10 +399,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     </div>
                     <div className="flex items-center overflow-hidden">
                       <span
-                        className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${
-                          pathname.startsWith("/brand-engagements") &&
+                        className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname.startsWith("/brand-engagements") &&
                           "text-[#3b82f6]"
-                        }`}
+                          }`}
                       >
                         Brand engagements
                       </span>

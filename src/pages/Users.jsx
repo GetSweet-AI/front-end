@@ -67,7 +67,7 @@ function Users() {
     setIsLoading(true)
     await axios
       .get(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}`
+        `http://localhost:5000/api/v1/admin/users?userId=${user?._id}`
       )
       .then((res) => {
         setUsers(res.data);
@@ -79,14 +79,30 @@ function Users() {
     setIsLoading(false)
   };
 
+  // useEffect(() => {
+  //   fetchUsers();
+  // }, []);
+
+  //pagination
+  const [pageNumber, setPageNumber] = useState(0);
+  const [numberOfPages, setNumberOfPages] = useState(0);
+
+  const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
+
+
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    fetch(`http://localhost:5000/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`)
+      .then((response) => response.json())
+      .then(({ totalPages, users }) => {
+        setUsers(users);
+        setNumberOfPages(totalPages);
+      });
+  }, [pageNumber]);
 
   const updateRole = (userId) => {
     axios
       .put(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users/${userId}/update-role`
+        `http://localhost:5000/api/v1/admin/users/${userId}/update-role`
       )
       .then((res) => {
         fetchUsers();
@@ -99,7 +115,7 @@ function Users() {
   const deleteUser = (userId) => {
     axios
       .delete(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${userId}`
+        `http://localhost:5000/api/v1/auth/users/${userId}`
       )
       .then((res) => {
         fetchUsers();
@@ -109,6 +125,14 @@ function Users() {
         console.log(err);
         toast.error(error);
       });
+  };
+
+  const gotoPrevious = () => {
+    setPageNumber(Math.max(0, pageNumber - 1));
+  };
+
+  const gotoNext = () => {
+    setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
   };
 
   return (
@@ -139,16 +163,16 @@ function Users() {
               visible={true}
             />
           </div>}
-          <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+          <div className="px-4 sm:px-6 lg:px-8 pt-8 w-full max-w-9xl mx-auto">
             {/* Page header */}
-            <div className="h-screen mb-8">
+            <div className="h-screen ">
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0">
                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
                   Users
                 </h1>
               </div>
-              <div className="w-full h-[700px] mt-10 overflow-x-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-blue-300 overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
+              <div className="w-full h-auto mt-10 overflow-x-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-blue-300 overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
                 <table className="min-w-full">
                   <thead>
                     <tr className="bg-purple-500 text-white">
@@ -166,7 +190,7 @@ function Users() {
                     </tr>
                   </thead>
                   <tbody>
-                    {users.filter((client) => (client._id !== user?._id) && client?.isEmailConfirmed === true).map((client, index) => (
+                    {users?.map((client, index) => (
                       <tr
                         key={client._id}
                         className={
@@ -208,6 +232,34 @@ function Users() {
                 </table>
               </div>
             </div>
+          </div>
+          <div class="flex md:mb-2 items-center  justify-center space-x-2">
+            <button
+              className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+              onClick={gotoPrevious}
+            >
+              Previous
+            </button>
+
+            {pages.map((pageIndex) => (
+              <button
+                key={pageIndex}
+                className={`${pageNumber === pageIndex
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
+                  } px-3 py-1 rounded-lg`}
+                onClick={() => setPageNumber(pageIndex)}
+              >
+                {pageIndex + 1}
+              </button>
+            ))}
+
+            <button
+              className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+              onClick={gotoNext}
+            >
+              Next
+            </button>
           </div>
         </main>
       </div>

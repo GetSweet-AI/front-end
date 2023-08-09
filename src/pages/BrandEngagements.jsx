@@ -15,47 +15,6 @@ import { useSelector } from "react-redux";
 import { MutatingDots } from "react-loader-spinner";
 
 function BrandEngagements() {
-  const items = [
-    {
-      id: 0,
-      category: "1",
-      members: [
-        {
-          name: "User 01",
-          image: Image01,
-          link: "#0",
-        },
-      ],
-      title: "Brand Engagement 1",
-      link: "/BrandEngagement/1",
-      content:
-        "Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts.",
-      dates: {
-        from: "Jan 20",
-      },
-      type: "draft",
-    },
-    {
-      id: 1,
-      category: "2",
-      members: [
-        {
-          name: "User 04",
-          image: Image02,
-          link: "#0",
-        },
-      ],
-      title: "Brand Engagement 2",
-      link: "/BrandEngagEment/2",
-      content:
-        "Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts.",
-      dates: {
-        from: "Jan 20",
-        // to: 'Jan 27'
-      },
-      type: "published",
-    },
-  ];
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -64,25 +23,63 @@ function BrandEngagements() {
   const [result, setResult] = useState(null);
   const { token, user } = useSelector((state) => state.auth);
 
-  const fetchEngagements = async () => {
-    setIsLoading(true);
-    await axios
-      .get(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}`
-      )
-      .then((res) => {
-        setEngagements(res.data?.brandEngagements);
-        console.log("brandEngagements" + JSON.stringify(res?.data));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    setIsLoading(false);
-  };
+  // const fetchEngagements = async () => {
+  //   setIsLoading(true);
+  //   await axios
+  //     .get(
+  //       `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}`
+  //     )
+  //     .then((res) => {
+  //       setEngagements(res.data?.brandEngagements);
+  //       console.log("brandEngagements" + JSON.stringify(res?.data));
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  //   setIsLoading(false);
+  // };
+
+  //pagination
+  const [pageNumber, setPageNumber] = useState(0);
+  const [numberOfPages, setNumberOfPages] = useState(0);
+
+  const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
+
+  // const fetchEngagements = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await axios.get(
+  //       `http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}`
+  //     );
+  //     setEngagements(response.data?.brandEngagements);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  //   setIsLoading(false);
+  // };
 
   useEffect(() => {
-    fetchEngagements();
-  }, []);
+    fetch(`http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+      .then((response) => response.json())
+      .then(({ totalPages, brandEngagements }) => {
+        setEngagements(brandEngagements);
+        setNumberOfPages(totalPages);
+      });
+  }, [pageNumber]);
+  // Fetch data when the currentPage changes
+
+
+  const gotoPrevious = () => {
+    setPageNumber(Math.max(0, pageNumber - 1));
+  };
+
+  const gotoNext = () => {
+    setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
+  };
+
+  // useEffect(() => {
+  //   fetchEngagements();
+  // }, []);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -156,7 +153,7 @@ function BrandEngagements() {
                         brandTone={item.BrandTone}
                         targetAudience={item.TargetAudience}
                         postType={item.PostType}
-                        fetchEngagements={fetchEngagements}
+                      // fetchEngagements={fetchEngagements}
                       />
                     );
                   })}
@@ -165,7 +162,36 @@ function BrandEngagements() {
             )}
 
             {/* Pagination */}
-            <div className="mt-8">{/* <PaginationNumeric /> */}</div>
+            <div className="mt-8">
+              <div class="flex items-center md:mt-4 justify-center space-x-2">
+                <button
+                  className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                  onClick={gotoPrevious}
+                >
+                  Previous
+                </button>
+
+                {pages.map((pageIndex) => (
+                  <button
+                    key={pageIndex}
+                    className={`${pageNumber === pageIndex
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
+                      } px-3 py-1 rounded-lg`}
+                    onClick={() => setPageNumber(pageIndex)}
+                  >
+                    {pageIndex + 1}
+                  </button>
+                ))}
+
+                <button
+                  className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                  onClick={gotoNext}
+                >
+                  Next
+                </button>
+              </div>
+              {/* <PaginationNumeric /> */}</div>
           </div>
         </main>
       </div>

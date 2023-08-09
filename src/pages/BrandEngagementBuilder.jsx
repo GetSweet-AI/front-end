@@ -25,12 +25,30 @@ import { setUserData } from "../redux/auth";
 function BrandEngagementBuilder() {
   const dispatch = useDispatch();
 
+  //pagination
+  const [pageNumber, setPageNumber] = useState(0);
+  const [numberOfPages, setNumberOfPages] = useState(0);
+
+  const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
+
+
   const [previewLoading, setPreviewLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [engagements, setEngagements] = useState([]);
   const [result, setResult] = useState(null);
   const { token, user } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
+
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`)
+      .then((response) => response.json())
+      .then(({ totalPages, brandEngagements }) => {
+        setEngagements(brandEngagements);
+        setNumberOfPages(totalPages);
+      });
+  }, [pageNumber]);
+
 
   const getUserData = async () => {
     await axios
@@ -200,23 +218,21 @@ function BrandEngagementBuilder() {
   };
   // console.log("_id :" + user?._id)
 
-  const fetchEngagements = async () => {
-    await axios
-      .get(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${user?._id}`
-      )
-      .then((res) => {
-        setEngagements(res.data?.brandEngagements);
-        console.log("res?.data :" + JSON.stringify(res?.data));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // const fetchEngagements = async () => {
+  //   await axios
+  //     .get(
+  //       `https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${user?._id}`
+  //     )
+  //     .then((res) => {
+  //       setEngagements(res.data?.brandEngagements);
+  //       console.log("res?.data :" + JSON.stringify(res?.data));
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
-  useEffect(() => {
-    fetchEngagements();
-  }, []);
+
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -239,6 +255,14 @@ function BrandEngagementBuilder() {
   };
 
   console.log("Post type :" + JSON.stringify(values.postType));
+
+  const gotoPrevious = () => {
+    setPageNumber(Math.max(0, pageNumber - 1));
+  };
+
+  const gotoNext = () => {
+    setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
+  };
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -365,85 +389,6 @@ function BrandEngagementBuilder() {
                           />
                         </div>
                         <div className="w-full md:w-1/2 p-2">
-                          <label htmlFor="select2" className="block mb-1">
-                            Company Sector
-                          </label>
-                          <Select
-                            id="select2"
-                            className="w-full"
-                            name="companySector"
-                            placeholder="Company Sector"
-                            value={values.companySector}
-                            onChange={(selectedOption) =>
-                              handleSelectChange(
-                                "companySector",
-                                selectedOption
-                              )
-                            }
-                            options={[
-                              {
-                                value: "E-commerce and Online Retail",
-                                label: "E-commerce and Online Retail",
-                              },
-                              {
-                                value: "Health and Wellness",
-                                label: "Health and Wellness",
-                              },
-                              {
-                                value: "Technology and Software Development",
-                                label: "Technology and Software Development",
-                              },
-                              {
-                                value: "Digital Marketing and Social Media",
-                                label: "Digital Marketing and Social Media",
-                              },
-                              {
-                                value: "Food and Beverage",
-                                label: "Food and Beverage",
-                              },
-                              {
-                                value: "Social Enterprise and Impact Investing",
-                                label: "Social Enterprise and Impact Investing",
-                              },
-                            ]}
-                          />
-                        </div>
-                        <div className="w-full md:w-1/2 p-2">
-                          <label htmlFor="select3" className="block mb-1">
-                            Brand Tone
-                          </label>
-                          <Select
-                            id="select3"
-                            className="w-full"
-                            placeholder="Brand Tone"
-                            name="brandTone"
-                            value={values.brandTone}
-                            onChange={(selectedOption) =>
-                              handleSelectChange("brandTone", selectedOption)
-                            }
-                            options={brandTones}
-                          />
-                        </div>
-                        <div className="w-full md:w-1/2 p-2">
-                          <label htmlFor="select4" className="block mb-1">
-                            Target Audience
-                          </label>
-                          <Select
-                            id="select4"
-                            className="w-full"
-                            name="targetAudience"
-                            placeholder="Target Audience"
-                            value={values.targetAudience}
-                            onChange={(selectedOption) =>
-                              handleSelectChange(
-                                "targetAudience",
-                                selectedOption
-                              )
-                            }
-                            options={targetAudienceOptions}
-                          />
-                        </div>
-                        <div className="w-full md:w-1/2 p-2">
                           <label className="block mb-1">Post type</label>
                           <Select
                             id="select3"
@@ -482,6 +427,96 @@ function BrandEngagementBuilder() {
                         /> */}
                           </div>
                         )}
+                        <div className="w-full  p-2">
+                          <label htmlFor="select2" className="block mb-1">
+                            Brand Description
+                          </label>
+                          {/* Brand Description Text Box */}
+                          <input
+                            // id="input1"
+                            className="w-full border-gray-300 rounded p-2"
+                            type="text"
+                            name="companySector"
+                            placeholder="Brand Name"
+                            value={values.companySector}
+                            onChange={handleInputChange}
+                          />
+                          {/* <Select
+                            id="select2"
+                            className="w-full"
+                            name="companySector"
+                            placeholder="Company Sector"
+                            value={values.companySector}
+                            onChange={(selectedOption) =>
+                              handleSelectChange(
+                                "companySector",
+                                selectedOption
+                              )
+                            }
+                            options={[
+                              {
+                                value: "E-commerce and Online Retail",
+                                label: "E-commerce and Online Retail",
+                              },
+                              {
+                                value: "Health and Wellness",
+                                label: "Health and Wellness",
+                              },
+                              {
+                                value: "Technology and Software Development",
+                                label: "Technology and Software Development",
+                              },
+                              {
+                                value: "Digital Marketing and Social Media",
+                                label: "Digital Marketing and Social Media",
+                              },
+                              {
+                                value: "Food and Beverage",
+                                label: "Food and Beverage",
+                              },
+                              {
+                                value: "Social Enterprise and Impact Investing",
+                                label: "Social Enterprise and Impact Investing",
+                              },
+                            ]}
+                          /> */}
+                        </div>
+                        <div className="w-full md:w-1/2 p-2">
+                          <label htmlFor="select3" className="block mb-1">
+                            Brand Tone
+                          </label>
+                          <Select
+                            id="select3"
+                            className="w-full"
+                            placeholder="Brand Tone"
+                            name="brandTone"
+                            value={values.brandTone}
+                            onChange={(selectedOption) =>
+                              handleSelectChange("brandTone", selectedOption)
+                            }
+                            options={brandTones}
+                          />
+                        </div>
+                        <div className="w-full md:w-1/2 p-2">
+                          <label htmlFor="select4" className="block mb-1">
+                            Target Audience
+                          </label>
+                          <Select
+                            id="select4"
+                            className="w-full"
+                            name="targetAudience"
+                            placeholder="Target Audience"
+                            value={values.targetAudience}
+                            onChange={(selectedOption) =>
+                              handleSelectChange(
+                                "targetAudience",
+                                selectedOption
+                              )
+                            }
+                            options={targetAudienceOptions}
+                          />
+                        </div>
+
                         <div className="flex w-full justify-center items-center">
                           <p className="text-red-500 text-sm my-2  text-center">
                             {message ? message : ""}
@@ -564,6 +599,8 @@ function BrandEngagementBuilder() {
 
             {/* Toast container */}
             <ToastContainer />
+
+
             {engagements?.length > 0 && (
               <div className="">
                 <h5 className="md:text-2xl text-xl md:mb-0 mb-2 font-bold ">
@@ -582,11 +619,41 @@ function BrandEngagementBuilder() {
                         brandTone={item.BrandTone}
                         targetAudience={item.TargetAudience}
                         postType={item.PostType}
-                        fetchEngagements={fetchEngagements}
+                      // fetchEngagements={fetchEngagements}
                       />
                     );
                   })}
                 </div>
+                <div class="flex items-center md:mt-4 justify-center space-x-2">
+                  <button
+                    className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                    onClick={gotoPrevious}
+                  >
+                    Previous
+                  </button>
+
+                  {pages.map((pageIndex) => (
+                    <button
+                      key={pageIndex}
+                      className={`${pageNumber === pageIndex
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
+                        } px-3 py-1 rounded-lg`}
+                      onClick={() => setPageNumber(pageIndex)}
+                    >
+                      {pageIndex + 1}
+                    </button>
+                  ))}
+
+                  <button
+                    className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                    onClick={gotoNext}
+                  >
+                    Next
+                  </button>
+                </div>
+
+
               </div>
             )}
           </div>
