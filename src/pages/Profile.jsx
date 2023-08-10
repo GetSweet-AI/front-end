@@ -45,9 +45,7 @@ function Profile() {
   const [userData, setUser] = useState([]);
   const fetchUserData = async () => {
     await axios
-      .get(
-        `http://localhost:5000/api/v1/auth/users/${user?._id}`
-      )
+      .get(`http://localhost:5000/api/v1/auth/users/${user?._id}`)
       .then((res) => {
         setUser(res.data);
         // dispatch(setUserData(res?.data.user))
@@ -78,13 +76,10 @@ function Profile() {
             currentUser
           )
           .then((res) => {
-            axios.post(
-              "http://localhost:5000/api/v1/auth/reset-password",
-              {
-                email: res?.data.user?.email,
-                newPassword: values.password,
-              }
-            );
+            axios.post("http://localhost:5000/api/v1/auth/reset-password", {
+              email: res?.data.user?.email,
+              newPassword: values.password,
+            });
           });
       } else {
         await axios.put(
@@ -117,9 +112,7 @@ function Profile() {
   };
   const deleteUser = (userId) => {
     axios
-      .delete(
-        `http://localhost:5000/api/v1/auth/users/${userId}`
-      )
+      .delete(`http://localhost:5000/api/v1/auth/users/${userId}`)
       .then((res) => {
         toast.success("User deleted successfully");
         dispatch(logoutUser());
