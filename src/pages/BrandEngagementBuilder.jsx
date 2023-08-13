@@ -41,7 +41,7 @@ function BrandEngagementBuilder() {
 
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`)
+    fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`)
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
         setEngagements(brandEngagements);
@@ -92,7 +92,7 @@ function BrandEngagementBuilder() {
 
   const postData = {
     Timezone: values.timeZone?.value,
-    CompanySector: values.companySector?.value,
+    CompanySector: values.companySector,
     BrandTone: values.brandTone?.value,
     TargetAudience: values.targetAudience?.value,
     PostType: values.postType?.value,
@@ -106,22 +106,10 @@ function BrandEngagementBuilder() {
     const {
       brandName,
       brandTone,
-      postType,
-      timeZone,
-      targetAudience,
       companySector,
-      websiteUrl,
     } = values;
     if (!brandTone) {
       dispatch(setMessage("Please provide the brand tone"));
-    } else if (!postType) {
-      dispatch(setMessage("Please provide the post type"));
-    } else if (!targetAudience) {
-      dispatch(setMessage("Please provide the target audience"));
-    } else if (!websiteUrl) {
-      dispatch(setMessage("Please provide the website URL"));
-    } else if (!timeZone) {
-      dispatch(setMessage("Please provide the time zone"));
     } else if (!companySector) {
       dispatch(setMessage("Please provide the company sector"));
     } else if (!brandName) {
@@ -133,13 +121,9 @@ function BrandEngagementBuilder() {
         .post(
           "https://seashell-app-8amlb.ondigitalocean.app/api/v1/generate-blog-post",
           {
-            targetAudience: values.targetAudience?.value,
-            platform: values.websiteUrl,
-            question:
-              values.postType?.value === "other"
-                ? values.other
-                : values.postType?.value,
             tone: values.brandTone?.value,
+            brandName: values.brandName,
+            CompanySector: values.companySector,
           }
         )
         .then((res) => {
@@ -159,21 +143,16 @@ function BrandEngagementBuilder() {
 
   const handleSave = async () => {
     setSaveLoading(true);
+
     const {
       brandName,
       brandTone,
-      postType,
       timeZone,
-      targetAudience,
       companySector,
       websiteUrl,
     } = values;
     if (
       !brandTone |
-      !postType |
-      !targetAudience |
-      !websiteUrl |
-      !timeZone |
       !companySector |
       !brandName
     ) {
@@ -187,11 +166,16 @@ function BrandEngagementBuilder() {
         )
         .then((res) => {
           getUserData();
+          handleReset();
           setSaveLoading(false);
           // console.log(res.data);
-          fetchEngagements();
+          fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`)
+            .then((response) => response.json())
+            .then(({ totalPages, brandEngagements }) => {
+              setEngagements(brandEngagements);
+              setNumberOfPages(totalPages);
+            });
 
-          handleReset();
           dispatch(clearMessage());
           // dispatch("")
         })
@@ -202,6 +186,7 @@ function BrandEngagementBuilder() {
         });
     }
     setSaveLoading(false);
+    // alert(JSON.stringify(values))
   };
 
   const handleReset = () => {
@@ -209,9 +194,10 @@ function BrandEngagementBuilder() {
       brandName: "",
       websiteUrl: "",
       timeZone: null,
-      companySector: null,
+      companySector: "",
       brandTone: null,
       targetAudience: null,
+
     });
     setResult(null);
     dispatch(clearMessage());
@@ -254,7 +240,7 @@ function BrandEngagementBuilder() {
     toast.success("Text copied successfully!");
   };
 
-  console.log("Post type :" + JSON.stringify(values.postType));
+  // console.log("Post type :" + JSON.stringify(values.postType));
 
   const gotoPrevious = () => {
     setPageNumber(Math.max(0, pageNumber - 1));
@@ -322,8 +308,80 @@ function BrandEngagementBuilder() {
                           />
                         </div>
                         <div className="w-full md:w-1/2 p-2">
+                          <label htmlFor="select3" className="block mb-1">
+                            Brand Tone
+                          </label>
+                          <Select
+                            id="select3"
+                            className="w-full"
+                            placeholder="Brand Tone"
+                            name="brandTone"
+                            value={values.brandTone}
+                            onChange={(selectedOption) =>
+                              handleSelectChange("brandTone", selectedOption)
+                            }
+                            options={brandTones}
+                          />
+                        </div>
+                        <div className="w-full  p-2">
+                          <label htmlFor="select2" className="block mb-1">
+                            Brand Description
+                          </label>
+                          {/* Brand Description Text Box */}
+                          <textarea
+                            // id="input1"
+                            className="w-full border-gray-300 rounded p-2"
+                            type="text"
+                            rows={2}
+                            name="companySector"
+                            placeholder="Enter your brand description "
+                            value={values.companySector}
+                            onChange={handleInputChange}
+                          />
+                          {/* <Select
+                            id="select2"
+                            className="w-full"
+                            name="companySector"
+                            placeholder="Company Sector"
+                            value={values.companySector}
+                            onChange={(selectedOption) =>
+                              handleSelectChange(
+                                "companySector",
+                                selectedOption
+                              )
+                            }
+                            options={[
+                              {
+                                value: "E-commerce and Online Retail",
+                                label: "E-commerce and Online Retail",
+                              },
+                              {
+                                value: "Health and Wellness",
+                                label: "Health and Wellness",
+                              },
+                              {
+                                value: "Technology and Software Development",
+                                label: "Technology and Software Development",
+                              },
+                              {
+                                value: "Digital Marketing and Social Media",
+                                label: "Digital Marketing and Social Media",
+                              },
+                              {
+                                value: "Food and Beverage",
+                                label: "Food and Beverage",
+                              },
+                              {
+                                value: "Social Enterprise and Impact Investing",
+                                label: "Social Enterprise and Impact Investing",
+                              },
+                            ]}
+                          /> */}
+                        </div>
+
+                        <div className="w-full md:w-1/2 p-2">
                           <label htmlFor="input2" className="block mb-1">
-                            Website URL
+                            Website URL (Optional)
                           </label>
                           <input
                             id="input2"
@@ -388,7 +446,7 @@ function BrandEngagementBuilder() {
                             ]}
                           />
                         </div>
-                        <div className="w-full md:w-1/2 p-2">
+                        {/* <div className="w-full md:w-1/2 p-2">
                           <label className="block mb-1">Post type</label>
                           <Select
                             id="select3"
@@ -400,8 +458,8 @@ function BrandEngagementBuilder() {
                             }
                             options={postTypeOptions}
                           />
-                        </div>
-                        {values.postType?.value === "other" && (
+                        </div> */}
+                        {/* {values.postType?.value === "other" && (
                           <div className="w-full md:w-1/2 p-2">
                             <label className="block mb-1">
                               Enter a post type
@@ -415,7 +473,7 @@ function BrandEngagementBuilder() {
                               value={values.other}
                               onChange={handleInputChange}
                             />
-                            {/* <Select
+                            <Select
                           id="select3"
                           className="w-full"
                           placeholder="Post Type"
@@ -424,80 +482,11 @@ function BrandEngagementBuilder() {
                             handleSelectChange("postType", selectedOption)
                           }
                           options={postTypeOptions}
-                        /> */}
+                        />
                           </div>
-                        )}
-                        <div className="w-full  p-2">
-                          <label htmlFor="select2" className="block mb-1">
-                            Brand Description
-                          </label>
-                          {/* Brand Description Text Box */}
-                          <input
-                            // id="input1"
-                            className="w-full border-gray-300 rounded p-2"
-                            type="text"
-                            name="companySector"
-                            placeholder="Brand Name"
-                            value={values.companySector}
-                            onChange={handleInputChange}
-                          />
-                          {/* <Select
-                            id="select2"
-                            className="w-full"
-                            name="companySector"
-                            placeholder="Company Sector"
-                            value={values.companySector}
-                            onChange={(selectedOption) =>
-                              handleSelectChange(
-                                "companySector",
-                                selectedOption
-                              )
-                            }
-                            options={[
-                              {
-                                value: "E-commerce and Online Retail",
-                                label: "E-commerce and Online Retail",
-                              },
-                              {
-                                value: "Health and Wellness",
-                                label: "Health and Wellness",
-                              },
-                              {
-                                value: "Technology and Software Development",
-                                label: "Technology and Software Development",
-                              },
-                              {
-                                value: "Digital Marketing and Social Media",
-                                label: "Digital Marketing and Social Media",
-                              },
-                              {
-                                value: "Food and Beverage",
-                                label: "Food and Beverage",
-                              },
-                              {
-                                value: "Social Enterprise and Impact Investing",
-                                label: "Social Enterprise and Impact Investing",
-                              },
-                            ]}
-                          /> */}
-                        </div>
-                        <div className="w-full md:w-1/2 p-2">
-                          <label htmlFor="select3" className="block mb-1">
-                            Brand Tone
-                          </label>
-                          <Select
-                            id="select3"
-                            className="w-full"
-                            placeholder="Brand Tone"
-                            name="brandTone"
-                            value={values.brandTone}
-                            onChange={(selectedOption) =>
-                              handleSelectChange("brandTone", selectedOption)
-                            }
-                            options={brandTones}
-                          />
-                        </div>
-                        <div className="w-full md:w-1/2 p-2">
+                        )} */}
+
+                        {/* <div className="w-full md:w-1/2 p-2">
                           <label htmlFor="select4" className="block mb-1">
                             Target Audience
                           </label>
@@ -515,7 +504,7 @@ function BrandEngagementBuilder() {
                             }
                             options={targetAudienceOptions}
                           />
-                        </div>
+                        </div> */}
 
                         <div className="flex w-full justify-center items-center">
                           <p className="text-red-500 text-sm my-2  text-center">
@@ -603,7 +592,7 @@ function BrandEngagementBuilder() {
 
             {engagements?.length > 0 && (
               <div className="">
-                <h5 className="md:text-2xl text-xl md:mb-0 mb-2 font-bold ">
+                <h5 className="md:text-2xl text-xl  mb-2 font-bold ">
                   Your saved brand engagements
                 </h5>
                 <div className="grid grid-cols-12 gap-6">
