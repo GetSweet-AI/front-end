@@ -1,12 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 
-export default function MyModal({
-  isOpen,
-  closeModal,
-  openModal,
-  deleteAccount,
-}) {
+export default function MyModal({ isOpen, closeModal, deleteAccount }) {
   const [inputDel, setInputDel] = useState("");
   const [confirmation, setConfirmation] = useState("");
 
@@ -24,17 +19,20 @@ export default function MyModal({
   const handleButtonDel = () => {
     if (inputDel === "DELETE") {
       setConfirmation("Successful");
-      {
-        deleteAccount();
-      }
+
+      deleteAccount();
     } else {
       setConfirmation("Denied");
-      {
-        closeModal();
-      }
+      closeModal();
     }
   };
 
+  const buttonDisabled = inputDel !== "DELETE";
+  const buttonClasses = `inline-flex justify-center rounded-md border text-sm font-medium py-2 px-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition-colors duration-300 ${
+    buttonDisabled
+      ? "bg-gray-300 border-gray-300 text-gray-700 cursor-not-allowed"
+      : "bg-red-500 border-transparent text-white hover:bg-red-600"
+  }`;
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -77,7 +75,7 @@ export default function MyModal({
 
                   <div className="mt-4 flex">
                     <input
-                      className="border-gray-300 rounded-md text-md font-medium text-purple-900 placeholder-gray-300"
+                      className="rounded-md font-medium text-purple-900 py-1 px-3 border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-700"
                       type="text"
                       placeholder="DELETE"
                       value={inputDel}
@@ -95,8 +93,9 @@ export default function MyModal({
                     </button>
                     <button
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      className={buttonClasses}
                       onClick={handleButtonDel}
+                      disabled={buttonDisabled}
                     >
                       Delete
                     </button>

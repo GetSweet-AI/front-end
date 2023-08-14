@@ -67,7 +67,7 @@ function Users() {
     setIsLoading(true)
     await axios
       .get(
-        `http://localhost:5000/api/v1/admin/users?userId=${user?._id}`
+        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}`
       )
       .then((res) => {
         setUsers(res.data);
@@ -91,7 +91,7 @@ function Users() {
 
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`)
+    fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`)
       .then((response) => response.json())
       .then(({ totalPages, users }) => {
         setUsers(users);
@@ -102,7 +102,7 @@ function Users() {
   const updateRole = (userId) => {
     axios
       .put(
-        `http://localhost:5000/api/v1/admin/users/${userId}/update-role`
+        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users/${userId}/update-role`
       )
       .then((res) => {
         fetchUsers();
@@ -115,7 +115,7 @@ function Users() {
   const deleteUser = (userId) => {
     axios
       .delete(
-        `http://localhost:5000/api/v1/auth/users/${userId}`
+        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${userId}`
       )
       .then((res) => {
         fetchUsers();
@@ -230,37 +230,37 @@ function Users() {
                     ))}
                   </tbody>
                 </table>
+              </div>    <div class="flex my-2 items-center  justify-center space-x-2">
+                <button
+                  className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                  onClick={gotoPrevious}
+                >
+                  Previous
+                </button>
+
+                {pages.map((pageIndex) => (
+                  <button
+                    key={pageIndex}
+                    className={`${pageNumber === pageIndex
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
+                      } px-3 py-1 rounded-lg`}
+                    onClick={() => setPageNumber(pageIndex)}
+                  >
+                    {pageIndex + 1}
+                  </button>
+                ))}
+
+                <button
+                  className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                  onClick={gotoNext}
+                >
+                  Next
+                </button>
               </div>
             </div>
           </div>
-          <div class="flex md:mb-2 items-center  justify-center space-x-2">
-            <button
-              className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
-              onClick={gotoPrevious}
-            >
-              Previous
-            </button>
 
-            {pages.map((pageIndex) => (
-              <button
-                key={pageIndex}
-                className={`${pageNumber === pageIndex
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
-                  } px-3 py-1 rounded-lg`}
-                onClick={() => setPageNumber(pageIndex)}
-              >
-                {pageIndex + 1}
-              </button>
-            ))}
-
-            <button
-              className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
-              onClick={gotoNext}
-            >
-              Next
-            </button>
-          </div>
         </main>
       </div>
       {/* Toast container */}

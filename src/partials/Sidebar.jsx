@@ -30,7 +30,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const fetchUserData = async () => {
     await axios
       .get(
-        `http://localhost:5000/api/v1/auth/users/${user?._id}`
+        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         setUser(res.data);
@@ -153,8 +153,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               {/* Home */}
               <li
                 className={`px-3 py-3 last:mb-0 ${pathname === "/brand-engagement-builder"
-                    ? "bg-white rounded-l-full"
-                    : ""
+                  ? "bg-white rounded-l-full"
+                  : ""
                   }`}
               >
                 <NavLink
@@ -376,8 +376,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               {user?.role === "admin" && (
                 <li
                   className={`px-3 py-3 last:mb-0 ${pathname.startsWith("/brand-engagements")
-                      ? "bg-white rounded-l-full"
-                      : ""
+                    ? "bg-white rounded-l-full"
+                    : ""
                     }`}
                 >
                   <NavLink

@@ -49,7 +49,7 @@ function BrandEngagements() {
   //   setIsLoading(true);
   //   try {
   //     const response = await axios.get(
-  //       `http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}`
+  //       `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}`
   //     );
   //     setEngagements(response.data?.brandEngagements);
   //   } catch (error) {
@@ -59,7 +59,7 @@ function BrandEngagements() {
   // };
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+    fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
         setEngagements(brandEngagements);

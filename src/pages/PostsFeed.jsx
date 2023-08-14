@@ -51,7 +51,7 @@ function PostsFeed() {
         setIsUserDataLoading(true)
         await axios
             .get(
-                `http://localhost:5000/api/v1/feed-posts/${user?._id}`
+                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/feed-posts/${user?._id}`
             )
             .then((res) => {
                 setFeedPosts(res.data?.feedPosts);
@@ -67,7 +67,7 @@ function PostsFeed() {
 
         await axios
             .get(
-                `http://localhost:5000/api/v1/admin/feedposts?userId=${user?._id}`
+                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}`
             )
             .then((res) => {
                 setAdminFeedPosts(res.data);
@@ -81,7 +81,7 @@ function PostsFeed() {
     const deletePostFeed = async (id) => {
         await axios
             .delete(
-                `http://localhost:5000/api/v1/feed-posts/${id}`
+                `https://seashell-app-8amlb.ondigitalocean.app/api/v1/feed-posts/${id}`
             )
             .then((res) => {
                 console.log("Post feed deleted")
@@ -128,7 +128,7 @@ function PostsFeed() {
 
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/feed-posts/${user?._id}?page=${pageNumber}`)
+        fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/feed-posts/${user?._id}?page=${pageNumber}`)
             .then((response) => response.json())
             .then(({ totalPages, feedPosts }) => {
                 setFeedPosts(feedPosts);
@@ -136,7 +136,7 @@ function PostsFeed() {
             });
     }, [pageNumber]);
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/admin/feedposts?userId=${user?._id}&page=${adminPageNumber}`)
+        fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}&page=${adminPageNumber}`)
             .then((response) => response.json())
             .then(({ totalPages, feedPosts }) => {
                 setAdminFeedPosts(feedPosts);
@@ -297,7 +297,8 @@ function PostsFeed() {
                                         </button>
                                     </div>
                                 </div>
-                                : <div className="mt-8">
+                                :
+                                <div className="mt-8">
                                     <div class="flex items-center md:mt-4 justify-center space-x-2">
                                         <button
                                             className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
@@ -327,6 +328,8 @@ function PostsFeed() {
                                         </button>
                                     </div>
                                 </div>}
+
+
                         </div>
                         {/* Toast container */}
 
