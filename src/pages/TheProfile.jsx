@@ -19,7 +19,7 @@ const initialState = {
   fullName: "",
 };
 
-function Profile() {
+function TheProfile() {
   let [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
@@ -334,4 +334,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default TheProfile;

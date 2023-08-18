@@ -10,7 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import BrandEngagements from "./pages/BrandEngagements";
 import BrandEngagementBuilder from "./pages/BrandEngagementBuilder";
 import BrandEngagementCard from "./pages/BrandEngagementCard";
-import Profile from "./pages/profile";
+import TheProfile from "./pages/TheProfile";
 import { useSelector } from "react-redux";
 import ResetPassword from "./pages/ResetPassword";
 import VerifyEmail from "./pages/VerifyEmail";
@@ -65,7 +65,7 @@ function App() {
         />
         <Route
           path="/profile"
-          element={isLoggedIn ? <Profile /> : <SignIn />}
+          element={isLoggedIn ? <TheProfile /> : <SignIn />}
         />
         <Route
           path="/payment"
