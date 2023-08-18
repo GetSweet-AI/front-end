@@ -31,7 +31,6 @@ function BrandEngagementBuilder() {
 
   const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
 
-
   const [previewLoading, setPreviewLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [engagements, setEngagements] = useState([]);
@@ -39,16 +38,16 @@ function BrandEngagementBuilder() {
   const { token, user } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
 
-
   useEffect(() => {
-    fetch(`http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`)
+    fetch(
+      `https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+    )
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
         setEngagements(brandEngagements);
         setNumberOfPages(totalPages);
       });
   }, [pageNumber]);
-
 
   const getUserData = async () => {
     await axios
@@ -151,18 +150,9 @@ function BrandEngagementBuilder() {
   const handleSave = async () => {
     setSaveLoading(true);
 
-    const {
-      brandName,
-      brandTone,
-      timeZone,
-      companySector,
-      websiteUrl,
-    } = values;
-    if (
-      !brandTone |
-      !companySector |
-      !brandName
-    ) {
+    const { brandName, brandTone, timeZone, companySector, websiteUrl } =
+      values;
+    if (!brandTone | !companySector | !brandName) {
       dispatch(setMessage("Please provide all values "));
       setSaveLoading(false);
     } else {
@@ -176,7 +166,9 @@ function BrandEngagementBuilder() {
           handleReset();
           setSaveLoading(false);
           // console.log(res.data);
-          fetch(`http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`)
+          fetch(
+            `https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+          )
             .then((response) => response.json())
             .then(({ totalPages, brandEngagements }) => {
               setEngagements(brandEngagements);
@@ -204,7 +196,6 @@ function BrandEngagementBuilder() {
       companySector: "",
       brandTone: null,
       targetAudience: null,
-
     });
     setResult(null);
     dispatch(clearMessage());
@@ -219,8 +210,6 @@ function BrandEngagementBuilder() {
         setNumberOfPages(totalPages);
       });
   };
-
-
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -287,9 +276,12 @@ function BrandEngagementBuilder() {
                 </p>
               </div>
               {user?.availableTokens === 0 ? (
-                <div className="flex justify-center items-center md:text-xl p-3 text-red-600 my-4">
+                <a
+                  className="flex justify-center items-center md:text-xl p-3 text-red-600 my-4"
+                  href="/payment"
+                >
                   No tokens remaining. Purchase more to continue.
-                </div>
+                </a>
               ) : (
                 <div className="flex flex-wrap   bg-white md:p-4 rounded-lg">
                   <div className="w-full md:w-1/2">
@@ -591,7 +583,6 @@ function BrandEngagementBuilder() {
             {/* Toast container */}
             <ToastContainer />
 
-
             {engagements?.length > 0 && (
               <div className="">
                 <h5 className="md:text-2xl text-xl  mb-2 font-bold ">
@@ -627,8 +618,8 @@ function BrandEngagementBuilder() {
                     <button
                       key={pageIndex}
                       className={`${pageNumber === pageIndex
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-300 hover:bg-gray-400 text-gray-800"
                         } px-3 py-1 rounded-lg`}
                       onClick={() => setPageNumber(pageIndex)}
                     >
