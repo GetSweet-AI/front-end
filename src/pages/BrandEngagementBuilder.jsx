@@ -41,7 +41,7 @@ function BrandEngagementBuilder() {
 
 
   useEffect(() => {
-    fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`)
+    fetch(`http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`)
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
         setEngagements(brandEngagements);
@@ -53,7 +53,7 @@ function BrandEngagementBuilder() {
   const getUserData = async () => {
     await axios
       .get(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then(() => {
         dispatch(setUserData(res?.data.user));
@@ -102,11 +102,14 @@ function BrandEngagementBuilder() {
   };
 
   const handlePreview = (e) => {
+    setResult("");
     e.preventDefault();
     const {
       brandName,
       brandTone,
       companySector,
+      websiteUrl,
+      timeZone
     } = values;
     if (!brandTone) {
       dispatch(setMessage("Please provide the brand tone"));
@@ -114,12 +117,16 @@ function BrandEngagementBuilder() {
       dispatch(setMessage("Please provide the company sector"));
     } else if (!brandName) {
       dispatch(setMessage("Please provide the brand name"));
+    } else if (!websiteUrl) {
+      dispatch(setMessage("Please provide the website URL"));
+    } else if (!timeZone) {
+      dispatch(setMessage("Please provide the time zone"));
     } else {
       setResult(null);
       setPreviewLoading(true);
       axios
         .post(
-          "https://seashell-app-8amlb.ondigitalocean.app/api/v1/generate-blog-post",
+          "http://localhost:5000/api/v1/generate-blog-post",
           {
             tone: values.brandTone?.value,
             brandName: values.brandName,
@@ -161,7 +168,7 @@ function BrandEngagementBuilder() {
     } else {
       await axios
         .post(
-          `https://seashell-app-8amlb.ondigitalocean.app/api/v1/save-brand-engagement/${user?._id}`,
+          `http://localhost:5000/api/v1/save-brand-engagement/${user?._id}`,
           postData
         )
         .then((res) => {
@@ -169,7 +176,7 @@ function BrandEngagementBuilder() {
           handleReset();
           setSaveLoading(false);
           // console.log(res.data);
-          fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`)
+          fetch(`http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`)
             .then((response) => response.json())
             .then(({ totalPages, brandEngagements }) => {
               setEngagements(brandEngagements);
@@ -204,19 +211,14 @@ function BrandEngagementBuilder() {
   };
   // console.log("_id :" + user?._id)
 
-  // const fetchEngagements = async () => {
-  //   await axios
-  //     .get(
-  //       `https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${user?._id}`
-  //     )
-  //     .then((res) => {
-  //       setEngagements(res.data?.brandEngagements);
-  //       console.log("res?.data :" + JSON.stringify(res?.data));
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
+  const fetchEngagements = async () => {
+    fetch(`http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`)
+      .then((response) => response.json())
+      .then(({ totalPages, brandEngagements }) => {
+        setEngagements(brandEngagements);
+        setNumberOfPages(totalPages);
+      });
+  };
 
 
 
@@ -608,12 +610,12 @@ function BrandEngagementBuilder() {
                         brandTone={item.BrandTone}
                         targetAudience={item.TargetAudience}
                         postType={item.PostType}
-                      // fetchEngagements={fetchEngagements}
+                        fetchEngagements={fetchEngagements}
                       />
                     );
                   })}
                 </div>
-                <div class="flex items-center md:mt-4 justify-center space-x-2">
+                {numberOfPages > 1 && <div class="flex items-center md:mt-4 justify-center space-x-2">
                   <button
                     className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
                     onClick={gotoPrevious}
@@ -641,7 +643,7 @@ function BrandEngagementBuilder() {
                     Next
                   </button>
                 </div>
-
+                }
 
               </div>
             )}

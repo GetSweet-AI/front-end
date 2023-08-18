@@ -27,7 +27,7 @@ function BrandEngagements() {
   //   setIsLoading(true);
   //   await axios
   //     .get(
-  //       `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}`
+  //       `http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}`
   //     )
   //     .then((res) => {
   //       setEngagements(res.data?.brandEngagements);
@@ -45,26 +45,30 @@ function BrandEngagements() {
 
   const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
 
-  // const fetchEngagements = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     const response = await axios.get(
-  //       `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}`
-  //     );
-  //     setEngagements(response.data?.brandEngagements);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  //   setIsLoading(false);
-  // };
+  const fetchEngagements = async () => {
+    setIsLoading(true);
+    try {
+      fetch(`http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+        .then((response) => response.json())
+        .then(({ totalPages, brandEngagements }) => {
+          setEngagements(brandEngagements);
+          setNumberOfPages(totalPages);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+    setIsLoading(true);
+    fetch(`http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
         setEngagements(brandEngagements);
         setNumberOfPages(totalPages);
       });
+    setIsLoading(false);
   }, [pageNumber]);
   // Fetch data when the currentPage changes
 
@@ -80,6 +84,7 @@ function BrandEngagements() {
   // useEffect(() => {
   //   fetchEngagements();
   // }, []);
+
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -153,7 +158,7 @@ function BrandEngagements() {
                         brandTone={item.BrandTone}
                         targetAudience={item.TargetAudience}
                         postType={item.PostType}
-                      // fetchEngagements={fetchEngagements}
+                        fetchEngagements={fetchEngagements}
                       />
                     );
                   })}
@@ -162,7 +167,7 @@ function BrandEngagements() {
             )}
 
             {/* Pagination */}
-            <div className="mt-8">
+            {numberOfPages > 0 && <div className="mt-8">
               <div class="flex items-center md:mt-4 justify-center space-x-2">
                 <button
                   className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
@@ -191,7 +196,8 @@ function BrandEngagements() {
                   Next
                 </button>
               </div>
-              {/* <PaginationNumeric /> */}</div>
+              {/* <PaginationNumeric /> */}</div>}
+
           </div>
         </main>
       </div>

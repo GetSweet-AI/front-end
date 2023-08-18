@@ -67,7 +67,7 @@ function Users() {
     setIsLoading(true)
     await axios
       .get(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}`
+        `http://localhost:5000/api/v1/admin/users?userId=${user?._id}`
       )
       .then((res) => {
         setUsers(res.data);
@@ -91,7 +91,7 @@ function Users() {
 
 
   useEffect(() => {
-    fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`)
+    fetch(`http://localhost:5000/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`)
       .then((response) => response.json())
       .then(({ totalPages, users }) => {
         setUsers(users);
@@ -102,7 +102,7 @@ function Users() {
   const updateRole = (userId) => {
     axios
       .put(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users/${userId}/update-role`
+        `http://localhost:5000/api/v1/admin/users/${userId}/update-role`
       )
       .then((res) => {
         fetchUsers();
@@ -115,7 +115,7 @@ function Users() {
   const deleteUser = (userId) => {
     axios
       .delete(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${userId}`
+        `http://localhost:5000/api/v1/auth/users/${userId}`
       )
       .then((res) => {
         fetchUsers();
@@ -230,7 +230,8 @@ function Users() {
                     ))}
                   </tbody>
                 </table>
-              </div>    <div class="flex my-2 items-center  justify-center space-x-2">
+              </div>
+              {numberOfPages > 1 && <div class="flex my-2 items-center  justify-center space-x-2">
                 <button
                   className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
                   onClick={gotoPrevious}
@@ -257,7 +258,7 @@ function Users() {
                 >
                   Next
                 </button>
-              </div>
+              </div>}
             </div>
           </div>
 
