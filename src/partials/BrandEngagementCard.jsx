@@ -36,7 +36,7 @@ function BrandEngagementCard({
     }
   };
   return (
-    <div className="col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-lg rounded-sm hover:bg-gray-50 hover:translate-y-1 hover:translate-x-1 border border-slate-200">
+    <div className="col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-md rounded-md border border-slate-200">
       <div className="flex flex-col h-full p-5">
         <header>
           <div className="flex items-center justify-between">
