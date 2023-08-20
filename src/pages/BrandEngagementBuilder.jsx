@@ -273,7 +273,7 @@ function BrandEngagementBuilder() {
                     onClick={() => setIsVisible(!isVisible)}
                   >
                     <FontAwesomeIcon icon={faPlus} className="mr-1" />
-                    Add new brand
+                    Add brand voice
                   </button>
                   {/* End Button to toggle visibility */}
 
@@ -289,11 +289,6 @@ function BrandEngagementBuilder() {
                       brand's messaging and value.
                   </p>
               </div>
-              {engagements?.length > 0 && (
-                <p>2</p>
-              )}
-                  <div>
-    </div>
 
       {/* Element that will be shown/hidden */}
       <div className={isVisible ? "" : "hidden"}>
