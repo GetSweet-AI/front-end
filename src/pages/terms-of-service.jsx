@@ -137,7 +137,7 @@ export default function TermsOfService() {
                     {section.body && section.body.length > 0 && (
                       <>
                         {section.body.map((item, index) => (
-                          <p key={index}>{item}</p>
+                          <p className="mt-2 mb-8" key={index}>{item}</p>
                         ))}
                       </>
                     )}
