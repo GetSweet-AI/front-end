@@ -12,7 +12,8 @@ import DashboardHeader from "../partials/DashboardHeader";
 import Select from "react-select";
 import axios from "axios";
 import ReactHtmlParser from "react-html-parser";
-import { faL } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faL, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { targetAudienceOptions } from "../constants/objects";
 import brandTones from "../constants/brandTones";
@@ -37,6 +38,8 @@ function BrandEngagementBuilder() {
   const [result, setResult] = useState(null);
   const { token, user } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
+  // State to track visibility
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     fetch(
@@ -261,8 +264,19 @@ function BrandEngagementBuilder() {
             <div className="md mb-8">
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0">
-                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
+                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold flex justify-between items-center">
                   Brand Engagement Builder
+
+                  {/* Button to toggle visibility */}
+                  <button 
+                    className="px-2 py-1 bg-purple-500 text-white rounded text-sm flex items-center font-normal" 
+                    onClick={() => setIsVisible(!isVisible)}
+                  >
+                    <FontAwesomeIcon icon={faPlus} className="mr-1" />
+                    Add new brand
+                  </button>
+                  {/* End Button to toggle visibility */}
+
                 </h1>
               </div>
 
@@ -275,6 +289,16 @@ function BrandEngagementBuilder() {
                       brand's messaging and value.
                   </p>
               </div>
+              {engagements?.length > 0 && (
+                <p>2</p>
+              )}
+                  <div>
+    </div>
+
+      {/* Element that will be shown/hidden */}
+      <div className={isVisible ? "" : "hidden"}>
+
+              {/*Brand Engagement Card Form*/}
               {user?.availableTokens === 0 ? (
                 <a
                   className="flex justify-center items-center md:text-xl p-3 text-red-600 my-4"
@@ -283,7 +307,7 @@ function BrandEngagementBuilder() {
                   No tokens remaining. Purchase more to continue.
                 </a>
               ) : (
-                <div className="flex flex-wrap   bg-white md:p-4 rounded-lg sm:mb-12">
+                <div id="Brand_Form" className="flex flex-wrap bg-white md:p-4 rounded-lg sm:mb-12">
                   <div className="w-full md:w-1/2">
                     <form className="rounded px-4" onSubmit={handlePreview}>
                       <div className="flex flex-wrap">
@@ -579,6 +603,9 @@ function BrandEngagementBuilder() {
                 </div>
               )}
             </div>
+      {/* Element that will be shown/hidden */}
+      </div>
+      {/*End Brand Engagement Card Form*/}
 
             {/* Toast container */}
             <ToastContainer />
