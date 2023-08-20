@@ -266,14 +266,14 @@ function BrandEngagementBuilder() {
                 </h1>
               </div>
 
-              <div className="my-4 sm:mb-0">
-                <p className="text-slate-800">
-                  Engagement Builder is a powerful product designed to help you
-                  elevate your brand's social media presence. With Engagement
-                  Builder, you'll be able to easily define your brand voice and
-                  ensure that all of your soaical content aligns with your
-                  brand's messaging and value.
-                </p>
+              <div className="my-4 sm:mb-8">  {/* Increased the bottom margin to mb-8 */}
+                  <p className="text-slate-800">
+                      Engagement Builder is a powerful product designed to help you
+                      elevate your brand's social media presence. With Engagement
+                      Builder, you'll be able to easily define your brand voice and
+                      ensure that all of your social content aligns with your
+                      brand's messaging and value.
+                  </p>
               </div>
               {user?.availableTokens === 0 ? (
                 <a
@@ -283,7 +283,7 @@ function BrandEngagementBuilder() {
                   No tokens remaining. Purchase more to continue.
                 </a>
               ) : (
-                <div className="flex flex-wrap   bg-white md:p-4 rounded-lg">
+                <div className="flex flex-wrap   bg-white md:p-4 rounded-lg sm:mb-12">
                   <div className="w-full md:w-1/2">
                     <form className="rounded px-4" onSubmit={handlePreview}>
                       <div className="flex flex-wrap">
@@ -585,7 +585,7 @@ function BrandEngagementBuilder() {
 
             {engagements?.length > 0 && (
               <div className="">
-                <h5 className="md:text-2xl text-xl  mb-2 font-bold ">
+                <h5 className="md:text-2xl text-xl  mb-2 font-bold sm:mb-4">
                   Your saved brand engagements
                 </h5>
                 <div className="grid grid-cols-12 gap-6">
