@@ -586,7 +586,7 @@ function BrandEngagementBuilder() {
             {engagements?.length > 0 && (
               <div className="">
                 <h5 className="md:text-2xl text-xl  mb-2 font-bold sm:mb-4">
-                  Your saved brand engagements
+                  Your saved brand voices
                 </h5>
                 <div className="grid grid-cols-12 gap-6">
                   {engagements.map((item) => {
