@@ -69,7 +69,8 @@ function Header() {
           <div className="shrink-0 mr-5">
             {/* Logo */}
             <Link to="/" className="block" aria-label="Cruip">
-              <div className='flex space-x-3'>  <img src={logo} alt="logo" className="w-10 h-10" />
+              <div className='flex space-x-3'>
+                <img src={logo} alt="logo" className="w-10 h-10" />
                 <p className='flex justify-center mt-2 items-center text-xl font-bold text-blue-900'>
                   GetSweet.AI
                 </p>
