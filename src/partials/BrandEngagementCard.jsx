@@ -55,12 +55,12 @@ function BrandEngagementCard({
             </a>
           </div>
           <div className="text-sm mb-2">
-            <span className="font-medium">Time Zone</span> : {timeZone}
+            <span className="font-medium">Time Zone</span>: {timeZone}
           </div> <div className="text-sm mb-2">
-            <span className="font-medium">Brand Tone</span> : {brandTone}
+            <span className="font-medium">Brand Tone</span>: {brandTone}
           </div>
           <div className="text-sm mb-2 h-12 overflow-y-hidden">
-            <span className="font-medium">Brand Description</span> :{" "}
+            <span className="font-medium">Brand Description</span>:{" "}
             {companySector}
           </div>
 
