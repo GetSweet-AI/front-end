@@ -375,7 +375,7 @@ function BrandEngagementBuilder() {
 
                         <div className="w-full md:w-1/2 p-2">
                           <label htmlFor="input2" className="block mb-1">
-                            Website URL (Optional)
+                            Web or Social URL
                           </label>
                           <input
                             id="input2"
@@ -509,7 +509,7 @@ function BrandEngagementBuilder() {
                           <button
                             type="reset"
                             onClick={handleReset}
-                            className="md:w-[20%] w-full bg-[#60696d] text-white rounded p-2"
+                            className="md:w-[40%] w-full bg-[#60696d] text-white rounded p-2"
                           >
                             Reset form
                           </button>
