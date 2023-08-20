@@ -52,7 +52,7 @@ function BrandEngagementBuilder() {
   const getUserData = async () => {
     await axios
       .get(
-        `http://localhost:5000/api/v1/auth/users/${user?._id}`
+        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${user?._id}`
       )
       .then(() => {
         dispatch(setUserData(res?.data.user));
@@ -125,7 +125,7 @@ function BrandEngagementBuilder() {
       setPreviewLoading(true);
       axios
         .post(
-          "http://localhost:5000/api/v1/generate-blog-post",
+          "https://seashell-app-8amlb.ondigitalocean.app/api/v1/generate-blog-post",
           {
             tone: values.brandTone?.value,
             brandName: values.brandName,
@@ -158,7 +158,7 @@ function BrandEngagementBuilder() {
     } else {
       await axios
         .post(
-          `http://localhost:5000/api/v1/save-brand-engagement/${user?._id}`,
+          `https://seashell-app-8amlb.ondigitalocean.app/api/v1/save-brand-engagement/${user?._id}`,
           postData
         )
         .then((res) => {
@@ -203,7 +203,7 @@ function BrandEngagementBuilder() {
   // console.log("_id :" + user?._id)
 
   const fetchEngagements = async () => {
-    fetch(`http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`)
+    fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`)
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
         setEngagements(brandEngagements);
