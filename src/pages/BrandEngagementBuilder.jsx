@@ -601,6 +601,7 @@ function BrandEngagementBuilder() {
                         brandTone={item.BrandTone}
                         targetAudience={item.TargetAudience}
                         postType={item.PostType}
+                        relatedPostsStatus={item.relatedPostsStatus}
                         fetchEngagements={fetchEngagements}
                       />
                     );

@@ -12,7 +12,7 @@ import Image02 from '../images/user-28-02.jpg';
 import DashboardHeader from '../partials/DashboardHeader';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { MutatingDots } from 'react-loader-spinner';
+import { MutatingDots, ThreeDots } from 'react-loader-spinner';
 import { useParams } from 'react-router-dom';
 import PostCard from '../partials/PostCard';
 
@@ -58,6 +58,7 @@ function BrandEngagementDetails() {
     const [engagement, setEngagement] = useState([]);
     const [feedPosts, setFeedPosts] = useState([]);
     const [isLoading, setIsLoading] = useState(false)
+    const [isCloseVisible, setIsCloseVisible] = useState(true)
     const [result, setResult] = useState(null);
     const { token, user } = useSelector((state) => state.auth)
 
@@ -200,26 +201,50 @@ function BrandEngagementDetails() {
                         <div className="mt-8">
                             {/* <PaginationNumeric /> */}
                         </div>
-                        <div className='text-xl font-bold my-2 text-blue-600'>
+                        {feedPosts.length > 0 && <> <div className='text-xl font-bold my-2 text-blue-600'>
                             Generated feed posts
                         </div>
-                        <div className="grid grid-cols-12 gap-6">
-                            {feedPosts.map((item) => {
-                                return (
-                                    <PostCard
-                                        key={item._id}
-                                        id={item._id}
-                                        MediaUrl={item.MediaUrl}
-                                        deleteFeedPost={deletePostFeed}
-                                        Caption={item.Caption}
-                                        Date={item.Date}
-                                        handleCopyText={handleCopyText}
-                                        Accounts={item.Accounts}
-                                        DownloadButton={downloadVideo}
-                                    />
-                                );
-                            })}
-                        </div>
+                            <div className="grid grid-cols-12 gap-6">
+                                {feedPosts.map((item) => {
+                                    return (
+                                        <PostCard
+                                            key={item._id}
+                                            id={item._id}
+                                            MediaUrl={item.MediaUrl}
+                                            deleteFeedPost={deletePostFeed}
+                                            Caption={item.Caption}
+                                            Date={item.Date}
+                                            handleCopyText={handleCopyText}
+                                            Accounts={item.Accounts}
+                                            DownloadButton={downloadVideo}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        </>}
+                        {(engagement?.relatedPostsStatus === "Posts generating..." && isCloseVisible) ?
+                            <div id="toast-success" className="flex items-center w-full p-4 mb-4 text-gray-600 bg-white rounded-lg shadow  " role="alert">
+
+                                <ThreeDots
+                                    height="10"
+                                    width="40"
+                                    radius="9"
+                                    color="#0967eb"
+                                    ariaLabel="three-dots-loading"
+                                    wrapperStyle={{}}
+                                    wrapperClassName=""
+                                    visible={true}
+                                />
+                                <div className="ml-3 text-sm font-medium">Posts Generating...</div>
+                                <button onClick={() => setIsCloseVisible(false)} type="button" className="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8  " data-dismiss-target="#toast-success" aria-label="Close">
+                                    <span className="sr-only">Close</span>
+                                    <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                    </svg>
+                                </button>
+                            </div>
+                            : <></>}
+
                     </div>
 
 
