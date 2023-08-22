@@ -230,7 +230,8 @@ function Users() {
                     ))}
                   </tbody>
                 </table>
-              </div>    <div class="flex my-2 items-center  justify-center space-x-2">
+              </div>
+              {numberOfPages > 1 && <div class="flex my-2 items-center  justify-center space-x-2">
                 <button
                   className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
                   onClick={gotoPrevious}
@@ -257,7 +258,7 @@ function Users() {
                 >
                   Next
                 </button>
-              </div>
+              </div>}
             </div>
           </div>
 

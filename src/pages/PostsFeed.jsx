@@ -265,7 +265,7 @@ function PostsFeed() {
 
                             }
 
-                            {enabled ?
+                            {(enabled &&
 
                                 <div className="mt-8">
                                     <div class="flex items-center md:mt-4 justify-center space-x-2">
@@ -297,7 +297,9 @@ function PostsFeed() {
                                         </button>
                                     </div>
                                 </div>
-                                :
+                            )}
+                            {(!enabled &&
+
                                 <div className="mt-8">
                                     <div class="flex items-center md:mt-4 justify-center space-x-2">
                                         <button
@@ -327,7 +329,8 @@ function PostsFeed() {
                                             Next
                                         </button>
                                     </div>
-                                </div>}
+                                </div>
+                            )}
 
 
                         </div>

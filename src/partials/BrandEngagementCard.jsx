@@ -1,8 +1,12 @@
 import { faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React from "react";
+import { ThreeDots } from "react-loader-spinner";
 import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+
 
 function BrandEngagementCard({
   id,
@@ -14,8 +18,11 @@ function BrandEngagementCard({
   targetAudience,
   postType,
   fetchEngagements,
+  relatedPostsStatus
 }) {
+
   const navigate = useNavigate();
+
   const deleteBrandEngagement = async (brandEngagementId) => {
     try {
       const response = await axios.delete(
@@ -49,17 +56,34 @@ function BrandEngagementCard({
           </div>
           <div className="text-sm mb-2">
             <span className="font-medium">Time Zone</span> : {timeZone}
-          </div>
-          <div className="text-sm mb-2">
-            <span className="font-medium">Company Sector</span> :{" "}
-            {companySector}
-          </div>
-          <div className="text-sm mb-2">
+          </div> <div className="text-sm mb-2">
             <span className="font-medium">Brand Tone</span> : {brandTone}
           </div>
+          <div className="text-sm mb-2 h-12 overflow-y-hidden">
+            <span className="font-medium">Brand Description</span> :{" "}
+            {companySector}
+          </div>
+
+          <div class="bg-blue-500 text-white p-[1px] my-2"></div>
           <div className="text-sm mb-2">
-            <span className="font-medium">Target Audience</span> :{" "}
-            {targetAudience}
+            {relatedPostsStatus === "Posts generating..." ? <div className="flex justify-center space-x-4 items-center">
+              <p className="font-medium text-gray-600">Posts generating...</p>
+              <ThreeDots
+                height="10"
+                width="40"
+                radius="9"
+                color="#0967eb"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClassName=""
+                visible={true}
+              /></div>
+              :
+              <div className="flex justify-center space-x-4 items-center"> <p className="font-medium text-gray-600 ">Posts are ready</p>
+                <FontAwesomeIcon icon={faCheck} color="#0967eb" size={24} />
+              </div>
+
+            }
           </div>
         </div>
         <footer className="mt-2">
