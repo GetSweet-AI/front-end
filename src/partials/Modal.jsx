@@ -19,6 +19,7 @@ export default function MyModal({ isOpen, closeModal, deleteAccount }) {
   const handleButtonDel = () => {
     if (inputDel === "DELETE") {
       setConfirmation("Successful");
+
       deleteAccount();
     } else {
       setConfirmation("Denied");

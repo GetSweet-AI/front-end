@@ -117,6 +117,7 @@ function TheProfile() {
   };
   const deleteUser = (userId) => {
     axios
+
       .delete(
         `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${userId}`
       )

@@ -12,18 +12,36 @@ import DashboardHeader from "../partials/DashboardHeader";
 import Select from "react-select";
 import axios from "axios";
 import ReactHtmlParser from "react-html-parser";
-import { faArrowsRotate, faL, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowsRotate,
+  faL,
+  faTrashAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { targetAudienceOptions } from "../constants/objects";
 import brandTones from "../constants/brandTones";
 import postTypeOptions from "../constants/postTypeOtions";
 import { clearMessage, setMessage } from "../redux/message";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { MutatingDots } from "react-loader-spinner";
+import ModalUser from "../partials/modalUser";
 
 function Users() {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userDeleteId, setUserDeleteId] = useState(null);
+
+  const openDeleteModal = (userId) => {
+    setUserDeleteId(userId);
+    setShowDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setUserDeleteId(null);
+  };
+
   const dispatch = useDispatch();
 
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -33,7 +51,7 @@ function Users() {
   const { token, user } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   // const [values, setValues] = useState({
   //   brandName: "",
   //   websiteUrl: "",
@@ -64,7 +82,7 @@ function Users() {
   const [users, setUsers] = useState([]);
 
   const fetchUsers = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     await axios
       .get(
         `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}`
@@ -76,7 +94,7 @@ function Users() {
       .catch((err) => {
         console.log(err);
       });
-    setIsLoading(false)
+    setIsLoading(false);
   };
 
   // useEffect(() => {
@@ -89,9 +107,10 @@ function Users() {
 
   const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
 
-
   useEffect(() => {
-    fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`)
+    fetch(
+      `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`
+    )
       .then((response) => response.json())
       .then(({ totalPages, users }) => {
         setUsers(users);
@@ -106,7 +125,7 @@ function Users() {
       )
       .then((res) => {
         fetchUsers();
-        toast.success('User role updated');
+        toast.success("User role updated");
       })
       .catch((err) => {
         console.log(err);
@@ -119,7 +138,7 @@ function Users() {
       )
       .then((res) => {
         fetchUsers();
-        toast.success('User deleted successfully');
+        toast.success("User deleted successfully");
       })
       .catch((err) => {
         console.log(err);
@@ -150,19 +169,21 @@ function Users() {
         />
 
         <main>
-          {isLoading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
-            <MutatingDots
-              height="100"
-              width="100"
-              color="#1c7aed"
-              secondaryColor='#3078fd'
-              radius='12.5'
-              ariaLabel="mutating-dots-loading"
-              wrapperStyle={{}}
-              wrapperClass=""
-              visible={true}
-            />
-          </div>}
+          {isLoading && (
+            <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
+              <MutatingDots
+                height="100"
+                width="100"
+                color="#1c7aed"
+                secondaryColor="#3078fd"
+                radius="12.5"
+                ariaLabel="mutating-dots-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+              />
+            </div>
+          )}
           <div className="px-4 sm:px-6 lg:px-8 pt-8 w-full max-w-9xl mx-auto">
             {/* Page header */}
             <div className="h-screen ">
@@ -181,9 +202,7 @@ function Users() {
                       </th>
                       <th className="py-3 px-6 text-left">Email</th>
                       <th className="py-3 px-6 text-left">Company</th>
-                      <th className="py-3 px-6 text-left ">
-                        Role
-                      </th>
+                      <th className="py-3 px-6 text-left ">Role</th>
                       <th className="py-3 px-6 text-left rounded-tr-lg">
                         Action
                       </th>
@@ -199,7 +218,9 @@ function Users() {
                             : "bg-blue-100 rounded-full"
                         }
                       >
-                        <td className="py-4 px-6 border-b">{client.fullName}</td>
+                        <td className="py-4 px-6 border-b">
+                          {client.fullName}
+                        </td>
                         <td className="py-4 px-6 border-b">{client.email}</td>
                         <td className="py-4 px-6 border-b">{client.company}</td>
                         <td className="py-4 px-6 border-b">
@@ -216,8 +237,10 @@ function Users() {
                         </td>
                         <td className="py-4 px-6 border-b">
                           <span
-                            onClick={() => deleteUser(client._id)}
-                            className="bg-red-500 flex items-center w-fit px-4 py-2 rounded-xl text-white uppercase text-sm cursor-pointer"
+                            onClick={() => openDeleteModal(client._id)}
+                            className="bg-red-500 flex items-center w-fit 
+                            px-4 py-2 rounded-xl text-white uppercase 
+                            text-sm cursor-pointer"
                           >
                             Delete
                             <FontAwesomeIcon
@@ -231,38 +254,48 @@ function Users() {
                   </tbody>
                 </table>
               </div>
-              {numberOfPages > 1 && <div class="flex my-2 items-center  justify-center space-x-2">
-                <button
-                  className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
-                  onClick={gotoPrevious}
-                >
-                  Previous
-                </button>
-
-                {pages.map((pageIndex) => (
+              {numberOfPages > 1 && (
+                <div class="flex my-2 items-center  justify-center space-x-2">
                   <button
-                    key={pageIndex}
-                    className={`${pageNumber === pageIndex
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
-                      } px-3 py-1 rounded-lg`}
-                    onClick={() => setPageNumber(pageIndex)}
+                    className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                    onClick={gotoPrevious}
                   >
-                    {pageIndex + 1}
+                    Previous
                   </button>
-                ))}
 
-                <button
-                  className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
-                  onClick={gotoNext}
-                >
-                  Next
-                </button>
-              </div>}
+                  {pages.map((pageIndex) => (
+                    <button
+                      key={pageIndex}
+                      className={`${
+                        pageNumber === pageIndex
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-300 hover:bg-gray-400 text-gray-800"
+                      } px-3 py-1 rounded-lg`}
+                      onClick={() => setPageNumber(pageIndex)}
+                    >
+                      {pageIndex + 1}
+                    </button>
+                  ))}
+
+                  <button
+                    className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                    onClick={gotoNext}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </div>
           </div>
-
         </main>
+        <ModalUser
+          isOpen={showDeleteModal}
+          onCancel={closeDeleteModal}
+          onConfirm={() => {
+            deleteUser(userDeleteId);
+            closeDeleteModal();
+          }}
+        />
       </div>
       {/* Toast container */}
       <ToastContainer
