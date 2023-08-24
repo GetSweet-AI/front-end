@@ -12,7 +12,8 @@ import DashboardHeader from "../partials/DashboardHeader";
 import Select from "react-select";
 import axios from "axios";
 import ReactHtmlParser from "react-html-parser";
-import { faL } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faL, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { targetAudienceOptions } from "../constants/objects";
 import brandTones from "../constants/brandTones";
@@ -37,6 +38,8 @@ function BrandEngagementBuilder() {
   const [result, setResult] = useState(null);
   const { token, user } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
+  // State to track visibility
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     fetch(
@@ -261,20 +264,36 @@ function BrandEngagementBuilder() {
             <div className="md mb-8">
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0">
-                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
+                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold flex justify-between items-center">
                   Brand Engagement Builder
+
+                  {/* Button to toggle visibility */}
+                  <button 
+                    className="px-2 py-1 bg-purple-500 text-white rounded text-sm flex items-center font-normal" 
+                    onClick={() => setIsVisible(!isVisible)}
+                  >
+                    <FontAwesomeIcon icon={faPlus} className="mr-1" />
+                    Add brand voice
+                  </button>
+                  {/* End Button to toggle visibility */}
+
                 </h1>
               </div>
 
-              <div className="my-4 sm:mb-0">
-                <p className="text-slate-800">
-                  Engagement Builder is a powerful product designed to help you
-                  elevate your brand's social media presence. With Engagement
-                  Builder, you'll be able to easily define your brand voice and
-                  ensure that all of your soaical content aligns with your
-                  brand's messaging and value.
-                </p>
+              <div className="my-4 sm:mb-8">  {/* Increased the bottom margin to mb-8 */}
+                  <p className="text-slate-800">
+                      Engagement Builder is a powerful product designed to help you
+                      elevate your brand's social media presence. With Engagement
+                      Builder, you'll be able to easily define your brand voice and
+                      ensure that all of your social content aligns with your
+                      brand's messaging and value.
+                  </p>
               </div>
+
+      {/* Element that will be shown/hidden */}
+      <div className={isVisible ? "" : "hidden"}>
+
+              {/*Brand Engagement Card Form*/}
               {user?.availableTokens === 0 ? (
                 <a
                   className="flex justify-center items-center md:text-xl p-3 text-red-600 my-4"
@@ -283,7 +302,7 @@ function BrandEngagementBuilder() {
                   No tokens remaining. Purchase more to continue.
                 </a>
               ) : (
-                <div className="flex flex-wrap   bg-white md:p-4 rounded-lg">
+                <div id="Brand_Form" className="flex flex-wrap bg-white md:p-4 rounded-lg sm:mb-12">
                   <div className="w-full md:w-1/2">
                     <form className="rounded px-4" onSubmit={handlePreview}>
                       <div className="flex flex-wrap">
@@ -375,7 +394,7 @@ function BrandEngagementBuilder() {
 
                         <div className="w-full md:w-1/2 p-2">
                           <label htmlFor="input2" className="block mb-1">
-                            Website URL (Optional)
+                            Web or Social URL
                           </label>
                           <input
                             id="input2"
@@ -509,7 +528,7 @@ function BrandEngagementBuilder() {
                           <button
                             type="reset"
                             onClick={handleReset}
-                            className="md:w-[20%] w-full bg-[#60696d] text-white rounded p-2"
+                            className="md:w-[40%] w-full bg-[#60696d] text-white rounded p-2"
                           >
                             Reset form
                           </button>
@@ -579,14 +598,17 @@ function BrandEngagementBuilder() {
                 </div>
               )}
             </div>
+      {/* Element that will be shown/hidden */}
+      </div>
+      {/*End Brand Engagement Card Form*/}
 
             {/* Toast container */}
             <ToastContainer />
 
             {engagements?.length > 0 && (
               <div className="">
-                <h5 className="md:text-2xl text-xl  mb-2 font-bold ">
-                  Your saved brand engagements
+                <h5 className="md:text-2xl text-xl  mb-2 font-bold sm:mb-4">
+                  Your saved brand voices
                 </h5>
                 <div className="grid grid-cols-12 gap-6">
                   {engagements.map((item) => {

@@ -36,7 +36,7 @@ function BrandEngagementCard({
     }
   };
   return (
-    <div className="col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-lg rounded-sm hover:bg-gray-50 hover:translate-y-1 hover:translate-x-1 border border-slate-200">
+    <div className="col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-md rounded-md border border-slate-200">
       <div className="flex flex-col h-full p-5">
         <header>
           <div className="flex items-center justify-between">
@@ -55,12 +55,12 @@ function BrandEngagementCard({
             </a>
           </div>
           <div className="text-sm mb-2">
-            <span className="font-medium">Time Zone</span> : {timeZone}
+            <span className="font-medium">Time Zone</span>: {timeZone}
           </div> <div className="text-sm mb-2">
-            <span className="font-medium">Brand Tone</span> : {brandTone}
+            <span className="font-medium">Brand Tone</span>: {brandTone}
           </div>
           <div className="text-sm mb-2 h-12 overflow-y-hidden">
-            <span className="font-medium">Brand Description</span> :{" "}
+            <span className="font-medium">Brand Description</span>:{" "}
             {companySector}
           </div>
 

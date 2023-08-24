@@ -159,17 +159,17 @@ export default function Home() {
           aria-label="Global"
         >
           <div className="flex lg:flex-1">
-<a href="#" className="flex items-center -m-1.5 p-1.5">
-    <img
-        className="h-10 w-auto mr-2"  // <-- Moved the comment out of the JSX attribute area
-        src={logo}
-        alt="GetSweet.AI logo icon"
-    />
-    {/* Added 'mr-2' for some spacing between the logo and the text */}
-    <span className="font-bold text-xl text-gray-900">
-        GetSweet.AI
-    </span>
-</a>
+          <a href="#" className="flex items-center -m-1.5 p-1.5">
+              <img
+                  className="h-10 w-auto mr-2"  // <-- Moved the comment out of the JSX attribute area
+                  src={logo}
+                  alt="GetSweet.AI logo icon"
+              />
+              {/* Added 'mr-2' for some spacing between the logo and the text */}
+              <span className="font-bold text-xl text-gray-900">
+                  GetSweet.AI
+              </span>
+          </a>
           </div>
           <div className="flex lg:hidden">
             <button

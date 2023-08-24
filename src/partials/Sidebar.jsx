@@ -122,15 +122,14 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             </button>
             {/* Logo */}
             <NavLink end to={isLoggedIn ? "/brand-engagement-builder" : "/"}>
-              {/* <img src={logo} className={`hidden 2xl:block`} alt="" /> */}
               {sidebarExpanded === true ? (
-                <div className="flex w-full h-20 items-center justify-center">
-                  <img className={` w-full h-full`} src={logo} alt="logo" />
-                  <p className="text-white font-bold -ml-3">GetSweet.AI</p>
+                <div className="flex w-full h-8 items-center justify-center">
+                  <img className={`w-[40px] heigh-[40px] object-contain`} src={logo} alt="logo" />
+                  <p className="text-white font-bold ml-2">GetSweet.AI</p>
                 </div>
               ) : (
                 <img
-                  className={`hidden bg-red-400  sidebar-expandded:hidden`}
+                  className={`hidden bg-red-400 sidebar-expanded:hidden`}
                   src={logo}
                   alt="short logo"
                 />
