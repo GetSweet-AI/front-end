@@ -29,7 +29,7 @@ function VerifyEmail() {
     const verifyVerificationCode = async () => {
         setLoading(true)
         try {
-            await axios.post("https://seashell-app-2-n2die.ondigitalocean.app//api/v1/auth/verify-email", {
+            await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/verify-email", {
                 email: email,
                 verificationCode: parseInt(values.verificationCode, 10)
             });

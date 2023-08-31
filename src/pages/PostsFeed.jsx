@@ -50,7 +50,7 @@ function PostsFeed() {
     setIsUserDataLoading(true);
     await axios
       .get(
-        `https://seashell-app-2-n2die.ondigitalocean.app//api/v1/feed-posts/${user?._id}`
+        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/feed-posts/${user?._id}`
       )
       .then((res) => {
         setFeedPosts(res.data?.feedPosts);
@@ -66,7 +66,7 @@ function PostsFeed() {
 
     await axios
       .get(
-        `https://seashell-app-2-n2die.ondigitalocean.app//api/v1/admin/feedposts?userId=${user?._id}`
+        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}`
       )
       .then((res) => {
         setAdminFeedPosts(res.data);
@@ -80,7 +80,7 @@ function PostsFeed() {
   const deletePostFeed = async (id) => {
     await axios
       .delete(
-        `https://seashell-app-2-n2die.ondigitalocean.app//api/v1/feed-posts/${id}`
+        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/feed-posts/${id}`
       )
       .then((res) => {
         console.log("Post feed deleted");
@@ -124,7 +124,7 @@ function PostsFeed() {
 
   useEffect(() => {
     fetch(
-      `https://seashell-app-2-n2die.ondigitalocean.app//api/v1/feed-posts/${user?._id}?page=${pageNumber}`
+      `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/feed-posts/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, feedPosts }) => {
@@ -134,7 +134,7 @@ function PostsFeed() {
   }, [pageNumber]);
   useEffect(() => {
     fetch(
-      `https://seashell-app-2-n2die.ondigitalocean.app//api/v1/admin/feedposts?userId=${user?._id}&page=${adminPageNumber}`
+      `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}&page=${adminPageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, feedPosts }) => {
@@ -282,8 +282,8 @@ function PostsFeed() {
                       <button
                         key={pageIndex}
                         className={`${adminPageNumber === pageIndex
-                            ? "bg-blue-500 text-white"
-                            : "bg-gray-300 hover:bg-gray-400 text-gray-800"
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-300 hover:bg-gray-400 text-gray-800"
                           } px-3 py-1 rounded-lg`}
                         onClick={() => setAdminPageNumber(pageIndex)}
                       >
@@ -314,8 +314,8 @@ function PostsFeed() {
                       <button
                         key={pageIndex}
                         className={`${pageNumber === pageIndex
-                            ? "bg-blue-500 text-white"
-                            : "bg-gray-300 hover:bg-gray-400 text-gray-800"
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-300 hover:bg-gray-400 text-gray-800"
                           } px-3 py-1 rounded-lg`}
                         onClick={() => setPageNumber(pageIndex)}
                       >

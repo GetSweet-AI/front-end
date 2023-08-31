@@ -70,7 +70,7 @@ function BrandEngagementDetails() {
         setIsLoading(true)
         await axios
             .get(
-                `https://seashell-app-2-n2die.ondigitalocean.app//api/v1/brand-engagement/${id}`
+                `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagement/${id}`
             )
             .then((res) => {
                 setEngagement(res.data?.brandEngagement);
@@ -85,7 +85,7 @@ function BrandEngagementDetails() {
         // setIsLoading(true)
         await axios
             .get(
-                `https://seashell-app-2-n2die.ondigitalocean.app//api/v1/feed-posts-engagements/${id}`
+                `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/feed-posts-engagements/${id}`
             )
             .then((res) => {
                 setFeedPosts(res.data?.feedPosts);
@@ -119,7 +119,7 @@ function BrandEngagementDetails() {
     const deletePostFeed = async (id) => {
         await axios
             .delete(
-                `https://seashell-app-2-n2die.ondigitalocean.app//api/v1/feed-posts/${id}`
+                `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/feed-posts/${id}`
             )
             .then((res) => {
                 console.log("Post feed deleted")
