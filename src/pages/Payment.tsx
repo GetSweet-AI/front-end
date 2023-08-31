@@ -22,7 +22,7 @@ function Payment() {
     const getPlanInfos = async () => {
         //   setIsPlansLoading(true)
         setIsLoading(true)
-        await axios.get(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/plans`)
+        await axios.get(`https://seashell-app-2-n2die.ondigitalocean.app//api/v1/plans`)
             .then((res) => {
                 setPlanInfos(res?.data.planInfos)
                 console.table(res?.data.planInfos)
@@ -54,7 +54,7 @@ function Payment() {
     const handleSwitchPlan = async () => {
         setSwitching(true)
         try {
-            const response = await axios.post("https://seashell-app-8amlb.ondigitalocean.app/api/v1/update-subscription", {
+            const response = await axios.post("https://seashell-app-2-n2die.ondigitalocean.app//api/v1/update-subscription", {
                 customerId: user?.customerId,
                 currentSubscriptionId: user?.subscriptionId,
                 newPlanId: plan.id

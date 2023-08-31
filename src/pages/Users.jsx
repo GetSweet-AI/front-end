@@ -47,7 +47,7 @@ function Users() {
   //   setIsLoading(true)
   //   await axios
   //     .get(
-  //       `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}`
+  //       `https://seashell-app-2-n2die.ondigitalocean.app//api/v1/admin/users?userId=${user?._id}`
   //     )
   //     .then((res) => {
   //       setUsers(res.data);
@@ -71,7 +71,7 @@ function Users() {
   async function fetchUsersData(user, pageNumber) {
     try {
       const response = await axios.get(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`
+        `https://seashell-app-2-n2die.ondigitalocean.app//api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`
       );
       const { totalPages, users } = response.data;
       setUsers(users);
@@ -88,7 +88,7 @@ function Users() {
   const updateRole = async (userId) => {
     await axios
       .put(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/users/${userId}/update-role`
+        `https://seashell-app-2-n2die.ondigitalocean.app//api/v1/admin/users/${userId}/update-role`
       )
       .then((res) => {
         fetchUsersData(user, pageNumber);
@@ -101,7 +101,7 @@ function Users() {
   const deleteUser = async (userId) => {
     await axios
       .delete(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${userId}`
+        `https://seashell-app-2-n2die.ondigitalocean.app//api/v1/auth/users/${userId}`
       )
       .then((res) => {
         fetchUsersData(user, pageNumber);
@@ -240,11 +240,10 @@ function Users() {
                   {pages.map((pageIndex) => (
                     <button
                       key={pageIndex}
-                      className={`${
-                        pageNumber === pageIndex
+                      className={`${pageNumber === pageIndex
                           ? "bg-blue-500 text-white"
                           : "bg-gray-300 hover:bg-gray-400 text-gray-800"
-                      } px-3 py-1 rounded-lg`}
+                        } px-3 py-1 rounded-lg`}
                       onClick={() => setPageNumber(pageIndex)}
                     >
                       {pageIndex + 1}
