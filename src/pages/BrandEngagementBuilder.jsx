@@ -263,21 +263,17 @@ function BrandEngagementBuilder() {
             {/* Page header */}
             <div className="md mb-8">
               {/* Left: Title */}
-              <div className="mb-4 sm:mb-0">
+              <div className="mb-4 flex md:justify-between md:flex-row flex-col sm:mb-0">
                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold flex justify-between items-center">
                   Brand Engagement Builder
-
-                  {/* Button to toggle visibility */}
-                  <button
-                    className="px-2 py-1 bg-purple-500 text-white rounded text-sm flex items-center font-normal"
-                    onClick={() => setIsVisible(!isVisible)}
-                  >
-                    <FontAwesomeIcon icon={faPlus} className="mr-1" />
-                    Add brand voice
-                  </button>
-                  {/* End Button to toggle visibility */}
-
                 </h1>
+                <button
+                  className="px-2 md:py-1 py-2 bg-purple-500 md:mt-0 mt-2  text-center text-white rounded text-sm flex items-center font-normal"
+                  onClick={() => setIsVisible(!isVisible)}
+                >
+                  <FontAwesomeIcon icon={faPlus} className="mr-1" />
+                  Add brand voice
+                </button>
               </div>
 
               <div className="my-4 sm:mb-8">  {/* Increased the bottom margin to mb-8 */}

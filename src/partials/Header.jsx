@@ -60,6 +60,8 @@ function Header() {
   //   }
   // }, [darkMode]);
 
+  console.log("isLoggedIn :" + isLoggedIn)
+
   return (
     <header className=" shadow-xl shadow-gray-100 fixed     w-full z-30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -82,37 +84,37 @@ function Header() {
           {/* Desktop navigation */}
           <nav className="hidden md:flex  justify-between   ">
             {/* Desktop sign in links */}
-            {!isLoggedIn && <ul className="flex md:justify-end md:flex-wrap items-center">
-              <li>
-                <Link
-                  // GA code
-                  onClick={() => gaHandler.handleLinkClick('header_sign_in_btn')}
-                  className="font-medium text-gray-600 decoration-blue-500 decoration-2 underline-offset-2 hover:underline px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
-                  to="/signin"
-                >
-                  Sign in
-                </Link>
-              </li>
-              <li className="ml-3">
-                <Link 
-                  // GA code
-                  onClick={() => gaHandler.handleLinkClick('header_create_account_btn')}
-                  className="btn-sm text-white bg-purple-500 hover:bg-blue-600 w-full shadow-sm" to="/signup">
-                  Create Account
-                </Link>
-              </li>
-            </ul>}
-            {isLoggedIn && <ul className="flex md:justify-end md:flex-wrap items-center">
-
-              <li className="ml-3">
-                <Link
-                  // GA code
-                  onClick={() => gaHandler.handleLinkClick('header_get_started_btn')}
-                  className="btn-sm text-white bg-blue-500 hover:bg-blue-600 w-full shadow-sm" to="/brand-engagement-builder">
-                  Get started
-                </Link>
-              </li>
-            </ul>}
+            {!isLoggedIn &&
+              <ul className="flex md:justify-end md:flex-wrap items-center">
+                <li>
+                  <Link
+                    // GA code
+                    onClick={() => gaHandler.handleLinkClick('header_sign_in_btn')}
+                    className="font-medium text-gray-600 decoration-blue-500 decoration-2 underline-offset-2 hover:underline px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
+                    to="/signin"
+                  >
+                    Sign in
+                  </Link>
+                </li>
+                <li className="ml-3">
+                  <Link
+                    // GA code
+                    onClick={() => gaHandler.handleLinkClick('header_create_account_btn')}
+                    className="btn-sm text-white bg-purple-500 hover:bg-blue-600 w-full shadow-sm" to="/signup">
+                    Create Account
+                  </Link>
+                </li>
+              </ul>}
+            {isLoggedIn &&
+              <ul className="flex md:justify-end md:flex-wrap items-center">
+                <li className="ml-3">
+                  <Link
+                    onClick={() => gaHandler.handleLinkClick('header_get_started_btn')}
+                    className="btn-sm text-white bg-blue-500 hover:bg-blue-600 w-full shadow-sm" to="/brand-engagement-builder">
+                    Get started
+                  </Link>
+                </li>
+              </ul>}
           </nav>
 
           {/* Mobile menu */}

@@ -24,6 +24,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
+import { useSelector } from "react-redux";
 
 const navigation = [
   { name: 'Sign up', href: '/signup', gtmtrigger: 'header_create_account_btn' },
@@ -140,9 +141,13 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+
+
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const { isLoggedIn } = useSelector((state) => state.auth)
+  console.log("isLoggedIn :" + isLoggedIn)
   return (
     <div className="bg-white#">
       {/* embed videos script */}
@@ -159,17 +164,17 @@ export default function Home() {
           aria-label="Global"
         >
           <div className="flex lg:flex-1">
-          <a href="#" className="flex items-center -m-1.5 p-1.5">
+            <a href="#" className="flex items-center -m-1.5 p-1.5">
               <img
-                  className="h-10 w-auto mr-2"  // <-- Moved the comment out of the JSX attribute area
-                  src={logo}
-                  alt="GetSweet.AI logo icon"
+                className="h-10 w-auto mr-2"  // <-- Moved the comment out of the JSX attribute area
+                src={logo}
+                alt="GetSweet.AI logo icon"
               />
               {/* Added 'mr-2' for some spacing between the logo and the text */}
               <span className="font-bold text-xl text-gray-900">
-                  GetSweet.AI
+                GetSweet.AI
               </span>
-          </a>
+            </a>
           </div>
           <div className="flex lg:hidden">
             <button
@@ -182,20 +187,29 @@ export default function Home() {
             </button>
           </div>
           <div className="hidden lg:flex lg:gap-x-12">
-            {navigation.map((item) => (
-              <a 
-                key={item.name} 
+            {!isLoggedIn && navigation.map((item) => (
+              <a
+                key={item.name}
                 href={item.href}
                 className="text-sm font-semibold leading-6 text-gray-900"
                 // GA code
                 onClick={(e) => {
                   handleLinkClick(item.gtmtrigger);
                 }}
-             
+
               >
                 {item.name}
               </a>
             ))}
+            {
+              isLoggedIn && <a
+                href="/brand-engagement-builder"
+                className="text-sm  font-semibold leading-6 text-gray-900"
+
+              >
+                Get Started
+              </a>
+            }
           </div>
         </nav>
         <Dialog
