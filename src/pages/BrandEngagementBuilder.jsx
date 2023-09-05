@@ -12,7 +12,7 @@ import DashboardHeader from "../partials/DashboardHeader";
 import Select from "react-select";
 import axios from "axios";
 import ReactHtmlParser from "react-html-parser";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faL, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { targetAudienceOptions } from "../constants/objects";
@@ -43,7 +43,7 @@ function BrandEngagementBuilder() {
 
   useEffect(() => {
     fetch(
-      `https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+      `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
@@ -55,7 +55,7 @@ function BrandEngagementBuilder() {
   const getUserData = async () => {
     await axios
       .get(
-        `https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${user?._id}`
       )
       .then(() => {
         dispatch(setUserData(res?.data.user));
@@ -106,13 +106,8 @@ function BrandEngagementBuilder() {
   const handlePreview = (e) => {
     setResult("");
     e.preventDefault();
-    const {
-      brandName,
-      brandTone,
-      companySector,
-      websiteUrl,
-      timeZone
-    } = values;
+    const { brandName, brandTone, companySector, websiteUrl, timeZone } =
+      values;
     if (!brandTone) {
       dispatch(setMessage("Please provide the brand tone"));
     } else if (!companySector) {
@@ -128,7 +123,7 @@ function BrandEngagementBuilder() {
       setPreviewLoading(true);
       axios
         .post(
-          "https://seashell-app-8amlb.ondigitalocean.app/api/v1/generate-blog-post",
+          "https://seashell-app-2-n2die.ondigitalocean.app/api/v1/generate-blog-post",
           {
             tone: values.brandTone?.value,
             brandName: values.brandName,
@@ -161,7 +156,7 @@ function BrandEngagementBuilder() {
     } else {
       await axios
         .post(
-          `https://seashell-app-8amlb.ondigitalocean.app/api/v1/save-brand-engagement/${user?._id}`,
+          `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/save-brand-engagement/${user?._id}`,
           postData
         )
         .then((res) => {
@@ -170,7 +165,7 @@ function BrandEngagementBuilder() {
           setSaveLoading(false);
           // console.log(res.data);
           fetch(
-            `https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+            `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
           )
             .then((response) => response.json())
             .then(({ totalPages, brandEngagements }) => {
@@ -206,7 +201,9 @@ function BrandEngagementBuilder() {
   // console.log("_id :" + user?._id)
 
   const fetchEngagements = async () => {
-    fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`)
+    fetch(
+      `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+    )
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
         setEngagements(brandEngagements);
@@ -266,92 +263,94 @@ function BrandEngagementBuilder() {
               <div className="mb-4 sm:mb-0">
                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold flex justify-between items-center">
                   Brand Engagement Builder
-
                   {/* Button to toggle visibility */}
-                  <button 
-                    className="px-2 py-1 bg-purple-500 text-white rounded text-sm flex items-center font-normal" 
+                  <button
+                    className="px-2 py-1 bg-purple-500 text-white rounded text-sm flex items-center font-normal"
                     onClick={() => setIsVisible(!isVisible)}
                   >
                     <FontAwesomeIcon icon={faPlus} className="mr-1" />
                     Add brand voice
                   </button>
                   {/* End Button to toggle visibility */}
-
                 </h1>
               </div>
 
-              <div className="my-4 sm:mb-8">  {/* Increased the bottom margin to mb-8 */}
-                  <p className="text-slate-800">
-                      Engagement Builder is a powerful product designed to help you
-                      elevate your brand's social media presence. With Engagement
-                      Builder, you'll be able to easily define your brand voice and
-                      ensure that all of your social content aligns with your
-                      brand's messaging and value.
-                  </p>
+              <div className="my-4 sm:mb-8">
+                {" "}
+                {/* Increased the bottom margin to mb-8 */}
+                <p className="text-slate-800">
+                  Engagement Builder is a powerful product designed to help you
+                  elevate your brand's social media presence. With Engagement
+                  Builder, you'll be able to easily define your brand voice and
+                  ensure that all of your social content aligns with your
+                  brand's messaging and value.
+                </p>
               </div>
 
-      {/* Element that will be shown/hidden */}
-      <div className={isVisible ? "" : "hidden"}>
-
-              {/*Brand Engagement Card Form*/}
-              {user?.availableTokens === 0 ? (
-                <a
-                  className="flex justify-center items-center md:text-xl p-3 text-red-600 my-4"
-                  href="/payment"
-                >
-                  No tokens remaining. Purchase more to continue.
-                </a>
-              ) : (
-                <div id="Brand_Form" className="flex flex-wrap bg-white md:p-4 rounded-lg sm:mb-12">
-                  <div className="w-full md:w-1/2">
-                    <form className="rounded px-4" onSubmit={handlePreview}>
-                      <div className="flex flex-wrap">
-                        <div className="w-full md:w-1/2 p-2">
-                          <label htmlFor="input1" className="block mb-1">
-                            Brand Name
-                          </label>
-                          <input
-                            id="input1"
-                            className="w-full border-gray-300 rounded p-2"
-                            type="text"
-                            name="brandName"
-                            placeholder="Brand Name"
-                            value={values.brandName}
-                            onChange={handleInputChange}
-                          />
-                        </div>
-                        <div className="w-full md:w-1/2 p-2">
-                          <label htmlFor="select3" className="block mb-1">
-                            Brand Tone
-                          </label>
-                          <Select
-                            id="select3"
-                            className="w-full"
-                            placeholder="Brand Tone"
-                            name="brandTone"
-                            value={values.brandTone}
-                            onChange={(selectedOption) =>
-                              handleSelectChange("brandTone", selectedOption)
-                            }
-                            options={brandTones}
-                          />
-                        </div>
-                        <div className="w-full  p-2">
-                          <label htmlFor="select2" className="block mb-1">
-                            Brand Description
-                          </label>
-                          {/* Brand Description Text Box */}
-                          <textarea
-                            // id="input1"
-                            className="w-full border-gray-300 rounded p-2"
-                            type="text"
-                            rows={2}
-                            name="companySector"
-                            placeholder="Enter your brand description "
-                            value={values.companySector}
-                            onChange={handleInputChange}
-                          />
-                          {/* <Select
+              {/* Element that will be shown/hidden */}
+              <div className={isVisible ? "" : "hidden"}>
+                {/*Brand Engagement Card Form*/}
+                {user?.availableTokens === 0 ? (
+                  <a
+                    className="flex justify-center items-center md:text-xl p-3 text-red-600 my-4"
+                    href="/payment"
+                  >
+                    No tokens remaining. Purchase more to continue.
+                  </a>
+                ) : (
+                  <div
+                    id="Brand_Form"
+                    className="flex flex-wrap bg-white md:p-4 rounded-lg sm:mb-12"
+                  >
+                    <div className="w-full md:w-1/2">
+                      <form className="rounded px-4" onSubmit={handlePreview}>
+                        <div className="flex flex-wrap">
+                          <div className="w-full md:w-1/2 p-2">
+                            <label htmlFor="input1" className="block mb-1">
+                              Brand Name
+                            </label>
+                            <input
+                              id="input1"
+                              className="w-full border-gray-300 rounded p-2"
+                              type="text"
+                              name="brandName"
+                              placeholder="Brand Name"
+                              value={values.brandName}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <div className="w-full md:w-1/2 p-2">
+                            <label htmlFor="select3" className="block mb-1">
+                              Brand Tone
+                            </label>
+                            <Select
+                              id="select3"
+                              className="w-full"
+                              placeholder="Brand Tone"
+                              name="brandTone"
+                              value={values.brandTone}
+                              onChange={(selectedOption) =>
+                                handleSelectChange("brandTone", selectedOption)
+                              }
+                              options={brandTones}
+                            />
+                          </div>
+                          <div className="w-full  p-2">
+                            <label htmlFor="select2" className="block mb-1">
+                              Brand Description
+                            </label>
+                            {/* Brand Description Text Box */}
+                            <textarea
+                              // id="input1"
+                              className="w-full border-gray-300 rounded p-2"
+                              type="text"
+                              rows={2}
+                              name="companySector"
+                              placeholder="Enter your brand description "
+                              value={values.companySector}
+                              onChange={handleInputChange}
+                            />
+                            {/* <Select
                             id="select2"
                             className="w-full"
                             name="companySector"
@@ -390,76 +389,76 @@ function BrandEngagementBuilder() {
                               },
                             ]}
                           /> */}
-                        </div>
+                          </div>
 
-                        <div className="w-full md:w-1/2 p-2">
-                          <label htmlFor="input2" className="block mb-1">
-                            Web or Social URL
-                          </label>
-                          <input
-                            id="input2"
-                            className="w-full border-gray-300 rounded p-2"
-                            type="text"
-                            name="websiteUrl"
-                            placeholder="Website URL"
-                            value={values.websiteUrl}
-                            onChange={handleInputChange}
-                          />
-                        </div>
-                        <div className="w-full md:w-1/2 p-2">
-                          <label htmlFor="select1" className="block mb-1">
-                            Time Zone
-                          </label>
-                          <Select
-                            id="timeZone"
-                            className="w-full"
-                            // name="timeZone"
-                            placeholder="Time Zone"
-                            value={values.timeZone}
-                            onChange={(selectedOption) =>
-                              handleSelectChange("timeZone", selectedOption)
-                            }
-                            options={[
-                              {
-                                value: "UTC (Coordinated Universal Time)",
-                                label: "UTC (Coordinated Universal Time)",
-                              },
-                              {
-                                value: "BST (British Summer Time)",
-                                label: "BST (British Summer Time)",
-                              },
-                              {
-                                value: "JST (Japan Standard Time)",
-                                label: "JST (Japan Standard Time)",
-                              },
-                              {
-                                value: "IST (Indian Standard Time)",
-                                label: "IST (Indian Standard Time)",
-                              },
-                              {
-                                value: "PST (Pacific Standard Time)",
-                                label: "PST (Pacific Standard Time)",
-                              },
-                              {
-                                value: "MST (Mountain Standard Time)",
-                                label: "MST (Mountain Standard Time)",
-                              },
-                              {
-                                value: "CST (Central Standard Time)",
-                                label: "CST (Central Standard Time)",
-                              },
-                              {
-                                value: "EST (Eastern Standard Time)",
-                                label: "EST (Eastern Standard Time)",
-                              },
-                              {
-                                value: "GMT (Greenwich Mean Time)",
-                                label: "GMT (Greenwich Mean Time)",
-                              },
-                            ]}
-                          />
-                        </div>
-                        {/* <div className="w-full md:w-1/2 p-2">
+                          <div className="w-full md:w-1/2 p-2">
+                            <label htmlFor="input2" className="block mb-1">
+                              Web or Social URL
+                            </label>
+                            <input
+                              id="input2"
+                              className="w-full border-gray-300 rounded p-2"
+                              type="text"
+                              name="websiteUrl"
+                              placeholder="Website URL"
+                              value={values.websiteUrl}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <div className="w-full md:w-1/2 p-2">
+                            <label htmlFor="select1" className="block mb-1">
+                              Time Zone
+                            </label>
+                            <Select
+                              id="timeZone"
+                              className="w-full"
+                              // name="timeZone"
+                              placeholder="Time Zone"
+                              value={values.timeZone}
+                              onChange={(selectedOption) =>
+                                handleSelectChange("timeZone", selectedOption)
+                              }
+                              options={[
+                                {
+                                  value: "UTC (Coordinated Universal Time)",
+                                  label: "UTC (Coordinated Universal Time)",
+                                },
+                                {
+                                  value: "BST (British Summer Time)",
+                                  label: "BST (British Summer Time)",
+                                },
+                                {
+                                  value: "JST (Japan Standard Time)",
+                                  label: "JST (Japan Standard Time)",
+                                },
+                                {
+                                  value: "IST (Indian Standard Time)",
+                                  label: "IST (Indian Standard Time)",
+                                },
+                                {
+                                  value: "PST (Pacific Standard Time)",
+                                  label: "PST (Pacific Standard Time)",
+                                },
+                                {
+                                  value: "MST (Mountain Standard Time)",
+                                  label: "MST (Mountain Standard Time)",
+                                },
+                                {
+                                  value: "CST (Central Standard Time)",
+                                  label: "CST (Central Standard Time)",
+                                },
+                                {
+                                  value: "EST (Eastern Standard Time)",
+                                  label: "EST (Eastern Standard Time)",
+                                },
+                                {
+                                  value: "GMT (Greenwich Mean Time)",
+                                  label: "GMT (Greenwich Mean Time)",
+                                },
+                              ]}
+                            />
+                          </div>
+                          {/* <div className="w-full md:w-1/2 p-2">
                           <label className="block mb-1">Post type</label>
                           <Select
                             id="select3"
@@ -472,7 +471,7 @@ function BrandEngagementBuilder() {
                             options={postTypeOptions}
                           />
                         </div> */}
-                        {/* {values.postType?.value === "other" && (
+                          {/* {values.postType?.value === "other" && (
                           <div className="w-full md:w-1/2 p-2">
                             <label className="block mb-1">
                               Enter a post type
@@ -499,7 +498,7 @@ function BrandEngagementBuilder() {
                           </div>
                         )} */}
 
-                        {/* <div className="w-full md:w-1/2 p-2">
+                          {/* <div className="w-full md:w-1/2 p-2">
                           <label htmlFor="select4" className="block mb-1">
                             Target Audience
                           </label>
@@ -519,88 +518,88 @@ function BrandEngagementBuilder() {
                           />
                         </div> */}
 
-                        <div className="flex w-full justify-center items-center">
-                          <p className="text-red-500 text-sm my-2  text-center">
-                            {message ? message : ""}
-                          </p>
-                        </div>
-                        <div className="md:flex w-full p-2">
-                          <button
-                            type="reset"
-                            onClick={handleReset}
-                            className="md:w-[40%] w-full bg-[#60696d] text-white rounded p-2"
-                          >
-                            Reset form
-                          </button>
-                          <button
-                            type={!previewLoading ? "submit" : "button"}
-                            className="md:w-[80%] flex justify-center items-center w-full bg-purple-500 text-white rounded p-2 mt-2 md:mt-0 md:ml-2"
-                          >
-                            {previewLoading ? (
-                              <>
-                                <img
-                                  className="mr-2"
-                                  width={20}
-                                  src={rolling}
-                                />
-                                Generating...
-                              </>
-                            ) : (
-                              "Preview"
-                            )}
-                          </button>
-                        </div>
-                        {result !== null && (
-                          <div className="w-full px-2">
+                          <div className="flex w-full justify-center items-center">
+                            <p className="text-red-500 text-sm my-2  text-center">
+                              {message ? message : ""}
+                            </p>
+                          </div>
+                          <div className="md:flex w-full p-2">
                             <button
-                              type="button"
-                              onClick={() => {
-                                !saveLoading && handleSave();
-                              }}
-                              className="flex justify-center items-center w-full bg-[#33cc00] text-white rounded p-2"
+                              type="reset"
+                              onClick={handleReset}
+                              className="md:w-[40%] w-full bg-[#60696d] text-white rounded p-2"
                             >
-                              {saveLoading ? (
+                              Reset form
+                            </button>
+                            <button
+                              type={!previewLoading ? "submit" : "button"}
+                              className="md:w-[80%] flex justify-center items-center w-full bg-purple-500 text-white rounded p-2 mt-2 md:mt-0 md:ml-2"
+                            >
+                              {previewLoading ? (
                                 <>
                                   <img
                                     className="mr-2"
                                     width={20}
                                     src={rolling}
                                   />
-                                  Saving...
+                                  Generating...
                                 </>
                               ) : (
-                                "Save"
+                                "Preview"
                               )}
                             </button>
                           </div>
-                        )}
+                          {result !== null && (
+                            <div className="w-full px-2">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  !saveLoading && handleSave();
+                                }}
+                                className="flex justify-center items-center w-full bg-[#33cc00] text-white rounded p-2"
+                              >
+                                {saveLoading ? (
+                                  <>
+                                    <img
+                                      className="mr-2"
+                                      width={20}
+                                      src={rolling}
+                                    />
+                                    Saving...
+                                  </>
+                                ) : (
+                                  "Save"
+                                )}
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </form>
+                    </div>
+                    <div className="w-full flex-col  text-white md:w-1/2 bg-[#333333] rounded-lg p-4">
+                      {result && (
+                        <div
+                          onClick={handleCopyText}
+                          className=" flex justify-end text-end "
+                        >
+                          <p className="bg-slate-600 w-[15%] cursor-pointer text-center rounded-lg py-1 ">
+                            {" "}
+                            Copy
+                          </p>
+                        </div>
+                      )}
+                      <div className="ove">
+                        {result !== null
+                          ? ReactHtmlParser(result)
+                          : "Results will be added here."}
                       </div>
-                    </form>
-                  </div>
-                  <div className="w-full flex-col  text-white md:w-1/2 bg-[#333333] rounded-lg p-4">
-                    {result && (
-                      <div
-                        onClick={handleCopyText}
-                        className=" flex justify-end text-end "
-                      >
-                        <p className="bg-slate-600 w-[15%] cursor-pointer text-center rounded-lg py-1 ">
-                          {" "}
-                          Copy
-                        </p>
-                      </div>
-                    )}
-                    <div className="ove">
-                      {result !== null
-                        ? ReactHtmlParser(result)
-                        : "Results will be added here."}
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+              {/* Element that will be shown/hidden */}
             </div>
-      {/* Element that will be shown/hidden */}
-      </div>
-      {/*End Brand Engagement Card Form*/}
+            {/*End Brand Engagement Card Form*/}
 
             {/* Toast container */}
             <ToastContainer />
@@ -629,36 +628,37 @@ function BrandEngagementBuilder() {
                     );
                   })}
                 </div>
-                {numberOfPages > 1 && <div class="flex items-center md:mt-4 justify-center space-x-2">
-                  <button
-                    className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
-                    onClick={gotoPrevious}
-                  >
-                    Previous
-                  </button>
-
-                  {pages.map((pageIndex) => (
+                {numberOfPages > 1 && (
+                  <div class="flex items-center md:mt-4 justify-center space-x-2">
                     <button
-                      key={pageIndex}
-                      className={`${pageNumber === pageIndex
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-300 hover:bg-gray-400 text-gray-800"
-                        } px-3 py-1 rounded-lg`}
-                      onClick={() => setPageNumber(pageIndex)}
+                      className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                      onClick={gotoPrevious}
                     >
-                      {pageIndex + 1}
+                      Previous
                     </button>
-                  ))}
 
-                  <button
-                    className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
-                    onClick={gotoNext}
-                  >
-                    Next
-                  </button>
-                </div>
-                }
+                    {pages.map((pageIndex) => (
+                      <button
+                        key={pageIndex}
+                        className={`${
+                          pageNumber === pageIndex
+                            ? "bg-blue-500 text-white"
+                            : "bg-gray-300 hover:bg-gray-400 text-gray-800"
+                        } px-3 py-1 rounded-lg`}
+                        onClick={() => setPageNumber(pageIndex)}
+                      >
+                        {pageIndex + 1}
+                      </button>
+                    ))}
 
+                    <button
+                      className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                      onClick={gotoNext}
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>

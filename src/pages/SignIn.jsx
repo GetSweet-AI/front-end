@@ -29,7 +29,7 @@ function SignIn() {
     setLoading(true);
     try {
       const { data } = await axios.post(
-        "https://seashell-app-8amlb.ondigitalocean.app/api/v1/auth/login",
+        "https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/login",
         currentUser
       );
       const { user, token } = data;

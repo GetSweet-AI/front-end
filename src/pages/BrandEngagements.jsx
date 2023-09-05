@@ -15,7 +15,6 @@ import { useSelector } from "react-redux";
 import { MutatingDots } from "react-loader-spinner";
 
 function BrandEngagements() {
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [engagements, setEngagements] = useState([]);
@@ -27,7 +26,7 @@ function BrandEngagements() {
   //   setIsLoading(true);
   //   await axios
   //     .get(
-  //       `https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}`
+  //       `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}`
   //     )
   //     .then((res) => {
   //       setEngagements(res.data?.brandEngagements);
@@ -48,7 +47,9 @@ function BrandEngagements() {
   const fetchEngagements = async () => {
     setIsLoading(true);
     try {
-      fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+      fetch(
+        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`
+      )
         .then((response) => response.json())
         .then(({ totalPages, brandEngagements }) => {
           setEngagements(brandEngagements);
@@ -62,7 +63,9 @@ function BrandEngagements() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`https://seashell-app-8amlb.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+    fetch(
+      `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`
+    )
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
         setEngagements(brandEngagements);
@@ -71,7 +74,6 @@ function BrandEngagements() {
     setIsLoading(false);
   }, [pageNumber]);
   // Fetch data when the currentPage changes
-
 
   const gotoPrevious = () => {
     setPageNumber(Math.max(0, pageNumber - 1));
@@ -84,7 +86,6 @@ function BrandEngagements() {
   // useEffect(() => {
   //   fetchEngagements();
   // }, []);
-
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -168,37 +169,40 @@ function BrandEngagements() {
             )}
 
             {/* Pagination */}
-            {numberOfPages > 0 && <div className="mt-8">
-              <div class="flex items-center md:mt-4 justify-center space-x-2">
-                <button
-                  className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
-                  onClick={gotoPrevious}
-                >
-                  Previous
-                </button>
-
-                {pages.map((pageIndex) => (
+            {numberOfPages > 0 && (
+              <div className="mt-8">
+                <div class="flex items-center md:mt-4 justify-center space-x-2">
                   <button
-                    key={pageIndex}
-                    className={`${pageNumber === pageIndex
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
-                      } px-3 py-1 rounded-lg`}
-                    onClick={() => setPageNumber(pageIndex)}
+                    className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                    onClick={gotoPrevious}
                   >
-                    {pageIndex + 1}
+                    Previous
                   </button>
-                ))}
 
-                <button
-                  className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
-                  onClick={gotoNext}
-                >
-                  Next
-                </button>
+                  {pages.map((pageIndex) => (
+                    <button
+                      key={pageIndex}
+                      className={`${
+                        pageNumber === pageIndex
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-300 hover:bg-gray-400 text-gray-800"
+                      } px-3 py-1 rounded-lg`}
+                      onClick={() => setPageNumber(pageIndex)}
+                    >
+                      {pageIndex + 1}
+                    </button>
+                  ))}
+
+                  <button
+                    className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                    onClick={gotoNext}
+                  >
+                    Next
+                  </button>
+                </div>
+                {/* <PaginationNumeric /> */}
               </div>
-              {/* <PaginationNumeric /> */}</div>}
-
+            )}
           </div>
         </main>
       </div>
