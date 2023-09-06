@@ -135,6 +135,8 @@ function Users() {
         <DashboardHeader
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
+          fullName={user.fullName}
+          picture={user.picture}
         />
 
         <main>
@@ -240,10 +242,11 @@ function Users() {
                   {pages.map((pageIndex) => (
                     <button
                       key={pageIndex}
-                      className={`${pageNumber === pageIndex
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-300 hover:bg-gray-400 text-gray-800"
-                        } px-3 py-1 rounded-lg`}
+                      className={`${
+                        pageNumber === pageIndex
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-300 hover:bg-gray-400 text-gray-800"
+                      } px-3 py-1 rounded-lg`}
                       onClick={() => setPageNumber(pageIndex)}
                     >
                       {pageIndex + 1}

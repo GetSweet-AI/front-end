@@ -12,7 +12,7 @@ import DashboardHeader from "../partials/DashboardHeader";
 import Select from "react-select";
 import axios from "axios";
 import ReactHtmlParser from "react-html-parser";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faL, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { targetAudienceOptions } from "../constants/objects";
@@ -41,8 +41,7 @@ function BrandEngagementBuilder() {
   // State to track visibility
   const [isVisible, setIsVisible] = useState(false);
 
-  console.log("User :" + JSON.stringify(user))
-
+  console.log("User :" + JSON.stringify(user));
 
   useEffect(() => {
     fetch(
@@ -256,6 +255,8 @@ function BrandEngagementBuilder() {
         <DashboardHeader
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
+          fullName={user.fullName}
+          picture={user.picture}
         />
 
         <main>
@@ -276,7 +277,9 @@ function BrandEngagementBuilder() {
                 </button>
               </div>
 
-              <div className="my-4 sm:mb-8">  {/* Increased the bottom margin to mb-8 */}
+              <div className="my-4 sm:mb-8">
+                {" "}
+                {/* Increased the bottom margin to mb-8 */}
                 <p className="text-slate-800">
                   Engagement Builder is a powerful product designed to help you
                   elevate your brand's social media presence. With Engagement
@@ -288,7 +291,6 @@ function BrandEngagementBuilder() {
 
               {/* Element that will be shown/hidden */}
               <div className={isVisible ? "" : "hidden"}>
-
                 {/*Brand Engagement Card Form*/}
                 {user?.availableTokens === 0 ? (
                   <a
@@ -298,7 +300,10 @@ function BrandEngagementBuilder() {
                     No tokens remaining. Purchase more to continue.
                   </a>
                 ) : (
-                  <div id="Brand_Form" className="flex flex-wrap bg-white md:p-4 rounded-lg sm:mb-12">
+                  <div
+                    id="Brand_Form"
+                    className="flex flex-wrap bg-white md:p-4 rounded-lg sm:mb-12"
+                  >
                     <div className="w-full md:w-1/2">
                       <form className="rounded px-4" onSubmit={handlePreview}>
                         <div className="flex flex-wrap">
@@ -638,10 +643,11 @@ function BrandEngagementBuilder() {
                     {pages.map((pageIndex) => (
                       <button
                         key={pageIndex}
-                        className={`${pageNumber === pageIndex
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-300 hover:bg-gray-400 text-gray-800"
-                          } px-3 py-1 rounded-lg`}
+                        className={`${
+                          pageNumber === pageIndex
+                            ? "bg-blue-500 text-white"
+                            : "bg-gray-300 hover:bg-gray-400 text-gray-800"
+                        } px-3 py-1 rounded-lg`}
                         onClick={() => setPageNumber(pageIndex)}
                       >
                         {pageIndex + 1}

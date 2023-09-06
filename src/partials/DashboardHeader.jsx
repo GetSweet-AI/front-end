@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Menu, Transition } from "@headlessui/react";
+import { logoutUser } from "../redux/auth";
+import userPic from "../images/user.png";
+import Greeting from "./Greeting";
 
-import { logoutUser } from '../redux/auth';
-
-function DashboardHeader({
+export default function DashboardHeader({
   sidebarOpen,
-  setSidebarOpen
+  setSidebarOpen,
+  fullName,
+  picture,
 }) {
-
-  const [searchModalOpen, setSearchModalOpen] = useState(false)
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const greeting = Greeting();
+  const userPicture = picture || userPic;
+  const capiFullname = fullName.charAt(0).toUpperCase() + fullName.slice(1);
+
   //Sign Out user
   const logOut = () => {
     dispatch(logoutUser());
@@ -23,104 +30,96 @@ function DashboardHeader({
     <header className="sticky top-0 bg-white border-b border-slate-200 z-30">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 -mb-px">
-
           {/* Header: Left side */}
           <div className="flex">
-
             {/* Hamburger button */}
             <button
               className="text-slate-500 hover:text-slate-600 lg:hidden"
               aria-controls="sidebar"
               aria-expanded={sidebarOpen}
-              onClick={(e) => { e.stopPropagation(); setSidebarOpen(!sidebarOpen); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSidebarOpen(!sidebarOpen);
+              }}
             >
               <span className="sr-only">Open sidebar</span>
-              <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                className="w-6 h-6 fill-current"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <rect x="4" y="5" width="16" height="2" />
                 <rect x="4" y="11" width="16" height="2" />
                 <rect x="4" y="17" width="16" height="2" />
               </svg>
             </button>
-
           </div>
 
           {/* Header: Right side */}
           <div className="flex items-center space-x-3">
             <hr className="w-px h-6 bg-slate-200 mx-3" />
-            {/* <UserMenu align="right" /> */}
-            <div
-              className="font-medium cursor-pointer text-sm text-slate-800 hover:text-slate-600 flex items-center py-1 px-3"
-              to="/signin"
-              onClick={logOut}
-            >
-              <svg
-                fill="#000000"
-                width="16px"
-                height="16x"
-                viewBox="0 0 24 24"
-                id="sign-out-left-2"
-                data-name="Line Color"
-                xmlns="http://www.w3.org/2000/svg"
-                class="icon line-color"
-                transform="matrix(-1, 0, 0, 1, 0, 0)"
-              >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g
-                  id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke="#CCCCCC"
-                  stroke-width="0.72"
-                ></g>
-                <g id="SVGRepo_iconCarrier">
-                  <polyline
-                    id="secondary"
-                    points="6 15 3 12 6 9"
-                    style={{
-                      fill: "none",
-                      stroke: "#6d7eef",
-                      strokeLinecap: "round",
-                      strokeLinejoin: "round",
-                      strokeWidth: "2.4",
-                    }}
-                  ></polyline>
-                  <line
-                    id="secondary-2"
-                    data-name="secondary"
-                    x1="3"
-                    y1="12"
-                    x2="17"
-                    y2="12"
-                    style={{
-                      fill: "none",
-                      stroke: "#6d7eef",
-                      strokeLinecap: "round",
-                      strokeLinejoin: "round",
-                      strokeWidth: "2.4",
-                    }}
-                  ></line>
-                  <path
-                    id="primary"
-                    d="M10,8V5a1,1,0,0,1,1-1h9a1,1,0,0,1,1,1V19a1,1,0,0,1-1,1H11a1,1,0,0,1-1-1V16"
-                    style={{
-                      fill: "none",
-                      stroke: "#4446e4",
-                      strokeLinecap: "round",
-                      strokeLinejoin: "round",
-                      strokeWidth: "2.4",
-                    }}
-                  ></path>
-                </g>
-              </svg>{" "}
-              <span className="ml-2">Sign Out</span>
+            <div>
+              <p>
+                {greeting} {capiFullname}!
+              </p>
+              {/* <UserMenu align="right" /> */}
+              {/* Profile dropdown */}
+              <Menu as="div" className="relative ml-3">
+                <div>
+                  <Menu.Button className="relative flex rounded-full  text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-700 ring">
+                    <span className="absolute -inset-1.5" />
+                    <img
+                      className="h-8 w-8 rounded-full"
+                      src={userPicture}
+                      alt="/user.png"
+                    />
+                  </Menu.Button>
+                </div>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          href="/profile"
+                          className={`block px-4 py-2 text-sm ${
+                            active
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          Account Settings
+                        </a>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button
+                          onClick={logOut}
+                          className={`block px-4 py-2 text-sm relative w-full flex  ${
+                            active
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-700"
+                          }`}
+                        >
+                          Logout
+                        </button>
+                      )}
+                    </Menu.Item>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
             </div>
-
           </div>
-
         </div>
       </div>
     </header>
   );
 }
-
-export default DashboardHeader;

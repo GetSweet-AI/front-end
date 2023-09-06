@@ -171,6 +171,8 @@ function PostsFeed() {
         <DashboardHeader
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
+          fullName={user.fullName}
+          picture={user.picture}
         />
 
         <main>
@@ -226,47 +228,47 @@ function PostsFeed() {
 
               {enabled
                 ? adminFeedPosts?.length > 0 && (
-                  <div className="">
-                    <div className="grid grid-cols-12 gap-6">
-                      {adminFeedPosts.map((item) => {
-                        return (
-                          <PostCard
-                            key={item._id}
-                            id={item._id}
-                            MediaUrl={item.MediaUrl}
-                            deleteFeedPost={deletePostFeed}
-                            Caption={item.Caption}
-                            Date={item.Date}
-                            handleCopyText={handleCopyText}
-                            Accounts={item.Accounts}
-                            DownloadButton={downloadVideo}
-                          />
-                        );
-                      })}
+                    <div className="">
+                      <div className="grid grid-cols-12 gap-6">
+                        {adminFeedPosts.map((item) => {
+                          return (
+                            <PostCard
+                              key={item._id}
+                              id={item._id}
+                              MediaUrl={item.MediaUrl}
+                              deleteFeedPost={deletePostFeed}
+                              Caption={item.Caption}
+                              Date={item.Date}
+                              handleCopyText={handleCopyText}
+                              Accounts={item.Accounts}
+                              DownloadButton={downloadVideo}
+                            />
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                )
+                  )
                 : feedPosts?.length > 0 && (
-                  <div className="">
-                    <div className="grid grid-cols-12 gap-6">
-                      {feedPosts.map((item) => {
-                        return (
-                          <PostCard
-                            key={item._id}
-                            id={item._id}
-                            MediaUrl={item.MediaUrl}
-                            deleteFeedPost={deletePostFeed}
-                            Caption={item.Caption}
-                            Date={item.Date}
-                            handleCopyText={handleCopyText}
-                            Accounts={item.Accounts}
-                            DownloadButton={downloadVideo}
-                          />
-                        );
-                      })}
+                    <div className="">
+                      <div className="grid grid-cols-12 gap-6">
+                        {feedPosts.map((item) => {
+                          return (
+                            <PostCard
+                              key={item._id}
+                              id={item._id}
+                              MediaUrl={item.MediaUrl}
+                              deleteFeedPost={deletePostFeed}
+                              Caption={item.Caption}
+                              Date={item.Date}
+                              handleCopyText={handleCopyText}
+                              Accounts={item.Accounts}
+                              DownloadButton={downloadVideo}
+                            />
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
               {enabled && (
                 <div className="mt-8">
@@ -281,10 +283,11 @@ function PostsFeed() {
                     {AdminPages.map((pageIndex) => (
                       <button
                         key={pageIndex}
-                        className={`${adminPageNumber === pageIndex
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-300 hover:bg-gray-400 text-gray-800"
-                          } px-3 py-1 rounded-lg`}
+                        className={`${
+                          adminPageNumber === pageIndex
+                            ? "bg-blue-500 text-white"
+                            : "bg-gray-300 hover:bg-gray-400 text-gray-800"
+                        } px-3 py-1 rounded-lg`}
                         onClick={() => setAdminPageNumber(pageIndex)}
                       >
                         {pageIndex + 1}
@@ -313,10 +316,11 @@ function PostsFeed() {
                     {pages.map((pageIndex) => (
                       <button
                         key={pageIndex}
-                        className={`${pageNumber === pageIndex
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-300 hover:bg-gray-400 text-gray-800"
-                          } px-3 py-1 rounded-lg`}
+                        className={`${
+                          pageNumber === pageIndex
+                            ? "bg-blue-500 text-white"
+                            : "bg-gray-300 hover:bg-gray-400 text-gray-800"
+                        } px-3 py-1 rounded-lg`}
                         onClick={() => setPageNumber(pageIndex)}
                       >
                         {pageIndex + 1}

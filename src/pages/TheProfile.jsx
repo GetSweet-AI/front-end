@@ -160,6 +160,8 @@ function TheProfile() {
         <DashboardHeader
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
+          fullName={user.fullName}
+          picture={user.picture}
         />
 
         <main>
