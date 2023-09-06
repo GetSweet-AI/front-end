@@ -5,17 +5,26 @@ import React from "react";
 import { Link } from "react-router-dom";
 import ReactPlayer from "react-player";
 import Video from "./Video";
+import { dateUpdate } from "./Time";
+import { parseISO, format } from "date-fns";
+import { utcToZonedTime } from "date-fns-tz";
 
 function PostCard({
   id,
   MediaUrl,
   Caption,
-  Date,
+  Date: postDate,
   deleteFeedPost,
   handleCopyText,
   Accounts,
   DownloadButton,
 }) {
+  const parsedDate = parseISO(postDate);
+  const localDate = utcToZonedTime(
+    parsedDate,
+    Intl.DateTimeFormat().resolvedOptions().timeZone
+  );
+
   return (
     <div className="col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-md rounded-md border border-slate-200">
       <div className="flex flex-col h-full p-5">
@@ -48,9 +57,9 @@ function PostCard({
         <div className="grow mt-2">
           <div className="text-sm mb-2">
             <span className="font-medium">Scheduled for</span>{" "}
-            <a className="underline text-blue-500" target="_blank">
-              {Date}
-            </a>
+            <p className="text-pink-500 font-bold" target="_blank">
+              {dateUpdate(localDate)}
+            </p>
           </div>
           <div className="text-sm font-medium mb-2">{Caption}</div>
         </div>
