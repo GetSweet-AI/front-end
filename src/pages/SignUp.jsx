@@ -74,7 +74,6 @@ function SignUp() {
   const onSubmit = async (e) => {
     e.preventDefault();
     const { email, password } = values;
-
     registerUser(values);
     console.log(JSON.stringify(values));
   };
@@ -116,6 +115,7 @@ function SignUp() {
                 </div>
 
                 {/* Form */}
+
                 <div>
                   <form onSubmit={onSubmit} className="max-w-sm mx-auto ">
                     <div className="flex flex-wrap -mx-3 mb-4">
@@ -202,6 +202,7 @@ function SignUp() {
                         </button>
                         {/* </Link> */}
                       </div>
+
                       {loading && (
                         <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
                           {" "}

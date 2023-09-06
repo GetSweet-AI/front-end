@@ -26,22 +26,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MutatingDots } from "react-loader-spinner";
-import ModalUser from "../partials/modalUser";
 
 function Users() {
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [userDeleteId, setUserDeleteId] = useState(null);
-
-  const openDeleteModal = (userId) => {
-    setUserDeleteId(userId);
-    setShowDeleteModal(true);
-  };
-
-  const closeDeleteModal = () => {
-    setShowDeleteModal(false);
-    setUserDeleteId(null);
-  };
-
   const dispatch = useDispatch();
 
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -50,52 +36,25 @@ function Users() {
   const [result, setResult] = useState(null);
   const { token, user } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
-
   const [isLoading, setIsLoading] = useState(false);
-  // const [values, setValues] = useState({
-  //   brandName: "",
-  //   websiteUrl: "",
-  //   timeZone: null,
-  //   companySector: null,
-  //   brandTone: null,
-  //   targetAudience: null,
-  //   postType: "",
-  // });
-
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setValues((prevValues) => ({
-  //     ...prevValues,
-  //     [name]: value,
-  //   }));
-  // };
-
-  // const handleSelectChange = (name, selectedOption) => {
-  //   setValues((prevValues) => ({
-  //     ...prevValues,
-  //     [name]: selectedOption,
-  //   }));
-  // };
-
   const [sidebarOpen, setSidebarOpen] = useState(true);
-
   const [users, setUsers] = useState([]);
 
-  const fetchUsers = async () => {
-    setIsLoading(true);
-    await axios
-      .get(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}`
-      )
-      .then((res) => {
-        setUsers(res.data);
-        console.log("res?.data :" + JSON.stringify(res?.data));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    setIsLoading(false);
-  };
+  // const fetchUsers = async () => {
+  //   setIsLoading(true)
+  //   await axios
+  //     .get(
+  //       `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}`
+  //     )
+  //     .then((res) => {
+  //       setUsers(res.data);
+  //       console.log("res?.data :" + JSON.stringify(res?.data));
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  //   setIsLoading(false)
+  // };
 
   // useEffect(() => {
   //   fetchUsers();
@@ -107,37 +66,44 @@ function Users() {
 
   const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
 
+  async function fetchUsersData(user, pageNumber) {
+    try {
+      const response = await axios.get(
+        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`
+      );
+      const { totalPages, users } = response.data;
+      setUsers(users);
+      setNumberOfPages(totalPages);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  }
+
   useEffect(() => {
-    fetch(
-      `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`
-    )
-      .then((response) => response.json())
-      .then(({ totalPages, users }) => {
-        setUsers(users);
-        setNumberOfPages(totalPages);
-      });
+    fetchUsersData(user, pageNumber);
   }, [pageNumber]);
 
-  const updateRole = (userId) => {
-    axios
+  const updateRole = async (userId) => {
+    await axios
       .put(
         `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/users/${userId}/update-role`
       )
       .then((res) => {
-        fetchUsers();
+        fetchUsersData(user, pageNumber);
         toast.success("User role updated");
       })
       .catch((err) => {
         console.log(err);
       });
   };
-  const deleteUser = (userId) => {
-    axios
+
+  const deleteUser = async (userId) => {
+    await axios
       .delete(
         `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${userId}`
       )
       .then((res) => {
-        fetchUsers();
+        fetchUsersData(user, pageNumber);
         toast.success("User deleted successfully");
       })
       .catch((err) => {
@@ -153,6 +119,8 @@ function Users() {
   const gotoNext = () => {
     setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
   };
+
+  // console.log("Users : ")
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -202,6 +170,10 @@ function Users() {
                       </th>
                       <th className="py-3 px-6 text-left">Email</th>
                       <th className="py-3 px-6 text-left">Company</th>
+
+                      <th className="py-3 px-6 text-left">Plan</th>
+                      <th className="py-3 px-6 text-left">Available Tokens</th>
+
                       <th className="py-3 px-6 text-left ">Role</th>
                       <th className="py-3 px-6 text-left rounded-tr-lg">
                         Action
@@ -223,6 +195,11 @@ function Users() {
                         </td>
                         <td className="py-4 px-6 border-b">{client.email}</td>
                         <td className="py-4 px-6 border-b">{client.company}</td>
+
+                        <td className="py-4 px-6 border-b">{client.Plan}</td>
+                        <td className="py-4 px-6 border-b text-center">
+                          {client.availableTokens}
+                        </td>
                         <td className="py-4 px-6 border-b">
                           <span
                             onClick={() => updateRole(client._id)}
@@ -237,10 +214,8 @@ function Users() {
                         </td>
                         <td className="py-4 px-6 border-b">
                           <span
-                            onClick={() => openDeleteModal(client._id)}
-                            className="bg-red-500 flex items-center w-fit 
-                            px-4 py-2 rounded-xl text-white uppercase 
-                            text-sm cursor-pointer"
+                            onClick={() => deleteUser(client._id)}
+                            className="bg-red-500 flex items-center w-fit px-4 py-2 rounded-xl text-white uppercase text-sm cursor-pointer"
                           >
                             Delete
                             <FontAwesomeIcon
@@ -288,14 +263,6 @@ function Users() {
             </div>
           </div>
         </main>
-        <ModalUser
-          isOpen={showDeleteModal}
-          onCancel={closeDeleteModal}
-          onConfirm={() => {
-            deleteUser(userDeleteId);
-            closeDeleteModal();
-          }}
-        />
       </div>
       {/* Toast container */}
       <ToastContainer

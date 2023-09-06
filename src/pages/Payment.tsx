@@ -7,6 +7,7 @@ import Sidebar from "../partials/Sidebar";
 import PricingTables from "../partials/PricingTables";
 import PlansCheckBox from "../partials/PlansCheckBox";
 import { useDispatch, useSelector } from "react-redux";
+
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { clearPlan } from "../redux/ui-slice";

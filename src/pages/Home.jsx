@@ -2,7 +2,7 @@ import React from "react";
 import Header from "../partials/Header";
 import Footer from "../partials/Footer";
 import logo from "../images/logogetsweet.png";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 import { Helmet } from "react-helmet";
 import GAHandler from "../partials/ga_gtm_handler";
@@ -12,7 +12,6 @@ const handleLinkClick = GAHandler();
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import specific icons
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
-
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import {
@@ -24,11 +23,12 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
+import { useSelector } from "react-redux";
 
 const navigation = [
-  { name: 'Sign up', href: '/signup', gtmtrigger: 'header_create_account_btn' },
-  { name: 'Sign in', href: '/signin', gtmtrigger: 'header_sign_in_btn' },
-]
+  { name: "Sign up", href: "/signup", gtmtrigger: "header_create_account_btn" },
+  { name: "Sign in", href: "/signin", gtmtrigger: "header_sign_in_btn" },
+];
 const features = [
   {
     name: "Push to deploy",
@@ -143,6 +143,8 @@ function classNames(...classes) {
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  console.log("isLoggedIn :" + isLoggedIn);
   return (
     <div className="bg-white#">
       {/* embed videos script */}
@@ -159,17 +161,17 @@ export default function Home() {
           aria-label="Global"
         >
           <div className="flex lg:flex-1">
-          <a href="#" className="flex items-center -m-1.5 p-1.5">
+            <a href="#" className="flex items-center -m-1.5 p-1.5">
               <img
-                  className="h-10 w-auto mr-2"  // <-- Moved the comment out of the JSX attribute area
-                  src={logo}
-                  alt="GetSweet.AI logo icon"
+                className="h-10 w-auto mr-2" // <-- Moved the comment out of the JSX attribute area
+                src={logo}
+                alt="GetSweet.AI logo icon"
               />
               {/* Added 'mr-2' for some spacing between the logo and the text */}
               <span className="font-bold text-xl text-gray-900">
-                  GetSweet.AI
+                GetSweet.AI
               </span>
-          </a>
+            </a>
           </div>
           <div className="flex lg:hidden">
             <button
@@ -182,20 +184,28 @@ export default function Home() {
             </button>
           </div>
           <div className="hidden lg:flex lg:gap-x-12">
-            {navigation.map((item) => (
-              <a 
-                key={item.name} 
-                href={item.href}
-                className="text-sm font-semibold leading-6 text-gray-900"
-                // GA code
-                onClick={(e) => {
-                  handleLinkClick(item.gtmtrigger);
-                }}
-             
+            {!isLoggedIn &&
+              navigation.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="text-sm font-semibold leading-6 text-gray-900"
+                  // GA code
+                  onClick={(e) => {
+                    handleLinkClick(item.gtmtrigger);
+                  }}
+                >
+                  {item.name}
+                </a>
+              ))}
+            {isLoggedIn && (
+              <a
+                href="/brand-engagement-builder"
+                className="text-sm  font-semibold leading-6 text-gray-900"
               >
-                {item.name}
+                Get Started
               </a>
-            ))}
+            )}
           </div>
         </nav>
         <Dialog
@@ -230,7 +240,7 @@ export default function Home() {
                       className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                       // GA code
                       onClick={(e) => {
-                        handleLinkClick('mobile_' + item.gtmtrigger);
+                        handleLinkClick("mobile_" + item.gtmtrigger);
                       }}
                     >
                       {item.name}
@@ -271,7 +281,8 @@ export default function Home() {
                   posting.
                 </p>
                 <div className="mt-6 flex items-center justify-center gap-x-6">
-                  <Link to="/signup"
+                  <Link
+                    to="/signup"
                     // GA code
                     onClick={() => handleLinkClick("home_get_started_btn")}
                     href="/signup"

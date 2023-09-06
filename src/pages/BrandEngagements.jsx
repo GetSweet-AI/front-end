@@ -63,6 +63,7 @@ function BrandEngagements() {
 
   useEffect(() => {
     setIsLoading(true);
+
     fetch(
       `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`
     )
@@ -169,6 +170,7 @@ function BrandEngagements() {
             )}
 
             {/* Pagination */}
+
             {numberOfPages > 0 && (
               <div className="mt-8">
                 <div class="flex items-center md:mt-4 justify-center space-x-2">

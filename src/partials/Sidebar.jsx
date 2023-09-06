@@ -126,6 +126,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             <NavLink end to={isLoggedIn ? "/brand-engagement-builder" : "/"}>
               {sidebarExpanded === true ? (
                 <div className="flex w-full h-8 items-center justify-center">
+                  />
                   <img
                     className={`w-[40px] heigh-[40px] object-contain`}
                     src={logo}

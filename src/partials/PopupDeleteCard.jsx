@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
 export default function PopupDelCard({ deleteBrandEngagement, id }) {
   const [show, setShow] = useState(false);
@@ -19,7 +20,7 @@ export default function PopupDelCard({ deleteBrandEngagement, id }) {
   return (
     <>
       <Button variant="danger" onClick={handleShow}>
-        <FontAwesomeIcon className="mr-2" icon={faTrash} />
+        <FontAwesomeIcon className="ml-2 mb-1" icon={faTrashAlt} />
         Delete
       </Button>
 

@@ -267,7 +267,6 @@ function PostsFeed() {
                       </div>
                     </div>
                   )}
-
               {enabled && (
                 <div className="mt-8">
                   <div class="flex items-center md:mt-4 justify-center space-x-2">

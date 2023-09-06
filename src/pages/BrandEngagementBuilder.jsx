@@ -41,6 +41,8 @@ function BrandEngagementBuilder() {
   // State to track visibility
   const [isVisible, setIsVisible] = useState(false);
 
+  console.log("User :" + JSON.stringify(user));
+
   useEffect(() => {
     fetch(
       `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
@@ -57,7 +59,7 @@ function BrandEngagementBuilder() {
       .get(
         `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${user?._id}`
       )
-      .then(() => {
+      .then((res) => {
         dispatch(setUserData(res?.data.user));
       });
   };
@@ -131,7 +133,7 @@ function BrandEngagementBuilder() {
           }
         )
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setPreviewLoading(false);
           setResult(res.data.postContent);
           // console.log("res.data.postContent :" + res.data.postContent)
@@ -260,19 +262,18 @@ function BrandEngagementBuilder() {
             {/* Page header */}
             <div className="md mb-8">
               {/* Left: Title */}
-              <div className="mb-4 sm:mb-0">
+
+              <div className="mb-4 flex md:justify-between md:flex-row flex-col sm:mb-0">
                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold flex justify-between items-center">
                   Brand Engagement Builder
-                  {/* Button to toggle visibility */}
-                  <button
-                    className="px-2 py-1 bg-purple-500 text-white rounded text-sm flex items-center font-normal"
-                    onClick={() => setIsVisible(!isVisible)}
-                  >
-                    <FontAwesomeIcon icon={faPlus} className="mr-1" />
-                    Add brand voice
-                  </button>
-                  {/* End Button to toggle visibility */}
                 </h1>
+                <button
+                  className="px-2 md:py-1 py-2 bg-purple-500 md:mt-0 mt-2  text-center text-white rounded text-sm flex items-center font-normal"
+                  onClick={() => setIsVisible(!isVisible)}
+                >
+                  <FontAwesomeIcon icon={faPlus} className="mr-1" />
+                  Add brand voice
+                </button>
               </div>
 
               <div className="my-4 sm:mb-8">
@@ -622,6 +623,7 @@ function BrandEngagementBuilder() {
                         brandTone={item.BrandTone}
                         targetAudience={item.TargetAudience}
                         postType={item.PostType}
+                        postContent={item.postContent}
                         relatedPostsStatus={item.relatedPostsStatus}
                         fetchEngagements={fetchEngagements}
                       />

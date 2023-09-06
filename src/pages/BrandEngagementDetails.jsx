@@ -182,6 +182,7 @@ function BrandEngagementDetails() {
                                 visible={true}
                             />
                         </div>} */}
+
             <div className="rounded-lg md:space-y-2 bg-blue-100 text-lg px-4 py-2 text-left text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75">
               {/* {id} */}
               <p>
@@ -251,6 +252,7 @@ function BrandEngagementDetails() {
                   wrapperClassName=""
                   visible={true}
                 />
+
                 <div className="ml-3 text-sm font-medium">
                   New posts are currently generating
                 </div>

@@ -6,6 +6,7 @@ import { ThreeDots } from "react-loader-spinner";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import ReactHtmlParser from "react-html-parser";
 
 function BrandEngagementCard({
   id,
@@ -18,6 +19,7 @@ function BrandEngagementCard({
   postType,
   fetchEngagements,
   relatedPostsStatus,
+  postContent,
 }) {
   const navigate = useNavigate();
 
@@ -61,6 +63,14 @@ function BrandEngagementCard({
           <div className="text-sm mb-2 h-12 overflow-y-hidden">
             <span className="font-medium">Brand Description</span>:{" "}
             {companySector}
+          </div>
+          <div className="grid grid-cols-4 gap-x-0">
+            <div className="text-sm mb-2 col-span-1">
+              <span className="font-medium">Post Content :</span>
+            </div>
+            <div className="text-sm mb-2 h-12 overflow-y-hidden col-span-3">
+              {ReactHtmlParser(postContent)}
+            </div>
           </div>
           <div class="bg-blue-500 text-white p-[1px] my-2"></div>
           <div className="text-sm mb-2">

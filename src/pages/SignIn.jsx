@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { setUserData, switchLoginStatus } from "../redux/auth";
 import { Puff } from "react-loader-spinner";
 import { clearMessage } from "../redux/message";
+import LoginGoogle from "../partials/LoginGoogle";
 
 const initialState = {
   email: "",
@@ -12,6 +13,9 @@ const initialState = {
 };
 
 function SignIn() {
+  // const location = useLocation();
+  // let from = (location.state.from.pathname) || '/';
+
   const navigate = useNavigate();
 
   const [values, setValues] = useState(initialState);
@@ -25,6 +29,7 @@ function SignIn() {
 
   const dispatch = useDispatch();
 
+  //Handle loading using react spinners and disable buttons
   const loginUser = async (currentUser) => {
     setLoading(true);
     try {
@@ -55,6 +60,7 @@ function SignIn() {
   useEffect(() => {
     dispatch(clearMessage());
   }, []);
+
   return (
     <div className="flex flex-col min-h-screen  relative overflow-hidden ">
       {/*  Site header */}
@@ -87,6 +93,10 @@ function SignIn() {
                       Sign-Up
                     </a>{" "}
                   </h1>
+                </div>
+                <div className="justify-center flex items-center ">
+                  {" "}
+                  <LoginGoogle />
                 </div>
 
                 {/* Form */}
