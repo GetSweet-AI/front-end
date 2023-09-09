@@ -57,20 +57,18 @@ function BrandEngagementCard({
           <div className="text-sm mb-2">
             <span className="font-medium">Time Zone</span>: {timeZone}
           </div>{" "}
-          <div className="text-sm mb-2">
+          <div className="text-sm mb-2 capitalize">
             <span className="font-medium">Brand Tone</span>: {brandTone}
           </div>
-          <div className="text-sm mb-2 h-12 overflow-y-hidden">
-            <span className="font-medium">Brand Description</span>:{" "}
+          <div className="text-sm  mb-2 h-auto overflow-y-hidden capitalize">
+            <span className="font-medium ">Brand Description</span>:{" "}
             {companySector}
           </div>
-          <div className="grid grid-cols-4 gap-x-0">
-            <div className="text-sm mb-2 col-span-1">
-              <span className="font-medium">Post Content :</span>
-            </div>
-            <div className="text-sm mb-2 h-12 overflow-y-hidden col-span-3">
-              {ReactHtmlParser(postContent)}
-            </div>
+          <div className="text-sm">
+            <span className="font-medium">Post Content: </span>
+          </div>
+          <div className="text-sm mb-6 h-auto">
+            {ReactHtmlParser(postContent)}
           </div>
           <div class="bg-blue-500 text-white p-[1px] my-2"></div>
           <div className="text-sm mb-2">
