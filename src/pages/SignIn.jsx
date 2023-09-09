@@ -1,3 +1,4 @@
+import logo from "../images/logogetsweet.png";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -13,7 +14,6 @@ const initialState = {
 };
 
 function SignIn() {
-
   // const location = useLocation();
   // let from = (location.state.from.pathname) || '/';
 
@@ -34,7 +34,10 @@ function SignIn() {
   const loginUser = async (currentUser) => {
     setLoading(true);
     try {
-      const { data } = await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/login", currentUser);
+      const { data } = await axios.post(
+        "https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/login",
+        currentUser
+      );
       const { user, token } = data;
       console.log("Data : " + data);
       navigate("/brand-engagement-builder");
@@ -56,15 +59,57 @@ function SignIn() {
   };
 
   useEffect(() => {
-    dispatch(clearMessage())
-  }, [])
-
+    dispatch(clearMessage());
+  }, []);
 
   return (
-    <div className="flex flex-col min-h-screen  relative overflow-hidden ">
-      {/*  Site header */}
+    <div className="flex flex-col min-h-screen  relative overflow-hidden">
+      <div
+        className="absolute inset-0 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+        aria-hidden="true"
+      >
+        <div
+          className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+          style={{
+            clipPath:
+              "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+          }}
+        />
+      </div>
 
-      {/*  Page content */}
+      <style>
+        {`
+          .overlay {
+            z-index: 1; 
+            position: relative; 
+            background-color: rgba(255, 255, 255, 0.9); 
+            padding: 2rem; 
+          }
+        `}
+      </style>
+      {/* Header */}
+
+      <header className="absolute inset-x-0 top-0 z-50">
+        <nav
+          className="flex items-center justify-between p-6 lg:px-8"
+          aria-label="Global"
+        >
+          <div className=" flex lg:flex-1">
+            <a href="/" className="flex items-center -m-1.5 p-1.5">
+              <img
+                className=" h-10 w-auto mr-2" // <-- Moved the comment out of the JSX attribute area
+                src={logo}
+                alt="GetSweet.AI logo icon"
+              />
+              {/* Added 'mr-2' for some spacing between the logo and the text */}
+              <span className="font-bold text-xl text-gray-900">
+                GetSweet.AI
+              </span>
+            </a>
+          </div>
+        </nav>
+      </header>
+
       <main className=" ">
         {/*  Page illustration */}
 
@@ -74,7 +119,7 @@ function SignIn() {
               className="pt-32 pb-10 md:translate-y-[20%]  lg:translate-y-0   lg:pb-16 
             flex justify-center items-center"
             >
-              <div className="bg-white bg-opacity-10 px-2 shadow-2xl py-5 opacity-90 md:w-[70%] lg:w-[45%] w-full rounded-xl">
+              <div className="overlay bg-white bg-opacity-10 px-2 shadow-2xl py-5 opacity-90 md:w-[70%] lg:w-[45%] w-full rounded-xl">
                 {/* Page header */}
                 {/* <div className="max-w-3xl mx-auto text-center pb-12 md:pb-10">
                   <h3 className="text-2xl font-bold  text-[#6366F1]">
@@ -93,7 +138,10 @@ function SignIn() {
                     </a>{" "}
                   </h1>
                 </div>
-                <div className="justify-center flex items-center ">   <LoginGoogle /></div>
+                <div className="justify-center flex items-center ">
+                  {" "}
+                  <LoginGoogle />
+                </div>
 
                 {/* Form */}
                 <div>
