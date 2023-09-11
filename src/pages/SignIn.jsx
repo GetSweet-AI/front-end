@@ -99,7 +99,7 @@ function SignIn() {
                   </h1>
                 </div>
                 <div className="justify-center flex items-center ">   <LoginGoogle /></div>
-
+                <hr className="max-w-sm mx-auto my-8" />
                 {/* Form */}
                 <div>
                   <form onSubmit={onSubmit} className="max-w-sm mx-auto ">
