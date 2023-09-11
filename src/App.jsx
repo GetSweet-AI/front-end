@@ -1,31 +1,32 @@
-import React, { useEffect } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import "aos/dist/aos.css";
 import "./css/style.css";
 import AOS from "aos";
-import Home from "./pages/Home";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import Dashboard from "./pages/Dashboard";
-import BrandEngagements from "./pages/BrandEngagements";
-import BrandEngagementBuilder from "./pages/BrandEngagementBuilder";
-import BrandEngagementCard from "./pages/BrandEngagementCard";
-import TheProfile from "./pages/TheProfile";
 import { useSelector } from "react-redux";
-import ResetPassword from "./pages/ResetPassword";
-import VerifyEmail from "./pages/VerifyEmail";
-import SendEmail from "./pages/SendEmail";
-import Users from "./pages/Users";
-import NotFound from "./pages/NotFound";
-import EmailConfirmed from "./pages/EmailConfirmed";
-import CheckEmail from "./pages/CheckEmail";
-import PostsFeed from "./pages/PostsFeed";
-import Payment from "./pages/Payment";
-import Success from "./pages/Success";
-import ManageSubscription from "./pages/ManageSubscriprion";
-import PrivacyPolicy from "./pages/privacy-policy";
-import TermsOfService from "./pages/terms-of-service";
-import BrandEngagementDetails from "./pages/BrandEngagementDetails";
+import { Puff } from "react-loader-spinner";
+
+const Home = lazy(() => import("./pages/Home"));
+const SignIn = lazy(() => import("./pages/SignIn"));
+const SignUp = lazy(() => import("./pages/SignUp"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const BrandEngagements = lazy(() => import("./pages/BrandEngagements"));
+const BrandEngagementBuilder = lazy(() => import("./pages/BrandEngagementBuilder"));
+const TheProfile = lazy(() => import("./pages/TheProfile"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const VerifyEmail = lazy(() => import("./pages/VerifyEmail"));
+const SendEmail = lazy(() => import("./pages/SendEmail"));
+const Users = lazy(() => import("./pages/Users"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const EmailConfirmed = lazy(() => import("./pages/EmailConfirmed"));
+const CheckEmail = lazy(() => import("./pages/CheckEmail"));
+const PostsFeed = lazy(() => import("./pages/PostsFeed"));
+const Payment = lazy(() => import("./pages/Payment"));
+const Success = lazy(() => import("./pages/Success"));
+const ManageSubscription = lazy(() => import("./pages/ManageSubscriprion"));
+const PrivacyPolicy = lazy(() => import("./pages/privacy-policy"));
+const TermsOfService = lazy(() => import("./pages/terms-of-service"));
+const BrandEngagementDetails = lazy(() => import("./pages/BrandEngagementDetails"));
 
 function App() {
   const location = useLocation();
@@ -46,45 +47,28 @@ function App() {
   }, [location.pathname]); // triggered on route change
 
   const { isLoggedIn, user } = useSelector((state) => state.auth);
-  // console.log(user);
-
-  // Check if the referrer starts with "https://checkout.stripe.com/"
 
   return (
-    <>
+    <Suspense fallback={<div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"><Puff
+      height="100"
+      width="100"
+      color="#4446e4"
+      secondaryColor="#4446e4"
+      radius="12.5"
+      ariaLabel="mutating-dots-loading"
+      wrapperStyle={{}}
+      wrapperClass=""
+      visible={true}
+    /></div>}>
       <Routes>
         <Route exact path="/" element={<Home />} />
-        {/* <Route path="/workflows" element={<Dashboard />} /> */}
-        <Route
-          path="/brand-engagements"
-          element={isLoggedIn ? <BrandEngagements /> : <SignIn />}
-        />
-        <Route
-          path="/brand-engagement-builder"
-          element={isLoggedIn ? <BrandEngagementBuilder /> : <SignIn />}
-        />
-        <Route
-          path="/profile"
-          element={isLoggedIn ? <TheProfile /> : <SignIn />}
-        />
-        <Route
-          path="/payment"
-          element={isLoggedIn ? <Payment /> : <SignIn />}
-        />
-        <Route
-          path="/payment/manage-subscription"
-          element={isLoggedIn ? <ManageSubscription /> : <SignIn />}
-        />
-
-        <Route
-          path="/success"
-          element={isLoggedIn ? <Success /> : <SignIn />}
-        />
-
-        <Route
-          path="/brand-engagements/:id"
-          element={isLoggedIn ? <BrandEngagementDetails /> : <SignIn />}
-        />
+        <Route path="/brand-engagements" element={isLoggedIn ? <BrandEngagements /> : <SignIn />} />
+        <Route path="/brand-engagement-builder" element={isLoggedIn ? <BrandEngagementBuilder /> : <SignIn />} />
+        <Route path="/profile" element={isLoggedIn ? <TheProfile /> : <SignIn />} />
+        <Route path="/payment" element={isLoggedIn ? <Payment /> : <SignIn />} />
+        <Route path="/payment/manage-subscription" element={isLoggedIn ? <ManageSubscription /> : <SignIn />} />
+        <Route path="/success" element={isLoggedIn ? <Success /> : <SignIn />} />
+        <Route path="/brand-engagements/:id" element={isLoggedIn ? <BrandEngagementDetails /> : <SignIn />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
@@ -98,7 +82,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
         {user?.role === "admin" && <Route path="/users" element={<Users />} />}
       </Routes>
-    </>
+    </Suspense>
   );
 }
 

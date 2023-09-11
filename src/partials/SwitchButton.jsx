@@ -4,7 +4,7 @@ import { Switch } from '@headlessui/react'
 export default function SwitchButton({ enabled, setEnabled }) {
 
   return (
-    <div className="py-16">
+    <div className="">
       <Switch
         checked={enabled}
         onChange={setEnabled}

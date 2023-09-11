@@ -47,7 +47,7 @@ function Users() {
   //   setIsLoading(true)
   //   await axios
   //     .get(
-  //       `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}`
+  //       `http://localhost:5000/api/v1/admin/users?userId=${user?._id}`
   //     )
   //     .then((res) => {
   //       setUsers(res.data);
@@ -71,7 +71,7 @@ function Users() {
   async function fetchUsersData(user, pageNumber) {
     try {
       const response = await axios.get(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`
+        `http://localhost:5000/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`
       );
       const { totalPages, users } = response.data;
       setUsers(users);
@@ -88,7 +88,7 @@ function Users() {
   const updateRole = async (userId) => {
     await axios
       .put(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/users/${userId}/update-role`
+        `http://localhost:5000/api/v1/admin/users/${userId}/update-role`
       )
       .then((res) => {
         fetchUsersData(user, pageNumber);
@@ -101,7 +101,7 @@ function Users() {
   const deleteUser = async (userId) => {
     await axios
       .delete(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${userId}`
+        `http://localhost:5000/api/v1/auth/users/${userId}`
       )
       .then((res) => {
         fetchUsersData(user, pageNumber);
@@ -121,6 +121,13 @@ function Users() {
     setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
   };
 
+  const [search, setSearch] = useState('')
+  const handleChange = (e) => {
+    setSearch(e.target.value)
+  };
+
+
+  console.log('Search : ' + search)
   // console.log("Users : ")
 
   return (
@@ -157,10 +164,17 @@ function Users() {
             {/* Page header */}
             <div className="h-screen ">
               {/* Left: Title */}
-              <div className="mb-4 sm:mb-0">
+              <div className="mb-4 sm:mb-0 flex md:justify-between md:flex-row flex-col">
                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
                   Users
                 </h1>
+                <input
+                  type="text"
+                  name="search"
+                  placeholder="Search by name or email"
+                  onChange={handleChange}
+                  className="form-input focus:border-slate-300"
+                />
               </div>
               <div className="w-full h-auto mt-10 overflow-x-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-blue-300 overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
                 <table className="min-w-full">
@@ -181,50 +195,61 @@ function Users() {
                     </tr>
                   </thead>
                   <tbody>
-                    {users?.map((client, index) => (
-                      <tr
-                        key={client._id}
-                        className={
-                          index % 2 === 0
-                            ? "bg-white"
-                            : "bg-blue-100 rounded-full"
+                    {users?.
+                      filter((customer) => {
+                        // const { email } = customer?.user;
+                        if (search == "") {
+                          return customer;
+                        } else if (customer?.email !== null &&
+                          (customer?.email.toLowerCase().includes(search.toLocaleLowerCase()) || customer?.fullName.toLowerCase().includes(search.toLocaleLowerCase()))
+                        ) {
+                          return customer;
                         }
-                      >
-                        <td className="py-4 px-6 border-b">
-                          {client.fullName}
-                        </td>
-                        <td className="py-4 px-6 border-b">{client.email}</td>
-                        <td className="py-4 px-6 border-b">{client.company}</td>
-                        <td className="py-4 px-6 border-b">{client.Plan}</td>
-                        <td className="py-4 px-6 border-b text-center">
-                          {client.availableTokens}
-                        </td>
-                        <td className="py-4 px-6 border-b">
-                          <span
-                            onClick={() => updateRole(client._id)}
-                            className="bg-purple-500 flex items-center w-fit px-4 py-2 rounded-xl text-white uppercase text-sm cursor-pointer"
-                          >
-                            {client.role}{" "}
-                            <FontAwesomeIcon
-                              className="ml-2 mb-1"
-                              icon={faArrowsRotate}
-                            />
-                          </span>
-                        </td>
-                        <td className="py-4 px-6 border-b">
-                          <span
-                            onClick={() => deleteUser(client._id)}
-                            className="bg-red-500 flex items-center w-fit px-4 py-2 rounded-xl text-white uppercase text-sm cursor-pointer"
-                          >
-                            Delete
-                            <FontAwesomeIcon
-                              className="ml-2 mb-1"
-                              icon={faTrashAlt}
-                            />
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
+                      })
+                      .map((client, index) => (
+                        <tr
+                          key={client._id}
+                          className={
+                            index % 2 === 0
+                              ? "bg-white"
+                              : "bg-blue-100 rounded-full"
+                          }
+                        >
+                          <td className="py-4 px-6 md:px-8 border-b">
+                            {client.fullName}
+                          </td>
+                          <td className="py-4 px-6 border-b">{client.email}</td>
+                          <td className="py-4 px-6 border-b">{client.company}</td>
+                          <td className="py-4 px-6 border-b">{client.Plan}</td>
+                          <td className="py-4 px-6 border-b text-center">
+                            {client.availableTokens}
+                          </td>
+                          <td className="py-4 px-6 border-b">
+                            <span
+                              onClick={() => updateRole(client._id)}
+                              className="bg-purple-500 flex items-center w-fit px-4 py-2 rounded-xl text-white uppercase text-sm cursor-pointer"
+                            >
+                              {client.role}{" "}
+                              <FontAwesomeIcon
+                                className="ml-2 mb-1"
+                                icon={faArrowsRotate}
+                              />
+                            </span>
+                          </td>
+                          <td className="py-4 px-6 border-b">
+                            <span
+                              onClick={() => deleteUser(client._id)}
+                              className="bg-red-500 flex items-center w-fit px-4 py-2 rounded-xl text-white uppercase text-sm cursor-pointer"
+                            >
+                              Delete
+                              <FontAwesomeIcon
+                                className="ml-2 mb-1"
+                                icon={faTrashAlt}
+                              />
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>

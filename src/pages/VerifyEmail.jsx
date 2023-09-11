@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { setUserData, switchLoginStatus } from "../redux/auth";
 import { MutatingDots, Puff } from 'react-loader-spinner'
 import { clearMessage, setMessage } from "../redux/message";
+import logo from "../images/logogetsweet.png";
 
 const initialState = {
     verificationCode: null
@@ -29,7 +30,7 @@ function VerifyEmail() {
     const verifyVerificationCode = async () => {
         setLoading(true)
         try {
-            await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/verify-email", {
+            await axios.post("http://localhost:5000/api/v1/auth/verify-email", {
                 email: email,
                 verificationCode: parseInt(values.verificationCode, 10)
             });
@@ -69,6 +70,9 @@ function VerifyEmail() {
                             <div className="bg-white bg-opacity-10 px-2 shadow-2xl py-5 opacity-90 md:w-[70%] lg:w-[45%] w-full rounded-xl">
 
                                 <div className="max-w-sm mx-auto text-start pb-12 md:pb-10">
+                                    <a href="/" className="flex w-[20%] ml-[40%] py-4 rounded-full  border border-[#6366F1] justify-center mb-6 items-center">
+                                        <img src={logo} alt="logo" className="w-10 h-10 animate-bounce " />
+                                    </a>
                                     <h1 className="h4 font-cabinet-grotesk text-[#6366F1]">Verification Code Entry</h1>
                                     <h1 className=" font-cabinet-grotesk">Please enter the verification code you have received. </h1>
                                 </div>

@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { Puff } from "react-loader-spinner";
 import EmailSentModal from "../partials/EmailSentModal";
 import { clearMessage } from "../redux/message";
+import logo from "../images/logogetsweet.png";
 
 
 const initialState = {
@@ -46,10 +47,10 @@ function SignUp() {
   const registerUser = async (currentUser) => {
     setLoading(true)
     try {
-      const { data } = await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/register", currentUser);
+      const { data } = await axios.post("http://localhost:5000/api/v1/auth/register", currentUser);
       const { user, token } = data;
       console.log("Data : " + data)
-      axios.post(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${user?._id}/send-email-verification`, {
+      axios.post(`http://localhost:5000/api/v1/auth/users/${user?._id}/send-email-verification`, {
         email: user?.email
       }).then((re) => {
         navigate('/check-email')
@@ -93,10 +94,13 @@ function SignUp() {
             flex justify-center items-center">
               <div className="bg-white bg-opacity-10 px-2 shadow-2xl py-5 opacity-90 md:w-[70%] lg:w-[45%] w-full rounded-xl">
                 {/* Page header */}
-                <div className="max-w-3xl mx-auto text-center pb-12 md:pb-10">
+                <div className="max-w-sm mx-auto text-start pb-12 md:pb-10">
                   {/* <h3 className="text-2xl font-bold  text-[#6366F1]">
                     Login to your account
                   </h3> */}
+                  <a href="/" className="flex w-[20%] ml-[40%] py-4 rounded-full  border border-[#6366F1] justify-center mb-6 items-center">
+                    <img src={logo} alt="logo" className="w-10 h-10 animate-bounce " />
+                  </a>
                   <div className="max-w-sm mx-auto text-start ">
                     <h1 className="h4 font-cabinet-grotesk text-[#6366F1]">Create Your GetSweet.AI Account</h1>
                     <h1 className=" font-cabinet-grotesk">Already have an account? <a href="/signin" className='underline pl-2 cursor-pointer'>Sign-in</a> </h1>

@@ -26,7 +26,7 @@ function BrandEngagementCard({
   const deleteBrandEngagement = async (brandEngagementId) => {
     try {
       const response = await axios.delete(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements/${brandEngagementId}`
+        `http://localhost:5000/api/v1/brand-engagements/${brandEngagementId}`
       );
       console.log(response.data); // Success message or response data
       fetchEngagements();

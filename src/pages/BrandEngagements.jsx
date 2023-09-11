@@ -27,7 +27,7 @@ function BrandEngagements() {
   //   setIsLoading(true);
   //   await axios
   //     .get(
-  //       `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}`
+  //       `http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}`
   //     )
   //     .then((res) => {
   //       setEngagements(res.data?.brandEngagements);
@@ -48,7 +48,7 @@ function BrandEngagements() {
   const fetchEngagements = async () => {
     setIsLoading(true);
     try {
-      fetch(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+      fetch(`http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
         .then((response) => response.json())
         .then(({ totalPages, brandEngagements }) => {
           setEngagements(brandEngagements);
@@ -62,7 +62,7 @@ function BrandEngagements() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+    fetch(`http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
         setEngagements(brandEngagements);
@@ -84,6 +84,13 @@ function BrandEngagements() {
   // useEffect(() => {
   //   fetchEngagements();
   // }, []);
+  const [search, setSearch] = useState('')
+  const handleChange = (e) => {
+    setSearch(e.target.value)
+  };
+
+
+  console.log('Search : ' + search)
 
 
   return (
@@ -105,14 +112,16 @@ function BrandEngagements() {
             {/* Page header */}
             <div className="sm:flex sm:justify-between sm:items-center mb-8">
               {/* Left: Title */}
-              <div className="mb-4 sm:mb-0">
+              <div className="mb-4 sm:mb-0 ">
                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
                   Brand Engagements
                 </h1>
+
               </div>
 
               {/* Right: Actions */}
-              <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
+              <div className="">
+                {/* <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2"> */}
                 {/* Search form */}
                 {/* <SearchForm /> */}
                 {/* Filter button */}
@@ -124,6 +133,13 @@ function BrandEngagements() {
                                     </svg>
                                     <span className="hidden xs:block ml-2">Create Worflow</span>
                                 </button> */}
+                <input
+                  type="text"
+                  name="search"
+                  placeholder="Search by brandName or website"
+                  onChange={handleChange}
+                  className="form-input focus:border-slate-300"
+                />
               </div>
             </div>
 
@@ -146,23 +162,34 @@ function BrandEngagements() {
             {engagements?.length > 0 && (
               <div className="">
                 <div className="grid grid-cols-12 gap-6">
-                  {engagements.map((item) => {
-                    return (
-                      <BrandEngagementCard
-                        key={item._id}
-                        id={item._id}
-                        brandName={item?.BrandName}
-                        website={item.WebSite}
-                        timeZone={item.Timezone}
-                        companySector={item.CompanySector}
-                        brandTone={item.BrandTone}
-                        targetAudience={item.TargetAudience}
-                        postType={item.PostType}
-                        relatedPostsStatus={item.relatedPostsStatus}
-                        fetchEngagements={fetchEngagements}
-                      />
-                    );
-                  })}
+                  {engagements.
+                    filter((brand) => {
+                      // const { email } = brand?.user;
+                      if (search == "") {
+                        return brand;
+                      } else if (brand?.email !== null &&
+                        (brand?.WebSite.toLowerCase().includes(search.toLocaleLowerCase()) || brand?.BrandName.toLowerCase().includes(search.toLocaleLowerCase()))
+                      ) {
+                        return brand;
+                      }
+                    }).
+                    map((item) => {
+                      return (
+                        <BrandEngagementCard
+                          key={item._id}
+                          id={item._id}
+                          brandName={item?.BrandName}
+                          website={item.WebSite}
+                          timeZone={item.Timezone}
+                          companySector={item.CompanySector}
+                          brandTone={item.BrandTone}
+                          targetAudience={item.TargetAudience}
+                          postType={item.PostType}
+                          relatedPostsStatus={item.relatedPostsStatus}
+                          fetchEngagements={fetchEngagements}
+                        />
+                      );
+                    })}
                 </div>
               </div>
             )}

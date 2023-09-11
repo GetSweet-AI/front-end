@@ -6,6 +6,7 @@ import { setUserData, switchLoginStatus } from "../redux/auth";
 import { Puff } from "react-loader-spinner";
 import { clearMessage } from "../redux/message";
 import LoginGoogle from "../partials/LoginGoogle";
+import logo from "../images/logogetsweet.png";
 
 const initialState = {
   email: "",
@@ -34,7 +35,7 @@ function SignIn() {
   const loginUser = async (currentUser) => {
     setLoading(true);
     try {
-      const { data } = await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/login", currentUser);
+      const { data } = await axios.post("http://localhost:5000/api/v1/auth/login", currentUser);
       const { user, token } = data;
       console.log("Data : " + data);
       navigate("/brand-engagement-builder");
@@ -68,7 +69,7 @@ function SignIn() {
       <main className=" ">
         {/*  Page illustration */}
 
-        <section className="relative  ">
+        <section className="relative   ">
           <div className="max-w-7xl md:mx-auto px-4 md:px-6 ">
             <div
               className="pt-32 pb-10 md:translate-y-[20%]  lg:translate-y-0   lg:pb-16 
@@ -83,6 +84,10 @@ function SignIn() {
 
                 </div> */}
                 <div className="max-w-sm mx-auto text-start pb-12 md:pb-10">
+                  <a href="/" className="flex w-[20%] ml-[40%] py-4 rounded-full animate-bounce  border border-[#6366F1] justify-center mb-6 items-center">
+                    <img src={logo} alt="logo" className="w-10 h-10 " />
+                  </a>
+
                   <h1 className="h4 font-cabinet-grotesk text-[#6366F1]">
                     Login to your account
                   </h1>

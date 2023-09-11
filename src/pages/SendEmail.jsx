@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { setUserData, settEmail, switchLoginStatus } from "../redux/auth";
 import { clearMessage, setMessage } from "../redux/message";
 import { ColorRing, MutatingDots, Puff } from 'react-loader-spinner'
+import logo from "../images/logogetsweet.png";
 
 const initialState = {
     email: "",
@@ -34,7 +35,7 @@ function SendEmail() {
     const sendVerificationCode = async (currentUser) => {
         setLoading(true)
         try {
-            const { data } = await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/send-verification-code", {
+            const { data } = await axios.post("http://localhost:5000/api/v1/auth/send-verification-code", {
                 email: values.email
             });
             // const { user, token } = data;
@@ -68,11 +69,14 @@ function SendEmail() {
                 <section className="relative  ">
                     <div
                         className="max-w-7xl md:mx-auto px-4 md:px-6 ">
+
                         <div className="pt-32 pb-10 md:translate-y-[20%]  lg:translate-y-0   lg:pb-16 
             flex justify-center items-center">
                             <div className="bg-white bg-opacity-10 px-2 shadow-2xl py-5 opacity-90 md:w-[70%] lg:w-[45%] w-full rounded-xl">
 
-                                <div className="max-w-sm mx-auto text-start pb-12 md:pb-10">
+                                <div className="max-w-sm mx-auto text-start pb-12 md:pb-10">                                <a href="/" className="flex w-[20%] ml-[40%] py-4 rounded-full  border border-[#6366F1] justify-center mb-6 items-center">
+                                    <img src={logo} alt="logo" className="w-10 h-10 animate-bounce " />
+                                </a>
                                     <h1 className="h4 font-cabinet-grotesk text-[#6366F1]">Send verification code</h1>
                                     <h1 className=" font-cabinet-grotesk">You will receive a verification code</h1>
                                 </div>

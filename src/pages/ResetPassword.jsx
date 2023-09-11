@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { clearMessage, setMessage } from '../redux/message';
 import { Puff } from 'react-loader-spinner';
 import axios from 'axios';
+import logo from "../images/logogetsweet.png";
 
 
 const initialState = {
@@ -30,7 +31,7 @@ function ResetPassword() {
   const resetPassword = async () => {
     setIsLoading(true)
     try {
-      await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/reset-password", {
+      await axios.post("http://localhost:5000/api/v1/auth/reset-password", {
         email: email,
         newPassword: values.password
       });
@@ -84,6 +85,9 @@ function ResetPassword() {
         <section>
           <div
             className="max-w-7xl md:mx-auto px-4 md:px-6 ">
+            <a href="/" className="flex w-[20%] ml-[40%] py-4 rounded-full  border border-[#6366F1] justify-center mb-6 items-center">
+              <img src={logo} alt="logo" className="w-10 h-10 animate-bounce " />
+            </a>
             <div className="pt-32 pb-10 md:translate-y-[20%]  lg:translate-y-0   lg:pb-16 
             flex justify-center items-center">
               <div className="bg-white bg-opacity-10 px-2 shadow-2xl py-5 opacity-90 md:w-[70%] lg:w-[45%] w-full rounded-xl">

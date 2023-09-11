@@ -22,7 +22,7 @@ function Payment() {
     const getPlanInfos = async () => {
         //   setIsPlansLoading(true)
         setIsLoading(true)
-        await axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/plans`)
+        await axios.get(`http://localhost:5000/api/v1/plans`)
             .then((res) => {
                 setPlanInfos(res?.data.planInfos)
                 console.table(res?.data.planInfos)
@@ -54,7 +54,7 @@ function Payment() {
     const handleSwitchPlan = async () => {
         setSwitching(true)
         try {
-            const response = await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/update-subscription", {
+            const response = await axios.post("http://localhost:5000/api/v1/update-subscription", {
                 customerId: user?.customerId,
                 currentSubscriptionId: user?.subscriptionId,
                 newPlanId: plan.id
@@ -107,13 +107,14 @@ function Payment() {
                         <div >
                             <PricingTables planInfos={planInfos} />
                             {hasSubscription && <>
-                                <h2 className="my-4 text-xl text-blue-500 font-bold">Update plan</h2>
+                                <h2 className="my-4 text-2xl text-blue-500 font-bold">Update your plan</h2>
                                 <PlansCheckBox selected={selected} setSelected={setSelected} plans={planInfos} />
                                 <p className="my-3 text-red-600">{message ? message : ""}</p>
                                 <div className="flex flex-col justify-center items-center">
                                     <button disabled={plan === null}
                                         onClick={handleSwitchPlan}
-                                        className="mx-auto w-full max-w-md mb-2 rounded-md cursor-pointer  font-bold text-center z-6 text-white bg-blue-500 py-3">
+                                        className="mx-auto w-full max-w-md mb-2 rounded-md cursor-pointer
+                                          font-bold text-center z-6 text-white bg-blue-500 py-3">
                                         {isSwitching ? "Switching..." : "Switch plan"}
                                     </button>
                                     <p className="text-red-600 text-center">{message}</p>
@@ -144,6 +145,7 @@ function Payment() {
                                         <div className="fixed inset-0 bg-black bg-opacity-25" />
                                     </Transition.Child>
 
+                                    {/* Switch plan */}
                                     <div className="fixed inset-0 overflow-y-auto">
                                         <div className="flex min-h-full items-center justify-center p-4 text-center">
                                             <Transition.Child
@@ -181,6 +183,7 @@ function Payment() {
                                             </Transition.Child>
                                         </div>
                                     </div>
+
                                 </Dialog>
                             </Transition>
 
