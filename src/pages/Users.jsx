@@ -16,6 +16,7 @@ import {
   faArrowsRotate,
   faL,
   faTrashAlt,
+  faPlus
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { targetAudienceOptions } from "../constants/objects";
@@ -26,10 +27,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MutatingDots } from "react-loader-spinner";
+import AddNewUserModal from "../partials/AddNewUserModal";
 
 function Users() {
   const dispatch = useDispatch();
 
+  const [isVisible, setIsVisible] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [engagements, setEngagements] = useState([]);
@@ -64,6 +67,7 @@ function Users() {
   // }, []);
 
   //pagination
+
   const [pageNumber, setPageNumber] = useState(0);
   const [numberOfPages, setNumberOfPages] = useState(0);
 
@@ -130,6 +134,14 @@ function Users() {
   console.log('Search : ' + search)
   // console.log("Users : ")
 
+  const [isOpen, setIsOpen] = useState(false)
+
+  function closeModal() {
+    setIsOpen(false)
+  }
+
+
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -168,12 +180,19 @@ function Users() {
                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
                   Users
                 </h1>
+                <button
+                  className="px-2 md:py-1 py-2 bg-purple-500 md:mt-0 mt-2  text-center text-white rounded text-sm flex items-center font-normal"
+                  onClick={() => setIsOpen(true)}
+                >
+                  <FontAwesomeIcon icon={faPlus} className="mr-1 " />
+                  Add New User
+                </button>
                 <input
                   type="text"
                   name="search"
                   placeholder="Search by name or email"
                   onChange={handleChange}
-                  className="form-input focus:border-slate-300"
+                  className="form-input focus:border-slate-300 mb-1"
                 />
               </div>
               <div className="w-full h-auto mt-10 overflow-x-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-blue-300 overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
@@ -299,6 +318,12 @@ function Users() {
         draggable
         pauseOnHover
         theme="light"
+      />
+
+      <AddNewUserModal
+        isOpen={isOpen}
+        onCancel={closeModal}
+
       />
     </div>
   );
