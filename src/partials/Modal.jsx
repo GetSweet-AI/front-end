@@ -1,5 +1,8 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logoutUser } from '../redux/auth';
 
 export default function MyModal({ isOpen, closeModal, deleteAccount }) {
   const [inputDel, setInputDel] = useState("");
@@ -12,6 +15,9 @@ export default function MyModal({ isOpen, closeModal, deleteAccount }) {
     }
   }, [isOpen]);
 
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
   const handleInputChange = (event) => {
     setInputDel(event.target.value);
   };
@@ -21,6 +27,9 @@ export default function MyModal({ isOpen, closeModal, deleteAccount }) {
       setConfirmation("Successful");
 
       deleteAccount();
+      navigate('/')
+      dispatch(logoutUser());
+
     } else {
       setConfirmation("Denied");
       closeModal();
@@ -28,11 +37,10 @@ export default function MyModal({ isOpen, closeModal, deleteAccount }) {
   };
 
   const buttonDisabled = inputDel !== "DELETE";
-  const buttonClasses = `inline-flex justify-center rounded-md border text-sm font-medium py-2 px-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition-colors duration-300 ${
-    buttonDisabled
-      ? "bg-gray-300 border-gray-300 text-gray-700 cursor-not-allowed"
-      : "bg-red-500 border-transparent text-white hover:bg-red-600"
-  }`;
+  const buttonClasses = `inline-flex justify-center rounded-md border text-sm font-medium py-2 px-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition-colors duration-300 ${buttonDisabled
+    ? "bg-gray-300 border-gray-300 text-gray-700 cursor-not-allowed"
+    : "bg-red-500 border-transparent text-white hover:bg-red-600"
+    }`;
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>

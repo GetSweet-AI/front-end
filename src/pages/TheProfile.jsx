@@ -149,14 +149,16 @@ function TheProfile() {
     setLoading(false);
   };
 
-  const deleteUser = (userId) => {
-    axios
-
-      .delete(
-        `http://localhost:5000/api/v1/auth/users/${userId}`
-      )
+  const deleteUser = async () => {
+    await axios.delete(
+      `http://localhost:5000/api/v1/auth/users/${user?._id}`, {
+      email: user?.email
+    }
+    )
       .then((res) => {
         toast.success("User deleted successfully");
+
+      }).then((res) => {
         dispatch(logoutUser());
         navigate("/");
       })
@@ -441,7 +443,7 @@ function TheProfile() {
               isOpen={isOpen}
               openModal={openModal}
               closeModal={closeModal}
-              deleteAccount={() => deleteUser(user?._id)}
+              deleteAccount={deleteUser}
             />
           </div>
         </main>

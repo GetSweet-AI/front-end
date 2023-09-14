@@ -103,91 +103,91 @@ function Payment() {
                                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold"> Purchase tokens</h1>
                             </div>
                         </div>
-
-                        <div >
-                            <PricingTables planInfos={planInfos} />
-                            {hasSubscription && <>
-                                <h2 className="my-4 text-2xl text-blue-500 font-bold">Update your plan</h2>
-                                <PlansCheckBox selected={selected} setSelected={setSelected} plans={planInfos} />
-                                <p className="my-3 text-red-600">{message ? message : ""}</p>
-                                <div className="flex flex-col justify-center items-center">
-                                    <button disabled={plan === null}
-                                        onClick={handleSwitchPlan}
-                                        className="mx-auto w-full max-w-md mb-2 rounded-md cursor-pointer
+                        {user?.Plan !== 'none' &&
+                            <div >
+                                <PricingTables planInfos={planInfos} />
+                                {hasSubscription && <>
+                                    <h2 className="my-4 text-2xl text-blue-500 font-bold">Update your plan</h2>
+                                    <PlansCheckBox selected={selected} setSelected={setSelected} plans={planInfos} />
+                                    <p className="my-3 text-red-600">{message ? message : ""}</p>
+                                    <div className="flex flex-col justify-center items-center">
+                                        <button disabled={plan === null}
+                                            onClick={handleSwitchPlan}
+                                            className="mx-auto w-full max-w-md mb-2 rounded-md cursor-pointer
                                           font-bold text-center z-6 text-white bg-blue-500 py-3">
-                                        {isSwitching ? "Switching..." : "Switch plan"}
-                                    </button>
-                                    <p className="text-red-600 text-center">{message}</p>
-                                    {isLoading && <TailSpin
-                                        height="80"
-                                        width="80"
-                                        color="#1b54f0"
-                                        ariaLabel="tail-spin-loading"
-                                        radius="1"
-                                        wrapperStyle={{}}
-                                        wrapperClass=""
-                                        visible={true}
-                                    />}
-                                </div>
-                            </>}
-
-                            <Transition appear show={isOpen} as={Fragment}>
-                                <Dialog as="div" className="relative z-10" onClose={closeModal}>
-                                    <Transition.Child
-                                        as={Fragment}
-                                        enter="ease-out duration-300"
-                                        enterFrom="opacity-0"
-                                        enterTo="opacity-100"
-                                        leave="ease-in duration-200"
-                                        leaveFrom="opacity-100"
-                                        leaveTo="opacity-0"
-                                    >
-                                        <div className="fixed inset-0 bg-black bg-opacity-25" />
-                                    </Transition.Child>
-
-                                    {/* Switch plan */}
-                                    <div className="fixed inset-0 overflow-y-auto">
-                                        <div className="flex min-h-full items-center justify-center p-4 text-center">
-                                            <Transition.Child
-                                                as={Fragment}
-                                                enter="ease-out duration-300"
-                                                enterFrom="opacity-0 scale-95"
-                                                enterTo="opacity-100 scale-100"
-                                                leave="ease-in duration-200"
-                                                leaveFrom="opacity-100 scale-100"
-                                                leaveTo="opacity-0 scale-95"
-                                            >
-                                                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                                                    <Dialog.Title
-                                                        as="h3"
-                                                        className="text-lg font-medium leading-6 text-gray-900"
-                                                    >
-                                                        Plan Switched
-                                                    </Dialog.Title>
-                                                    <div className="mt-2">
-                                                        <p className="text-sm text-gray-500">
-                                                            Your plan has been switched successfully
-                                                        </p>
-                                                    </div>
-
-                                                    <div className="mt-4">
-                                                        <button
-                                                            type="button"
-                                                            className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                                                            onClick={closeModal}
-                                                        >
-                                                            Close
-                                                        </button>
-                                                    </div>
-                                                </Dialog.Panel>
-                                            </Transition.Child>
-                                        </div>
+                                            {isSwitching ? "Switching..." : "Switch plan"}
+                                        </button>
+                                        <p className="text-red-600 text-center">{message}</p>
+                                        {isLoading && <TailSpin
+                                            height="80"
+                                            width="80"
+                                            color="#1b54f0"
+                                            ariaLabel="tail-spin-loading"
+                                            radius="1"
+                                            wrapperStyle={{}}
+                                            wrapperClass=""
+                                            visible={true}
+                                        />}
                                     </div>
+                                </>}
 
-                                </Dialog>
-                            </Transition>
+                                <Transition appear show={isOpen} as={Fragment}>
+                                    <Dialog as="div" className="relative z-10" onClose={closeModal}>
+                                        <Transition.Child
+                                            as={Fragment}
+                                            enter="ease-out duration-300"
+                                            enterFrom="opacity-0"
+                                            enterTo="opacity-100"
+                                            leave="ease-in duration-200"
+                                            leaveFrom="opacity-100"
+                                            leaveTo="opacity-0"
+                                        >
+                                            <div className="fixed inset-0 bg-black bg-opacity-25" />
+                                        </Transition.Child>
 
-                        </div>
+                                        {/* Switch plan */}
+                                        <div className="fixed inset-0 overflow-y-auto">
+                                            <div className="flex min-h-full items-center justify-center p-4 text-center">
+                                                <Transition.Child
+                                                    as={Fragment}
+                                                    enter="ease-out duration-300"
+                                                    enterFrom="opacity-0 scale-95"
+                                                    enterTo="opacity-100 scale-100"
+                                                    leave="ease-in duration-200"
+                                                    leaveFrom="opacity-100 scale-100"
+                                                    leaveTo="opacity-0 scale-95"
+                                                >
+                                                    <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                                                        <Dialog.Title
+                                                            as="h3"
+                                                            className="text-lg font-medium leading-6 text-gray-900"
+                                                        >
+                                                            Plan Switched
+                                                        </Dialog.Title>
+                                                        <div className="mt-2">
+                                                            <p className="text-sm text-gray-500">
+                                                                Your plan has been switched successfully
+                                                            </p>
+                                                        </div>
+
+                                                        <div className="mt-4">
+                                                            <button
+                                                                type="button"
+                                                                className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                                                onClick={closeModal}
+                                                            >
+                                                                Close
+                                                            </button>
+                                                        </div>
+                                                    </Dialog.Panel>
+                                                </Transition.Child>
+                                            </div>
+                                        </div>
+
+                                    </Dialog>
+                                </Transition>
+
+                            </div>}
                         {/* Toast container */}
                     </div>
                 </main>

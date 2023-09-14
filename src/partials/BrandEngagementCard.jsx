@@ -64,11 +64,11 @@ function BrandEngagementCard({
             <span className="font-medium">Brand Description</span>:{" "}
             {companySector}
           </div>
-          <div className="grid grid-cols-4 gap-x-0">
-            <div className="text-sm mb-2 col-span-1">
-              <span className="font-medium">Post Content :</span>
+          <div className="flex flex-col">
+            <div className="text-sm  mb-2 col-span-1">
+              <span className="font-bold">Post Content </span>
             </div>
-            <div className="text-sm mb-2 h-12 overflow-y-hidden col-span-3">
+            <div className="text-sm mb-2 h-16 overflow-y-scroll col-span-3">
               {ReactHtmlParser(postContent)}
             </div>
           </div>

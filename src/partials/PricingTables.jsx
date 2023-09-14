@@ -126,11 +126,9 @@ function PricingTables({ planInfos }) {
         <div className="py-12 md:py-20">
 
           {/* Section header */}
-          <div className="max-w-3xl mx-auto text-center pb-12">
+          {user?.Plan !== 'none' && <div className="max-w-3xl mx-auto text-center pb-12">
             <h2 className="h3 font-red-hat-display mb-4 text-gray-100">{hasSubscription ? `You're now on ${user?.Plan} plan. Your subscription is ${subscriptionStatus}` : "Start building for free, then upgrade to a plan to unleash your content."}</h2>
-            {/* <h2 className="h3 font-red-hat-display mb-4 text-gray-100">{subscriptionStatus}</h2> */}
-            {/* <p className="text-xl text-gray-400">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit laborum — semper quis lectus nulla.</p> */}
-          </div>
+          </div>}
           {hasSubscription &&
             <div className='flex flex-col justify-center'>
               <div className='flex flex-col justify-center'>
@@ -150,10 +148,11 @@ function PricingTables({ planInfos }) {
               <div className='flex flex-col justify-center'>
 
               </div>
-            </div>}
+            </div>
+          }
 
           {/* Pricing tables */}
-          {(!hasSubscription && !isPlansLoading)
+          {(user?.Plan === 'none' || (!hasSubscription && !isPlansLoading))
             && <div className="max-w-xs mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-4 items-start sm:max-w-none md:max-w-2xl lg:max-w-none">
 
               {/* Pricing table 1 */}

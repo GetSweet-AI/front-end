@@ -585,7 +585,7 @@ function BrandEngagementBuilder() {
                           </p>
                         </div>
                       )}
-                      <div className="ove">
+                      <div className="ove md:space-y-3">
                         {result !== null
                           ? ReactHtmlParser(result)
                           : "Results will be added here."}
