@@ -27,7 +27,7 @@ function BrandEngagements() {
   //   setIsLoading(true);
   //   await axios
   //     .get(
-  //       `http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}`
+  //       `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}`
   //     )
   //     .then((res) => {
   //       setEngagements(res.data?.brandEngagements);
@@ -48,7 +48,7 @@ function BrandEngagements() {
   const fetchEngagements = async () => {
     setIsLoading(true);
     try {
-      fetch(`http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+      fetch(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
         .then((response) => response.json())
         .then(({ totalPages, brandEngagements }) => {
           setEngagements(brandEngagements);
@@ -62,7 +62,7 @@ function BrandEngagements() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+    fetch(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
         setEngagements(brandEngagements);

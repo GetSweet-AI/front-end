@@ -50,7 +50,7 @@ function Users() {
   //   setIsLoading(true)
   //   await axios
   //     .get(
-  //       `http://localhost:5000/api/v1/admin/users?userId=${user?._id}`
+  //       `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}`
   //     )
   //     .then((res) => {
   //       setUsers(res.data);
@@ -75,7 +75,7 @@ function Users() {
   async function fetchUsersData(user, pageNumber) {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`
+        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`
       );
       const { totalPages, users } = response.data;
       setUsers(users);
@@ -92,7 +92,7 @@ function Users() {
   const updateRole = async (userId) => {
     await axios
       .put(
-        `http://localhost:5000/api/v1/admin/users/${userId}/update-role`
+        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/users/${userId}/update-role`
       )
       .then((res) => {
         fetchUsersData(user, pageNumber);
@@ -105,7 +105,7 @@ function Users() {
   const deleteUser = async (userId) => {
     await axios
       .delete(
-        `http://localhost:5000/api/v1/auth/users/${userId}`
+        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${userId}`
       )
       .then((res) => {
         fetchUsersData(user, pageNumber);

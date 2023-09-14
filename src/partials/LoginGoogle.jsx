@@ -28,7 +28,7 @@ const LoginGoogle = (props) => {
     const responseGoogle = async (response) => {
         setLoading(true)
         // console.log(response)
-        await axios.post('http://localhost:5000/api/v1/auth/googlelogin',
+        await axios.post('https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/googlelogin',
             { idToken: response.tokenId }
         ).then(response => {
             // console.log(response)
