@@ -22,6 +22,7 @@ import { clearMessage, setMessage } from "../redux/message";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { setUserData } from "../redux/auth";
+import PaymentSuccessMessage from "../partials/PaymentSuccessMessage ";
 
 function BrandEngagementBuilder() {
   const dispatch = useDispatch();
@@ -244,6 +245,51 @@ function BrandEngagementBuilder() {
     setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
   };
 
+  //Handle notification on payment 
+  console.log("user.notificationMessage : " + user.notificationMessage)
+  const handleNotificationClose = async () => {
+
+    // if (user.notificationMessage === 'payment_succeeded') {
+    //   // Display a success toast message
+    //   toast.success("Payment succeeded");
+    //   // Reset the notificationMessage to 'none' in the frontend
+    // } else {
+    //   if (user.notificationMessage === 'payment_failed') {
+    //     // Display a success toast message
+
+    //     setTimeout(() => {
+    //       toast.success("Payment Failed!");
+    //     }, 3000);
+
+    //   }
+    // }
+    try {
+      // Make a POST request to update the notificationMessage in the backend using Axios
+      // Replace 'YOUR_UPDATE_NOTIFICATION_ENDPOINT' with your actual endpoint
+      await axios.put(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/update-notification-message/${user._id}`, {
+        notificationMessage: 'none',
+      }).then((res) => {
+        fetchUserData()
+      })
+    } catch (error) {
+      console.error('Error updating notificationMessage:', error);
+    }
+  }
+
+  const fetchUserData = async () => {
+    await axios
+      .get(
+        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+      )
+      .then((res) => {
+        dispatch(setUserData(res.data.user));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -277,7 +323,11 @@ function BrandEngagementBuilder() {
               </div>
 
               <div className="my-4 sm:mb-8">  {/* Increased the bottom margin to mb-8 */}
-                <p className="text-slate-800">
+                {user.notificationMessage !== 'none' &&
+                  <PaymentSuccessMessage
+                    onClose={handleNotificationClose}
+                    text={(user.notificationMessage === 'payment_failed') ? 'Payment Failed!' : user.notificationMessage === 'payment_succeeded' ? "Payment succeeded" : ""} />
+                }                <p className="text-slate-800">
                   Engagement Builder is a powerful product designed to help you
                   elevate your brand's social media presence. With Engagement
                   Builder, you'll be able to easily define your brand voice and
