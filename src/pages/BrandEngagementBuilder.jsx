@@ -118,8 +118,6 @@ function BrandEngagementBuilder() {
       dispatch(setMessage("Please provide the company sector"));
     } else if (!brandName) {
       dispatch(setMessage("Please provide the brand name"));
-    } else if (!websiteUrl) {
-      dispatch(setMessage("Please provide the website URL"));
     } else if (!timeZone) {
       dispatch(setMessage("Please provide the time zone"));
     } else {
@@ -392,6 +390,7 @@ function BrandEngagementBuilder() {
                               className="w-full border-gray-300 rounded p-2"
                               type="text"
                               rows={2}
+                              maxLength={90}
                               name="companySector"
                               placeholder="Enter your brand description "
                               value={values.companySector}
@@ -440,7 +439,7 @@ function BrandEngagementBuilder() {
 
                           <div className="w-full md:w-1/2 p-2">
                             <label htmlFor="input2" className="block mb-1">
-                              Web or Social URL
+                              Web or Social URL <span className="text-gray-500 text-sm">Optional</span>
                             </label>
                             <input
                               id="input2"

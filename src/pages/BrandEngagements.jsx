@@ -90,7 +90,18 @@ function BrandEngagements() {
   };
 
 
+
   console.log('Search : ' + search)
+
+  //Get ClientConnect by BrandEngagementId
+  const [connectLinkURL, setConnectLinkURL] = useState("")
+  const [isLoadingCC, setIsLoadingCC] = useState(false);
+
+
+
+
+
+
 
 
   return (
@@ -179,6 +190,7 @@ function BrandEngagements() {
                           key={item._id}
                           id={item._id}
                           brandName={item?.BrandName}
+                          postContent={item?.postContent}
                           website={item.WebSite}
                           timeZone={item.Timezone}
                           companySector={item.CompanySector}
@@ -187,6 +199,7 @@ function BrandEngagements() {
                           postType={item.PostType}
                           relatedPostsStatus={item.relatedPostsStatus}
                           fetchEngagements={fetchEngagements}
+
                         />
                       );
                     })}

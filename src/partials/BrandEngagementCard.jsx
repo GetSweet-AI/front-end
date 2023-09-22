@@ -1,7 +1,7 @@
 import { faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,6 +20,7 @@ function BrandEngagementCard({
   fetchEngagements,
   relatedPostsStatus,
   postContent,
+  checkConnectLinkExistsByBrandEngagementID,
 }) {
   const navigate = useNavigate();
 
@@ -35,6 +36,7 @@ function BrandEngagementCard({
       console.log(error); // Handle error
     }
   };
+
   return (
     <div className="col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-md rounded-md border border-slate-200">
       <div className="flex flex-col h-full p-5">
@@ -64,18 +66,18 @@ function BrandEngagementCard({
             <span className="font-medium">Brand Description</span>:{" "}
             {companySector}
           </div>
-          <div className="flex flex-col">
+          {postContent && <div className="flex flex-col">
             <div className="text-sm  mb-2 col-span-1">
               <span className="font-bold">Post Content </span>
             </div>
-            <div className="text-sm mb-2 h-16 overflow-y-scroll col-span-3">
-              {ReactHtmlParser(postContent)}
+            <div className={`text-sm mb-2 h-16 text-gray-900 ${postContent ? "overflow-y-scroll" : ""} col-span-3`}>
+              {postContent && ReactHtmlParser(postContent)}
             </div>
-          </div>
-          <div class="bg-blue-500 text-white p-[1px] my-2"></div>
+          </div>}
+          <div class="bg-blue-500 text-white p-[1px] my-4"></div>
           <div className="text-sm mb-2">
             {relatedPostsStatus === "Posts generating..." ? (
-              <div className="flex justify-center space-x-4 items-center">
+              <div className="flex my-2 justify-center space-x-4 items-center">
                 <p className="font-medium text-gray-600">Posts generating...</p>
                 <ThreeDots
                   height="10"
@@ -89,7 +91,7 @@ function BrandEngagementCard({
                 />
               </div>
             ) : (
-              <div className="flex justify-center space-x-4 items-center">
+              <div className="flex my-2 justify-center space-x-4 items-center">
                 {" "}
                 <p className="font-medium text-gray-600 ">Posts are ready</p>
                 <FontAwesomeIcon icon={faCheck} color="#0967eb" size={24} />
@@ -98,17 +100,19 @@ function BrandEngagementCard({
           </div>
         </div>
         <footer className="mt-2">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between space-x-2 items-center">
             <div
+
               onClick={() => navigate(`/brand-engagements/${id}`)}
-              className="text-sm font-medium bg-slate-200 text-blue-700 rounded  p-2 cursor-pointer"
+              className="text-sm font-medium md:flex-[0.3] flex-[0.3] bg-slate-200 text-blue-700 rounded  p-2 cursor-pointer"
             >
               {/* Not Active */}
               <FontAwesomeIcon className="mr-2" icon={faEye} />
               View
             </div>
+
             <div
-              className="text-sm text-white rounded bg-[#d7364b] p-2 cursor-pointer"
+              className="text-sm text-white rounded text-center bg-[#d7364b] flex-[0.4] p-2 cursor-pointer"
               onClick={() => deleteBrandEngagement(id)}
             >
               <FontAwesomeIcon className="mr-2" icon={faTrash} />
@@ -117,7 +121,7 @@ function BrandEngagementCard({
           </div>
         </footer>
       </div>
-    </div>
+    </div >
   );
 }
 

@@ -74,7 +74,7 @@ function BrandEngagementDetails() {
             )
             .then((res) => {
                 setEngagement(res.data?.brandEngagement);
-                console.log("brandEngagements" + JSON.stringify(res?.data))
+                // console.log("brandEngagements" + JSON.stringify(res?.data))
             })
             .catch((err) => {
                 console.log(err);
@@ -89,7 +89,7 @@ function BrandEngagementDetails() {
             )
             .then((res) => {
                 setFeedPosts(res.data?.feedPosts);
-                console.log("feedPosts" + JSON.stringify(res?.data))
+                // console.log("feedPosts" + JSON.stringify(res?.data))
             })
             .catch((err) => {
                 console.log(err);
@@ -129,6 +129,44 @@ function BrandEngagementDetails() {
                 console.log(err);
             });
     };
+    const [isLoadingCC, setIsLoadingCC] = useState(false);
+    const getClientConnect = async () => {
+        setIsLoadingCC(true)
+        try {
+            const response = await axios.get(
+                `http://localhost:5000/api/v1/client-connect/${id}`
+            );
+            console.log("Client connect :" + response.data); // Success message or response data
+            // Perform any additional actions after successful deletion
+            window.location.href = response.data?.ConnectLinkURL
+        } catch (error) {
+            console.log(error); // Handle error
+        }
+        setIsLoadingCC(false)
+    };
+
+    //Check if BE has connectURL or no
+    const [hasConnectUrl, setHasConnectUrl] = useState(false)
+
+    async function checkConnectLinkExistsByBrandEngagementID() {
+        // setIsLoadingCC(true)
+        try {
+            // Make a request to the endpoint to get the ConnectLinkURL
+            const response = await axios.get(`http://localhost:5000/api/v1/check-connect-link-exists/${id}`);
+
+            // Extract the hasConnectLinkURL from the response
+            setHasConnectUrl(response.data?.hasConnectLinkURL)
+            console.log("hasConnectUrl : " + response.data?.hasConnectLinkURL)
+        } catch (error) {
+            // Handle errors if necessary
+            console.error('Error   :', error);
+        }
+        // setIsLoadingCC(false)
+    }
+
+    useEffect(() => {
+        checkConnectLinkExistsByBrandEngagementID()
+    }, [])
 
     return (
         <div className="flex h-screen overflow-hidden">
@@ -187,10 +225,21 @@ function BrandEngagementDetails() {
                         </div>} */}
                         <div className='rounded-lg md:space-y-2 bg-blue-100 text-lg px-4 py-2 text-left text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75'>
                             {/* {id} */}
+                            {hasConnectUrl ? <button
+                                disabled={isLoadingCC}
+                                onClick={getClientConnect}
+                                className="text-sm font-medium flex justify-center  flex-[0.5] text-white w-full bg-purple-500 rounded  p-2 cursor-pointer"
+                            >
+                                {/* Not Active */}
+                                {isLoadingCC ? "Connecting" : " Connect Account"}
+                            </button> : <div className='text-center text-red-500 font-medium my-2'>
+                                This Brand Engagement has no ConnectUrl
+                            </div>}
                             <p><span className='font-bold'>Website:</span> {engagement?.WebSite}</p>
                             <p><span className='font-bold'>Brand Tone:</span> {engagement?.BrandTone}</p>
                             <p><span className='font-bold'>Brand Description:</span> {engagement?.CompanySector}</p>
                             <p><span className='font-bold'>Timezone:</span> {engagement?.Timezone}</p>
+
                             {/*                            <p><span className='font-bold'>PostType:</span> {engagement?.PostType}</p>
                             <p><span className='font-bold'>Target audience:</span> {engagement?.TargetAudience}</p>*/}
                         </div>
