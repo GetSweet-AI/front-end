@@ -15,6 +15,7 @@ import MyModal from "../partials/Modal";
 const initialState = {
   email: "",
   password: "",
+  confirmPassword: "",
   company: "",
   fullName: "",
 };
@@ -70,8 +71,11 @@ function TheProfile() {
   const updateAuthInfos = async (currentUser) => {
     setLoading(true);
 
+    const { password, confirmPassword } = values
+
     try {
       if (isChecked) {
+
         await axios
           .put(
             `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
@@ -84,8 +88,11 @@ function TheProfile() {
                 email: res?.data.user?.email,
                 newPassword: values.password,
               }
-            );
+            ).then((res) => {
+              dispatch(clearMessage())
+            })
           });
+
       } else {
         await axios.put(
           `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
@@ -170,10 +177,15 @@ function TheProfile() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const { email, fullName, company } = values;
+    const { email, fullName, company, password, confirmPassword } = values;
 
-    updateAuthInfos(values);
-    console.log(JSON.stringify(values));
+    if (isChecked && (password !== confirmPassword)) {
+      dispatch(setMessage("Passwords do not match"))
+    } else {
+      updateAuthInfos(values);
+      console.log(JSON.stringify(values));
+    }
+
   };
   const onSubmitTwo = async (e) => {
     e.preventDefault();
@@ -291,21 +303,39 @@ function TheProfile() {
                           </label>
                         </div>
                         {isChecked && (
-                          <div className="w-full px-3">
-                            <label
-                              className="block text-gray-700 text-sm font-medium mb-1"
-                              htmlFor="email"
-                            >
-                              Password
-                            </label>
-                            <input
-                              type="password"
-                              name="password"
-                              value={values.password}
-                              onChange={handleChange}
-                              className="form-input w-full rounded-full text-gray-700"
-                              placeholder="Password"
-                            />
+                          <div className="flex w-full flex-col">
+                            <div className="w-full px-3">
+                              <label
+                                className="block mb-2 text-gray-700 text-sm font-medium "
+                                htmlFor="email"
+                              >
+                                Password
+                              </label>
+                              <input
+                                type="password"
+                                name="password"
+                                value={values.password}
+                                onChange={handleChange}
+                                className="form-input w-full rounded-full text-gray-700"
+                                placeholder="Password"
+                              />
+                            </div>
+                            <div className="w-full px-3">
+                              <label
+                                className="block text-gray-700 text-sm font-medium my-2"
+                                htmlFor="email"
+                              >
+                                Confirm Password
+                              </label>
+                              <input
+                                type="password"
+                                name="confirmPassword"
+                                value={values.confirmPassword}
+                                onChange={handleChange}
+                                className="form-input w-full rounded-full text-gray-700"
+                                placeholder="Confirm Password"
+                              />
+                            </div>
                           </div>
                         )}
                       </div>

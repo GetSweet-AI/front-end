@@ -134,7 +134,7 @@ function BrandEngagementDetails() {
         setIsLoadingCC(true)
         try {
             const response = await axios.get(
-                `http://localhost:5000/api/v1/client-connect/${id}`
+                `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/client-connect/${id}`
             );
             console.log("Client connect :" + response.data); // Success message or response data
             // Perform any additional actions after successful deletion
@@ -152,7 +152,7 @@ function BrandEngagementDetails() {
         // setIsLoadingCC(true)
         try {
             // Make a request to the endpoint to get the ConnectLinkURL
-            const response = await axios.get(`http://localhost:5000/api/v1/check-connect-link-exists/${id}`);
+            const response = await axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/check-connect-link-exists/${id}`);
 
             // Extract the hasConnectLinkURL from the response
             setHasConnectUrl(response.data?.hasConnectLinkURL)
