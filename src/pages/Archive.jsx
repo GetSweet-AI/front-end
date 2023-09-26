@@ -14,7 +14,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { MutatingDots } from "react-loader-spinner";
 
-function BrandEngagements() {
+function Archive() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -22,7 +22,6 @@ function BrandEngagements() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
   const { token, user } = useSelector((state) => state.auth);
-
 
 
   //pagination
@@ -34,10 +33,10 @@ function BrandEngagements() {
   const fetchEngagements = async () => {
     setIsLoading(true);
     try {
-      fetch(`http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+      fetch(`http://localhost:5000/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
         .then((response) => response.json())
-        .then(({ totalPages, brandEngagements }) => {
-          setEngagements(brandEngagements);
+        .then(({ totalPages, archive }) => {
+          setEngagements(archive);
           setNumberOfPages(totalPages);
         });
     } catch (error) {
@@ -48,10 +47,10 @@ function BrandEngagements() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+    fetch(`http://localhost:5000/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
       .then((response) => response.json())
-      .then(({ totalPages, brandEngagements }) => {
-        setEngagements(brandEngagements);
+      .then(({ totalPages, archive }) => {
+        setEngagements(archive);
         setNumberOfPages(totalPages);
       });
     setIsLoading(false);
@@ -67,27 +66,15 @@ function BrandEngagements() {
     setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
   };
 
-  // useEffect(() => {
-  //   fetchEngagements();
-  // }, []);
+
   const [search, setSearch] = useState('')
   const handleChange = (e) => {
     setSearch(e.target.value)
   };
 
-
-
-  console.log('Search : ' + search)
-
   //Get ClientConnect by BrandEngagementId
   const [connectLinkURL, setConnectLinkURL] = useState("")
   const [isLoadingCC, setIsLoadingCC] = useState(false);
-
-
-
-
-
-
 
 
   return (
@@ -111,25 +98,14 @@ function BrandEngagements() {
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0 ">
                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
-                  Brand Engagements
+                  Archive
                 </h1>
 
               </div>
 
               {/* Right: Actions */}
               <div className="">
-                {/* <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2"> */}
-                {/* Search form */}
-                {/* <SearchForm /> */}
-                {/* Filter button */}
-                {/* <FilterButton align="right" /> */}
-                {/* Create campaign button */}
-                {/* <button className="btn bg-indigo-500 hover:bg-indigo-600 ">
-                                    <svg className="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
-                                        <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
-                                    </svg>
-                                    <span className="hidden xs:block ml-2">Create Worflow</span>
-                                </button> */}
+
                 <input
                   type="text"
                   name="search"
@@ -185,7 +161,7 @@ function BrandEngagements() {
                           postType={item.PostType}
                           relatedPostsStatus={item.relatedPostsStatus}
                           fetchEngagements={fetchEngagements}
-                          isArchive={false}
+                          isArchive={true}
 
                         />
                       );
@@ -233,4 +209,4 @@ function BrandEngagements() {
   );
 }
 
-export default BrandEngagements;
+export default Archive;

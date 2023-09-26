@@ -21,13 +21,14 @@ function BrandEngagementCard({
   relatedPostsStatus,
   postContent,
   checkConnectLinkExistsByBrandEngagementID,
+  isArchive
 }) {
   const navigate = useNavigate();
 
   const deleteBrandEngagement = async (brandEngagementId) => {
     try {
       const response = await axios.delete(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements/${brandEngagementId}`
+        `http://localhost:5000/api/v1/brand-engagements/${brandEngagementId}`
       );
       console.log(response.data); // Success message or response data
       fetchEngagements();
@@ -75,31 +76,33 @@ function BrandEngagementCard({
             </div>
           </div>}
           <div class="bg-blue-500 text-white p-[1px] my-4"></div>
-          <div className="text-sm mb-2">
-            {relatedPostsStatus === "Posts generating..." ? (
-              <div className="flex my-2 justify-center space-x-4 items-center">
-                <p className="font-medium text-gray-600">Posts generating...</p>
-                <ThreeDots
-                  height="10"
-                  width="40"
-                  radius="9"
-                  color="#0967eb"
-                  ariaLabel="three-dots-loading"
-                  wrapperStyle={{}}
-                  wrapperClassName=""
-                  visible={true}
-                />
-              </div>
-            ) : (
-              <div className="flex my-2 justify-center space-x-4 items-center">
-                {" "}
-                <p className="font-medium text-gray-600 ">Posts are ready</p>
-                <FontAwesomeIcon icon={faCheck} color="#0967eb" size={24} />
-              </div>
-            )}
-          </div>
+          {
+            !isArchive && <div className="text-sm mb-2">
+              {relatedPostsStatus === "Posts generating..." ? (
+                <div className="flex my-2 justify-center space-x-4 items-center">
+                  <p className="font-medium text-gray-600">Posts generating...</p>
+                  <ThreeDots
+                    height="10"
+                    width="40"
+                    radius="9"
+                    color="#0967eb"
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClassName=""
+                    visible={true}
+                  />
+                </div>
+              ) : (
+                <div className="flex my-2 justify-center space-x-4 items-center">
+                  {" "}
+                  <p className="font-medium text-gray-600 ">Posts are ready</p>
+                  <FontAwesomeIcon icon={faCheck} color="#0967eb" size={24} />
+                </div>
+              )}
+            </div>
+          }
         </div>
-        <footer className="mt-2">
+        {!isArchive && <footer className="mt-2">
           <div className="flex justify-between space-x-2 items-center">
             <div
 
@@ -119,7 +122,7 @@ function BrandEngagementCard({
               Delete
             </div>
           </div>
-        </footer>
+        </footer>}
       </div>
     </div >
   );

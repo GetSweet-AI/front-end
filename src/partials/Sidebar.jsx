@@ -4,7 +4,7 @@ import logo from "../images/logogetsweet.png";
 // import shortLogo from "../images/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBlog, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faArchive, faBlog, faUsers } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { setUserData } from "../redux/auth";
 import AvailableTokens from "./AvailableTokens";
@@ -30,7 +30,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         setUser(res.data);
@@ -403,6 +403,42 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                           }`}
                       >
                         Brand engagements
+                      </span>
+                    </div>
+                  </NavLink>
+                </li>
+              )}
+              {user?.role === "admin" && (
+                <li
+                  className={`px-3 py-3 last:mb-0 ${pathname.startsWith("/archive")
+                    ? "bg-white rounded-l-full"
+                    : ""
+                    }`}
+                >
+                  <NavLink
+                    end
+                    to="/archive"
+                    className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname.startsWith("/archive") &&
+                      "hover:text-white"
+                      }`}
+                  >
+                    <div>
+                      <FontAwesomeIcon
+                        className={
+                          pathname.startsWith("/archive")
+                            ? "text-[#3b82f6]"
+                            : "text-[#fff]"
+                        }
+                        icon={faArchive}
+                      />
+                    </div>
+                    <div className="flex items-center overflow-hidden">
+                      <span
+                        className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname.startsWith("/archive") &&
+                          "text-[#3b82f6]"
+                          }`}
+                      >
+                        Archive
                       </span>
                     </div>
                   </NavLink>
