@@ -14,7 +14,7 @@ function MailchimpForm() {
   const registerUser = async (currentUser) => {
     setLoading(true)
     try {
-      const { data } = await axios.post("http://localhost:5000/api/v1/auth/register", currentUser);
+      const { data } = await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/register", currentUser);
       const { user, token } = data;
 
     } catch (error) {

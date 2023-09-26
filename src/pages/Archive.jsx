@@ -33,7 +33,7 @@ function Archive() {
   const fetchEngagements = async () => {
     setIsLoading(true);
     try {
-      fetch(`http://localhost:5000/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
+      fetch(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
         .then((response) => response.json())
         .then(({ totalPages, archive }) => {
           setEngagements(archive);
@@ -47,7 +47,7 @@ function Archive() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`http://localhost:5000/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
+    fetch(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
       .then((response) => response.json())
       .then(({ totalPages, archive }) => {
         setEngagements(archive);
