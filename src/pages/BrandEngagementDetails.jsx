@@ -7,6 +7,9 @@ import FilterButton from '../components/DropdownFilter';
 import BrandEngagementCard from '../partials/BrandEngagementCard';
 import PaginationNumeric from '../partials/PaginationNumeric';
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFacebook, faTwitter, faInstagram, faPinterest, faSnapchat, faTiktok, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { faArchive, faBlog, faFaceMehBlank, faUsers } from "@fortawesome/free-solid-svg-icons";
 import Image01 from '../images/user-28-01.jpg';
 import Image02 from '../images/user-28-02.jpg';
 import DashboardHeader from '../partials/DashboardHeader';
@@ -130,6 +133,7 @@ function BrandEngagementDetails() {
             });
     };
     const [isLoadingCC, setIsLoadingCC] = useState(false);
+
     const getClientConnect = async () => {
         setIsLoadingCC(true)
         try {
@@ -168,6 +172,28 @@ function BrandEngagementDetails() {
         checkConnectLinkExistsByBrandEngagementID()
     }, [])
 
+    //Fetch clinet connect data
+    const [clientConnectData, setClientConnectData] = useState("")
+    const getClientConnectData = async () => {
+        try {
+            const response = await axios.get(
+                `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/client-connect/${id}`
+            );
+            console.log("Client connect data :" + JSON.stringify(response.data)); // Success message or response data
+            // Perform any additional actions after successful deletion
+            setClientConnectData(response.data)
+
+        } catch (error) {
+            console.log(error); // Handle error
+        }
+    };
+
+
+
+    useEffect(() => {
+        getClientConnectData()
+    }, [])
+
     return (
         <div className="flex h-screen overflow-hidden">
 
@@ -193,39 +219,40 @@ function BrandEngagementDetails() {
                             </div>
 
                             {/* Right: Actions */}
-                            <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
-                                {/* Search form */}
-                                {/* <SearchForm /> */}
-                                {/* Filter button */}
-                                {/* <FilterButton align="right" /> */}
-                                {/* Create campaign button */}
-                                {/* <button className="btn bg-indigo-500 hover:bg-indigo-600 ">
-                                    <svg className="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
-                                        <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
-                                    </svg>
-                                    <span className="hidden xs:block ml-2">Create Worflow</span>
-                                </button> */}
-                            </div>
+                            {clientConnectData ? <div className="grid grid-flow-col bg-blue-100 rounded-lg p-2 hover:bg-blue-200 sm:auto-cols-max justify-start sm:justify-end gap-2">
+                                <span className="font-medium"> Connected to :</span>
+                                <span> {clientConnectData?.FacebookConnected !== "no" && <FontAwesomeIcon
+                                    className="text-[#3e4ef5]"
+                                    icon={faFacebook}
+                                />}   </span>
+                                <span> {clientConnectData?.TwitterConnected !== "no" && <FontAwesomeIcon
+                                    className="text-[#3b82f6]"
+                                    icon={faTwitter}
+                                />}   </span>
+                                <span> {clientConnectData?.TikTokConnected !== "no" && <FontAwesomeIcon
+                                    className="text-[#3b82f6]"
+                                    icon={faTiktok}
+                                />}   </span>
+                                <span> {clientConnectData?.YoutubeConnected !== "no" && <FontAwesomeIcon
+                                    className="text-[#f63e3b]"
+                                    icon={faYoutube}
+                                />}   </span>
+                                <span> {clientConnectData?.InstagramConnected !== "no" && <FontAwesomeIcon
+                                    // className="text-[#3b82f6]"
+                                    icon={faInstagram}
+                                />}   </span>
+                            </div> :
+                                <div className="grid grid-flow-col bg-blue-100 rounded-lg p-2 hover:bg-blue-200 sm:auto-cols-max justify-start sm:justify-end gap-2">
+                                    <span className="font-medium text-red-400"> Not connected to any social media account</span></div>
+
+                            }
 
                         </div>
 
-                        {/* Cards */}
-                        {/* {isLoading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
-                            <MutatingDots
-                                height="100"
-                                width="100"
-                                color="#1c7aed"
-                                secondaryColor='#3078fd'
-                                radius='12.5'
-                                ariaLabel="mutating-dots-loading"
-                                wrapperStyle={{}}
-                                wrapperClass=""
-                                visible={true}
-                            />
-                        </div>} */}
+
                         <div className='rounded-lg md:space-y-2 bg-blue-100 text-lg px-4 py-2 text-left text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75'>
                             {/* {id} */}
-                            {hasConnectUrl ? <button
+                            {clientConnectData?.ConnectLinkURL ? <button
                                 disabled={isLoadingCC}
                                 onClick={getClientConnect}
                                 className="text-sm font-medium flex justify-center  flex-[0.5] text-white w-full bg-purple-500 rounded  p-2 cursor-pointer"

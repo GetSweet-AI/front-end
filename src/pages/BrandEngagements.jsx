@@ -85,11 +85,6 @@ function BrandEngagements() {
 
 
 
-
-
-
-
-
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -117,7 +112,8 @@ function BrandEngagements() {
               </div>
 
               {/* Right: Actions */}
-              <div className="">
+              <div className="flex justify-center items-center">
+
                 {/* <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2"> */}
                 {/* Search form */}
                 {/* <SearchForm /> */}
@@ -130,13 +126,47 @@ function BrandEngagements() {
                                     </svg>
                                     <span className="hidden xs:block ml-2">Create Worflow</span>
                                 </button> */}
-                <input
+
+                <div>
+                  {numberOfPages > 0 && <div className="mr-4">
+                    <div class="flex items-center justify-center space-x-2">
+                      <button
+                        className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                        onClick={gotoPrevious}
+                      >
+                        Previous
+                      </button>
+
+                      {pages.map((pageIndex) => (
+                        <button
+                          key={pageIndex}
+                          className={`${pageNumber === pageIndex
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
+                            } px-3 py-1 rounded-lg`}
+                          onClick={() => setPageNumber(pageIndex)}
+                        >
+                          {pageIndex + 1}
+                        </button>
+                      ))}
+
+                      <button
+                        className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                        onClick={gotoNext}
+                      >
+                        Next
+                      </button>
+                    </div>
+                    {/* <PaginationNumeric /> */}</div>}
+                </div>
+                <div><input
                   type="text"
                   name="search"
                   placeholder="Search by brandName or website"
                   onChange={handleChange}
                   className="form-input focus:border-slate-300"
                 />
+                </div>
               </div>
             </div>
 
