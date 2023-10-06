@@ -25,6 +25,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { useSelector } from "react-redux";
+import Onboarding from "../components/OnBoarding/Onboarding";
 
 const navigation = [
   { name: 'Sign up', href: '/signup', gtmtrigger: 'header_create_account_btn' },
@@ -148,6 +149,10 @@ export default function Home() {
 
   const { isLoggedIn } = useSelector((state) => state.auth)
   console.log("isLoggedIn :" + isLoggedIn)
+
+
+
+
   return (
     <div className="bg-white#">
       {/* embed videos script */}

@@ -23,6 +23,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { setUserData } from "../redux/auth";
 import PaymentSuccessMessage from "../partials/PaymentSuccessMessage ";
+import Onboarding from "../components/OnBoarding/Onboarding";
 
 function BrandEngagementBuilder() {
   const dispatch = useDispatch();
@@ -203,7 +204,7 @@ function BrandEngagementBuilder() {
   // console.log("_id :" + user?._id)
 
   const fetchEngagements = async () => {
-    fetch(
+    await fetch(
       `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
@@ -213,7 +214,7 @@ function BrandEngagementBuilder() {
       });
   };
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     dispatch(clearMessage());
@@ -288,6 +289,39 @@ function BrandEngagementBuilder() {
   };
 
 
+  let [isOpen, setIsOpen] = useState(false);
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  const realEstateValues = {
+    brandName: "Real Estate Brand",
+    websiteUrl: "https://realestatewebsite.com",
+    timeZone: { value: "UTC (Coordinated Universal Time)", label: "UTC (Coordinated Universal Time)" },
+    companySector: "A real estate company is a business that buys, sells, or manages properties, such as homes, commercial buildings",
+    brandTone: { value: "professional", label: "Professional" },
+    targetAudience: "Homebuyers",
+    postType: "News",
+    other: "Other information for Real Estate",
+  };
+
+
+  //Handle template button clicked
+  const handleButtonClick = (associatedValues) => {
+    setValues(associatedValues);
+  };
+
+
+  console.log("values :" + JSON.stringify(values))
+
+
+
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -303,6 +337,7 @@ function BrandEngagementBuilder() {
         />
 
         <main>
+
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
             {/* Page header */}
             <div className="md mb-8">
@@ -320,7 +355,7 @@ function BrandEngagementBuilder() {
                 </button>
               </div>
 
-              <div className="my-4 sm:mb-8">  {/* Increased the bottom margin to mb-8 */}
+              <div className="my-4 sm:mb-8 flex flex-col">  {/* Increased the bottom margin to mb-8 */}
                 {user.notificationMessage !== 'none' &&
                   <PaymentSuccessMessage
                     onClose={handleNotificationClose}
@@ -332,6 +367,24 @@ function BrandEngagementBuilder() {
                   ensure that all of your social content aligns with your
                   brand's messaging and value.
                 </p>
+                {
+                  isVisible &&
+                  <>
+                    <h1 className="text-md md:text-xl mt-3 text-gray-500 font-bold flex justify-between items-center">
+                      Start from template
+                    </h1>
+
+                    <div className="mt-4 flex-">
+                      <button
+                        className="border-2 text-sm m-1 text-md hover:bg-blue-600
+                     hover:text-white border-blue-600 py-2 px-2 rounded-xl"
+                        onClick={() => handleButtonClick(realEstateValues)}
+                      >
+                        Real Estate Company
+                      </button>
+
+                    </div></>
+                }
               </div>
 
               {/* Element that will be shown/hidden */}
@@ -650,6 +703,10 @@ function BrandEngagementBuilder() {
             {/* Toast container */}
             <ToastContainer />
 
+            {/* OnBoarding */}
+            <Onboarding closeModal={closeModal} isOpen={isOpen} />
+
+
             {engagements?.length > 0 && (
               <div className="">
                 <h5 className="md:text-2xl text-xl  mb-2 font-bold sm:mb-4">
@@ -671,6 +728,7 @@ function BrandEngagementBuilder() {
                         postContent={item.postContent}
                         relatedPostsStatus={item.relatedPostsStatus}
                         fetchEngagements={fetchEngagements}
+                        userId={user?._id}
                       />
                     );
                   })}

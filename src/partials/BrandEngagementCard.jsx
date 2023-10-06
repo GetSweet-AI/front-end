@@ -1,4 +1,4 @@
-import { faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faClone, faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -21,11 +21,15 @@ function BrandEngagementCard({
   relatedPostsStatus,
   postContent,
   checkConnectLinkExistsByBrandEngagementID,
-  isArchive
+  isArchive,
+  userId
 }) {
   const navigate = useNavigate();
 
+
+  const [isArchiveLoading, setIsArchiveLoading] = useState(false)
   const deleteBrandEngagement = async (brandEngagementId) => {
+    setIsArchiveLoading(true)
     try {
       const response = await axios.delete(
         `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements/${brandEngagementId}`
@@ -36,7 +40,26 @@ function BrandEngagementCard({
     } catch (error) {
       console.log(error); // Handle error
     }
+    setIsArchiveLoading(false)
   };
+
+  const [isCloneLoading, setIsCloneLoading] = useState(false)
+  const handleCloneClick = async (e, beId) => {
+    e.preventDefault()
+    setIsCloneLoading(true)
+    try {
+
+      //Step 1 : use the endpoint here
+      // Step 1: Make a POST request to the endpoint with the `id` as a parameter
+      const response = await axios.post(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/clone-brand-engagement/${userId}?beId=${id}`);
+
+      fetchEngagements();
+    } catch (error) {
+      console.log(error); // Handle error
+    }
+    setIsCloneLoading(false)
+  };
+
 
   return (
     <div className="col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-md rounded-md border border-slate-200">
@@ -107,20 +130,37 @@ function BrandEngagementCard({
             <div
 
               onClick={() => navigate(`/brand-engagements/${id}`)}
-              className="text-sm font-medium md:flex-[0.3] flex-[0.3] bg-slate-200 text-blue-700 rounded  p-2 cursor-pointer"
+              className="text-sm flex justify-center items-center font-medium md:flex-[0.3] flex-[0.3] bg-slate-200 text-blue-700 rounded  p-2 cursor-pointer"
             >
               {/* Not Active */}
               <FontAwesomeIcon className="mr-2" icon={faEye} />
               View
             </div>
-
             <div
-              className="text-sm text-white rounded text-center bg-[#d7364b] flex-[0.4] p-2 cursor-pointer"
-              onClick={() => deleteBrandEngagement(id)}
+
+              onClick={(e) => handleCloneClick(e, id)}
+              className="text-sm flex justify-center
+               items-center font-medium md:flex-[0.3]
+                flex-[0.3] bg-white text-blue-700
+                 rounded-md  p-2 cursor-pointer
+                 border-2 border-blue-600
+                 hover:bg-gray-100
+                 "
+
             >
-              <FontAwesomeIcon className="mr-2" icon={faTrash} />
-              Delete
+              {/* Not Active */}
+
+              {isCloneLoading ? "Cloning.." : <><FontAwesomeIcon className="mr-2" icon={faClone} /> Clone</>}
             </div>
+
+            <button
+              className="text-sm text-white rounded text-center bg-[#d7364b] flex-[0.3] p-2 cursor-pointer"
+              onClick={() => deleteBrandEngagement(id)}
+              disabled={isArchiveLoading}
+            >
+              {isArchiveLoading ? "Archiving.." : <> <FontAwesomeIcon className="mr-2" icon={faTrash} />
+                Archive</>}
+            </button>
           </div>
         </footer>}
       </div>
