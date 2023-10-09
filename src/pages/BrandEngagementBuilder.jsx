@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Sidebar from "../partials/Sidebar";
 import Header from "../partials/Header";
 import SearchForm from "../partials/SearchForm";
@@ -288,7 +288,6 @@ function BrandEngagementBuilder() {
       });
   };
 
-
   let [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
@@ -318,6 +317,19 @@ function BrandEngagementBuilder() {
 
 
   console.log("values :" + JSON.stringify(values))
+
+  const handleCloneClick = (brandEngagementData) => {
+    setValues({
+      brandName: brandEngagementData.brandName,
+      websiteUrl: brandEngagementData.websiteUrl,
+      timeZone: brandEngagementData.timeZone,
+      companySector: brandEngagementData.companySector,
+      brandTone: brandEngagementData.brandTone,
+      targetAudience: brandEngagementData.targetAudience,
+      postType: brandEngagementData.postType,
+    });
+    // Additional code to handle cloning logic if needed
+  };
 
 
 
@@ -383,7 +395,8 @@ function BrandEngagementBuilder() {
                         Real Estate Company
                       </button>
 
-                    </div></>
+                    </div>
+                  </>
                 }
               </div>
 
@@ -719,7 +732,7 @@ function BrandEngagementBuilder() {
                         key={item._id}
                         id={item._id}
                         brandName={item?.BrandName}
-                        website={item.WebSite}
+                        websiteUrl={item.WebSite}
                         timeZone={item.Timezone}
                         companySector={item.CompanySector}
                         brandTone={item.BrandTone}
@@ -729,6 +742,8 @@ function BrandEngagementBuilder() {
                         relatedPostsStatus={item.relatedPostsStatus}
                         fetchEngagements={fetchEngagements}
                         userId={user?._id}
+                        setFormValues={setValues}
+                        isAdminPage={false}
                       />
                     );
                   })}

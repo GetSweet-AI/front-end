@@ -6,6 +6,7 @@ import AOS from "aos";
 import { useSelector } from "react-redux";
 import { Puff } from "react-loader-spinner";
 import Archive from "./pages/Archive";
+import Settings from "./pages/Settings";
 
 const Home = lazy(() => import("./pages/Home"));
 const SignIn = lazy(() => import("./pages/SignIn"));
@@ -79,6 +80,7 @@ function App() {
         <Route path="/posts-feed" element={<PostsFeed />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/check-email" element={<CheckEmail />} />
+        <Route path="/settings" element={<Settings />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/confirm-email/:userId" element={<EmailConfirmed />} />
         <Route path="*" element={<NotFound />} />

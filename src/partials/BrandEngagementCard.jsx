@@ -1,7 +1,7 @@
 import { faClone, faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,7 +11,7 @@ import ReactHtmlParser from "react-html-parser";
 function BrandEngagementCard({
   id,
   brandName,
-  website,
+  websiteUrl,
   timeZone,
   companySector,
   brandTone,
@@ -22,10 +22,11 @@ function BrandEngagementCard({
   postContent,
   checkConnectLinkExistsByBrandEngagementID,
   isArchive,
-  userId
+  userId,
+  setFormValues,
+  isAdminPage
 }) {
   const navigate = useNavigate();
-
 
   const [isArchiveLoading, setIsArchiveLoading] = useState(false)
   const deleteBrandEngagement = async (brandEngagementId) => {
@@ -43,23 +44,25 @@ function BrandEngagementCard({
     setIsArchiveLoading(false)
   };
 
-  const [isCloneLoading, setIsCloneLoading] = useState(false)
-  const handleCloneClick = async (e, beId) => {
-    e.preventDefault()
-    setIsCloneLoading(true)
-    try {
 
-      //Step 1 : use the endpoint here
-      // Step 1: Make a POST request to the endpoint with the `id` as a parameter
-      const response = await axios.post(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/clone-brand-engagement/${userId}?beId=${id}`);
 
-      fetchEngagements();
-    } catch (error) {
-      console.log(error); // Handle error
-    }
-    setIsCloneLoading(false)
+
+  const handleCloneClick = () => {
+    // Create an object with the current brand engagement data
+    const brandEngagementData = {
+      brandName,
+      websiteUrl,
+      timeZone: { label: timeZone, value: timeZone },
+      companySector,
+      brandTone: { label: brandTone, value: brandTone },
+      targetAudience,
+      postType,
+    };
+
+    // Call the setFormValues function to set the form values
+    setFormValues(brandEngagementData);
+
   };
-
 
   return (
     <div className="col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-md rounded-md border border-slate-200">
@@ -71,13 +74,13 @@ function BrandEngagementCard({
         </header>
         <div className="grow mt-2">
           <div className="text-sm mb-2">
-            <span className="font-medium">Website</span> :{" "}
+            <span className="font-medium">websiteUrl</span> :{" "}
             <a
               className="underline text-blue-500"
-              href={website}
+              href={websiteUrl}
               target="_blank"
             >
-              {website}
+              {websiteUrl}
             </a>
           </div>
           <div className="text-sm mb-2">
@@ -136,22 +139,24 @@ function BrandEngagementCard({
               <FontAwesomeIcon className="mr-2" icon={faEye} />
               View
             </div>
-            <div
+            {
+              !isAdminPage && <button
 
-              onClick={(e) => handleCloneClick(e, id)}
-              className="text-sm flex justify-center
-               items-center font-medium md:flex-[0.3]
-                flex-[0.3] bg-white text-blue-700
-                 rounded-md  p-2 cursor-pointer
-                 border-2 border-blue-600
-                 hover:bg-gray-100
-                 "
+                onClick={handleCloneClick}
+                className="text-sm flex justify-center
+             items-center font-medium md:flex-[0.3]
+              flex-[0.3] bg-white text-blue-700
+               rounded-md  p-2 cursor-pointer
+               border-2 border-blue-600
+               hover:bg-gray-100
+               "
 
-            >
-              {/* Not Active */}
+              >
+                {/* Not Active */}
 
-              {isCloneLoading ? "Cloning.." : <><FontAwesomeIcon className="mr-2" icon={faClone} /> Clone</>}
-            </div>
+                <FontAwesomeIcon className="mr-2" icon={faClone} /> Clone
+              </button>
+            }
 
             <button
               className="text-sm text-white rounded text-center bg-[#d7364b] flex-[0.3] p-2 cursor-pointer"

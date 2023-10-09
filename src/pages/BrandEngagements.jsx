@@ -216,6 +216,7 @@ function BrandEngagements() {
                           relatedPostsStatus={item.relatedPostsStatus}
                           fetchEngagements={fetchEngagements}
                           isArchive={false}
+                          isAdminPage={true}
 
                         />
                       );
