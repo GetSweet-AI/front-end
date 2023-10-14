@@ -8,7 +8,7 @@ export default function SwitchButton({ enabled, setEnabled }) {
       <Switch
         checked={enabled}
         onChange={setEnabled}
-        className={`${enabled ? 'bg-blue-900' : 'bg-blue-500'}
+        className={`${enabled ? 'bg-blue-900' : 'bg-blue-400'}
           relative inline-flex h-[32px] w-[68px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
       >
         <span className="sr-only">Use setting</span>

@@ -13,6 +13,7 @@ import Select from "react-select";
 import brandTones from "../constants/brandTones";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArchive, faBlog, faClose, faCog, faUsers } from "@fortawesome/free-solid-svg-icons";
+import SwitchButton from "../partials/SwitchButton";
 
 function Settings() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -28,6 +29,11 @@ function Settings() {
         postType: "",
         other: "",
     });
+
+
+    const [selectedOption, setSelectedOption] = useState('RunForEver');
+
+    const [endDate, setEndDate] = useState(''); // Initialize endDate state
 
     const { message } = useSelector((state) => state.message);
     const { user } = useSelector((state) => state.auth);
@@ -55,7 +61,11 @@ function Settings() {
         TargetAudience: values.targetAudience?.value,
         WebSite: values.websiteUrl,
         BrandName: values.brandName,
+        endDate: endDate,
+        lifeCycleStatus: selectedOption
     };
+
+    console.log("newTemplate :" + JSON.stringify(newTemplate))
 
     // const addNewTemplate = async (e) => {
 
@@ -156,6 +166,23 @@ function Settings() {
 
         }
     }
+
+
+
+    const handleEndDateChange = (e) => {
+        setEndDate(e.target.value);
+    };
+
+    const [enabled, setEnabled] = useState(false);
+    useEffect(() => {
+        if (enabled) {
+            //Show endDate field
+            setSelectedOption("HasEndDate")
+        } else {
+            setSelectedOption("RunForEver")
+            setEndDate("")
+        }
+    }, [enabled])
 
 
     return (
@@ -334,6 +361,35 @@ function Settings() {
                                                     options={brandTones}
                                                 />
                                             </div>
+                                            <div className="w-full mt-3 md:w-1/2 p-2">
+                                                <div className=" mt-2 flex w-full justify-center items-center p-2">
+                                                    <label className={`mr-4 ${selectedOption === 'RunForEver' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
+                                                        <span className="mr-2 text-md  font-medium">Run forever</span>
+                                                    </label>
+
+                                                    <SwitchButton enabled={enabled} setEnabled={setEnabled} />
+
+                                                    <label className={`ml-4 ${selectedOption === 'HasEndDate' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
+                                                        <span className="ml-2 text-md  font-medium">Add end date</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div className="w-full md:w-1/2 p-2">
+                                                {selectedOption === 'HasEndDate' && (
+                                                    <div>
+                                                        <label className="block text-md  ">
+                                                            End Date
+                                                        </label>
+                                                        <input
+                                                            type="date"
+                                                            className="mt-1 p-2 border border-gray-300 rounded w-full focus:ring-indigo-500 focus:border-indigo-500"
+                                                            value={endDate} // Bind the input value to endDate state
+                                                            onChange={handleEndDateChange} // Update the endDate state
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
 
 
                                             <div className="flex w-full justify-center items-center">
@@ -386,8 +442,6 @@ function Settings() {
 
                                         <div className="flex flex-wrap">
                                             {
-
-
                                                 templates?.map((template, idx) => (
                                                     <div
                                                         key={idx}

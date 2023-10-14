@@ -24,6 +24,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { setUserData } from "../redux/auth";
 import PaymentSuccessMessage from "../partials/PaymentSuccessMessage ";
 import Onboarding from "../components/OnBoarding/Onboarding";
+import SwitchButton from "../partials/SwitchButton";
 
 function BrandEngagementBuilder() {
   const dispatch = useDispatch();
@@ -42,6 +43,11 @@ function BrandEngagementBuilder() {
   const { message } = useSelector((state) => state.message);
   // State to track visibility
   const [isVisible, setIsVisible] = useState(false);
+
+  const [selectedOption, setSelectedOption] = useState('RunForEver');
+
+  const [endDate, setEndDate] = useState(''); // Initialize endDate state
+
 
   console.log("User :" + JSON.stringify(user))
 
@@ -106,6 +112,8 @@ function BrandEngagementBuilder() {
     postContent: result,
     WebSite: values.websiteUrl,
     BrandName: values.brandName,
+    endDate: endDate,
+    lifeCycleStatus: selectedOption
   };
 
   const handlePreview = async (e) => {
@@ -156,6 +164,9 @@ function BrandEngagementBuilder() {
     if (!brandTone | !companySector | !brandName) {
       dispatch(setMessage("Please provide all values "));
       setSaveLoading(false);
+    } else if (selectedOption === "HasEndDate" && endDate === "") {
+      dispatch(setMessage("Please provide End Date "));
+      setSaveLoading(false);
     } else {
       await axios
         .post(
@@ -185,6 +196,7 @@ function BrandEngagementBuilder() {
           // dispatch(setMessage(err.data))
         });
     }
+
     setSaveLoading(false);
     // alert(JSON.stringify(values))
   };
@@ -298,38 +310,94 @@ function BrandEngagementBuilder() {
     setIsOpen(true);
   }
 
-  const realEstateValues = {
-    brandName: "Real Estate Brand",
-    websiteUrl: "https://realestatewebsite.com",
-    timeZone: { value: "UTC (Coordinated Universal Time)", label: "UTC (Coordinated Universal Time)" },
-    companySector: "A real estate company is a business that buys, sells, or manages properties, such as homes, commercial buildings",
-    brandTone: { value: "professional", label: "Professional" },
-    targetAudience: "Homebuyers",
-    postType: "News",
-    other: "Other information for Real Estate",
-  };
+  // const realEstateValues = {
+  //   brandName: "Real Estate Brand",
+  //   websiteUrl: "https://realestatewebsite.com",
+  //   timeZone: { value: "UTC (Coordinated Universal Time)", label: "UTC (Coordinated Universal Time)" },
+  //   companySector: "A real estate company is a business that buys, sells, or manages properties, such as homes, commercial buildings",
+  //   brandTone: { value: "professional", label: "Professional" },
+  //   targetAudience: "Homebuyers",
+  //   postType: "News",
+  //   other: "Other information for Real Estate",
+  // };
 
 
   //Handle template button clicked
-  const handleButtonClick = (associatedValues) => {
-    setValues(associatedValues);
+  const handleButtonClick = (template) => {
+    setValues({
+      brandName: template.BrandName,
+      websiteUrl: template.WebSite,
+      timeZone: { label: template.Timezone, value: template.Timezone },
+      companySector: template.CompanySector,
+      brandTone: { label: template.BrandTone, value: template.BrandTone },
+    });
+
+    const endDateValue = template.lifeCycleStatus === "HasEndDate" ? template.endDate : ""
+    setEndDate(endDateValue)
+    setSelectedOption(template.lifeCycleStatus)
+    template.lifeCycleStatus === "HasEndDate" ? setEnabled(true) : ""
+
   };
 
 
   console.log("values :" + JSON.stringify(values))
 
-  const handleCloneClick = (brandEngagementData) => {
-    setValues({
-      brandName: brandEngagementData.brandName,
-      websiteUrl: brandEngagementData.websiteUrl,
-      timeZone: brandEngagementData.timeZone,
-      companySector: brandEngagementData.companySector,
-      brandTone: brandEngagementData.brandTone,
-      targetAudience: brandEngagementData.targetAudience,
-      postType: brandEngagementData.postType,
-    });
-    // Additional code to handle cloning logic if needed
+  // const handleCloneClick = (brandEngagementData) => {
+  //   setValues({
+  //     brandName: brandEngagementData.brandName,
+  //     websiteUrl: brandEngagementData.websiteUrl,
+  //     timeZone: brandEngagementData.timeZone,
+  //     companySector: brandEngagementData.companySector,
+  //     brandTone: brandEngagementData.brandTone,
+  //     targetAudience: brandEngagementData.targetAudience,
+  //     postType: brandEngagementData.postType,
+  //   });
+
+  //   setSelectedOption(brandEngagementData.lifeCycleStatus)
+
+  //   setEndDate(brandEngagementData.lifeCycleStatus === "HasEndDate" ? brandEngagementData.endDate : "")
+  //   // Additional code to handle cloning logic if needed
+  // };
+
+
+
+  //Get template + add delete icon
+  const [templates, setTemplates] = useState([])
+  const getTemplates = async () => {
+    try {
+      await axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
+        setTemplates(res.data.templates)
+      })
+
+    } catch (error) {
+
+    }
+  }
+
+  useEffect(() => {
+    getTemplates()
+  }, [])
+
+
+  const handleOptionChange = (e) => {
+    setSelectedOption(e.target.value);
   };
+
+  const handleEndDateChange = (e) => {
+    setEndDate(e.target.value);
+  };
+
+
+  const [enabled, setEnabled] = useState(false);
+  useEffect(() => {
+    if (enabled) {
+      //Show endDate field
+      setSelectedOption("HasEndDate")
+    } else {
+      setSelectedOption("RunForEver")
+      setEndDate("")
+    }
+  }, [enabled])
 
 
 
@@ -386,16 +454,20 @@ function BrandEngagementBuilder() {
                       Start from template
                     </h1>
 
-                    <div className="mt-4 flex-">
-                      <button
-                        className="border-2 text-sm m-1 text-md hover:bg-blue-600
-                     hover:text-white border-blue-600 py-2 px-2 rounded-xl"
-                        onClick={() => handleButtonClick(realEstateValues)}
-                      >
-                        Real Estate Company
-                      </button>
 
-                    </div>
+                    <div className="flex flex-wrap">
+                      {
+                        templates?.map((template, idx) => (
+                          <button
+                            key={idx}
+                            className="border-2 cursor-pointer text-sm m-1 text-md hover:bg-blue-600
+                            hover:text-white border-blue-600 py-2 px-3 rounded-xl"
+                            onClick={() => handleButtonClick(template)}
+                          >
+                            {template.Title}
+                          </button>
+                        ))
+                      }</div>
                   </>
                 }
               </div>
@@ -415,6 +487,8 @@ function BrandEngagementBuilder() {
                   <div id="Brand_Form" className="flex flex-wrap bg-white md:p-4 rounded-lg sm:mb-12">
                     <div className="w-full md:w-1/2">
                       <form className="rounded px-4" onSubmit={handlePreview}>
+
+
                         <div className="flex flex-wrap">
                           <div className="w-full md:w-1/2 p-2">
                             <label htmlFor="input1" className="block mb-1">
@@ -462,45 +536,7 @@ function BrandEngagementBuilder() {
                               value={values.companySector}
                               onChange={handleInputChange}
                             />
-                            {/* <Select
-                            id="select2"
-                            className="w-full"
-                            name="companySector"
-                            placeholder="Company Sector"
-                            value={values.companySector}
-                            onChange={(selectedOption) =>
-                              handleSelectChange(
-                                "companySector",
-                                selectedOption
-                              )
-                            }
-                            options={[
-                              {
-                                value: "E-commerce and Online Retail",
-                                label: "E-commerce and Online Retail",
-                              },
-                              {
-                                value: "Health and Wellness",
-                                label: "Health and Wellness",
-                              },
-                              {
-                                value: "Technology and Software Development",
-                                label: "Technology and Software Development",
-                              },
-                              {
-                                value: "Digital Marketing and Social Media",
-                                label: "Digital Marketing and Social Media",
-                              },
-                              {
-                                value: "Food and Beverage",
-                                label: "Food and Beverage",
-                              },
-                              {
-                                value: "Social Enterprise and Impact Investing",
-                                label: "Social Enterprise and Impact Investing",
-                              },
-                            ]}
-                          /> */}
+
                           </div>
 
                           <div className="w-full md:w-1/2 p-2">
@@ -570,65 +606,35 @@ function BrandEngagementBuilder() {
                               ]}
                             />
                           </div>
-                          {/* <div className="w-full md:w-1/2 p-2">
-                          <label className="block mb-1">Post type</label>
-                          <Select
-                            id="select3"
-                            className="w-full"
-                            placeholder="Post Type"
-                            value={values.postType}
-                            onChange={(selectedOption) =>
-                              handleSelectChange("postType", selectedOption)
-                            }
-                            options={postTypeOptions}
-                          />
-                        </div> */}
-                          {/* {values.postType?.value === "other" && (
-                          <div className="w-full md:w-1/2 p-2">
-                            <label className="block mb-1">
-                              Enter a post type
-                            </label>{" "}
-                            <input
-                              id="input2"
-                              className="w-full border-gray-300 rounded p-2"
-                              type="text"
-                              name="other"
-                              placeholder="Enter another post type"
-                              value={values.other}
-                              onChange={handleInputChange}
-                            />
-                            <Select
-                          id="select3"
-                          className="w-full"
-                          placeholder="Post Type"
-                          value={values.postType}
-                          onChange={(selectedOption) =>
-                            handleSelectChange("postType", selectedOption)
-                          }
-                          options={postTypeOptions}
-                        />
-                          </div>
-                        )} */}
 
-                          {/* <div className="w-full md:w-1/2 p-2">
-                          <label htmlFor="select4" className="block mb-1">
-                            Target Audience
-                          </label>
-                          <Select
-                            id="select4"
-                            className="w-full"
-                            name="targetAudience"
-                            placeholder="Target Audience"
-                            value={values.targetAudience}
-                            onChange={(selectedOption) =>
-                              handleSelectChange(
-                                "targetAudience",
-                                selectedOption
-                              )
-                            }
-                            options={targetAudienceOptions}
-                          />
-                        </div> */}
+
+                          <div className=" mt-2 flex w-full justify-center items-center p-2">
+                            <label className={`mr-4 ${selectedOption === 'RunForEver' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
+                              <span className="mr-2 text-md  font-medium">Run forever</span>
+                            </label>
+
+                            <SwitchButton enabled={enabled} setEnabled={setEnabled} />
+
+                            <label className={`ml-4 ${selectedOption === 'HasEndDate' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
+                              <span className="ml-2 text-md  font-medium">Add end date</span>
+                            </label>
+                          </div>
+
+                          <div className="w-full my-2  p-2">
+                            {selectedOption === 'HasEndDate' && (
+                              <div>
+                                <label className="block text-md  ">
+                                  End Date
+                                </label>
+                                <input
+                                  type="date"
+                                  className="mt-1 p-2 border border-gray-300 rounded w-full focus:ring-indigo-500 focus:border-indigo-500"
+                                  value={endDate} // Bind the input value to endDate state
+                                  onChange={handleEndDateChange} // Update the endDate state
+                                />
+                              </div>
+                            )}
+                          </div>
 
                           <div className="flex w-full justify-center items-center">
                             <p className="text-red-500 text-sm my-2  text-center">
@@ -686,6 +692,7 @@ function BrandEngagementBuilder() {
                             </div>
                           )}
                         </div>
+
                       </form>
                     </div>
                     <div className="w-full flex-col  text-white md:w-1/2 bg-[#333333] rounded-lg p-4">
@@ -744,6 +751,13 @@ function BrandEngagementBuilder() {
                         userId={user?._id}
                         setFormValues={setValues}
                         isAdminPage={false}
+                        setIsVisible={setIsVisible}
+
+                        endDate={item?.endDate}
+                        setEndDate={setEndDate}
+                        setSelectedOption={setSelectedOption}
+                        lifeCycleStatus={item?.lifeCycleStatus}
+                        setEnabled={setEnabled}
                       />
                     );
                   })}

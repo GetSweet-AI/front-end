@@ -24,7 +24,13 @@ function BrandEngagementCard({
   isArchive,
   userId,
   setFormValues,
-  isAdminPage
+  isAdminPage,
+  setIsVisible,
+  endDate,
+  lifeCycleStatus,
+  setSelectedOption,
+  setEndDate,
+  setEnabled
 }) {
   const navigate = useNavigate();
 
@@ -45,8 +51,6 @@ function BrandEngagementCard({
   };
 
 
-
-
   const handleCloneClick = () => {
     // Create an object with the current brand engagement data
     const brandEngagementData = {
@@ -61,6 +65,15 @@ function BrandEngagementCard({
 
     // Call the setFormValues function to set the form values
     setFormValues(brandEngagementData);
+    setIsVisible(true)
+
+    console.log("End Date : " + endDate)
+
+    //Apply life cycle status here
+    // const endDateValue = lifeCycleStatus === "HasEndDate" ? endDate : ""
+    // setEndDate(endDateValue)
+    // setSelectedOption(lifeCycleStatus)
+    // lifeCycleStatus === "HasEndDate" ? setEnabled(true) : ""
 
   };
 
@@ -93,6 +106,10 @@ function BrandEngagementCard({
             <span className="font-medium">Brand Description</span>:{" "}
             {companySector}
           </div>
+          {/* {endDate && <div className="text-sm mb-2 h-6 bg-slate-400 overflow-y-hidden">
+            <span className="font-medium">End Date</span>:{" "}
+            {endDate}
+          </div>} */}
           {postContent && <div className="flex flex-col">
             <div className="text-sm  mb-2 col-span-1">
               <span className="font-bold">Post Content </span>
