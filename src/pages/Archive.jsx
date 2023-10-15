@@ -19,25 +19,30 @@ function Archive() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [engagements, setEngagements] = useState([]);
+  const [templates, setTemplates] = useState([])
+
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
   const { token, user } = useSelector((state) => state.auth);
-
 
   //pagination
   const [pageNumber, setPageNumber] = useState(0);
   const [numberOfPages, setNumberOfPages] = useState(0);
 
+
+  //creates an array called pages and initializes it with a sequence of numbers from 0 to numberOfPages - 1
   const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
 
+  //Fetch archive of brand engagements and templates
   const fetchEngagements = async () => {
     setIsLoading(true);
     try {
-      fetch(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
+      fetch(`http://localhost:5000/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
         .then((response) => response.json())
         .then(({ totalPages, archive }) => {
           setEngagements(archive);
           setNumberOfPages(totalPages);
+
         });
     } catch (error) {
       console.log(error);
@@ -47,7 +52,7 @@ function Archive() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
+    fetch(`http://localhost:5000/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
       .then((response) => response.json())
       .then(({ totalPages, archive }) => {
         setEngagements(archive);
@@ -77,6 +82,27 @@ function Archive() {
   const [isLoadingCC, setIsLoadingCC] = useState(false);
 
 
+  //Get template + add delete icon
+
+  const [loadingTemplates, setLoadingTemplates] = useState(false)
+  const getTemplates = async () => {
+    setLoadingTemplates(true)
+    try {
+      await axios.get(`http://localhost:5000/api/v1/admin/templates-archive?userId=${user?._id}`).then((res) => {
+        setTemplates(res.data.templateArchive)
+      })
+
+    } catch (error) {
+
+    }
+    setLoadingTemplates(false)
+  }
+
+  useEffect(() => {
+    getTemplates()
+  }, [])
+
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -98,7 +124,7 @@ function Archive() {
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0 ">
                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
-                  Archive
+                  Brand Engagements Archive
                 </h1>
 
               </div>
@@ -115,6 +141,8 @@ function Archive() {
                 />
               </div>
             </div>
+
+
 
             {/* Cards */}
             {isLoading && (
@@ -202,7 +230,38 @@ function Archive() {
               </div>
               {/* <PaginationNumeric /> */}</div>}
 
+
+            {/* Page header */}
+            <div className="sm:flex sm:justify-between sm:items-center mb-8">
+              {/* Left: Title */}
+              <div className="mb-4 sm:mb-0 ">
+                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
+                  Templates Archive
+                </h1>
+
+              </div>
+
+            </div>
+            <div className="flex flex-wrap">
+              {
+                templates?.map((template, idx) => (
+                  <div
+                    key={idx}
+                    className="flex border-2 text-sm m-1 text-md 
+                                                        border-blue-600 py-1 px-2 rounded-xl"
+                  // onClick={ }
+                  >
+                    <button className="">
+                      {template.Title}
+                    </button>
+
+                  </div>
+                ))
+              }</div>
           </div>
+
+
+
         </main>
       </div>
     </div>
