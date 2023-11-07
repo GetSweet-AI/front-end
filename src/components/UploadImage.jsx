@@ -25,7 +25,7 @@ export default function UploadImage() {
     function uploadSingleImage(base64) {
         setLoading(true);
         axios
-            .post("http://localhost:5000/api/uploadImage", { image: base64 })
+            .post("https://seashell-app-2-n2die.ondigitalocean.app/api/uploadImage", { image: base64 })
             .then((res) => {
                 setUrl(res.data);
                 alert("Image uploaded Succesfully");
@@ -37,7 +37,7 @@ export default function UploadImage() {
     function uploadMultipleImages(images) {
         setLoading(true);
         axios
-            .post("http://localhost:5000/api/uploadMultipleImages", { images })
+            .post("https://seashell-app-2-n2die.ondigitalocean.app/api/uploadMultipleImages", { images })
             .then((res) => {
                 setUrl(res.data);
                 alert("Image uploaded Succesfully");

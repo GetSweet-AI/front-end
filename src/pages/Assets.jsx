@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 import { MutatingDots } from "react-loader-spinner";
 import UploadImage from "../components/UploadImage";
 
-const url = "http://localhost:5000/uploads"
+const url = "https://seashell-app-2-n2die.ondigitalocean.app/uploads"
 
 function Assets() {
 
