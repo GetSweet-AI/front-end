@@ -26,7 +26,7 @@ function PricingTables({ planInfos }) {
 
   const handleClick = async (plan) => {
     setIsLoading(true)
-    const result = await axios.post("http://localhost:5000/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp",
+    const result = await axios.post("http://localhost:5000/api/v1/checkout/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",
       {
         name: user?.fullName,
         phone: '123456789',
@@ -164,12 +164,12 @@ function PricingTables({ planInfos }) {
                   </div>
                   <div className="font-red-hat-display inline-flex items-baseline mb-b mt-6">
                     <span className="h4 text-gray-400">$</span>
-                    <span className="h3 text-white">{planInfos[2]?.price}</span>
+                    <span className="h3 text-white">{(planInfos.find(plan => plan.id === 'price_1O729YEDPwNjcL6iScRkv2Iy'))?.price}</span>
                     <span className="font-medium text-gray-500 "> / month</span>
                   </div>
-                  <div className="text-gray-300 ">- Generate 10 posts.</div>
+                  <div className="text-gray-300 ">- Generate 5 posts.</div>
                 </div>
-                <div onClick={() => handleClick("basic")} className="mt-24">
+                <div onClick={() => handleClick("Starter Plan")} className="mt-24">
                   <a className="btn-sm text-white bg-[#3b82f6] hover:bg-[#145aca] w-full" href="#0">Go Premium</a>
                 </div>
                 {isLoading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"> <Puff
@@ -194,12 +194,12 @@ function PricingTables({ planInfos }) {
                   </div>
                   <div className="font-red-hat-display inline-flex items-baseline mb-2">
                     <span className="h4 text-gray-400">$</span>
-                    <span className="h3 text-white">{planInfos[1]?.price}</span>
+                    <span className="h3 text-white">{(planInfos.find(plan => plan.id === 'price_1MlQ9oEDPwNjcL6iRrBxLjD8'))?.price}</span>
                     <span className="font-medium text-gray-500 "> / month</span>
                   </div>
-                  <div className="text-gray-300 ">- Generate 20 posts.</div>
+                  <div className="text-gray-300 ">- Generate 10 posts.</div>
                 </div>
-                <div onClick={() => handleClick("pro")} className="mt-24">
+                <div onClick={() => handleClick("Growth")} className="mt-24">
                   <a className="btn-sm text-white bg-[#3b82f6] hover:bg-[#145aca] w-full" href="#0">Go Premium</a>
                 </div>
                 {isLoading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"> <Puff
@@ -224,12 +224,12 @@ function PricingTables({ planInfos }) {
                   </div>
                   <div className="font-red-hat-display inline-flex items-baseline mb-2">
                     <span className="h4 text-gray-400">$</span>
-                    <span className="h3 text-white">{planInfos[0]?.price}</span>
+                    <span className="h3 text-white">{(planInfos.find(plan => plan.id === 'price_1MlR1jEDPwNjcL6i4ZgxVOGg'))?.price}</span>
                     <span className="font-medium text-gray-500 "> / month</span>
                   </div>
-                  <div className="text-gray-300 ">- Generate 50 posts.</div>
+                  <div className="text-gray-300 ">- Generate 30 posts.</div>
                 </div>
-                <div onClick={() => handleClick("pro_plus")} className="mt-24">
+                <div onClick={() => handleClick("Business")} className="mt-24">
                   <a className="btn-sm text-white bg-[#3b82f6] hover:bg-[#145aca] w-full" href="#0">Go Premium</a>
                 </div>
                 {isLoading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"> <Puff

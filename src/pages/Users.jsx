@@ -28,6 +28,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MutatingDots } from "react-loader-spinner";
 import AddNewUserModal from "../partials/AddNewUserModal";
+import { formatReadableDate } from "../utils/formatReadableDate";
 
 function Users() {
   const dispatch = useDispatch();
@@ -208,6 +209,8 @@ function Users() {
                       <th className="py-3 px-6 text-left">Available Tokens</th>
 
                       <th className="py-3 px-6 text-left ">Role</th>
+                      <th className="py-3 px-6 text-left ">lastLoggedIn</th>
+                      <th className="py-3 px-6 text-left ">Nbr of BEs</th>
                       <th className="py-3 px-6 text-left rounded-tr-lg">
                         Action
                       </th>
@@ -237,12 +240,15 @@ function Users() {
                           <td className="py-4 px-6 md:px-8 border-b">
                             {client.fullName}
                           </td>
-                          <td className="py-4 px-6 border-b">{client.email}</td>
+                          <td className="py-4 px-2 border-b">{client.email}</td>
                           <td className="py-4 px-6 border-b">{client.company}</td>
                           <td className="py-4 px-6 border-b">{client.Plan}</td>
                           <td className="py-4 px-6 border-b text-center">
                             {client.availableTokens}
                           </td>
+                          {/* <td className="py-4 px-6 border-b text-center">
+                       
+                          </td> */}
                           <td className="py-4 px-6 border-b">
                             <span
                               onClick={() => updateRole(client._id)}
@@ -255,6 +261,8 @@ function Users() {
                               />
                             </span>
                           </td>
+                          <td className="py-4 px-6 border-b">     {client?.lastLoggedIn && formatReadableDate(client?.lastLoggedIn)}</td>
+                          <td className="py-4 px-6 border-b">     {client?.countBrandEngagements}</td>
                           <td className="py-4 px-6 border-b">
                             <span
                               onClick={() => deleteUser(client._id)}

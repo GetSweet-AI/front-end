@@ -4,7 +4,7 @@ import logo from "../images/logogetsweet.png";
 // import shortLogo from "../images/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArchive, faBlog, faCog, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faArchive, faBlog, faCog, faImage, faUsers } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { setUserData } from "../redux/auth";
 import AvailableTokens from "./AvailableTokens";
@@ -41,31 +41,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         console.log(err);
       });
   };
-  // close on click outside
-  useEffect(() => {
-    const clickHandler = ({ target }) => {
-      if (!sidebar.current || !trigger.current) return;
-      if (
-        !sidebarOpen ||
-        sidebar.current.contains(target) ||
-        trigger.current.contains(target)
-      )
-        return;
-      setSidebarOpen(false);
-    };
-    document.addEventListener("click", clickHandler);
-    return () => document.removeEventListener("click", clickHandler);
-  });
 
-  // close if the esc key is pressed
-  useEffect(() => {
-    const keyHandler = ({ keyCode }) => {
-      if (!sidebarOpen || keyCode !== 27) return;
-      setSidebarOpen(false);
-    };
-    document.addEventListener("keydown", keyHandler);
-    return () => document.removeEventListener("keydown", keyHandler);
-  });
+
 
   useEffect(() => {
     localStorage.setItem("sidebar-expanded", sidebarExpanded);
@@ -192,7 +169,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                         "text-[#3b82f6]"
                         }`}
                     >
-                      Brand Builder
+                      {sidebarExpanded ? "Brand Builder" : ""}
                     </span>
                   </div>
                 </NavLink>
@@ -232,7 +209,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                       className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/posts-feed" && "text-[#3b82f6]"
                         }`}
                     >
-                      Posts Feed
+                      {sidebarExpanded ? "Posts Feed" : ""}
+
                     </span>
                   </div>
                 </NavLink>
@@ -295,7 +273,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                       className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/payment" && "text-[#3b82f6]"
                         }`}
                     >
-                      Payment
+                      {sidebarExpanded ? "Payment" : ""}
                     </span>
                   </div>
                 </NavLink>
@@ -335,11 +313,42 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                       className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/profile" && "text-[#3b82f6]"
                         }`}
                     >
-                      Account settings
+                      {sidebarExpanded ? "Account settings" : ""}
+
                     </span>
+
                   </div>
                 </NavLink>
               </li>
+
+              {/*Assets page    */}
+              {/* <li
+                className={`px-3 py-3 last:mb-0 ${pathname === "/assets" ? "bg-white rounded-l-full" : ""
+                  }`}
+              >
+                <NavLink
+                  end
+                  to="/assets"
+                  className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/assets" && "hover:text-white"
+                    }`}
+                >
+                  <div>
+                    <FontAwesomeIcon icon={faImage} color={`${pathname === "/assets" ? 'blue' : 'white'}`} size={24} />
+
+                  </div>
+                  <div className="flex items-center overflow-hidden">
+                    <span
+                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/assets" && "text-[#3b82f6]"
+                        }`}
+                    >
+                      {sidebarExpanded ? "Assets" : ""}
+
+                    </span>
+
+                  </div>
+                </NavLink>
+              </li> */}
+
               {user?.role === "admin" && (
                 <li
                   className={`px-3 py-3 last:mb-0 ${pathname === "/users" ? "bg-white rounded-l-full" : ""
@@ -366,7 +375,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                         className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/users" && "text-[#3b82f6]"
                           }`}
                       >
-                        Users
+                        {sidebarExpanded ? " Users" : ""}
+
                       </span>
                     </div>
                   </NavLink>
@@ -402,7 +412,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                           "text-[#3b82f6]"
                           }`}
                       >
-                        Brand engagements
+                        {sidebarExpanded ? "Brand engagements" : ""}
+
                       </span>
                     </div>
                   </NavLink>
@@ -438,7 +449,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                           "text-[#3b82f6]"
                           }`}
                       >
-                        Archive
+                        {sidebarExpanded ? "Archive" : ""}
+
                       </span>
                     </div>
                   </NavLink>
@@ -474,7 +486,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                           "text-[#3b82f6]"
                           }`}
                       >
-                        Settings
+                        {sidebarExpanded ? "Settings" : ""}
+
                       </span>
                     </div>
                   </NavLink>
@@ -489,7 +502,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         </div>
 
         {/* Expand / collapse button */}
-        <div className="pt-3 hidden lg:inline-flex 2xl:hidden justify-end mt-auto">
+        <div className="pt-3 hidden md:inline-flex  justify-end mt-auto">
           <div className="px-3 py-3">
             <button onClick={() => setSidebarExpanded(!sidebarExpanded)}>
               <span className="sr-only">Expand / collapse sidebar</span>

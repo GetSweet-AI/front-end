@@ -25,6 +25,7 @@ import { setUserData } from "../redux/auth";
 import PaymentSuccessMessage from "../partials/PaymentSuccessMessage ";
 import Onboarding from "../components/OnBoarding/Onboarding";
 import SwitchButton from "../partials/SwitchButton";
+import RadioButton from "../components/RadioButton";
 
 function BrandEngagementBuilder() {
   const dispatch = useDispatch();
@@ -47,6 +48,7 @@ function BrandEngagementBuilder() {
   const [selectedOption, setSelectedOption] = useState('RunForEver');
 
   const [endDate, setEndDate] = useState(''); // Initialize endDate state
+  const [selectedPostType, setSelectedPostType] = useState('TextImagePost');
 
 
   console.log("User :" + JSON.stringify(user))
@@ -108,12 +110,12 @@ function BrandEngagementBuilder() {
     CompanySector: values.companySector,
     BrandTone: values.brandTone?.value,
     TargetAudience: values.targetAudience?.value,
-    PostType: values.postType?.value,
     postContent: result,
     WebSite: values.websiteUrl,
     BrandName: values.brandName,
     endDate: endDate,
-    lifeCycleStatus: selectedOption
+    lifeCycleStatus: selectedOption,
+    PostType: selectedPostType
   };
 
   const handlePreview = async (e) => {
@@ -178,7 +180,7 @@ function BrandEngagementBuilder() {
           handleReset();
           setSaveLoading(false);
           // console.log(res.data);
-          fetch(
+          axios.get(
             `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
           )
             .then((response) => response.json())
@@ -190,10 +192,15 @@ function BrandEngagementBuilder() {
           dispatch(clearMessage());
           // dispatch("")
         })
-        .catch((err) => {
+        .catch((error) => {
           setSaveLoading(false);
-          console.log(err);
-          // dispatch(setMessage(err.data))
+          console.log("err :" + error.message);
+          if (error.message === "Request failed with status code 400") {
+            dispatch(setMessage('BrandName must be unique'))
+          } else {
+            dispatch(setMessage('An error occurred'))
+          }
+
         });
     }
 
@@ -226,7 +233,7 @@ function BrandEngagementBuilder() {
       });
   };
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     dispatch(clearMessage());
@@ -402,6 +409,29 @@ function BrandEngagementBuilder() {
 
 
 
+  const handlePostTypeChange = (event) => {
+    setSelectedPostType(event.target.value);
+  };
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveClick = () => {
+    setIsEditing(false);
+  };
+
+  const handleCancelClick = () => {
+    setIsEditing(false);
+  };
+
+  const handleResultChange = (event) => {
+    setResult(event.target.value);
+  };
+
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -487,6 +517,38 @@ function BrandEngagementBuilder() {
                   <div id="Brand_Form" className="flex flex-wrap bg-white md:p-4 rounded-lg sm:mb-12">
                     <div className="w-full md:w-1/2">
                       <form className="rounded px-4" onSubmit={handlePreview}>
+                        <div className="bg-white flex-col rounded-md  flex flex-wrap">
+                          <label htmlFor="select3" className="block mb-2">
+                            Please choose the post type
+                          </label>
+                          <div className="w-full flex flex-wrap">
+                            <RadioButton
+                              id="TextImagePost"
+                              value="TextImagePost"
+                              checked={selectedPostType === 'TextImagePost'}
+                              onChange={handlePostTypeChange}
+                              label="Text Image Post"
+                            />
+
+                            <RadioButton
+                              id="TextVideoPost"
+                              value="TextVideoPost"
+                              checked={selectedPostType === 'TextVideoPost'}
+                              onChange={handlePostTypeChange}
+                              label="Text Video Post"
+                            />
+                            <RadioButton
+                              type="radio"
+                              id="Both"
+                              value="Both"
+                              checked={selectedPostType === 'Both'}
+                              onChange={handlePostTypeChange}
+                              label="Both"
+
+                            />
+                          </div>
+
+                        </div>
 
 
                         <div className="flex flex-wrap">
@@ -530,7 +592,6 @@ function BrandEngagementBuilder() {
                               className="w-full border-gray-300 rounded p-2"
                               type="text"
                               rows={2}
-                              maxLength={90}
                               name="companySector"
                               placeholder="Enter your brand description "
                               value={values.companySector}
@@ -697,20 +758,39 @@ function BrandEngagementBuilder() {
                     </div>
                     <div className="w-full flex-col  text-white md:w-1/2 bg-[#333333] rounded-lg p-4">
                       {result && (
-                        <div
-                          onClick={handleCopyText}
-                          className=" flex justify-end text-end "
-                        >
-                          <p className="bg-slate-600 w-[15%] cursor-pointer text-center rounded-lg py-1 ">
-                            {" "}
-                            Copy
-                          </p>
+                        <div className="flex justify-end mb-4">
+                          {!isEditing && <button className="bg-green-500 w-[15%] cursor-pointer
+                           text-center rounded-lg py-1 mr-2" onClick={handleEditClick}>Edit</button>}
+                          <div
+                            onClick={handleCopyText}
+                            className="bg-slate-600 w-[15%] cursor-pointer text-center  rounded-lg py-1 "
+                          >
+                            <p className=" ">
+
+                              Copy
+                            </p>
+                          </div>
                         </div>
                       )}
-                      <div className="ove md:space-y-3">
-                        {result !== null
-                          ? ReactHtmlParser(result)
-                          : "Results will be added here."}
+                      <div className=" md:space-y-3">
+                        {isEditing ? (
+                          <div>
+                            <textarea
+                              value={result}
+                              rows={10}
+                              onChange={handleResultChange}
+                              className="text-white bg-[#333333] w-full"
+                            />
+                            <div className="flex mt-3">  <button className="bg-green-500 w-[15%] cursor-pointer
+                           text-center rounded-lg py-1 mr-2" onClick={handleSaveClick}>Save</button>
+                              <button className="text-red-400" onClick={handleCancelClick}>Cancel</button></div>
+                          </div>
+                        ) : (
+                          <pre className="whitespace-pre-wrap font-medium">
+                            {result !== null ? ReactHtmlParser(result) : "Results will be added here."}
+
+                          </pre>
+                        )}
                       </div>
                     </div>
                   </div>

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { Puff } from "react-loader-spinner";
 import Archive from "./pages/Archive";
 import Settings from "./pages/Settings";
+import Assets from "./pages/Assets";
 
 const Home = lazy(() => import("./pages/Home"));
 const SignIn = lazy(() => import("./pages/SignIn"));
@@ -68,6 +69,7 @@ function App() {
         <Route path="/archive" element={isLoggedIn ? <Archive /> : <SignIn />} />
         <Route path="/brand-engagement-builder" element={isLoggedIn ? <BrandEngagementBuilder /> : <SignIn />} />
         <Route path="/profile" element={isLoggedIn ? <TheProfile /> : <SignIn />} />
+        <Route path="/assets" element={isLoggedIn ? <Assets /> : <SignIn />} />
         <Route path="/payment" element={isLoggedIn ? <Payment /> : <SignIn />} />
         <Route path="/payment/manage-subscription" element={isLoggedIn ? <ManageSubscription /> : <SignIn />} />
         <Route path="/success" element={isLoggedIn ? <Success /> : <SignIn />} />

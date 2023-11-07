@@ -243,7 +243,8 @@ function PostsFeed() {
               <ToastContainer />
 
               {enabled
-                ? adminFeedPosts?.length > 0 && (
+                ?
+                adminFeedPosts?.length > 0 && (
                   <div className="">
                     <div className="grid grid-cols-12 gap-6">
                       {adminFeedPosts.
@@ -307,7 +308,7 @@ function PostsFeed() {
 
               {enabled && (
                 <div className="mt-8">
-                  <div class="flex items-center md:mt-4 md:overflow-hidden overflow-x-scroll py-2  justify-center space-x-2">
+                  <div class="flex flex-wrap md:flex-nowrap  md:mx-4 items-center md:mt-4 overflow-x-scroll py-2  justify-center space-x-2">
                     <button
                       className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
                       onClick={gotoPreviousAdmin}

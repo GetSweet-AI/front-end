@@ -9,7 +9,7 @@ import { dateUpdate } from "./Time";
 import { parseISO, format } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 
-function PostCard({
+function TextImagePostCard({
   id,
   MediaUrl,
   Caption,
@@ -65,8 +65,8 @@ function PostCard({
           </div>
           <div className="text-sm font-medium mb-2">{Caption}</div>
         </div>
-        <div className="my-3 h-[60%] relative">
-          <ReactPlayer controls={true} width="100%" url={MediaUrl} />
+        <div className="my-3 h-[60%] bg-red-400 relative">
+          image here
         </div>
 
         <div className="my-2">{/* Engagement card link */}</div>
@@ -92,4 +92,4 @@ function PostCard({
   );
 }
 
-export default PostCard;
+export default TextImagePostCard;
