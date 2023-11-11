@@ -3,9 +3,10 @@ import { useState } from "react";
 import assets from "../images/assets.gif";
 import axios from "axios";
 
-export default function UploadImage() {
+export default function UploadImage({ brandEngagementId, fetchEngagements }) {
     const [loading, setLoading] = useState(false);
     const [url, setUrl] = useState("");
+    const [urls, setUrls] = useState([]);
 
     const convertBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -22,10 +23,10 @@ export default function UploadImage() {
         });
     };
 
-    function uploadSingleImage(base64) {
+    async function uploadSingleImage(base64) {
         setLoading(true);
-        axios
-            .post("https://seashell-app-2-n2die.ondigitalocean.app/api/uploadImage", { image: base64 })
+        await axios
+            .post("https://seashell-app-2-n2die.ondigitalocean.app/api/uploadImage", { image: base64, brandEId: brandEngagementId })
             .then((res) => {
                 setUrl(res.data);
                 alert("Image uploaded Succesfully");
@@ -34,16 +35,27 @@ export default function UploadImage() {
             .catch(console.log);
     }
 
-    function uploadMultipleImages(images) {
+    async function uploadImages(files) {
         setLoading(true);
-        axios
-            .post("https://seashell-app-2-n2die.ondigitalocean.app/api/uploadMultipleImages", { images })
-            .then((res) => {
-                setUrl(res.data);
-                alert("Image uploaded Succesfully");
-            })
-            .then(() => setLoading(false))
-            .catch(console.log);
+        const uploadPromises = Array.from(files).map(async (file) => {
+            const base64 = await convertBase64(file);
+            return axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/uploadImage", {
+                image: base64,
+                brandEId: brandEngagementId,
+            });
+        });
+
+        try {
+            const responses = await Promise.all(uploadPromises);
+            const uploadedUrls = responses.map((res) => res.data);
+            setUrls(uploadedUrls);
+            console.log('uploadedUrls :' + JSON.stringify(uploadedUrls))
+            alert("Images uploaded successfully");
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
     }
 
     const uploadImage = async (event) => {
@@ -56,12 +68,13 @@ export default function UploadImage() {
             return;
         }
 
-        const base64s = [];
-        for (var i = 0; i < files.length; i++) {
-            var base = await convertBase64(files[i]);
-            base64s.push(base);
+
+        if (files.length > 0) {
+            uploadImages(files);
         }
-        uploadMultipleImages(base64s);
+
+        fetchEngagements()
+
     };
 
     function UploadInput() {
@@ -101,38 +114,58 @@ export default function UploadImage() {
                         type="file"
                         className="hidden"
                         multiple
+                        accept="image/*" // This restricts selection to image files
                     />
                 </label>
             </div>
         );
     }
 
+
+
+
     return (
-        <div className="flex justify-center flex-col m-8 ">
+        <div className="flex justify-center flex-col p-2 ">
             <div>
-                <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">
-                    Upload Photo
+                <h2 className="mb-4  tracking-tight ">
+                    Attach image to the chosen brand engagement 📸
                 </h2>
             </div>
-            <div>
-                {url && (
-                    <div>
-                        Access you file at{" "}
-                        <a href={url} target="_blank" rel="noopener noreferrer">
-                            {url}
-                        </a>
-                    </div>
-                )}
-            </div>
+
             <div>
                 {loading ? (
                     <div className="flex items-center justify-center">
                         <img src={assets} />{" "}
                     </div>
                 ) : (
-                    <UploadInput />
+                    url ? <></> : <UploadInput />
                 )}
             </div>
+            {/* <div>
+                {url && (
+                    <div className="text-gray-700 mt-2">
+                        <span className="font-bold text-blue-600">Access your image at :</span>
+                        <a href={url[0]} target="_blank" className="ml-2 hover:underline" rel="noopener noreferrer">
+                            {url[0]}
+                        </a>
+                        <img
+                            src={url[0]}
+                        />
+                    </div>
+                )}
+                <div className="text-gray-700 mt-2">
+                    <span className="font-bold text-blue-600">Access your images at :</span>
+                    {urls?.map((uploadedUrl, index) => (
+                        <div key={index}>
+                            <a href={uploadedUrl} target="_blank" className="ml-2 hover:underline" rel="noopener noreferrer">
+                                {uploadedUrl}
+                            </a>
+                            <img src={uploadedUrl} alt={`uploaded-${index}`} />
+                        </div>
+                    ))}
+                </div>
+
+            </div> */}
         </div>
     );
 }

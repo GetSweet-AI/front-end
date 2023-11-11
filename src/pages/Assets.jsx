@@ -14,8 +14,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { MutatingDots } from "react-loader-spinner";
 import UploadImage from "../components/UploadImage";
-
-const url = "https://seashell-app-2-n2die.ondigitalocean.app/uploads"
+import Select from "react-select";
 
 function Assets() {
 
@@ -26,32 +25,57 @@ function Assets() {
     const { token, user } = useSelector((state) => state.auth);
 
 
-    const [postImage, setPostImage] = useState({ myFile: "" })
 
-    const createPost = async (newImage) => {
+    //Drop down here
+    const [values, setValues] = useState({
+        brandEngagementId: "",
+        brandEngagementName: ""
+    });
+
+    const handleSelectChange = (name, selectedOption) => {
+        setValues((prevValues) => ({
+            ...prevValues,
+            [name]: selectedOption,
+        }));
+    };
+
+    //Get brand engagement by userId
+
+    const [engagements, setEngagements] = useState([]);
+    const [engagementsData, setEngagementsData] = useState([]);
+    const fetchEngagements = async () => {
+        setIsLoading(true);
         try {
-            await axios.post(url, newImage)
+            fetch(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements-np/${user?._id}`)
+                .then((response) => response.json())
+                .then(({ brandEngagements }) => {
+                    const brandEngagementsNewArray = brandEngagements.map(({ _id, BrandName }) => ({
+                        label: BrandName,
+                        value: _id,
+                    }));
+                    setEngagementsData(brandEngagements)
+                    setEngagements(brandEngagementsNewArray);
+                    console.log("brandEngagements :" + JSON.stringify(brandEngagementsNewArray))
+                });
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+        setIsLoading(false);
+    };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        createPost(postImage)
-        console.log("Uploaded")
-    }
+    useEffect(() => {
+        fetchEngagements()
+    }, [])
 
-    const handleFileUpload = async (e) => {
-        const file = e.target.files[0];
-        const base64 = await convertToBase64(file);
-        console.log(base64)
-        setPostImage({ ...postImage, myFile: base64 })
-    }
-
-
-
-
+    const isImageExist = async (imageUrl) => {
+        try {
+            const response = await fetch(`${imageUrl}?type=fetch&fetch_format=auto`, { method: 'HEAD' });
+            return response.ok;
+        } catch (error) {
+            console.error('Error checking image existence:', error);
+            return false;
+        }
+    };
 
     return (
         <div className="flex h-screen overflow-hidden">
@@ -74,7 +98,7 @@ function Assets() {
                             {/* Left: Title */}
                             <div className="mb-4 sm:mb-0 ">
                                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
-                                    Assets
+                                    Assets Page
                                 </h1>
 
                             </div>
@@ -110,72 +134,61 @@ function Assets() {
                                 />
                             </div>
                         )}
-                        {/* {engagements?.length > 0 && (
-              <div className="">
-                <div className="grid grid-cols-12 gap-6">
-                  {engagements.
-                    filter((brand) => {
-                      // const { email } = brand?.user;
-                      if (search == "") {
-                        return brand;
-                      } else if (brand?.email !== null &&
-                        (brand?.WebSite.toLowerCase().includes(search.toLocaleLowerCase()) || brand?.BrandName.toLowerCase().includes(search.toLocaleLowerCase()))
-                      ) {
-                        return brand;
-                      }
-                    }).
-                    map((item) => {
-                      return (
-                        <BrandEngagementCard
-                          key={item._id}
-                          id={item._id}
-                          brandName={item?.BrandName}
-                          postContent={item?.postContent}
-                          website={item.WebSite}
-                          timeZone={item.Timezone}
-                          companySector={item.CompanySector}
-                          brandTone={item.BrandTone}
-                          targetAudience={item.TargetAudience}
-                          postType={item.PostType}
-                          relatedPostsStatus={item.relatedPostsStatus}
-                          fetchEngagements={fetchEngagements}
-                          isArchive={true}
-
-                        />
-                      );
-                    })}
-                </div>
-              </div>
-            )} */}
-
-                        {/* <UploadImage /> */}
-
-
-
-
-                    </div>
-                    <div className="App">
-                        <form onSubmit={handleSubmit}>
-
-                            <label htmlFor="file-upload" className='custom-file-upload'>
-                                <img src={postImage.myFile} alt="" />
+                        <div className="w-full md:w-1/2 p-2">
+                            <label htmlFor="select3" className="block mb-1">
+                                Choose a Brand Engagement 🎈
                             </label>
-
-                            <input
-                                type="file"
-                                lable="Image"
-                                name="myFile"
-                                id='file-upload'
-                                accept='.jpeg, .png, .jpg'
-                                onChange={(e) => handleFileUpload(e)}
+                            <Select
+                                id="select3"
+                                className="w-full"
+                                placeholder="Brand Tone"
+                                name="brandEngagementId"
+                                value={values.brandEngagementId}
+                                onChange={(selectedOption) =>
+                                    handleSelectChange("brandEngagementId", selectedOption)
+                                }
+                                options={engagements}
                             />
+                        </div>
 
-                            <h3>Doris Wilder</h3>
-                            <span>Designer</span>
+                        <UploadImage brandEngagementId={values.brandEngagementId?.value} fetchEngagements={fetchEngagements} />
 
-                            <button type='submit'>Submit</button>
-                        </form>
+                        <div className="my-4 sm:mb-0  ">
+                            <h1 className="text-xl md:text-3xl text-gray-600 font-bold">
+                                Uploaded Images
+                            </h1>
+
+                        </div>
+                        <div className="grid grid-cols-1 relative sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+                            {engagementsData.filter(
+                                (brandEngagement) => brandEngagement.attachedPicture !== ""
+                            ).map((brandEngagement) => (
+                                <section key={brandEngagement._id} className="overflow-hidden flex flex-col justify-center items-center bg-gray-200 rounded-md">
+                                    {brandEngagement.attachedPicture.length > 0 && (
+                                        <div className="flex overflow-x-scroll space-x-2">
+                                            {brandEngagement.attachedPicture.map((picture, index) => (
+                                                <>
+                                                    <img
+                                                        key={index}
+                                                        src={picture}
+                                                        alt={`Brand Engagement - ${brandEngagement.BrandName}`}
+                                                        className="w-auto h-auto object-contain"
+                                                    />
+                                                </>
+                                            ))}
+
+                                        </div>
+                                    )}  <div className="p-4">
+                                        <h3 className="text-lg font-semibold mb-2">{brandEngagement.BrandName}</h3>
+                                        {/* Add other details or components here */}
+                                    </div>
+
+                                </section>
+
+                            ))}
+                        </div>
                     </div>
+
 
 
 
@@ -188,15 +201,3 @@ function Assets() {
 export default Assets;
 
 
-function convertToBase64(file) {
-    return new Promise((resolve, reject) => {
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-        fileReader.onload = () => {
-            resolve(fileReader.result)
-        };
-        fileReader.onerror = (error) => {
-            reject(error)
-        }
-    })
-}

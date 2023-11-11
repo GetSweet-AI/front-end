@@ -289,18 +289,21 @@ function Users() {
                     Previous
                   </button>
 
-                  {pages.map((pageIndex) => (
-                    <button
-                      key={pageIndex}
-                      className={`${pageNumber === pageIndex
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-300 hover:bg-gray-400 text-gray-800"
-                        } px-3 py-1 rounded-lg`}
-                      onClick={() => setPageNumber(pageIndex)}
-                    >
-                      {pageIndex + 1}
-                    </button>
-                  ))}
+                  <select
+                    value={pageNumber}
+                    onChange={(e) => setPageNumber(parseInt(e.target.value))}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-16 p-2.5 "
+                  >
+                    {pages.map((pageIndex) => (
+                      <option
+                        key={pageIndex}
+                        value={pageIndex}
+                        className="text-black font-medium "
+                      >
+                        {pageIndex + 1}
+                      </option>
+                    ))}
+                  </select>
 
                   <button
                     className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"

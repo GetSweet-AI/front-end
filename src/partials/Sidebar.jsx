@@ -322,7 +322,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               </li>
 
               {/*Assets page    */}
-              {/* <li
+              <li
                 className={`px-3 py-3 last:mb-0 ${pathname === "/assets" ? "bg-white rounded-l-full" : ""
                   }`}
               >
@@ -347,7 +347,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
                   </div>
                 </NavLink>
-              </li> */}
+              </li>
 
               {user?.role === "admin" && (
                 <li

@@ -347,24 +347,6 @@ function BrandEngagementBuilder() {
   };
 
 
-  console.log("values :" + JSON.stringify(values))
-
-  // const handleCloneClick = (brandEngagementData) => {
-  //   setValues({
-  //     brandName: brandEngagementData.brandName,
-  //     websiteUrl: brandEngagementData.websiteUrl,
-  //     timeZone: brandEngagementData.timeZone,
-  //     companySector: brandEngagementData.companySector,
-  //     brandTone: brandEngagementData.brandTone,
-  //     targetAudience: brandEngagementData.targetAudience,
-  //     postType: brandEngagementData.postType,
-  //   });
-
-  //   setSelectedOption(brandEngagementData.lifeCycleStatus)
-
-  //   setEndDate(brandEngagementData.lifeCycleStatus === "HasEndDate" ? brandEngagementData.endDate : "")
-  //   // Additional code to handle cloning logic if needed
-  // };
 
 
 

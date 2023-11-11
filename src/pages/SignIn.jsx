@@ -62,7 +62,7 @@ function SignIn() {
 
 
   return (
-    <div className="flex flex-col min-h-screen  relative overflow-hidden ">
+    <div className="flex flex-col h-screen  relative overflow-hidden ">
       {/*  Site header */}
 
       {/*  Page content */}
@@ -72,7 +72,7 @@ function SignIn() {
         <section className="relative   ">
           <div className="max-w-7xl md:mx-auto px-4 md:px-6 ">
             <div
-              className="pt-32 pb-10 md:translate-y-[20%]  lg:translate-y-0   lg:pb-16 
+              className="mt-[5%] md:translate-y-[20%]  lg:translate-y-0   lg:pb-16 
             flex justify-center items-center"
             >
               <div className="bg-white bg-opacity-10 px-2 shadow-2xl py-5 opacity-90 md:w-[70%] lg:w-[45%] w-full rounded-xl">
