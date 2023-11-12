@@ -46,7 +46,7 @@ function Assets() {
     const fetchEngagements = async () => {
         setIsLoading(true);
         try {
-            fetch(`http://localhost:5000/api/v1/brand-engagements-np/${user?._id}`)
+            fetch(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements-np/${user?._id}`)
                 .then((response) => response.json())
                 .then(({ brandEngagements }) => {
                     const brandEngagementsNewArray = brandEngagements.map(({ _id, BrandName }) => ({

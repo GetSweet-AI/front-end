@@ -38,7 +38,7 @@ function CreateNewUser() {
   const createUser = async (currentUser) => {
     setLoading(true)
     try {
-      const { data } = await axios.post("http://localhost:5000/api/v1/admin/create-user", currentUser);
+      const { data } = await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/create-user", currentUser);
       const { user, token } = data;
       setValues(initialState)
       toast.success("User created successfully");
