@@ -26,7 +26,7 @@ function PricingTables({ planInfos }) {
 
   const handleClick = async (plan) => {
     setIsLoading(true)
-    const result = await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/checkout/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",
+    const result = await axios.post("http://localhost:5000/api/v1/checkout/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",
       {
         name: user?.fullName,
         phone: '123456789',
@@ -35,7 +35,7 @@ function PricingTables({ planInfos }) {
         plan: plan
       }
     )
-    //  await fetch.post(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`, {
+    //  await fetch.post(`http://localhost:5000/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`, {
     //       payload,
     //     });
     setIsLoading(false)
@@ -51,7 +51,7 @@ function PricingTables({ planInfos }) {
   // const navigate = useNavigate
   // Check if the user has already a subscription
   const getHasSubscription = async () => {
-    await axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/has-subscription/${user?.customerId}`).then((res) => {
+    await axios.get(`http://localhost:5000/api/v1/has-subscription/${user?.customerId}`).then((res) => {
       dispatch(setHasSubscription(res.data?.hasSubscription))
     })
   }
@@ -60,9 +60,9 @@ function PricingTables({ planInfos }) {
   const [cancelMessage, setCancelMessage] = useState(null)
 
   const getSubscriptionStatus = async () => {
-    await axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/subscriptions/customer/${user?.customerId}`)
+    await axios.get(`http://localhost:5000/api/v1/subscriptions/customer/${user?.customerId}`)
       .then((res) => {
-        axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/${res.data?.subscriptionIds[0]}/status`)
+        axios.get(`http://localhost:5000/api/v1/${res.data?.subscriptionIds[0]}/status`)
           .then((response) => {
             setSubscriptionStatus(response.data?.status)
           })
@@ -70,9 +70,9 @@ function PricingTables({ planInfos }) {
   }
 
   const cancelSubscription = async () => {
-    await axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/subscriptions/customer/${user?.customerId}`)
+    await axios.get(`http://localhost:5000/api/v1/subscriptions/customer/${user?.customerId}`)
       .then((res) => {
-        axios.post(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/cancel-subscription`, {
+        axios.post(`http://localhost:5000/api/v1/cancel-subscription`, {
           subscriptionId: res.data?.subscriptionIds[0]
         })
           .then((response) => {

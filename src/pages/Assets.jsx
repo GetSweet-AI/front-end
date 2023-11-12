@@ -46,7 +46,7 @@ function Assets() {
     const fetchEngagements = async () => {
         setIsLoading(true);
         try {
-            fetch(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements-np/${user?._id}`)
+            fetch(`http://localhost:5000/api/v1/brand-engagements-np/${user?._id}`)
                 .then((response) => response.json())
                 .then(({ brandEngagements }) => {
                     const brandEngagementsNewArray = brandEngagements.map(({ _id, BrandName }) => ({
@@ -159,29 +159,30 @@ function Assets() {
                             </h1>
 
                         </div>
-                        <div className="grid grid-cols-1 relative sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+                        <div className='grid grid-cols-1 relative sm:grid-cols-2 md:grid-cols-3 gap-4 p-4'>
                             {engagementsData.filter(
                                 (brandEngagement) => brandEngagement.attachedPicture !== ""
                             ).map((brandEngagement) => (
-                                <section key={brandEngagement._id} className="overflow-hidden flex flex-col justify-center items-center bg-gray-200 rounded-md">
-                                    {brandEngagement.attachedPicture.length > 0 && (
+                                <section key={brandEngagement._id} className="shadow-xl p-2 rounded-xl">
+                                    <div className="p-4">
+                                        <h3 className="text-lg font-semibold mb-2">{brandEngagement.BrandName}</h3>
+                                        {/* Add other details or components here */}
+                                    </div>  {brandEngagement.attachedPicture.length > 0 && (
                                         <div className="flex overflow-x-scroll space-x-2">
                                             {brandEngagement.attachedPicture.map((picture, index) => (
-                                                <>
+                                                <div>
                                                     <img
                                                         key={index}
                                                         src={picture}
                                                         alt={`Brand Engagement - ${brandEngagement.BrandName}`}
-                                                        className="w-auto h-auto object-contain"
+                                                        className="h-48 max-w-xs object-contain"
                                                     />
-                                                </>
+                                                </div>
                                             ))}
 
                                         </div>
-                                    )}  <div className="p-4">
-                                        <h3 className="text-lg font-semibold mb-2">{brandEngagement.BrandName}</h3>
-                                        {/* Add other details or components here */}
-                                    </div>
+                                    )}
+
 
                                 </section>
 
