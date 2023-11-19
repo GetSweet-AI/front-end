@@ -316,7 +316,7 @@ function PostsFeed() {
                       Previous
                     </button>
 
-                    {AdminPages.map((pageIndex) => (
+                    {/* {AdminPages.map((pageIndex) => (
                       <button
                         key={pageIndex}
                         className={`${adminPageNumber === pageIndex
@@ -327,7 +327,23 @@ function PostsFeed() {
                       >
                         {pageIndex + 1}
                       </button>
-                    ))}
+                    ))} */}
+                    <select
+                      value={adminPageNumber}
+                      onChange={(e) => setAdminPageNumber(parseInt(e.target.value))}
+                      className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
+                    >
+                      {AdminPages.map((pageIndex) => (
+                        <option
+                          key={pageIndex}
+                          value={pageIndex}
+                          className="text-black"
+                        >
+                          {pageIndex + 1}
+                        </option>
+                      ))}
+                    </select>
+
 
                     <button
                       className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
@@ -351,7 +367,7 @@ function PostsFeed() {
                       Previous
                     </button>}
 
-                    {pages.map((pageIndex) => (
+                    {/* {pages.map((pageIndex) => (
                       <button
                         key={pageIndex}
                         className={`${pageNumber === pageIndex
@@ -362,7 +378,23 @@ function PostsFeed() {
                       >
                         {pageIndex + 1}
                       </button>
-                    ))}
+                    ))} */}
+                    <select
+                      value={pageNumber}
+                      onChange={(e) => setPageNumber(parseInt(e.target.value))}
+                      className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
+                    >
+                      {pages.map((pageIndex) => (
+                        <option
+                          key={pageIndex}
+                          value={pageIndex}
+                          className="text-black"
+                        >
+                          {pageIndex + 1}
+                        </option>
+                      ))}
+                    </select>
+
 
                     {pages.length !== 0 && <button
                       className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"

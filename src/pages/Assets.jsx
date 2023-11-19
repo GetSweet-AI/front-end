@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import Sidebar from "../partials/Sidebar";
 import Header from "../partials/Header";
 import SearchForm from "../partials/SearchForm";
@@ -15,6 +14,7 @@ import { useSelector } from "react-redux";
 import { MutatingDots } from "react-loader-spinner";
 import UploadImage from "../components/UploadImage";
 import Select from "react-select";
+import { Link } from 'react-router-dom'
 
 function Assets() {
 
@@ -40,7 +40,8 @@ function Assets() {
     };
 
     //Get brand engagement by userId
-
+    const [activeBrandId, setActiveBrandId] = useState(null)
+    console.log("active :" + activeBrandId)
     const [engagements, setEngagements] = useState([]);
     const [engagementsData, setEngagementsData] = useState([]);
     const fetchEngagements = async () => {
@@ -53,8 +54,13 @@ function Assets() {
                         label: BrandName,
                         value: _id,
                     }));
-                    setEngagementsData(brandEngagements)
+                    setEngagementsData(brandEngagements.filter(
+                        (brandEngagement) => brandEngagement.attachedPicture.length > 0
+                    ))
                     setEngagements(brandEngagementsNewArray);
+                    if (activeBrandId === null) {
+                        setActiveBrandId(brandEngagements[0]?._id)
+                    }
                     console.log("brandEngagements :" + JSON.stringify(brandEngagementsNewArray))
                 });
         } catch (error) {
@@ -76,6 +82,29 @@ function Assets() {
             return false;
         }
     };
+
+
+
+    const deleteImage = async (picture) => {
+        console.log('imageUrl :' + picture)
+
+        // Check if imageUrl is a valid string
+        if (typeof picture !== 'string') {
+            console.error('Invalid picture:', picture);
+            return;
+        }
+        const be = activeBrandId
+        try {
+            await axios.delete(`http://localhost:5000/api/delete-image?brandEngagementID=${activeBrandId}&imageUrl=${picture}`, {
+                imageUrl: picture
+            })
+
+            fetchEngagements()
+        } catch (error) {
+            console.log('An error ocurred')
+        }
+    }
+
 
     return (
         <div className="flex h-screen overflow-hidden">
@@ -159,32 +188,49 @@ function Assets() {
                             </h1>
 
                         </div>
-                        <div className='grid grid-cols-1 relative sm:grid-cols-2 md:grid-cols-3 gap-4 p-4'>
-                            {engagementsData.filter(
-                                (brandEngagement) => brandEngagement.attachedPicture !== ""
-                            ).map((brandEngagement) => (
-                                <section key={brandEngagement._id} className="shadow-xl p-2 rounded-xl">
-                                    <div className="p-4">
-                                        <h3 className="text-lg font-semibold mb-2">{brandEngagement.BrandName}</h3>
-                                        {/* Add other details or components here */}
-                                    </div>  {brandEngagement.attachedPicture.length > 0 && (
-                                        <div className="flex overflow-x-scroll space-x-2">
-                                            {brandEngagement.attachedPicture.map((picture, index) => (
-                                                <div>
+                        {/* <div className='grid grid-cols-1 content-center relative sm:grid-cols-2 md:grid-cols-6 gap-4 p-4'> */}
+                        <div className='flex p-4 space-x-2'>
+                            {engagementsData.map((brandEngagement) => (
+                                <section key={brandEngagement._id}
+                                    className={`shadow-xl text-md      rounded-xl             ${brandEngagement._id === activeBrandId ? 'bg-blue-400 text-white' : ''}`}>
+                                    <div
+                                        onClick={() => setActiveBrandId(brandEngagement._id)}
+                                        className={`p-2 text-center cursor-pointer 
+   `}>
+                                        <h3 className="text-md font-medium ">{brandEngagement.BrandName}</h3>
+                                    </div>
+
+
+
+                                </section>
+
+                            ))}
+                        </div>
+                        <div className=''>
+                            {engagementsData.map((brandEngagement) => (
+
+                                brandEngagement._id === activeBrandId && (
+                                    <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2  ">
+                                        {brandEngagement.attachedPicture.map((picture, index) => (
+                                            <div className="p-2">
+                                                <button onClick={() => deleteImage(picture)} className="flex text-end justify-end w-6   m-1">
+                                                    <p className="border-2 border-red-400 cursor-pointer w-full hover:bg-red-400  text-center px-[2px] rounded-full font-bold hover:text-white text-red-500  ">x</p>
+                                                </button>
+                                                <Link to={picture}>
                                                     <img
                                                         key={index}
                                                         src={picture}
                                                         alt={`Brand Engagement - ${brandEngagement.BrandName}`}
-                                                        className="h-48 max-w-xs object-contain"
-                                                    />
-                                                </div>
-                                            ))}
+                                                        className="h-48  w-[28rem] object-contain  hover:scale-105 rounded-xl"
+                                                    /></Link>
+                                            </div>
+                                        ))}
 
-                                        </div>
-                                    )}
+                                    </div>
+                                )
 
 
-                                </section>
+
 
                             ))}
                         </div>

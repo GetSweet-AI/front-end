@@ -92,6 +92,10 @@ function BrandEngagementBuilder() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    console.log(value.length)
+    if (name === "companySector" && value.length > 50) {
+      getTargetAudiences()
+    }
     setValues((prevValues) => ({
       ...prevValues,
       [name]: value,
@@ -348,8 +352,6 @@ function BrandEngagementBuilder() {
 
 
 
-
-
   //Get template + add delete icon
   const [templates, setTemplates] = useState([])
   const getTemplates = async () => {
@@ -366,6 +368,23 @@ function BrandEngagementBuilder() {
   useEffect(() => {
     getTemplates()
   }, [])
+  //Get target audiences
+  const [targetAudiences, setTargetAudiences] = useState([])
+  const getTargetAudiences = async () => {
+    try {
+      await axios.post(`http://localhost:5000/api/v1/generate-ta-options`, {
+        companySector: values.companySector
+      }).then((res) => {
+        setTargetAudiences(res.data.targetAudiences)
+        console.log('targetAudiences :' + res.data.targetAudiences)
+      })
+
+    } catch (error) {
+      console.log('error :' + error)
+    }
+  }
+
+
 
 
   const handleOptionChange = (e) => {
@@ -387,8 +406,6 @@ function BrandEngagementBuilder() {
       setEndDate("")
     }
   }, [enabled])
-
-
 
 
   const handlePostTypeChange = (event) => {
@@ -581,6 +598,20 @@ function BrandEngagementBuilder() {
                             />
 
                           </div>
+                          {targetAudiences.length !== 0 && <div className="w-full  p-2">
+                            <label htmlFor="select1" className="block mb-1">
+                              Target Audience -<span className="text-blue-300 text-sm"> Generated with ai</span>
+                            </label>
+                            <Select
+                              className="w-full"
+                              placeholder="choose your Target Audience"
+                              value={values.targetAudience}
+                              onChange={(selectedOption) =>
+                                handleSelectChange("targetAudience", selectedOption)
+                              }
+                              options={JSON.parse(targetAudiences)}
+                            />
+                          </div>}
 
                           <div className="w-full md:w-1/2 p-2">
                             <label htmlFor="input2" className="block mb-1">

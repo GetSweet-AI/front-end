@@ -142,7 +142,7 @@ export default function UploadImage({ brandEngagementId, fetchEngagements }) {
                         <img src={assets} />{" "}
                     </div>
                 ) : (
-                    url ? <></> : <UploadInput />
+                    <UploadInput />
                 )}
             </div>
             {/* <div>

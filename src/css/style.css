@@ -30,7 +30,7 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background-color: rgb(65, 65, 214);
+    background-color: #00abfb;
     border-radius: 3px;
 }
 
