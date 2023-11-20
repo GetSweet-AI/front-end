@@ -26,7 +26,7 @@ function PricingTables({ planInfos }) {
 
   const handleClick = async (plan) => {
     setIsLoading(true)
-    const result = await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/checkout/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",
+    const result = await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/checkout/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",
       {
         name: user?.fullName,
         phone: '123456789',
@@ -164,7 +164,10 @@ function PricingTables({ planInfos }) {
                   </div>
                   <div className="font-red-hat-display inline-flex items-baseline mb-b mt-6">
                     <span className="h4 text-gray-400">$</span>
-                    <span className="h3 text-white">{(planInfos.find(plan => plan.id === 'price_1O729YEDPwNjcL6iScRkv2Iy'))?.price}</span>
+                    <span className="h3 text-white">
+
+                      {(planInfos.find(plan => plan.id === 'price_1O729YEDPwNjcL6iScRkv2Iy'))?.price}
+                    </span>
                     <span className="font-medium text-gray-500 "> / month</span>
                   </div>
                   <div className="text-gray-300 ">- Generate 5 posts.</div>

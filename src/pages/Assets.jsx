@@ -57,6 +57,8 @@ function Assets() {
                     setEngagementsData(brandEngagements.filter(
                         (brandEngagement) => brandEngagement.attachedPicture.length > 0
                     ))
+
+                    brandEngagementsNewArray[0] && handleSelectChange("brandEngagementId", brandEngagementsNewArray[0])
                     setEngagements(brandEngagementsNewArray);
                     if (activeBrandId === null) {
                         setActiveBrandId(brandEngagements[0]?._id)
@@ -95,7 +97,7 @@ function Assets() {
         }
         const be = activeBrandId
         try {
-            await axios.delete(`http://localhost:5000/api/delete-image?brandEngagementID=${activeBrandId}&imageUrl=${picture}`, {
+            await axios.delete(`https://seashell-app-2-n2die.ondigitalocean.app/api/delete-image?brandEngagementID=${activeBrandId}&imageUrl=${picture}`, {
                 imageUrl: picture
             })
 
