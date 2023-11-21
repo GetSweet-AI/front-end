@@ -26,7 +26,7 @@ function PricingTables({ planInfos }) {
 
   const handleClick = async (plan) => {
     setIsLoading(true)
-    const result = await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/checkout/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",
+    const result = await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/checkout",
       {
         name: user?.fullName,
         phone: '123456789',
