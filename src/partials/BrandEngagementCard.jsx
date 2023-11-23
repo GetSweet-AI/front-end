@@ -1,4 +1,4 @@
-import { faClone, faEye, faImage, faTrash, faVideo } from "@fortawesome/free-solid-svg-icons";
+import { faClone, faEye, faImage, faPaperclip, faTrash, faVideo } from "@fortawesome/free-solid-svg-icons";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
@@ -7,6 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import ReactHtmlParser from "react-html-parser";
+import { useDispatch } from "react-redux";
+import { clearActiveBrandEngagement, setActiveBrandEngagement } from "../redux/message";
 
 function BrandEngagementCard({
   id,
@@ -39,7 +41,7 @@ function BrandEngagementCard({
     setIsArchiveLoading(true)
     try {
       const response = await axios.delete(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements/${brandEngagementId}`
+        `http://localhost:5000/api/v1/brand-engagements/${brandEngagementId}`
       );
       console.log(response.data); // Success message or response data
       fetchEngagements();
@@ -49,7 +51,6 @@ function BrandEngagementCard({
     }
     setIsArchiveLoading(false)
   };
-
 
   const handleCloneClick = () => {
     // Create an object with the current brand engagement data
@@ -77,6 +78,16 @@ function BrandEngagementCard({
 
   };
 
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(clearActiveBrandEngagement())
+  }, [])
+  const handleAttachAssets = () => {
+    navigate('/assets')
+    dispatch(setActiveBrandEngagement(id))
+  }
+
   return (
     <div className="col-span-full sm:col-span-6 xl:col-span-4">
       <div className="bg-white shadow-lg rounded-lg border border-slate-200 hover:shadow-blue-200 hover:shadow-xl hover:border-blue-500">
@@ -98,24 +109,25 @@ function BrandEngagementCard({
           {/* </div> */}
 
           <div className="grow mt-2">
-            {websiteUrl ? <div className="text-sm mb-2">
-              <span className="font-medium">websiteUrl</span> :{" "}
-              <a
-                className="underline text-blue-500"
-                href={websiteUrl}
-                target="_blank"
-              >
-                {websiteUrl}
-              </a>
-            </div>
+            {websiteUrl ?
+              <div className="text-sm mb-2 ">
+                <span className="font-medium">websiteUrl</span> :{" "}
+                <a
+                  className="underline text-blue-500"
+                  href={websiteUrl}
+                  target="_blank"
+                >
+                  {websiteUrl}
+                </a>
+              </div>
               :
               <div className="text-sm mb-2"></div>
             }
-            <div className="text-sm mb-2">
+            <div className="text-sm mb-2 ">
               <span className="font-medium">Time Zone</span>: {timeZone}
             </div>
             {" "}
-            <div className="text-sm mb-2">
+            <div className="text-sm mb-2 ">
               <span className="font-medium">Brand Tone</span>: {brandTone}
             </div>
             <div className="text-sm mb-2 h-12 overflow-y-hidden">
@@ -127,8 +139,12 @@ function BrandEngagementCard({
             {endDate}
           </div>} */}
             {postContent && <div className="flex flex-col">
-              <div className="text-sm  mb-2 col-span-1">
-                <span className="font-bold">Post Content </span>
+              <div className="text-sm mb-2 text-center col-span-1">
+                <div className="flex items-center">
+                  <div className="flex-1 h-0.5 bg-gray-300 mr-2"></div>
+                  <span className="font-bold">Post Content</span>
+                  <div className="flex-1 h-0.5 bg-gray-300 ml-2"></div>
+                </div>
               </div>
               <div className={`text-sm mb-2 h-16 text-gray-900 ${postContent ? "overflow-y-scroll" : ""} col-span-3`}>
                 {postContent && ReactHtmlParser(postContent)}
@@ -161,22 +177,14 @@ function BrandEngagementCard({
               </div>
             }
           </div>
-          {!isArchive && <footer className="mt-2">
-            <div className="flex justify-between space-x-2 items-center">
-              <div
+          {!isArchive &&
+            <footer className="mt-2 flex-col">
+              <div className="flex justify-between space-x-2 items-center">
+                {
+                  !isAdminPage && <button
 
-                onClick={() => navigate(`/brand-engagements/${id}`)}
-                className="text-sm flex justify-center items-center font-medium md:flex-[0.3] flex-[0.3] bg-slate-200 text-blue-700 rounded  p-2 cursor-pointer"
-              >
-                {/* Not Active */}
-                <FontAwesomeIcon className="mr-2" icon={faEye} />
-                View
-              </div>
-              {
-                !isAdminPage && <button
-
-                  onClick={handleCloneClick}
-                  className="text-sm flex justify-center
+                    onClick={handleCloneClick}
+                    className="text-sm flex justify-center
              items-center font-medium md:flex-[0.3]
               flex-[0.3] bg-white text-blue-700
                rounded-md  p-2 cursor-pointer
@@ -184,23 +192,46 @@ function BrandEngagementCard({
                hover:bg-gray-100
                "
 
+                  >
+                    {/* Not Active */}
+
+                    <FontAwesomeIcon className="mr-2" icon={faClone} /> Clone
+                  </button>
+                }
+                <div
+
+                  onClick={() => navigate(`/brand-engagements/${id}`)}
+                  className="text-sm flex justify-center shadow-xl items-center font-medium md:flex-[0.3] flex-[0.3] bg-slate-100 hover:text-white hover:bg-blue-600 text-blue-700 rounded  p-2 cursor-pointer"
                 >
                   {/* Not Active */}
+                  <FontAwesomeIcon className="mr-2" icon={faEye} />
+                  View
+                </div>
 
-                  <FontAwesomeIcon className="mr-2" icon={faClone} /> Clone
+
+                <button
+                  className="text-sm text-white rounded text-center bg-[#d7364b] flex-[0.3] p-2 cursor-pointer"
+                  onClick={() => deleteBrandEngagement(id)}
+                  disabled={isArchiveLoading}
+                >
+                  {isArchiveLoading ? "Archiving.." : <> <FontAwesomeIcon className="mr-2" icon={faTrash} />
+                    Archive</>}
                 </button>
-              }
-
-              <button
-                className="text-sm text-white rounded text-center bg-[#d7364b] flex-[0.3] p-2 cursor-pointer"
-                onClick={() => deleteBrandEngagement(id)}
-                disabled={isArchiveLoading}
-              >
-                {isArchiveLoading ? "Archiving.." : <> <FontAwesomeIcon className="mr-2" icon={faTrash} />
-                  Archive</>}
-              </button>
-            </div>
-          </footer>}
+              </div>
+              <div className="mt-4 flex justify-center">
+                <button className="text-md flex justify-center
+             items-center font-medium 
+              bg-white text-blue-700
+               rounded-md  p-2 cursor-pointer  
+               "
+                  onClick={handleAttachAssets}
+                >
+                  Attach assets
+                  <FontAwesomeIcon className="ml-2" icon={faPaperclip} />
+                  {/* <FontAwesomeIcon icon="fa-solid fa-paperclip" /> */}
+                </button>
+              </div>
+            </footer>}
         </div>
       </div >
     </div >

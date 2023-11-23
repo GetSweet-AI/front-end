@@ -10,7 +10,7 @@ import { setUserData } from "../redux/auth";
 import AvailableTokens from "./AvailableTokens";
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
-  const { isLoggedIn, usuario } = useSelector((state) => state.auth);
+  const { isLoggedIn } = useSelector((state) => state.auth);
 
   const location = useLocation();
   const { pathname } = location;
@@ -30,7 +30,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         setUser(res.data);
@@ -53,9 +53,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
     }
   }, [sidebarExpanded]);
 
-  useEffect(() => {
-    sidebarOpen && !sidebarExpanded && setSidebarExpanded(true);
-  }, [sidebarOpen]);
+  // useEffect(() => {
+  //   sidebarOpen && !sidebarExpanded && setSidebarExpanded(true);
+  // }, [sidebarOpen]);
 
   useEffect(() => {
     fetchUserData();

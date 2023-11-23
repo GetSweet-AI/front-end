@@ -50,7 +50,7 @@ function PostsFeed() {
     setIsUserDataLoading(true);
     await axios
       .get(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/feed-posts/${user?._id}`
+        `http://localhost:5000/api/v1/feed-posts/${user?._id}`
       )
       .then((res) => {
         setFeedPosts(res.data?.feedPosts);
@@ -66,7 +66,7 @@ function PostsFeed() {
 
     await axios
       .get(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}`
+        `http://localhost:5000/api/v1/admin/feedposts?userId=${user?._id}`
       )
       .then((res) => {
         setAdminFeedPosts(res.data);
@@ -80,7 +80,7 @@ function PostsFeed() {
   const deletePostFeed = async (id) => {
     await axios
       .delete(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/feed-posts/${id}`
+        `http://localhost:5000/api/v1/feed-posts/${id}`
       )
       .then((res) => {
         console.log("Post feed deleted");
@@ -124,7 +124,7 @@ function PostsFeed() {
 
   useEffect(() => {
     fetch(
-      `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/feed-posts/${user?._id}?page=${pageNumber}`
+      `http://localhost:5000/api/v1/feed-posts/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, feedPosts }) => {
@@ -134,7 +134,7 @@ function PostsFeed() {
   }, [pageNumber]);
   useEffect(() => {
     fetch(
-      `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}&page=${adminPageNumber}`
+      `http://localhost:5000/api/v1/admin/feedposts?userId=${user?._id}&page=${adminPageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, feedPosts }) => {
@@ -213,14 +213,14 @@ function PostsFeed() {
           )}
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
             {/* Page header */}
-            <div className="flex flex-col md:flex-row justify-between items-center ">
+            <div className="flex flex-col md:flex-row justify-between  p-2 ">
               <div className="mb-4 sm:mb-0 flex flex-col">
                 <h1 className="text-2xl md:text-3xl mb-2 text-blue-500 font-bold" >
                   {enabled ? "Admin" : "User"} Feed Posts
                 </h1>
 
               </div>
-              <div className=" flex justify-center items-center flex-row space-x-3 ">
+              <div className=" flex  items-center flex-row space-x-3 ">
                 <div className="flex justify-center items-center ">
                   <input
                     type="text"
@@ -229,11 +229,12 @@ function PostsFeed() {
                     onChange={handleChange}
                     className="form-input focus:border-slate-300"
                   />
-                </div> <div className="flex justify-center mt-1 items-center"> {user?.role === "admin" ? (
-                  <SwitchButton enabled={enabled} setEnabled={setEnabled} />
-                ) : (
-                  <></>
-                )}
+                </div> <div
+                  className="flex justify-center mt-1 items-center"> {user?.role === "admin" ? (
+                    <SwitchButton enabled={enabled} setEnabled={setEnabled} />
+                  ) : (
+                    <></>
+                  )}
                 </div>
 
               </div>
@@ -275,7 +276,8 @@ function PostsFeed() {
                     </div>
                   </div>
                 )
-                : feedPosts?.length > 0 && (
+                :
+                feedPosts?.length > 0 && (
                   <div className="">
                     <div className="grid grid-cols-12 gap-6">
                       {feedPosts.filter((feedPost) => {

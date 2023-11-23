@@ -56,7 +56,7 @@ function BrandEngagementBuilder() {
 
   useEffect(() => {
     fetch(
-      `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+      `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
@@ -68,7 +68,7 @@ function BrandEngagementBuilder() {
   const getUserData = async () => {
     await axios
       .get(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         dispatch(setUserData(res?.data.user));
@@ -125,7 +125,7 @@ function BrandEngagementBuilder() {
   const handlePreview = async (e) => {
     setResult("");
     e.preventDefault();
-    const { brandName, brandTone, companySector, websiteUrl, timeZone } =
+    const { brandName, brandTone, companySector, websiteUrl, timeZone, targetAudience } =
       values;
     if (!brandTone) {
       dispatch(setMessage("Please provide the brand tone"));
@@ -140,11 +140,12 @@ function BrandEngagementBuilder() {
       setPreviewLoading(true);
       await axios
         .post(
-          "https://seashell-app-2-n2die.ondigitalocean.app/api/v1/generate-blog-post",
+          "http://localhost:5000/api/v1/generate-blog-post",
           {
-            tone: values.brandTone?.value,
-            brandName: values.brandName,
-            CompanySector: values.companySector,
+            tone: brandTone?.value,
+            brandName: brandName,
+            CompanySector: companySector,
+            targetAudience: targetAudience?.value
           }
         )
         .then((res) => {
@@ -176,7 +177,7 @@ function BrandEngagementBuilder() {
     } else {
       await axios
         .post(
-          `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/save-brand-engagement/${user?._id}`,
+          `http://localhost:5000/api/v1/save-brand-engagement/${user?._id}`,
           postData
         )
         .then((res) => {
@@ -185,14 +186,14 @@ function BrandEngagementBuilder() {
           setSaveLoading(false);
           // console.log(res.data);
           axios.get(
-            `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+            `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
           )
             .then((response) => response.json())
             .then(({ totalPages, brandEngagements }) => {
               setEngagements(brandEngagements);
               setNumberOfPages(totalPages);
             });
-
+          fetchEngagements()
           dispatch(clearMessage());
           // dispatch("")
         })
@@ -228,7 +229,7 @@ function BrandEngagementBuilder() {
 
   const fetchEngagements = async () => {
     await fetch(
-      `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+      `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
@@ -288,7 +289,7 @@ function BrandEngagementBuilder() {
     try {
       // Make a POST request to update the notificationMessage in the backend using Axios
       // Replace 'YOUR_UPDATE_NOTIFICATION_ENDPOINT' with your actual endpoint
-      await axios.put(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/update-notification-message/${user._id}`, {
+      await axios.put(`http://localhost:5000/api/v1/auth/update-notification-message/${user._id}`, {
         notificationMessage: 'none',
       }).then((res) => {
         fetchUserData()
@@ -301,7 +302,7 @@ function BrandEngagementBuilder() {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         dispatch(setUserData(res.data.user));
@@ -356,7 +357,7 @@ function BrandEngagementBuilder() {
   const [templates, setTemplates] = useState([])
   const getTemplates = async () => {
     try {
-      await axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
+      await axios.get(`http://localhost:5000/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
         setTemplates(res.data.templates)
       })
 
@@ -372,7 +373,7 @@ function BrandEngagementBuilder() {
   const [targetAudiences, setTargetAudiences] = useState([])
   const getTargetAudiences = async () => {
     try {
-      await axios.post(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/generate-ta-options`, {
+      await axios.post(`http://localhost:5000/api/v1/generate-ta-options`, {
         companySector: values.companySector
       }).then((res) => {
         setTargetAudiences(res.data.targetAudiences)

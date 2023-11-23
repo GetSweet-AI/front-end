@@ -33,11 +33,16 @@ function Assets() {
     });
 
     const handleSelectChange = (name, selectedOption) => {
+
         setValues((prevValues) => ({
             ...prevValues,
             [name]: selectedOption,
         }));
     };
+
+
+
+    const { message, activeBrandID } = useSelector((state) => state.message);
 
     //Get brand engagement by userId
     const [activeBrandId, setActiveBrandId] = useState(null)
@@ -47,22 +52,31 @@ function Assets() {
     const fetchEngagements = async () => {
         setIsLoading(true);
         try {
-            fetch(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements-np/${user?._id}`)
+            fetch(`http://localhost:5000/api/v1/brand-engagements-np/${user?._id}`)
                 .then((response) => response.json())
                 .then(({ brandEngagements }) => {
                     const brandEngagementsNewArray = brandEngagements.map(({ _id, BrandName }) => ({
                         label: BrandName,
                         value: _id,
                     }));
-                    setEngagementsData(brandEngagements.filter(
-                        (brandEngagement) => brandEngagement.attachedPicture.length > 0
-                    ))
+                    setEngagementsData(brandEngagements)
+                    // setEngagementsData(brandEngagements.filter(
+                    //     (brandEngagement) => brandEngagement.attachedPicture.length > 0
+                    // ))
 
-                    brandEngagementsNewArray[0] && handleSelectChange("brandEngagementId", brandEngagementsNewArray[0])
+                    // brandEngagementsNewArray[0] && handleSelectChange("brandEngagementId", brandEngagementsNewArray[0])
+                    if (activeBrandID) {
+                        handleSelectChange("brandEngagementId", brandEngagementsNewArray.find((item) => item.value === activeBrandID))
+                    } else if (brandEngagementsNewArray[0]) {
+                        handleSelectChange("brandEngagementId", brandEngagementsNewArray[0])
+                    }
+
                     setEngagements(brandEngagementsNewArray);
+
                     if (activeBrandId === null) {
                         setActiveBrandId(brandEngagements[0]?._id)
                     }
+
                     console.log("brandEngagements :" + JSON.stringify(brandEngagementsNewArray))
                 });
         } catch (error) {
@@ -85,8 +99,6 @@ function Assets() {
         }
     };
 
-
-
     const deleteImage = async (picture) => {
         console.log('imageUrl :' + picture)
 
@@ -97,7 +109,7 @@ function Assets() {
         }
         const be = activeBrandId
         try {
-            await axios.delete(`https://seashell-app-2-n2die.ondigitalocean.app/api/delete-image?brandEngagementID=${activeBrandId}&imageUrl=${picture}`, {
+            await axios.delete(`http://localhost:5000/api/delete-image?brandEngagementID=${activeBrandId}&imageUrl=${picture}`, {
                 imageUrl: picture
             })
 
@@ -165,34 +177,46 @@ function Assets() {
                                 />
                             </div>
                         )}
-                        <div className="w-full md:w-1/2 p-2">
-                            <label htmlFor="select3" className="block mb-1">
-                                Choose a Brand Engagement 🎈
-                            </label>
-                            <Select
-                                id="select3"
-                                className="w-full"
-                                placeholder="Brand Tone"
-                                name="brandEngagementId"
-                                value={values.brandEngagementId}
-                                onChange={(selectedOption) =>
-                                    handleSelectChange("brandEngagementId", selectedOption)
-                                }
-                                options={engagements}
-                            />
-                        </div>
 
-                        <UploadImage brandEngagementId={values.brandEngagementId?.value} fetchEngagements={fetchEngagements} />
+                        {engagementsData.length > 0 ?
+                            <>
+                                <div className="w-full md:w-1/2 p-2">
+                                    <label htmlFor="select3" className="block mb-1">
+                                        Choose a Brand Engagement 🎈
+                                    </label>
+                                    <Select
+                                        id="select3"
+                                        className="w-full"
+                                        placeholder="Brand Tone"
+                                        name="brandEngagementId"
+                                        value={values.brandEngagementId}
+                                        onChange={(selectedOption) =>
+                                            handleSelectChange("brandEngagementId", selectedOption)
+                                        }
+                                        options={engagements}
+                                    />
+                                </div>
 
-                        <div className="my-4 sm:mb-0  ">
-                            <h1 className="text-xl md:text-3xl text-gray-600 font-bold">
-                                Uploaded Images
-                            </h1>
+                                <UploadImage brandEngagementId={values.brandEngagementId?.value} fetchEngagements={fetchEngagements} />
 
-                        </div>
+                                <div className="my-4 sm:mb-0  ">
+                                    <h1 className="text-xl md:text-3xl text-gray-600 font-bold">
+                                        Uploaded Images
+                                    </h1>
+
+                                </div>
+                            </>
+                            :
+                            <p className="">
+                                You have to create a brand engagement to link it with pictures. <a href="/brand-engagement-builder" className="text-blue-600 underline">Add brand voice</a>
+                            </p>
+                        }
+
                         {/* <div className='grid grid-cols-1 content-center relative sm:grid-cols-2 md:grid-cols-6 gap-4 p-4'> */}
                         <div className='flex p-4 space-x-2'>
-                            {engagementsData.map((brandEngagement) => (
+                            {/* {
+                                engagementsData.length > 0 ? */}
+                            <>  {engagementsData.map((brandEngagement) => (
                                 <section key={brandEngagement._id}
                                     className={`shadow-xl text-md      rounded-xl             ${brandEngagement._id === activeBrandId ? 'bg-blue-400 text-white' : ''}`}>
                                     <div
@@ -207,26 +231,42 @@ function Assets() {
                                 </section>
 
                             ))}
+                            </>
+                            {/* :
+                                    <p className="">
+                                        You haven't yet saved any brand engagement. <a href="/brand-engagement-builder" className="text-blue-600 underline">Add brand voice</a>
+
+                                    </p>
+
+                            } */}
                         </div>
                         <div className=''>
                             {engagementsData.map((brandEngagement) => (
 
                                 brandEngagement._id === activeBrandId && (
                                     <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2  ">
-                                        {brandEngagement.attachedPicture.map((picture, index) => (
-                                            <div className="p-2">
-                                                <button onClick={() => deleteImage(picture)} className="flex text-end justify-end w-6   m-1">
-                                                    <p className="border-2 border-red-400 cursor-pointer w-full hover:bg-red-400  text-center px-[2px] rounded-full font-bold hover:text-white text-red-500  ">x</p>
-                                                </button>
-                                                <Link to={picture}>
-                                                    <img
-                                                        key={index}
-                                                        src={picture}
-                                                        alt={`Brand Engagement - ${brandEngagement.BrandName}`}
-                                                        className="h-48  w-[28rem] object-contain  hover:scale-105 rounded-xl"
-                                                    /></Link>
-                                            </div>
-                                        ))}
+
+                                        {brandEngagement.attachedPicture.length > 0 ?
+                                            <> {brandEngagement.attachedPicture.map((picture, index) => (
+                                                <div className="p-2">
+                                                    <button onClick={() => deleteImage(picture)} className="flex text-end justify-end w-6   m-1">
+                                                        <p className="border-2 border-red-400 cursor-pointer w-full hover:bg-red-400  text-center px-[2px] rounded-full font-bold hover:text-white text-red-500  ">x</p>
+                                                    </button>
+                                                    <Link to={picture}>
+                                                        <img
+                                                            key={index}
+                                                            src={picture}
+                                                            alt={`Brand Engagement - ${brandEngagement.BrandName}`}
+                                                            className="h-48  w-[28rem] object-contain  hover:scale-105 rounded-xl"
+                                                        /></Link>
+                                                </div>
+                                            ))}
+                                            </>
+                                            :
+                                            <p className="text-red-700 p-2">You haven't attached any image yet </p>
+                                        }
+
+
 
                                     </div>
                                 )
