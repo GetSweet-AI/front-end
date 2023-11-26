@@ -42,8 +42,6 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
       });
   };
 
-
-
   useEffect(() => {
     localStorage.setItem("sidebar-expanded", sidebarExpanded);
     if (sidebarExpanded) {
@@ -53,13 +51,31 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
     }
   }, [sidebarExpanded]);
 
-  // useEffect(() => {
-  //   sidebarOpen && !sidebarExpanded && setSidebarExpanded(true);
-  // }, [sidebarOpen]);
+
+  useEffect(() => {
+    sidebarOpen && !sidebarExpanded && setSidebarExpanded(true);
+  }, [sidebarOpen]);
+
 
   useEffect(() => {
     fetchUserData();
   }, []);
+
+  // close on click outside
+  useEffect(() => {
+    const clickHandler = ({ target }) => {
+      if (!sidebar.current || !trigger.current) return;
+      if (
+        !sidebarOpen ||
+        sidebar.current.contains(target) ||
+        trigger.current.contains(target)
+      )
+        return;
+      setSidebarOpen(false);
+    };
+    document.addEventListener("click", clickHandler);
+    return () => document.removeEventListener("click", clickHandler);
+  });
 
   return (
     <div>

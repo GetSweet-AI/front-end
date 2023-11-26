@@ -48,6 +48,7 @@ function BrandEngagementBuilder() {
   const [selectedOption, setSelectedOption] = useState('RunForEver');
 
   const [endDate, setEndDate] = useState(''); // Initialize endDate state
+  const [startDate, setStartDate] = useState(''); // Initialize endDate state
   const [selectedPostType, setSelectedPostType] = useState('TextImagePost');
 
 
@@ -88,6 +89,7 @@ function BrandEngagementBuilder() {
     targetAudience: null,
     postType: "",
     other: "",
+
   });
 
   const handleInputChange = (e) => {
@@ -118,6 +120,7 @@ function BrandEngagementBuilder() {
     WebSite: values.websiteUrl,
     BrandName: values.brandName,
     endDate: endDate,
+    startDate: startDate,
     lifeCycleStatus: selectedOption,
     PostType: selectedPostType
   };
@@ -272,20 +275,6 @@ function BrandEngagementBuilder() {
   console.log("user.notificationMessage : " + user.notificationMessage)
   const handleNotificationClose = async () => {
 
-    // if (user.notificationMessage === 'payment_succeeded') {
-    //   // Display a success toast message
-    //   toast.success("Payment succeeded");
-    //   // Reset the notificationMessage to 'none' in the frontend
-    // } else {
-    //   if (user.notificationMessage === 'payment_failed') {
-    //     // Display a success toast message
-
-    //     setTimeout(() => {
-    //       toast.success("Payment Failed!");
-    //     }, 3000);
-
-    //   }
-    // }
     try {
       // Make a POST request to update the notificationMessage in the backend using Axios
       // Replace 'YOUR_UPDATE_NOTIFICATION_ENDPOINT' with your actual endpoint
@@ -322,16 +311,6 @@ function BrandEngagementBuilder() {
     setIsOpen(true);
   }
 
-  // const realEstateValues = {
-  //   brandName: "Real Estate Brand",
-  //   websiteUrl: "https://realestatewebsite.com",
-  //   timeZone: { value: "UTC (Coordinated Universal Time)", label: "UTC (Coordinated Universal Time)" },
-  //   companySector: "A real estate company is a business that buys, sells, or manages properties, such as homes, commercial buildings",
-  //   brandTone: { value: "professional", label: "Professional" },
-  //   targetAudience: "Homebuyers",
-  //   postType: "News",
-  //   other: "Other information for Real Estate",
-  // };
 
 
   //Handle template button clicked
@@ -345,7 +324,9 @@ function BrandEngagementBuilder() {
     });
 
     const endDateValue = template.lifeCycleStatus === "HasEndDate" ? template.endDate : ""
+    const startDateValue = template.lifeCycleStatus === "HasEndDate" ? template.startDate : ""
     setEndDate(endDateValue)
+    setStartDate(startDateValue)
     setSelectedOption(template.lifeCycleStatus)
     template.lifeCycleStatus === "HasEndDate" ? setEnabled(true) : ""
 
@@ -394,6 +375,9 @@ function BrandEngagementBuilder() {
 
   const handleEndDateChange = (e) => {
     setEndDate(e.target.value);
+  };
+  const handleStartDateChange = (e) => {
+    setStartDate(e.target.value);
   };
 
 
@@ -691,22 +675,35 @@ function BrandEngagementBuilder() {
                             <SwitchButton enabled={enabled} setEnabled={setEnabled} />
 
                             <label className={`ml-4 ${selectedOption === 'HasEndDate' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
-                              <span className="ml-2 text-md  font-medium">Add end date</span>
+                              <span className="ml-2 text-md  font-medium">Set Date Range</span>
                             </label>
                           </div>
 
                           <div className="w-full my-2  p-2">
                             {selectedOption === 'HasEndDate' && (
-                              <div>
-                                <label className="block text-md  ">
-                                  End Date
-                                </label>
-                                <input
-                                  type="date"
-                                  className="mt-1 p-2 border border-gray-300 rounded w-full focus:ring-indigo-500 focus:border-indigo-500"
-                                  value={endDate} // Bind the input value to endDate state
-                                  onChange={handleEndDateChange} // Update the endDate state
-                                />
+                              <div className="flex md:flex-row flex-col md:space-x-2">
+                                <div className="md:w-1/2 w-full">
+                                  <label className="block text-md  ">
+                                    Start Date
+                                  </label>
+                                  <input
+                                    type="date"
+                                    className="mt-1 p-2 border border-gray-300 rounded w-full focus:ring-indigo-500 focus:border-indigo-500"
+                                    value={startDate} // Bind the input value to endDate state
+                                    onChange={handleStartDateChange} // Update the endDate state
+                                  />
+                                </div>
+                                <div className="md:w-1/2 w-full">
+                                  <label className="block text-md  ">
+                                    End Date
+                                  </label>
+                                  <input
+                                    type="date"
+                                    className="mt-1 p-2 border border-gray-300 rounded w-full focus:ring-indigo-500 focus:border-indigo-500"
+                                    value={endDate} // Bind the input value to endDate state
+                                    onChange={handleEndDateChange} // Update the endDate state
+                                  />
+                                </div>
                               </div>
                             )}
                           </div>

@@ -34,6 +34,7 @@ function Settings() {
     const [selectedOption, setSelectedOption] = useState('RunForEver');
 
     const [endDate, setEndDate] = useState(''); // Initialize endDate state
+    const [startDate, setStartDate] = useState(''); // Initialize endDate state
 
     const { message } = useSelector((state) => state.message);
     const { user } = useSelector((state) => state.auth);
@@ -55,13 +56,11 @@ function Settings() {
 
     const newTemplate = {
         Title: values?.Title,
-        Timezone: values.timeZone?.value,
         CompanySector: values.companySector,
         BrandTone: values.brandTone?.value,
         TargetAudience: values.targetAudience?.value,
-        WebSite: values.websiteUrl,
-        BrandName: values.brandName,
         endDate: endDate,
+        startDate: startDate,
         lifeCycleStatus: selectedOption
     };
 
@@ -91,7 +90,6 @@ function Settings() {
     const addNewTemplate = async (e) => {
         e.preventDefault();
 
-        const { brandName, brandTone, companySector, websiteUrl, timeZone } = values;
 
         setIsLoading(true)
         await axios
@@ -102,6 +100,9 @@ function Settings() {
             .then((res) => {
                 handleReset()
                 getTemplates()
+                setEndDate('')
+                setStartDate('')
+
             })
             .catch((err) => {
 
@@ -126,6 +127,7 @@ function Settings() {
             targetAudience: null,
         });
         dispatch(clearMessage());
+
     };
 
 
@@ -162,6 +164,9 @@ function Settings() {
 
     const handleEndDateChange = (e) => {
         setEndDate(e.target.value);
+    };
+    const handleStartDateChange = (e) => {
+        setStartDate(e.target.value);
     };
 
     const [enabled, setEnabled] = useState(false);
@@ -208,17 +213,18 @@ function Settings() {
 
 
                         <div>
+
                             <div className="max-w-8xl md:mx-auto px-4 md:px-6 ">
                                 <div
                                     className="pt-10 pb-10 md:translate-y-[20%]  lg:translate-y-0   lg:pb-16 
             flex justify-center items-center"
                                 >
 
-                                    <form className="rounded-xl bg-white py-4 px-4 border-2 border-b-white border-l-blue-500"
+                                    <form className="rounded-xl bg-white py-4 px-4 border-2 "
                                         onSubmit={addNewTemplate}>
                                         <div className="flex flex-wrap">
                                             <div className="w-full p-3">
-                                                <h2 className="font-medium bg-blue-100 md:w-1/2 p-2 rounded-md  text-md  md:text-2xl mb-2">
+                                                <h2 className="font-medium md:w-1/2 p-2 rounded-md  text-md  md:text-2xl mb-2">
                                                     Add New Template
                                                 </h2>
                                             </div>
@@ -235,7 +241,7 @@ function Settings() {
                                                     onChange={handleInputChange}
                                                 />
                                             </div>
-                                            <div className="w-full md:w-1/2 p-2">
+                                            {/* <div className="w-full md:w-1/2 p-2">
                                                 <label htmlFor="input1" className="block mb-1">
                                                     Brand Name
                                                 </label>
@@ -248,9 +254,9 @@ function Settings() {
                                                     value={values.brandName}
                                                     onChange={handleInputChange}
                                                 />
-                                            </div>
+                                            </div> */}
 
-                                            <div className="w-full md:w-1/2 p-2">
+                                            {/* <div className="w-full md:w-1/2 p-2">
                                                 <label htmlFor="input2" className="block mb-1">
                                                     Web or Social URL <span className="text-gray-500 text-sm">Optional</span>
                                                 </label>
@@ -263,7 +269,7 @@ function Settings() {
                                                     value={values.websiteUrl}
                                                     onChange={handleInputChange}
                                                 />
-                                            </div>
+                                            </div> */}
                                             <div className="w-full md:w-1/2 p-2">
                                                 <label htmlFor="select2" className="block mb-1">
                                                     Brand Description
@@ -274,7 +280,7 @@ function Settings() {
                                                     className="w-full border-gray-300 rounded p-2"
                                                     type="text"
                                                     rows={2}
-                                                    maxLength={90}
+                                                    maxLength={300}
                                                     name="companySector"
                                                     placeholder="Enter your brand description "
                                                     value={values.companySector}
@@ -283,7 +289,7 @@ function Settings() {
 
                                             </div>
 
-                                            <div className="w-full md:w-1/2 p-2">
+                                            {/* <div className="w-full md:w-1/2 p-2">
                                                 <label htmlFor="select1" className="block mb-1">
                                                     Time Zone
                                                 </label>
@@ -335,7 +341,7 @@ function Settings() {
                                                         },
                                                     ]}
                                                 />
-                                            </div>
+                                            </div> */}
                                             <div className="w-full md:w-1/2 p-2">
                                                 <label htmlFor="select3" className="block mb-1">
                                                     Brand Tone
@@ -361,11 +367,26 @@ function Settings() {
                                                     <SwitchButton enabled={enabled} setEnabled={setEnabled} />
 
                                                     <label className={`ml-4 ${selectedOption === 'HasEndDate' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
-                                                        <span className="ml-2 text-md  font-medium">Add end date</span>
+                                                        <span className="ml-2 text-md  font-medium">Add date range</span>
                                                     </label>
                                                 </div>
                                             </div>
 
+                                            <div className="w-full md:w-1/2 p-2">
+                                                {selectedOption === 'HasEndDate' && (
+                                                    <div>
+                                                        <label className="block text-md  ">
+                                                            Start Date
+                                                        </label>
+                                                        <input
+                                                            type="date"
+                                                            className="mt-1 p-2 border border-gray-300 rounded w-full focus:ring-indigo-500 focus:border-indigo-500"
+                                                            value={startDate} // Bind the input value to endDate state
+                                                            onChange={handleStartDateChange} // Update the endDate state
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
                                             <div className="w-full md:w-1/2 p-2">
                                                 {selectedOption === 'HasEndDate' && (
                                                     <div>

@@ -188,8 +188,6 @@ function BrandEngagementDetails() {
         }
     };
 
-
-
     useEffect(() => {
         getClientConnectData()
     }, [])
