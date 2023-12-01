@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import StepOne from './StepOne';
+import StepTwo from './StepTwo';
+import StepThree from './StepThree';
 
 export default function Onboarding({ isOpen, closeModal, disableFirstLogin }) {
     const [currentPage, setCurrentPage] = useState(1);
@@ -45,11 +48,11 @@ export default function Onboarding({ isOpen, closeModal, disableFirstLogin }) {
     const renderContent = () => {
         switch (currentPage) {
             case 1:
-                return <>Form 1</>;
+                return <StepOne />;
             case 2:
-                return <>Form 2 </>;
+                return <StepTwo />;
             case 3:
-                return <>Form 3 </>;
+                return <StepThree />;
             default:
                 return null;
         }
@@ -66,12 +69,12 @@ export default function Onboarding({ isOpen, closeModal, disableFirstLogin }) {
                 <div className="fixed inset-0 overflow-y-auto">
                     <div className="flex min-h-full items-center justify-center p-4 text-center">
                         <div className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                            <Dialog.Title
+                            {/* <Dialog.Title
                                 as="h3"
                                 className="text-lg font-medium leading-6 text-gray-900"
                             >
                                 Onboarding
-                            </Dialog.Title>
+                            </Dialog.Title> */}
                             <div className="mt-3">
                                 {renderContent()}
                             </div>

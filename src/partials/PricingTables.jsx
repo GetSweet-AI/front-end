@@ -26,7 +26,7 @@ function PricingTables({ planInfos }) {
 
   const handleClick = async (plan) => {
     setIsLoading(true)
-    const result = await axios.post("http://localhost:5000/api/v1/checkout",
+    const result = await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/checkout",
       {
         name: user?.fullName,
         phone: '123456789',
@@ -35,7 +35,7 @@ function PricingTables({ planInfos }) {
         plan: plan
       }
     )
-    //  await fetch.post(`http://localhost:5000/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`, {
+    //  await fetch.post(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/checkout/sk_test_51MbAZNKrjQpaXbt11BqblQtCpraeA1nV1nmEX9rIaZdBpJQlIwrjK2aijRGVmo8WH7H5unbbUL7jRjrRbVagoswv00FlFbimKp`, {
     //       payload,
     //     });
     setIsLoading(false)
@@ -51,7 +51,7 @@ function PricingTables({ planInfos }) {
   // const navigate = useNavigate
   // Check if the user has already a subscription
   const getHasSubscription = async () => {
-    await axios.get(`http://localhost:5000/api/v1/has-subscription/${user?.customerId}`).then((res) => {
+    await axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/has-subscription/${user?.customerId}`).then((res) => {
       dispatch(setHasSubscription(res.data?.hasSubscription))
     })
   }
@@ -60,9 +60,9 @@ function PricingTables({ planInfos }) {
   const [cancelMessage, setCancelMessage] = useState(null)
 
   const getSubscriptionStatus = async () => {
-    await axios.get(`http://localhost:5000/api/v1/subscriptions/customer/${user?.customerId}`)
+    await axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/subscriptions/customer/${user?.customerId}`)
       .then((res) => {
-        axios.get(`http://localhost:5000/api/v1/${res.data?.subscriptionIds[0]}/status`)
+        axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/${res.data?.subscriptionIds[0]}/status`)
           .then((response) => {
             setSubscriptionStatus(response.data?.status)
           })
@@ -70,9 +70,9 @@ function PricingTables({ planInfos }) {
   }
 
   const cancelSubscription = async () => {
-    await axios.get(`http://localhost:5000/api/v1/subscriptions/customer/${user?.customerId}`)
+    await axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/subscriptions/customer/${user?.customerId}`)
       .then((res) => {
-        axios.post(`http://localhost:5000/api/v1/cancel-subscription`, {
+        axios.post(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/cancel-subscription`, {
           subscriptionId: res.data?.subscriptionIds[0]
         })
           .then((response) => {
@@ -153,13 +153,15 @@ function PricingTables({ planInfos }) {
 
           {/* Pricing tables */}
           {(user?.Plan === 'none' || (!hasSubscription && !isPlansLoading))
-            && <div className="max-w-xs mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-4 items-start sm:max-w-none md:max-w-2xl lg:max-w-none">
+            && <div className="max-w-xs mx-auto grid gap-6 sm:grid-cols-2
+             lg:grid-cols-4 items-start sm:max-w-none md:max-w-2xl
+              lg:max-w-none">
 
               {/* Pricing table 1 */}
               <div className="flex flex-col h-full p-6 bg-gray-800 shadow border-2 border-[#3b82f6]" data-aos="fade-down">
                 <div className="grow mb-4 pb-4">
                   <div className="flex justify-between items-center mb-1">
-                    <div className="text-xl font-bold font-red-hat-display"></div>
+                    <div className="text-xl font-bold text-gray-300 ">{(planInfos.find(plan => plan.id === 'price_1O729YEDPwNjcL6iScRkv2Iy'))?.productName}</div>
                     <div className="inline-flex px-3 py-1 text-xs font-medium text-white  bg-[#3b82f6]  rounded-full"></div>
                   </div>
                   <div className="font-red-hat-display inline-flex items-baseline mb-b mt-6">
@@ -170,7 +172,8 @@ function PricingTables({ planInfos }) {
                     </span>
                     <span className="font-medium text-gray-500 "> / month</span>
                   </div>
-                  <div className="text-gray-300 ">- Generate 5 posts.</div>
+                  <div className="text-gray-300 my-2">✔ 5 Generated posts a month.</div>
+                  <div className="text-gray-300 ">✔ 5 Planned post scheduling.</div>
                 </div>
                 <div onClick={() => handleClick("Starter Plan")} className="mt-24">
                   <a className="btn-sm text-white bg-[#3b82f6] hover:bg-[#145aca] w-full" href="#0">Go Premium</a>
@@ -192,7 +195,9 @@ function PricingTables({ planInfos }) {
               <div className="flex flex-col h-full p-6 bg-gray-800 shadow border-2 border-[#3b82f6]" data-aos="fade-down">
                 <div className="grow mb-4 pb-4">
                   <div className="flex justify-between items-center mb-1">
-                    <div className="text-xl font-bold font-red-hat-display"></div>
+                    <div className="text-xl text-gray-300 font-bold font-red-hat-display">
+                      {(planInfos.find(plan => plan.id === 'price_1MlQ9oEDPwNjcL6iRrBxLjD8'))?.productName}
+                    </div>
                     <div className="inline-flex px-3 py-1 text-xs font-medium text-white  bg-[#3b82f6]  rounded-full">-5%</div>
                   </div>
                   <div className="font-red-hat-display inline-flex items-baseline mb-2">
@@ -200,10 +205,12 @@ function PricingTables({ planInfos }) {
                     <span className="h3 text-white">{(planInfos.find(plan => plan.id === 'price_1MlQ9oEDPwNjcL6iRrBxLjD8'))?.price}</span>
                     <span className="font-medium text-gray-500 "> / month</span>
                   </div>
-                  <div className="text-gray-300 ">- Generate 10 posts.</div>
+                  <div className="text-gray-300 mt-2">✔ 10 generated posts a month.</div>
+                  <div className="text-gray-300 my-2">✔ Planned post scheduling.</div>
+                  <div className="text-gray-300 ">✔ Access to premium templates.</div>
                 </div>
                 <div onClick={() => handleClick("Growth")} className="mt-24">
-                  <a className="btn-sm text-white bg-[#3b82f6] hover:bg-[#145aca] w-full" href="#0">Go Premium</a>
+                  <a className="btn-sm text-white bg-[#3b82f6] hover:bg-[#145aca] w-full" href="#0">Go Standart</a>
                 </div>
                 {isLoading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"> <Puff
                   height="100"
@@ -222,7 +229,9 @@ function PricingTables({ planInfos }) {
               <div className="flex flex-col h-full p-6 bg-gray-800 shadow border-2 border-[#3b82f6]" data-aos="fade-down">
                 <div className="grow mb-4 pb-4">
                   <div className="flex justify-between items-center mb-1">
-                    <div className="text-xl font-bold font-red-hat-display"></div>
+                    <div className="text-xl text-gray-300 font-bold font-red-hat-display">
+                      {(planInfos.find(plan => plan.id === 'price_1MlR1jEDPwNjcL6i4ZgxVOGg'))?.productName}
+                    </div>
                     <div className="inline-flex px-3 py-1 text-xs font-medium text-white  bg-[#3b82f6]  rounded-full">-10%</div>
                   </div>
                   <div className="font-red-hat-display inline-flex items-baseline mb-2">
@@ -230,7 +239,10 @@ function PricingTables({ planInfos }) {
                     <span className="h3 text-white">{(planInfos.find(plan => plan.id === 'price_1MlR1jEDPwNjcL6i4ZgxVOGg'))?.price}</span>
                     <span className="font-medium text-gray-500 "> / month</span>
                   </div>
-                  <div className="text-gray-300 ">- Generate 30 posts.</div>
+                  <div className="text-gray-300 mt-2">✔ 30 generated posts a month.</div>
+                  <div className="text-gray-300 my-2">✔ Planned post scheduling.</div>
+                  <div className="text-gray-300 ">✔ Access to premium templates.</div>
+
                 </div>
                 <div onClick={() => handleClick("Business")} className="mt-24">
                   <a className="btn-sm text-white bg-[#3b82f6] hover:bg-[#145aca] w-full" href="#0">Go Premium</a>
@@ -249,8 +261,6 @@ function PricingTables({ planInfos }) {
                 </div>}
               </div>
 
-
-
               {/* Pricing features */}
               <div className="sm:order-first">
                 <div className="text-right hidden sm:block">
@@ -264,30 +274,32 @@ function PricingTables({ planInfos }) {
                     <svg className="w-3 h-3 fill-current text-teal-500 mr-3 shrink-0" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
                       <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
                     </svg>
-                    <span>Generate brand engagement</span>
+                    <span>Guaranteed brand engagement growth</span>
                   </li>
                   <li className="flex items-center mb-2">
                     <svg className="w-3 h-3 fill-current text-teal-500 mr-3 shrink-0" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
                       <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
                     </svg>
-                    <span>Save brand engagement</span>
+                    <span>Post generation</span>
                   </li>
                   <li className="flex items-center mb-2">
                     <svg className="w-3 h-3 fill-current text-teal-500 mr-3 shrink-0" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
                       <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
                     </svg>
-                    <span>Generate/download video</span>
+                    <span>Post archiving</span>
                   </li>
                   <li className="flex items-center mb-2">
                     <svg className="w-3 h-3 fill-current text-teal-500 mr-3 shrink-0" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
                       <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
                     </svg>
-                    <span>Copy Text</span>
+                    <span>Ability to copy/paste from generated posts</span>
                   </li>
 
 
                 </ul>
               </div>
+
+
               {/* Cancel plan */}
 
 

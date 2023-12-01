@@ -50,7 +50,7 @@ function PostsFeed() {
     setIsUserDataLoading(true);
     await axios
       .get(
-        `http://localhost:5000/api/v1/feed-posts/${user?._id}`
+        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/feed-posts/${user?._id}`
       )
       .then((res) => {
         setFeedPosts(res.data?.feedPosts);
@@ -66,7 +66,7 @@ function PostsFeed() {
 
     await axios
       .get(
-        `http://localhost:5000/api/v1/admin/feedposts?userId=${user?._id}`
+        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}`
       )
       .then((res) => {
         setAdminFeedPosts(res.data);
@@ -80,7 +80,7 @@ function PostsFeed() {
   const deletePostFeed = async (id) => {
     await axios
       .delete(
-        `http://localhost:5000/api/v1/feed-posts/${id}`
+        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/feed-posts/${id}`
       )
       .then((res) => {
         console.log("Post feed deleted");
@@ -124,7 +124,7 @@ function PostsFeed() {
 
   useEffect(() => {
     fetch(
-      `http://localhost:5000/api/v1/feed-posts/${user?._id}?page=${pageNumber}`
+      `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/feed-posts/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, feedPosts }) => {
@@ -134,7 +134,7 @@ function PostsFeed() {
   }, [pageNumber]);
   useEffect(() => {
     fetch(
-      `http://localhost:5000/api/v1/admin/feedposts?userId=${user?._id}&page=${adminPageNumber}`
+      `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}&page=${adminPageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, feedPosts }) => {
@@ -163,7 +163,6 @@ function PostsFeed() {
   const handleChange = (e) => {
     setSearch(e.target.value)
   };
-
 
 
   return (
@@ -318,18 +317,7 @@ function PostsFeed() {
                       Previous
                     </button>
 
-                    {/* {AdminPages.map((pageIndex) => (
-                      <button
-                        key={pageIndex}
-                        className={`${adminPageNumber === pageIndex
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-300 hover:bg-gray-400 text-gray-800"
-                          } px-3 py-1 rounded-lg`}
-                        onClick={() => setAdminPageNumber(pageIndex)}
-                      >
-                        {pageIndex + 1}
-                      </button>
-                    ))} */}
+
                     <select
                       value={adminPageNumber}
                       onChange={(e) => setAdminPageNumber(parseInt(e.target.value))}
@@ -360,7 +348,7 @@ function PostsFeed() {
                 <div className="mt-8">
                   <div class="flex items-center md:mt-4 py-2 md:overflow-hidden overflow-x-scroll  justify-center space-x-2">
 
-                    {pages.length === 0 && <div> No recent posts on your feed. <a className="text-[#6366F1]" href="/brand-engagement-builder">Time for a new one?</a>
+                    {pages.length === 0 && <div> Hmmm… it seems as though you do not have any posts generated right now.  <a className="text-[#6366F1]" href="/brand-engagement-builder">Let us fix that!.</a>
                     </div>}
                     {pages.length !== 0 && <button
                       className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
@@ -369,18 +357,6 @@ function PostsFeed() {
                       Previous
                     </button>}
 
-                    {/* {pages.map((pageIndex) => (
-                      <button
-                        key={pageIndex}
-                        className={`${pageNumber === pageIndex
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-300 hover:bg-gray-400 text-gray-800"
-                          } px-3 py-1 rounded-lg`}
-                        onClick={() => setPageNumber(pageIndex)}
-                      >
-                        {pageIndex + 1}
-                      </button>
-                    ))} */}
                     <select
                       value={pageNumber}
                       onChange={(e) => setPageNumber(parseInt(e.target.value))}

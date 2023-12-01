@@ -209,7 +209,9 @@ export default function Home() {
             {
               isLoggedIn && <a
                 href="/brand-engagement-builder"
-                className="text-sm  font-semibold leading-6 text-gray-900"
+                className="text-sm  font-semibold leading-6
+                border-2 border-gray-400 p-2 rounded-xl
+                text-gray-900 hover:bg-pink-600 hover:text-white"
 
               >
                 Get Started
@@ -279,15 +281,15 @@ export default function Home() {
           </div>
           <div className="py-8 sm:py-16">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
-              <div className="mx-auto max-w-2xl text-center">
+              <div className="mx-auto max-w-3xl text-center">
                 <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
                   100% Automate your{" "}
                   <span className="text-pink-600">social media</span> with AI
+
+                  {/* Fully automate your business’s <span className="text-pink-600"> social media posts!</span> */}
                 </h1>
                 <p className="mt-4 text-md leading-8 text-gray-600">
-                  Replace ChatGPT and other tools you use for social media with
-                  GetSweet.AI to 100% automate your content creation and
-                  posting.
+                  Ditch ChatGPT and all the other tools your business might use and get on board with Sweet.AI; the revolutionary social media that will fully automate your posts seamlessly!
                 </p>
                 <div className="mt-6 flex items-center justify-center gap-x-6">
                   <Link to="/signup"
