@@ -47,7 +47,7 @@ function TheProfile() {
   const fetchUserData = async () => {
     await axios
       .get(
-        `http://localhost:5000/api/v1/auth/users/${user?._id}`
+        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         setUser(res.data);
@@ -78,12 +78,12 @@ function TheProfile() {
 
         await axios
           .put(
-            `http://localhost:5000/api/v1/auth/update/${user?._id}`,
+            `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
             { email: currentUser?.email }
           )
           .then((res) => {
             axios.post(
-              "http://localhost:5000/api/v1/auth/reset-password",
+              "https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/reset-password",
               {
                 email: res?.data.user?.email,
                 newPassword: values.password,
@@ -95,7 +95,7 @@ function TheProfile() {
 
       } else {
         await axios.put(
-          `http://localhost:5000/api/v1/auth/update/${user?._id}`,
+          `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
           currentUser
         );
       }
@@ -130,7 +130,7 @@ function TheProfile() {
     try {
 
       await axios.put(
-        `http://localhost:5000/api/v1/auth/update-general-info/${user?._id}`,
+        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/update-general-info/${user?._id}`,
         currentUser
       );
       fetchUserData()
@@ -158,7 +158,7 @@ function TheProfile() {
 
   const deleteUser = async () => {
     await axios.delete(
-      `http://localhost:5000/api/v1/auth/users/${user?._id}`, {
+      `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${user?._id}`, {
       email: user?.email
     }
     )
@@ -376,6 +376,7 @@ function TheProfile() {
                         </div>
                       </div>
                     </form>
+
 
                     {/* Update AUth Infos form */}
                     <div> <form
