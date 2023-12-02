@@ -232,7 +232,7 @@ function TheProfile() {
                 </h1>
               </div>
             </div>
-            <div className='flex flex-col justify-center'>
+            {/* <div className='flex flex-col justify-center'>
               <div className='flex md:flex-row flex-col md:space-x-3'>
                 <div onClick={() => {
                   setEditGeneralInfo(true);
@@ -251,7 +251,7 @@ function TheProfile() {
                   Edit Auth Info
                 </button>
               </div>
-            </div>
+            </div> */}
 
 
             <div>
@@ -261,10 +261,12 @@ function TheProfile() {
             flex justify-center items-center"
                 >
 
-                  <div className="bg-white bg-opacity-10 px-2 shadow-2xl py-5 opacity-90 md:w-[70%] lg:w-[45%] w-full rounded-xl">
+                  <div className="bg-white bg-opacity-10 px-2 
+                  shadow-md py-5 opacity-90 
+                    rounded-xl  grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
 
                     {/* Update General Infos form */}
-                    {!editGeneralInfo && <form
+                    <form
                       onSubmit={onSubmit}
                       className="max-w-sm mx-auto md:mt-8 "
                     >
@@ -373,10 +375,10 @@ function TheProfile() {
                           {/* </Link> */}
                         </div>
                       </div>
-                    </form>}
+                    </form>
 
                     {/* Update AUth Infos form */}
-                    {editGeneralInfo && <form
+                    <div> <form
                       onSubmit={onSubmitTwo}
                       className="max-w-sm mx-auto md:mt-8 "
                     >
@@ -452,15 +454,16 @@ function TheProfile() {
                           {/* </Link> */}
                         </div>
                       </div>
-                    </form>}
+                    </form>
 
-                    <div className="max-w-sm mx-auto">
-                      <button
-                        onClick={openModal}
-                        className="font-bold w-full text-white mt-3 bg-[#ef3717] py-3"
-                      >
-                        Delete my account
-                      </button>
+                      <div className="max-w-sm mx-auto">
+                        <button
+                          onClick={openModal}
+                          className="font-bold w-full text-white mt-3 bg-[#ef3717] py-3"
+                        >
+                          Delete my account
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

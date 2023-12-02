@@ -72,7 +72,7 @@ function Settings() {
     //     // alert(JSON.stringify(postData))
     //     try {
 
-    //         await axios.post(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/add-template?userId=${user?._id}`,
+    //         await axios.post(`http://localhost:5000/api/v1/admin/add-template?userId=${user?._id}`,
     //             newTemplate
     //         )
     //     } catch (error) {
@@ -94,7 +94,7 @@ function Settings() {
         setIsLoading(true)
         await axios
             .post(
-                `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/add-template/${user?._id}`,
+                `http://localhost:5000/api/v1/admin/add-template/${user?._id}`,
                 newTemplate
             )
             .then((res) => {
@@ -135,7 +135,7 @@ function Settings() {
     const [templates, setTemplates] = useState([])
     const getTemplates = async () => {
         try {
-            await axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
+            await axios.get(`http://localhost:5000/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
                 setTemplates(res.data.templates)
             })
 
@@ -151,7 +151,7 @@ function Settings() {
 
     const deleteTemplate = async (id) => {
         try {
-            await axios.delete(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/templates/${user._id}?temId=${id}`).then((res) => {
+            await axios.delete(`http://localhost:5000/api/v1/admin/templates/${user._id}?temId=${id}`).then((res) => {
                 getTemplates()
             })
 
