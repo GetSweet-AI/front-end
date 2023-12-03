@@ -73,7 +73,7 @@ function BrandEngagementDetails() {
         setIsLoading(true)
         await axios
             .get(
-                `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagement/${id}`
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagement/${id}`
             )
             .then((res) => {
                 setEngagement(res.data?.brandEngagement);
@@ -88,7 +88,7 @@ function BrandEngagementDetails() {
         // setIsLoading(true)
         await axios
             .get(
-                `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/feed-posts-engagements/${id}`
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${id}`
             )
             .then((res) => {
                 setFeedPosts(res.data?.feedPosts);
@@ -122,7 +122,7 @@ function BrandEngagementDetails() {
     const deletePostFeed = async (id) => {
         await axios
             .delete(
-                `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/feed-posts/${id}`
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${id}`
             )
             .then((res) => {
                 console.log("Post feed deleted")
@@ -138,7 +138,7 @@ function BrandEngagementDetails() {
         setIsLoadingCC(true)
         try {
             const response = await axios.get(
-                `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/client-connect/${id}`
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`
             );
             console.log("Client connect :" + response.data); // Success message or response data
             // Perform any additional actions after successful deletion
@@ -156,7 +156,7 @@ function BrandEngagementDetails() {
         // setIsLoadingCC(true)
         try {
             // Make a request to the endpoint to get the ConnectLinkURL
-            const response = await axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/check-connect-link-exists/${id}`);
+            const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/check-connect-link-exists/${id}`);
 
             // Extract the hasConnectLinkURL from the response
             setHasConnectUrl(response.data?.hasConnectLinkURL)
@@ -177,7 +177,7 @@ function BrandEngagementDetails() {
     const getClientConnectData = async () => {
         try {
             const response = await axios.get(
-                `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/client-connect/${id}`
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`
             );
             console.log("Client connect data :" + JSON.stringify(response.data)); // Success message or response data
             // Perform any additional actions after successful deletion

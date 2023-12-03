@@ -38,7 +38,7 @@ function PostCard({
     setEditing(true);
     //Update caption on the backend + setSaving(true)
     try {
-      const response = await axios.put(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/feed-posts/${id}`, {
+      const response = await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${id}`, {
         NewCaption: caption
       });
     } catch (error) {

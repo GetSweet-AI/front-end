@@ -26,7 +26,7 @@ export default function UploadImage({ brandEngagementId, fetchEngagements }) {
     async function uploadSingleImage(base64) {
         setLoading(true);
         await axios
-            .post("https://seashell-app-2-n2die.ondigitalocean.app/api/uploadImage", { image: base64, brandEId: brandEngagementId })
+            .post("https://seal-app-dk3kg.ondigitalocean.app/api/uploadImage", { image: base64, brandEId: brandEngagementId })
             .then((res) => {
                 setUrl(res.data);
                 alert("Image uploaded Succesfully");
@@ -42,7 +42,7 @@ export default function UploadImage({ brandEngagementId, fetchEngagements }) {
         setLoading(true);
         const uploadPromises = Array.from(files).map(async (file) => {
             const base64 = await convertBase64(file);
-            return axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/uploadImage", {
+            return axios.post("https://seal-app-dk3kg.ondigitalocean.app/api/uploadImage", {
                 image: base64,
                 brandEId: brandEngagementId,
             });

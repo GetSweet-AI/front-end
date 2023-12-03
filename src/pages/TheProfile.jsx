@@ -47,7 +47,7 @@ function TheProfile() {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         setUser(res.data);
@@ -78,12 +78,12 @@ function TheProfile() {
 
         await axios
           .put(
-            `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
+            `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
             { email: currentUser?.email }
           )
           .then((res) => {
             axios.post(
-              "https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/reset-password",
+              "https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/reset-password",
               {
                 email: res?.data.user?.email,
                 newPassword: values.password,
@@ -95,7 +95,7 @@ function TheProfile() {
 
       } else {
         await axios.put(
-          `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
+          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
           currentUser
         );
       }
@@ -130,7 +130,7 @@ function TheProfile() {
     try {
 
       await axios.put(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/update-general-info/${user?._id}`,
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/update-general-info/${user?._id}`,
         currentUser
       );
       fetchUserData()
@@ -158,7 +158,7 @@ function TheProfile() {
 
   const deleteUser = async () => {
     await axios.delete(
-      `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${user?._id}`, {
+      `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`, {
       email: user?.email
     }
     )
@@ -228,7 +228,7 @@ function TheProfile() {
               <div className="mb-4 sm:mb-0">
                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
                   {" "}
-                  Update User Information
+                  Edit personal info
                 </h1>
               </div>
             </div>
@@ -262,7 +262,7 @@ function TheProfile() {
                 >
 
                   <div className="bg-white bg-opacity-10 px-2 
-                  shadow-md py-5 opacity-90 
+                  shadow-md py-5 opacity-90 md:space-y-0 space-x-3
                     rounded-xl  grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
 
                     {/* Update General Infos form */}

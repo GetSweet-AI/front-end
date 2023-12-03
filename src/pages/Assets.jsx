@@ -52,7 +52,7 @@ function Assets() {
     const fetchEngagements = async () => {
         setIsLoading(true);
         try {
-            fetch(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/brand-engagements-np/${user?._id}`)
+            fetch(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements-np/${user?._id}`)
                 .then((response) => response.json())
                 .then(({ brandEngagements }) => {
                     const brandEngagementsNewArray = brandEngagements.map(({ _id, BrandName }) => ({
@@ -109,7 +109,7 @@ function Assets() {
         }
         const be = activeBrandId
         try {
-            await axios.delete(`https://seashell-app-2-n2die.ondigitalocean.app/api/delete-image?brandEngagementID=${activeBrandId}&imageUrl=${picture}`, {
+            await axios.delete(`https://seal-app-dk3kg.ondigitalocean.app/api/delete-image?brandEngagementID=${activeBrandId}&imageUrl=${picture}`, {
                 imageUrl: picture
             })
 

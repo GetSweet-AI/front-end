@@ -37,7 +37,7 @@ function Archive() {
   const fetchEngagements = async () => {
     setIsLoading(true);
     try {
-      fetch(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
+      fetch(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
         .then((response) => response.json())
         .then(({ totalPages, archive }) => {
           setEngagements(archive);
@@ -52,7 +52,7 @@ function Archive() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
+    fetch(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
       .then((response) => response.json())
       .then(({ totalPages, archive }) => {
         setEngagements(archive);
@@ -88,7 +88,7 @@ function Archive() {
   const getTemplates = async () => {
     setLoadingTemplates(true)
     try {
-      await axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/admin/templates-archive?userId=${user?._id}`).then((res) => {
+      await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/templates-archive?userId=${user?._id}`).then((res) => {
         setTemplates(res.data.templateArchive)
       })
 
