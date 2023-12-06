@@ -55,6 +55,12 @@ function PostCard({
     setCaption(Caption)
   };
 
+
+  const isJpeg = MediaUrl.endsWith('.jpeg');
+  const isMp4 = MediaUrl.endsWith('.mp4');
+
+  // const navigate = useNavigate
+
   return (
     <div className="col-span-full sm:col-span-6 xl:col-span-4
      bg-white shadow-md rounded-md border
@@ -125,7 +131,12 @@ function PostCard({
           </div>
         </div>
         <div className="my-3 h-[60%] relative">
-          <ReactPlayer controls={true} width="100%" url={MediaUrl} />
+
+          {isMp4 && <ReactPlayer controls={true} width="100%" url={MediaUrl} />}
+          {isJpeg &&
+
+            <img src={MediaUrl} className="h-[48vh]  w-full object-contain" />
+          }
         </div>
 
         <div className="my-2">{/* Engagement card link */}</div>
@@ -138,12 +149,24 @@ function PostCard({
               {/* Not Active */}
               <FontAwesomeIcon className="px-2" icon={faTrash} />
             </div>
-            <div
-              onClick={() => DownloadButton(MediaUrl)}
-              className="text-sm text-white rounded bg-[#36d74b] p-2 cursor-pointer"
-            >
-              <FontAwesomeIcon className=" px-2" icon={faDownload} />
-            </div>
+            {isMp4 ?
+              <div
+                onClick={() => DownloadButton(MediaUrl)}
+                className="text-sm text-white rounded bg-[#36d74b] p-2 cursor-pointer"
+              >
+                <FontAwesomeIcon className=" px-2" icon={faDownload} />
+              </div>
+              :
+
+              <Link to={MediaUrl}>
+                <div
+                  // onClick={() => DownloadButton(MediaUrl)}
+                  className="text-sm text-white rounded bg-[#36d74b] p-2 cursor-pointer"
+                >
+                  <FontAwesomeIcon className=" px-2" icon={faDownload} />
+                </div>
+              </Link>
+            }
           </div>
         </footer>
       </div>

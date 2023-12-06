@@ -213,12 +213,12 @@ function Assets() {
                         }
 
                         {/* <div className='grid grid-cols-1 content-center relative sm:grid-cols-2 md:grid-cols-6 gap-4 p-4'> */}
-                        <div className='flex p-4 space-x-2'>
+                        <div className='flex flex-wrap p-4 space-x-2'>
                             {/* {
                                 engagementsData.length > 0 ? */}
                             <>  {engagementsData.map((brandEngagement) => (
                                 <section key={brandEngagement._id}
-                                    className={`shadow-xl text-md      rounded-xl             ${brandEngagement._id === activeBrandId ? 'bg-blue-400 text-white' : ''}`}>
+                                    className={`shadow-xl text-md   rounded-xl             ${brandEngagement._id === activeBrandId ? 'bg-blue-400 text-white' : ''}`}>
                                     <div
                                         onClick={() => setActiveBrandId(brandEngagement._id)}
                                         className={`p-2 text-center cursor-pointer 
