@@ -22,9 +22,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <Router>
       <Provider store={store}>
         {/* <Theme> */}
-        <ChakraProvider>
-          <App />
-        </ChakraProvider>
+        <App />
         {/* </Theme> */}
       </Provider>
     </Router>
