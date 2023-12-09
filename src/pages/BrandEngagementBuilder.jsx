@@ -26,6 +26,7 @@ import PaymentSuccessMessage from "../partials/PaymentSuccessMessage ";
 import Onboarding from "../components/OnBoarding/Onboarding";
 import SwitchButton from "../partials/SwitchButton";
 import RadioButton from "../components/RadioButton";
+import { Text } from "@chakra-ui/react";
 
 function BrandEngagementBuilder() {
   const dispatch = useDispatch();
@@ -52,7 +53,7 @@ function BrandEngagementBuilder() {
   const [selectedPostType, setSelectedPostType] = useState('TextImagePost');
 
 
-  console.log("User :" + JSON.stringify(user))
+  // console.log("User :" + JSON.stringify(user))
 
 
   useEffect(() => {
@@ -94,7 +95,7 @@ function BrandEngagementBuilder() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(value.length)
+    // console.log(value.length)
     if (name === "companySector" && value.length > 50) {
       getTargetAudiences()
     }
@@ -124,6 +125,8 @@ function BrandEngagementBuilder() {
     lifeCycleStatus: selectedOption,
     PostType: selectedPostType
   };
+
+  console.log('selectedPostType :' + selectedPostType)
 
   const handlePreview = async (e) => {
     setResult("");
@@ -202,7 +205,7 @@ function BrandEngagementBuilder() {
         })
         .catch((error) => {
           setSaveLoading(false);
-          console.log("err :" + error.message);
+          // console.log("err :" + error.message);
           if (error.message === "Request failed with status code 400") {
             dispatch(setMessage('BrandName must be unique'))
           } else {
@@ -272,7 +275,7 @@ function BrandEngagementBuilder() {
   };
 
   //Handle notification on payment 
-  console.log("user.notificationMessage : " + user.notificationMessage)
+  // console.log("user.notificationMessage : " + user.notificationMessage)
   const handleNotificationClose = async () => {
 
     try {
@@ -284,7 +287,7 @@ function BrandEngagementBuilder() {
         fetchUserData()
       })
     } catch (error) {
-      console.error('Error updating notificationMessage:', error);
+      // console.error('Error updating notificationMessage:', error);
     }
   }
 
@@ -458,6 +461,8 @@ function BrandEngagementBuilder() {
                   Add brand voice
                 </button>
               </div>
+
+
 
               <div className="my-4 sm:mb-8 flex flex-col">  {/* Increased the bottom margin to mb-8 */}
                 {user.notificationMessage !== 'none' &&
@@ -831,7 +836,8 @@ function BrandEngagementBuilder() {
 
             {engagements?.length > 0 && (
               <div className="">
-                <h5 className="md:text-2xl text-xl text-blue-500  mb-2 font-bold sm:mb-4">
+                <h5 className="md:text-2xl text-xl text-blue-500 
+                 mb-2 font-bold sm:mb-4">
                   Your saved brand voices
                 </h5>
                 <div className="grid grid-cols-12 gap-6">
@@ -873,7 +879,7 @@ function BrandEngagementBuilder() {
                       Previous
                     </button>
 
-                    {pages.map((pageIndex) => (
+                    {/* {pages.map((pageIndex) => (
                       <button
                         key={pageIndex}
                         className={`${pageNumber === pageIndex
@@ -884,8 +890,22 @@ function BrandEngagementBuilder() {
                       >
                         {pageIndex + 1}
                       </button>
-                    ))}
-
+                    ))} */}
+                    <select
+                      value={pageNumber}
+                      onChange={(e) => setPageNumber(e.target.value)}
+                      className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
+                    >
+                      {pages.map((pageIndex) => (
+                        <option
+                          key={pageIndex}
+                          value={pageIndex}
+                          className="text-black"
+                        >
+                          {pageIndex + 1}
+                        </option>
+                      ))}
+                    </select>
                     <button
                       className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
                       onClick={gotoNext}

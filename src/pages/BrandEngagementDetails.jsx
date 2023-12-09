@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { MutatingDots, ThreeDots } from 'react-loader-spinner';
 import { useParams } from 'react-router-dom';
 import PostCard from '../partials/PostCard';
+import CheckConnectedAccount from '../utils/ChechConnectedAccount';
 
 
 async function downloadVideo(url) {
@@ -84,14 +85,30 @@ function BrandEngagementDetails() {
             });
         setIsLoading(false)
     };
+
+    //Fetch related feed posts with pagination
+    //pagination
+    const [pageNumber, setPageNumber] = useState(0);
+    const [numberOfPages, setNumberOfPages] = useState(0);
+
+    const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
+
+    const gotoPrevious = () => {
+        setPageNumber(Math.max(0, pageNumber - 1));
+    };
+
+    const gotoNext = () => {
+        setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
+    };
+
     const fetchFeedPosts = async () => {
         // setIsLoading(true)
         await axios
             .get(
-                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${id}`
-            )
-            .then((res) => {
-                setFeedPosts(res.data?.feedPosts);
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${id}?page=${pageNumber}`
+            ).then((response) => {
+                setFeedPosts(response.data?.feedPosts);
+                setNumberOfPages(response.data?.totalPages)
                 // console.log("feedPosts" + JSON.stringify(res?.data))
             })
             .catch((err) => {
@@ -99,6 +116,10 @@ function BrandEngagementDetails() {
             });
         // setIsLoading(false)
     };
+
+    useEffect(() => {
+        fetchFeedPosts()
+    }, [pageNumber])
 
     const handleCopyText = (result) => {
         // Convert HTML to plain text
@@ -192,6 +213,9 @@ function BrandEngagementDetails() {
         getClientConnectData()
     }, [])
 
+
+    const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
+    console.log("isAnAccountConnected :" + isAnAccountConnected)
     return (
         <div className="flex h-screen overflow-hidden">
 
@@ -216,13 +240,26 @@ function BrandEngagementDetails() {
                                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">{engagement?.BrandName}</h1>
                             </div>
 
+                            {/* Center */}
+
+
                             {/* Right: Actions */}
-                            {clientConnectData ? <div className="grid grid-flow-col bg-blue-100 rounded-lg p-2 hover:bg-blue-200 sm:auto-cols-max justify-start sm:justify-end gap-2">
-                                <span className="font-medium"> Connected to :</span>
-                                <span> {clientConnectData?.FacebookConnected !== "no" && <FontAwesomeIcon
-                                    className="text-[#3e4ef5]"
-                                    icon={faFacebook}
-                                />}   </span>
+
+                            <div className={`grid grid-flow-col ${isAnAccountConnected && "bg-white shadow-md border-t-2 border-blue-400 border-l-2 "} rounded-lg p-3
+                              sm:auto-cols-max justify-start sm:justify-end gap-2`}>
+
+                                {isAnAccountConnected && <span className="font-medium "> Connected to </span>}
+                                {!isAnAccountConnected && <div className="flex items-center bg-orange-200 text-gray-400 text-sm font-bold px-4 py-3" role="alert">
+                                    <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z" /></svg>
+                                    <p>No socials connected</p>
+                                </div>}
+                                <span> {clientConnectData?.FacebookConnected !== "no" &&
+                                    <> <FontAwesomeIcon
+                                        className="text-[#3e4ef5]"
+                                        icon={faFacebook}
+                                    />
+                                    </>
+                                }  </span>
                                 <span> {clientConnectData?.TwitterConnected !== "no" && <FontAwesomeIcon
                                     className="text-[#3b82f6]"
                                     icon={faTwitter}
@@ -239,32 +276,44 @@ function BrandEngagementDetails() {
                                     // className="text-[#3b82f6]"
                                     icon={faInstagram}
                                 />}   </span>
-                            </div> :
+                            </div>   {clientConnectData?.ConnectLinkURL ?
+                                <button
+                                    disabled={isLoadingCC}
+                                    onClick={getClientConnect}
+                                    className="text-sm font-medium md:mt-0 mt-3 flex justify-center 
+                              text-white  hover:font-bold shadow-xl bg-blue-500 md:w-auto w-full  rounded  p-3 cursor-pointer"
+                                >
+
+                                    {isLoadingCC ? "Connecting" : " Connect it to social media Account"}
+
+
+                                </button> : <div className='text-center text-red-500 font-medium my-2'>
+                                    This Brand Engagement has no ConnectUrl
+                                </div>}
+                            {/* :
                                 <div className="grid grid-flow-col bg-blue-100 rounded-lg p-2 hover:bg-blue-200 sm:auto-cols-max justify-start sm:justify-end gap-2">
                                     <span className="font-medium text-red-400"> Not connected to any social media account</span></div>
 
-                            }
+                            } */}
 
                         </div>
 
 
-                        <div className='rounded-lg md:space-y-2 bg-blue-100 text-lg px-4 py-2 text-left text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75'>
+                        <div className='my-2  grid grid-cols-1  md:grid-cols-2 gap-3
+                         text-lg  text-sm font-medium
+                         text-blue-900focus:outline-none focus-visible:ring
+                          focus-visible:ring-blue-500 focus-visible:ring-opacity-75'>
                             {/* {id} */}
-                            {clientConnectData?.ConnectLinkURL ? <button
-                                disabled={isLoadingCC}
-                                onClick={getClientConnect}
-                                className="text-sm font-medium flex justify-center  flex-[0.5] text-white w-full bg-purple-500 rounded  p-2 cursor-pointer"
-                            >
-                                {/* Not Active */}
-                                {isLoadingCC ? "Connecting" : " Connect Account"}
-                            </button> : <div className='text-center text-red-500 font-medium my-2'>
-                                This Brand Engagement has no ConnectUrl
-                            </div>}
-                            <p><span className='font-bold'>Website:</span> {engagement?.WebSite}</p>
-                            <p><span className='font-bold'>Brand Tone:</span> {engagement?.BrandTone}</p>
-                            <p><span className='font-bold'>Brand Description:</span> {engagement?.CompanySector}</p>
-                            <p><span className='font-bold'>Timezone:</span> {engagement?.Timezone}</p>
 
+                            <div className='bg-blue-100 h-12 flex justify-between p-3 rounded-xl'>     <p className='font-bold'>Website</p>
+                                <a className='underline text-blue-600' href={engagement?.WebSite}> {engagement?.WebSite}</a>
+                            </div>
+                            <div className='bg-blue-100 flex h-12 justify-between p-3 rounded-xl'><span className='font-bold'>Brand Tone</span>   <p> {engagement?.BrandTone}</p></div>
+
+                            <div className='bg-blue-100 flex h-12 justify-between p-3 rounded-xl'><p className='font-bold'>Timezone</p> <p> {engagement?.Timezone}</p></div>
+                            <div className='bg-blue-100 flex flex-col h-20 overflow-y-scroll  justify-between p-3 rounded-xl'>
+                                <p className='font-bold'>Brand Description</p>
+                                <p> {engagement?.CompanySector}</p></div>
                             {/*                            <p><span className='font-bold'>PostType:</span> {engagement?.PostType}</p>
                             <p><span className='font-bold'>Target audience:</span> {engagement?.TargetAudience}</p>*/}
                         </div>
@@ -276,9 +325,11 @@ function BrandEngagementDetails() {
                         <div className="mt-8">
                             {/* <PaginationNumeric /> */}
                         </div>
-                        {feedPosts.length > 0 && <> <div className='text-xl font-bold my-2 text-blue-600'>
-                            Generated feed posts
-                        </div>
+                        {feedPosts.length > 0 && <>
+                            <div className='text-xl font-bold mt-2 mb-4  text-white'>
+                                <span className='bg-slate-500 w-auto p-3  '> Generated feed posts
+                                </span>
+                            </div>
                             <div className="grid grid-cols-12 gap-6">
                                 {feedPosts.map((item) => {
                                     return (
@@ -297,6 +348,41 @@ function BrandEngagementDetails() {
                                 })}
                             </div>
                         </>}
+
+                        <div className="mt-8">
+                            <div class="flex flex-wrap md:flex-nowrap  md:mx-4 items-center md:mt-4 overflow-x-scroll py-2  justify-center space-x-2">
+                                <button
+                                    className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                                    onClick={gotoPrevious}
+                                >
+                                    Previous
+                                </button>
+
+                                <select
+                                    value={pageNumber}
+                                    onChange={(e) => setPageNumber(parseInt(e.target.value))}
+                                    className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
+                                >
+                                    {pages.map((pageIndex) => (
+                                        <option
+                                            key={pageIndex}
+                                            value={pageIndex}
+                                            className="text-black"
+                                        >
+                                            {pageIndex + 1}
+                                        </option>
+                                    ))}
+                                </select>
+
+
+                                <button
+                                    className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                                    onClick={gotoNext}
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        </div>
                         {(engagement?.relatedPostsStatus === "Posts generating..." && isCloseVisible) ?
                             <div id="toast-success" className="flex items-center w-full p-4 mt-8 mb-4 text-gray-600 bg-gray-800 text-white rounded-lg shadow  " role="alert">
 

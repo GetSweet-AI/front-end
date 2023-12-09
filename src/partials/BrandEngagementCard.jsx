@@ -103,8 +103,16 @@ function BrandEngagementCard({
           {/* <div className="text-sm my-1 flex"> */}
           {/* <span className="font-medium">Post Type : </span> */}
           <div className="flex justify-center bg-blue-50 rounded-es-xl rounded-ee-xl  p-2 space-x-2 pt-2">
-            <FontAwesomeIcon icon={faImage} color="#0967eb" size="xl" />
-            <FontAwesomeIcon icon={faVideo} color="#0967eb" size="xl" />
+            {postType === "TextImagePost" && <FontAwesomeIcon icon={faImage} color="#0967eb" size="xl" />}
+            {postType === "TextVideoPost" && <FontAwesomeIcon icon={faVideo} color="#0967eb" size="xl" />}
+            {postType === "Both" &&
+              <>
+                <FontAwesomeIcon icon={faImage} color="#0967eb" size="xl" />
+                <FontAwesomeIcon icon={faVideo} color="#0967eb" size="xl" />
+              </>
+            }
+
+
           </div>
           {/* </div> */}
 

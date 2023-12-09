@@ -46,21 +46,21 @@ function PostsFeed() {
 
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const fetchUserFeedPosts = async () => {
-    setIsUserDataLoading(true);
-    await axios
-      .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${user?._id}`
-      )
-      .then((res) => {
-        setFeedPosts(res.data?.feedPosts);
-        // console.log("res?.data :" + JSON.stringify(res?.data))
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    setIsUserDataLoading(false);
-  };
+  // const fetchUserFeedPosts = async () => {
+  //   setIsUserDataLoading(true);
+  //   await axios
+  //     .get(
+  //       `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${user?._id}`
+  //     )
+  //     .then((res) => {
+  //       setFeedPosts(res.data?.feedPosts);
+  //       // console.log("res?.data :" + JSON.stringify(res?.data))
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  //   setIsUserDataLoading(false);
+  // };
   const fetchAllFeedPosts = async () => {
     setIsLoading(true);
 
@@ -84,19 +84,22 @@ function PostsFeed() {
       )
       .then((res) => {
         console.log("Post feed deleted");
-        fetchUserFeedPosts();
+        fetch(
+          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${user?._id}?page=${pageNumber}`
+        )
+          .then((response) => response.json())
+          .then(({ totalPages, feedPosts }) => {
+            setFeedPosts(feedPosts);
+            setNumberOfPages(totalPages);
+          });
+
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  // useEffect(() => {
-  //     fetchUserFeedPosts();
-  //     fetchAllFeedPosts();
-  // }, []);
 
-  // console.log("Token " + token)
   const handleCopyText = (result) => {
     // Convert HTML to plain text
     const tempElement = document.createElement("div");
@@ -132,6 +135,7 @@ function PostsFeed() {
         setNumberOfPages(totalPages);
       });
   }, [pageNumber]);
+
   useEffect(() => {
     fetch(
       `https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}&page=${adminPageNumber}`
@@ -163,6 +167,7 @@ function PostsFeed() {
   const handleChange = (e) => {
     setSearch(e.target.value)
   };
+
 
 
   return (
@@ -215,7 +220,7 @@ function PostsFeed() {
             <div className="flex flex-col md:flex-row justify-between  p-2 ">
               <div className="mb-4 sm:mb-0 flex flex-col">
                 <h1 className="text-2xl md:text-3xl mb-2 text-blue-500 font-bold" >
-                  {enabled ? "Admin" : "User"} Feed Posts
+                  {enabled ? "Admin" : "My"} Feed Posts
                 </h1>
 
               </div>
@@ -274,8 +279,7 @@ function PostsFeed() {
                         })}
                     </div>
                   </div>
-                )
-                :
+                ) :
                 feedPosts?.length > 0 && (
                   <div className="">
                     <div className="grid grid-cols-12 gap-6">
@@ -317,7 +321,6 @@ function PostsFeed() {
                       Previous
                     </button>
 
-
                     <select
                       value={adminPageNumber}
                       onChange={(e) => setAdminPageNumber(parseInt(e.target.value))}
@@ -348,8 +351,9 @@ function PostsFeed() {
                 <div className="mt-8">
                   <div class="flex items-center md:mt-4 py-2 md:overflow-hidden overflow-x-scroll  justify-center space-x-2">
 
-                    {pages.length === 0 && <div> Hmmm… it seems as though you do not have any posts generated right now.  <a className="text-[#6366F1]" href="/brand-engagement-builder">Let us fix that!.</a>
-                    </div>}
+                    {pages.length === 0 &&
+                      <div> Hmmm… it seems as though you do not have any posts generated right now.  <a className="text-[#6366F1]" href="/brand-engagement-builder">Let us fix that!.</a>
+                      </div>}
                     {pages.length !== 0 && <button
                       className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
                       onClick={gotoPrevious}
@@ -357,7 +361,7 @@ function PostsFeed() {
                       Previous
                     </button>}
 
-                    <select
+                    {pages.length !== 0 && <select
                       value={pageNumber}
                       onChange={(e) => setPageNumber(parseInt(e.target.value))}
                       className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
@@ -371,7 +375,7 @@ function PostsFeed() {
                           {pageIndex + 1}
                         </option>
                       ))}
-                    </select>
+                    </select>}
 
 
                     {pages.length !== 0 && <button

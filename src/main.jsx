@@ -10,6 +10,8 @@ const tagManagerArgs = {
   gtmId: "GTM-W22KL25B", // replace with your GTM ID
 };
 
+import { ChakraProvider } from '@chakra-ui/react'
+
 // import { Theme } from '@radix-ui/themes';
 // import '@radix-ui/themes/styles.css';
 
@@ -20,7 +22,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <Router>
       <Provider store={store}>
         {/* <Theme> */}
-        <App />
+        <ChakraProvider>
+          <App />
+        </ChakraProvider>
         {/* </Theme> */}
       </Provider>
     </Router>

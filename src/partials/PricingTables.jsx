@@ -157,7 +157,7 @@ function PricingTables({ planInfos }) {
               lg:max-w-none">
 
               {/* Pricing table 1 */}
-              <div className="flex flex-col h-full p-6 bg-gray-800 shadow border-2 border-[#3b82f6]" data-aos="fade-down">
+              <div className="flex flex-col h-full p-6 bg-gray-800 shadow border-2 border-[#3b82f6]" data-aos="flip-down">
                 <div className="grow mb-4 pb-4">
                   <div className="flex justify-between items-center mb-1">
                     <div className="text-xl font-bold text-gray-300 ">{(planInfos.find(plan => plan.id === 'price_1O729YEDPwNjcL6iScRkv2Iy'))?.productName}</div>
@@ -191,7 +191,8 @@ function PricingTables({ planInfos }) {
                 </div>}
               </div>
               {/* Pricing table 2 */}
-              <div className="flex flex-col h-full p-6 bg-gray-800 shadow border-2 border-[#3b82f6]" data-aos="fade-down">
+              <div className="flex flex-col   h-full p-6 bg-gray-800 shadow border-4 border-[#3b82f6]"
+                data-aos="flip-up">
                 <div className="grow mb-4 pb-4">
                   <div className="flex justify-between items-center mb-1">
                     <div className="text-xl text-gray-300 font-bold font-red-hat-display">
@@ -225,7 +226,8 @@ function PricingTables({ planInfos }) {
                 </div>}
               </div>
               {/* Pricing table 3 */}
-              <div className="flex flex-col h-full p-6 bg-gray-800 shadow border-2 border-[#3b82f6]" data-aos="fade-down">
+              <div className="flex flex-col h-full p-6 bg-gray-800 shadow border-2 border-[#3b82f6]"
+                data-aos="flip-up">
                 <div className="grow mb-4 pb-4">
                   <div className="flex justify-between items-center mb-1">
                     <div className="text-xl text-gray-300 font-bold font-red-hat-display">

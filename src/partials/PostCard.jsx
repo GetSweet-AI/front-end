@@ -8,6 +8,7 @@ import Video from "./Video";
 import { dateUpdate } from "./Time";
 import { parseISO, format } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
+import logo from '../images/jouer.png'
 
 function PostCard({
   id,
@@ -132,7 +133,10 @@ function PostCard({
         </div>
         <div className="my-3 h-[60%] relative">
 
-          {isMp4 && <ReactPlayer controls={true} width="100%" url={MediaUrl} />}
+          {isMp4 && <ReactPlayer playIcon={<img src={logo}
+
+            width={60} alt="thumbnail" />}
+            controls={true} width="100%" url={MediaUrl} />}
           {isJpeg &&
 
             <img src={MediaUrl} className="h-[48vh]  w-full object-contain" />
