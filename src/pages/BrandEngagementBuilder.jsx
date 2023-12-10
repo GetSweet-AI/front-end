@@ -606,7 +606,7 @@ function BrandEngagementBuilder() {
                               onChange={(selectedOption) =>
                                 handleSelectChange("targetAudience", selectedOption)
                               }
-                              options={JSON.parse(targetAudiences)}
+                              options={targetAudiences && JSON.parse(targetAudiences)}
                             />
                           </div>}
 
