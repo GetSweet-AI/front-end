@@ -595,7 +595,7 @@ function BrandEngagementBuilder() {
                             />
 
                           </div>
-                          {targetAudiences.length !== 0 && <div className="w-full  p-2">
+                          {targetAudiences.length > 0 && <div className="w-full  p-2">
                             <label htmlFor="select1" className="block mb-1">
                               Target Audience -<span className="text-blue-300 text-sm"> Generated with ai</span>
                             </label>
@@ -606,7 +606,7 @@ function BrandEngagementBuilder() {
                               onChange={(selectedOption) =>
                                 handleSelectChange("targetAudience", selectedOption)
                               }
-                              options={targetAudiences && JSON.parse(targetAudiences)}
+                              options={JSON.parse(targetAudiences)}
                             />
                           </div>}
 
