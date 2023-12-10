@@ -96,9 +96,9 @@ function BrandEngagementBuilder() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     // console.log(value.length)
-    if (name === "companySector" && value.length > 50) {
-      getTargetAudiences()
-    }
+    // if (name === "companySector" && value.length > 50) {
+    getTargetAudiences()
+    // }
     setValues((prevValues) => ({
       ...prevValues,
       [name]: value,
@@ -595,7 +595,7 @@ function BrandEngagementBuilder() {
                             />
 
                           </div>
-                          {targetAudiences.length > 0 && <div className="w-full  p-2">
+                          {/* {targetAudiences.length > 0 && <div className="w-full  p-2">
                             <label htmlFor="select1" className="block mb-1">
                               Target Audience -<span className="text-blue-300 text-sm"> Generated with ai</span>
                             </label>
@@ -606,9 +606,9 @@ function BrandEngagementBuilder() {
                               onChange={(selectedOption) =>
                                 handleSelectChange("targetAudience", selectedOption)
                               }
-                              options={JSON.parse(targetAudiences)}
+                              options={targetAudiences && JSON.parse(targetAudiences)}
                             />
-                          </div>}
+                          </div>} */}
 
                           <div className="w-full md:w-1/2 p-2">
                             <label htmlFor="input2" className="block mb-1">
