@@ -41,7 +41,7 @@ function BrandEngagementCard({
     setIsArchiveLoading(true)
     try {
       const response = await axios.delete(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${brandEngagementId}`
+        `http://localhost:5000/api/v1/brand-engagements/${brandEngagementId}`
       );
       console.log(response.data); // Success message or response data
       fetchEngagements();

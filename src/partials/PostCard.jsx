@@ -39,7 +39,7 @@ function PostCard({
     setEditing(true);
     //Update caption on the backend + setSaving(true)
     try {
-      const response = await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${id}`, {
+      const response = await axios.put(`http://localhost:5000/api/v1/feed-posts/${id}`, {
         NewCaption: caption
       });
     } catch (error) {
@@ -139,7 +139,7 @@ function PostCard({
             controls={true} width="100%" url={MediaUrl} />}
           {isJpeg &&
 
-            <img src={MediaUrl} className="h-[48vh]  w-full object-contain" />
+            <img src={MediaUrl} className="h-[50vh]  w-full object-contain" />
           }
         </div>
 

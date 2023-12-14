@@ -47,7 +47,7 @@ function TheProfile() {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         setUser(res.data);
@@ -78,12 +78,12 @@ function TheProfile() {
 
         await axios
           .put(
-            `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
+            `http://localhost:5000/api/v1/auth/update/${user?._id}`,
             { email: currentUser?.email }
           )
           .then((res) => {
             axios.post(
-              "https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/reset-password",
+              "http://localhost:5000/api/v1/auth/reset-password",
               {
                 email: res?.data.user?.email,
                 newPassword: values.password,
@@ -95,7 +95,7 @@ function TheProfile() {
 
       } else {
         await axios.put(
-          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
+          `http://localhost:5000/api/v1/auth/update/${user?._id}`,
           currentUser
         );
       }
@@ -130,7 +130,7 @@ function TheProfile() {
     try {
 
       await axios.put(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/update-general-info/${user?._id}`,
+        `http://localhost:5000/api/v1/auth/update-general-info/${user?._id}`,
         currentUser
       );
       fetchUserData()
@@ -158,7 +158,7 @@ function TheProfile() {
 
   const deleteUser = async () => {
     await axios.delete(
-      `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`, {
+      `http://localhost:5000/api/v1/auth/users/${user?._id}`, {
       email: user?.email
     }
     )
@@ -232,37 +232,16 @@ function TheProfile() {
                 </h1>
               </div>
             </div>
-            {/* <div className='flex flex-col justify-center'>
-              <div className='flex md:flex-row flex-col md:space-x-3'>
-                <div onClick={() => {
-                  setEditGeneralInfo(true);
-                  dispatch(clearMessage())
-                }} className='mb-2 rounded-md  cursor-pointer font-bold text-center z-6 text-white bg-gradient-to-r from-[#6366ff] to-[#373afd] py-3 w-full md:w-1/2' >
-                  Edit General Info
-                </div>
-                <button
-                  onClick={() => {
-                    setEditGeneralInfo(false);
-                    dispatch(clearMessage())
-                  }}
-                  className='mb-2 rounded-md  cursor-pointer 
-                   font-bold text-center z-6 text-white bg-gradient-to-r
-                    from-[#eb59d2] to-[#f016e9] py-3  w-full md:w-1/2' >
-                  Edit Auth Info
-                </button>
-              </div>
-            </div> */}
-
 
             <div>
-              <div className="max-w-7xl md:mx-auto px-4 md:px-6 ">
+              <div className="max-w-8xl shadow-md bg-blue-50 md:mx-auto px-4 md:px-6 ">
                 <div
                   className="pt-10 pb-10 md:translate-y-[20%]  lg:translate-y-0   lg:pb-16 
             flex justify-center items-center"
                 >
 
                   <div className="bg-white bg-opacity-10 px-2 
-                  shadow-md py-5 opacity-90 md:space-y-0 space-x-3
+                   py-5 opacity-90 md:space-y-0 space-x-3
                     rounded-xl  grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
 
                     {/* Update General Infos form */}
@@ -351,9 +330,11 @@ function TheProfile() {
                           {/* <Link to="/services"> */}
                           <button
                             type="submit"
-                            className="font-bold  text-white bg-gradient-to-r from-[#9394d2] to-[#4446e4] py-3 w-full"
+                            className="font-bold 
+                             text-gray-800 bg-gradient-to-r
+                              from-gsBlue to-gsBlueTwo py-3 w-full"
                           >
-                            UPDATE
+                            Update
                           </button>
 
                           {loading && (
@@ -431,7 +412,9 @@ function TheProfile() {
                           {/* <Link to="/services"> */}
                           <button
                             type="submit"
-                            className="font-bold  text-white bg-gradient-to-r from-[#9394d2] to-[#4446e4] py-3 w-full"
+                            className="font-bold 
+                            text-gray-800 bg-gradient-to-r
+                             from-gsBlue to-gsBlueTwo py-3 w-full"
                           >
                             Update
                           </button>

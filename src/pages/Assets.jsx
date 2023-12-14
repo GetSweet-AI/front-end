@@ -52,7 +52,7 @@ function Assets() {
     const fetchEngagements = async () => {
         setIsLoading(true);
         try {
-            fetch(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements-np/${user?._id}`)
+            fetch(`http://localhost:5000/api/v1/brand-engagements-np/${user?._id}`)
                 .then((response) => response.json())
                 .then(({ brandEngagements }) => {
                     const brandEngagementsNewArray = brandEngagements.map(({ _id, BrandName }) => ({
@@ -109,7 +109,7 @@ function Assets() {
         }
         const be = activeBrandId
         try {
-            await axios.delete(`https://seal-app-dk3kg.ondigitalocean.app/api/delete-image?brandEngagementID=${activeBrandId}&imageUrl=${picture}`, {
+            await axios.delete(`http://localhost:5000/api/delete-image?brandEngagementID=${activeBrandId}&imageUrl=${picture}`, {
                 imageUrl: picture
             })
 
@@ -249,8 +249,12 @@ function Assets() {
                                         {brandEngagement.attachedPicture.length > 0 ?
                                             <> {brandEngagement.attachedPicture.map((picture, index) => (
                                                 <div className="p-2">
-                                                    <button onClick={() => deleteImage(picture)} className="flex text-end justify-end w-6   m-1">
-                                                        <p className="border-2 border-red-400 cursor-pointer w-full hover:bg-red-400  text-center px-[2px] rounded-full font-bold hover:text-white text-red-500  ">x</p>
+                                                    <button onClick={() => deleteImage(picture)} className="flex  text-end justify-end">
+
+                                                        <p className="border-2 border-red-400 
+                                                        cursor-pointer  hover:bg-red-400 
+                                                        text-center px-[8px] rounded-full font-bold
+                                                          hover:text-white text-red-500  ">x</p>
                                                     </button>
                                                     <Link to={picture}>
                                                         <img

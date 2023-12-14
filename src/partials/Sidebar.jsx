@@ -30,7 +30,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         setUser(res.data);
@@ -90,7 +90,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
       <div
         id="sidebar"
         ref={sidebar}
-        className={`flex bg-purple-500 flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-72 lg:w-20 lg:sidebar-expanded:!w-72 2xl:!w-68 shrink-0 p-4 pr-0 transition-all duration-200 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-72"
+        className={`flex bg-gradient-to-b via-blue-600 from-blue-500 to-pink-500 flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-72 lg:w-20 lg:sidebar-expanded:!w-72 2xl:!w-68 shrink-0 p-4 pr-0 transition-all duration-200 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-72"
           }`}
       >
         {/* Sidebar header */}
@@ -144,7 +144,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               </li>
               {/* Home */}
               <li
-                className={`px-3 py-3 last:mb-0 ${pathname === "/brand-engagement-builder"
+                className={`px-3 mt-1 py-3 last:mb-0 ${pathname === "/brand-engagement-builder"
                   ? "bg-white rounded-l-full"
                   : ""
                   }`}
@@ -231,32 +231,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </div>
                 </NavLink>
               </li>
-              {/* {user?.role === "admin" && (
-                <li
-                  className={`px-3 py-3 last:mb-0 ${pathname === "/users" ? "bg-white rounded-l-full" : ""
-                    }`}
-                >
-                  <NavLink
-                    end
-                    to="/users"
-                    className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/users" && "hover:text-white"
-                      }`}
-                  >
-                    <div>
-                      <FontAwesomeIcon className={pathname === "/users" ? "text-[#3b82f6]" : "text-[#fff]"} icon={faUsers} />
-                    </div>
-                    <div className="flex items-center overflow-hidden">
-                      <span
-                        className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/users" && "text-[#3b82f6]"
-                          }`}
-                      >
-                        Users
-                      </span>
-                    </div>
-                  </NavLink>
-                </li>
-              )} */}
-              {/* Home */}
+
+              {/* payment */}
               <li
                 className={`px-3 py-3 last:mb-0 ${pathname === "/payment" ? "bg-white rounded-l-full" : ""
                   }`}
@@ -294,7 +270,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </div>
                 </NavLink>
               </li>
-              {/* Home */}
+              {/* profile */}
               <li
                 className={`px-3 py-3 last:mb-0 ${pathname === "/profile" ? "bg-white rounded-l-full" : ""
                   }`}
@@ -336,10 +312,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </div>
                 </NavLink>
               </li>
-
               {/*Assets page    */}
               <li
-                className={`px-3 py-3 last:mb-0 ${pathname === "/assets" ? "bg-white rounded-l-full" : ""
+                className={`px-3 ml-1 py-3 last:mb-0 ${pathname === "/assets" ? "bg-white rounded-l-full" : ""
                   }`}
               >
                 <NavLink
@@ -365,9 +340,11 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 </NavLink>
               </li>
 
+              <div className="h-[2px] my-2 bg-gray-400" />
+
               {user?.role === "admin" && (
                 <li
-                  className={`px-3 py-3 last:mb-0 ${pathname === "/users" ? "bg-white rounded-l-full" : ""
+                  className={`px-3 ml-1 py-3 last:mb-0 ${pathname === "/users" ? "bg-white rounded-l-full" : ""
                     }`}
                 >
                   <NavLink
@@ -400,7 +377,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               )}
               {user?.role === "admin" && (
                 <li
-                  className={`px-3 py-3 last:mb-0 ${pathname.startsWith("/brand-engagements")
+                  className={`px-3 ml-1 py-3 last:mb-0 ${pathname.startsWith("/brand-engagements")
                     ? "bg-white rounded-l-full"
                     : ""
                     }`}
@@ -437,7 +414,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               )}
               {user?.role === "admin" && (
                 <li
-                  className={`px-3 py-3 last:mb-0 ${pathname.startsWith("/archive")
+                  className={`px-3 ml-1 py-3 last:mb-0 ${pathname.startsWith("/archive")
                     ? "bg-white rounded-l-full"
                     : ""
                     }`}
@@ -474,7 +451,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               )}
               {user?.role === "admin" && (
                 <li
-                  className={`px-3 py-3 last:mb-0 ${pathname.startsWith("/settings")
+                  className={`px-3 ml-1 py-3 last:mb-0 ${pathname.startsWith("/settings")
                     ? "bg-white rounded-l-full"
                     : ""
                     }`}
@@ -510,9 +487,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 </li>
               )}
 
-              <li
+              {/* <li
                 className={`px-3 py-3 rounded-sm last:mb-0 bg-purple-500`}
-              ></li>
+              ></li> */}
             </ul>
           </div>
         </div>

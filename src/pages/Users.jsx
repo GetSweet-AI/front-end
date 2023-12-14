@@ -16,7 +16,8 @@ import {
   faArrowsRotate,
   faL,
   faTrashAlt,
-  faPlus
+  faPlus,
+  faRightToBracket
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { targetAudienceOptions } from "../constants/objects";
@@ -29,6 +30,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { MutatingDots } from "react-loader-spinner";
 import AddNewUserModal from "../partials/AddNewUserModal";
 import { formatReadableDate } from "../utils/formatReadableDate";
+import { setUserData, switchLoginStatus } from "../redux/auth";
 
 function Users() {
   const dispatch = useDispatch();
@@ -47,25 +49,6 @@ function Users() {
 
   const [users, setUsers] = useState([]);
 
-  // const fetchUsers = async () => {
-  //   setIsLoading(true)
-  //   await axios
-  //     .get(
-  //       `https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}`
-  //     )
-  //     .then((res) => {
-  //       setUsers(res.data);
-  //       console.log("res?.data :" + JSON.stringify(res?.data));
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  //   setIsLoading(false)
-  // };
-
-  // useEffect(() => {
-  //   fetchUsers();
-  // }, []);
 
   //pagination
 
@@ -76,7 +59,7 @@ function Users() {
   async function fetchUsersData(user, pageNumber) {
     try {
       const response = await axios.get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`
+        `http://localhost:5000/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`
       );
       const { totalPages, users } = response.data;
       setUsers(users);
@@ -93,7 +76,7 @@ function Users() {
   const updateRole = async (userId) => {
     await axios
       .put(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/users/${userId}/update-role`
+        `http://localhost:5000/api/v1/admin/users/${userId}/update-role`
       )
       .then((res) => {
         fetchUsersData(user, pageNumber);
@@ -106,7 +89,7 @@ function Users() {
   const deleteUser = async (userId) => {
     await axios
       .delete(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${userId}`
+        `http://localhost:5000/api/v1/auth/users/${userId}`
       )
       .then((res) => {
         fetchUsersData(user, pageNumber);
@@ -131,16 +114,15 @@ function Users() {
     setSearch(e.target.value)
   };
 
-
-  console.log('Search : ' + search)
-  // console.log("Users : ")
-
   const [isOpen, setIsOpen] = useState(false)
 
   function closeModal() {
     setIsOpen(false)
   }
 
+  const loginToUserAccount = async (id) => {
+
+  }
 
 
   return (
@@ -176,16 +158,20 @@ function Users() {
           <div className="px-4 sm:px-6 lg:px-8 pt-8 w-full max-w-9xl mx-auto">
             {/* Page header */}
             <div className="h-screen ">
+              <div className="flex space-x-3">
+                <button>SuperAmin</button>
+                <button>User</button>
+              </div>
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0 flex md:justify-between md:flex-row flex-col">
-                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
+                <h1 className="text-2xl md:text-3xl text-blue-600 font-bold">
                   Users
                 </h1>
                 <button
-                  className="px-2 md:py-1 py-2 bg-purple-500 md:mt-0 mt-2  text-center text-white rounded text-sm flex items-center font-normal"
+                  className="px-2 md:py-1 py-2 bg-blue-600 md:mt-0 mt-2  text-center text-white rounded text-sm flex items-center font-medium"
                   onClick={() => setIsOpen(true)}
                 >
-                  <FontAwesomeIcon icon={faPlus} className="mr-1 " />
+                  <FontAwesomeIcon icon={faPlus} className="mr-1 w-4 h-4 mb-[2px]" />
                   Add New User
                 </button>
                 <input
@@ -196,10 +182,10 @@ function Users() {
                   className="form-input focus:border-slate-300 mb-1"
                 />
               </div>
-              <div className="w-full h-auto mt-10 overflow-x-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-blue-300 overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
+              <div className="w-full h-auto mt-10 overflow-x-auto scrollbar-thin scrollbar-thumb-blue-600 scrollbar-track-blue-300 overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
                 <table className="min-w-full">
                   <thead>
-                    <tr className="bg-purple-500 text-white">
+                    <tr className="bg-blue-600 text-white">
                       <th className="py-3 px-6 text-left rounded-tl-lg">
                         Name
                       </th>
@@ -252,7 +238,7 @@ function Users() {
                           <td className="py-4 px-6 border-b">
                             <span
                               onClick={() => updateRole(client._id)}
-                              className="bg-purple-500 flex items-center w-fit px-4 py-2 rounded-xl text-white uppercase text-sm cursor-pointer"
+                              className="bg-blue-600 flex items-center w-fit px-4 py-2 rounded-xl text-white uppercase text-sm cursor-pointer"
                             >
                               {client.role}{" "}
                               <FontAwesomeIcon
@@ -263,17 +249,24 @@ function Users() {
                           </td>
                           <td className="py-4 px-6 border-b">     {client?.lastLoggedIn && formatReadableDate(client?.lastLoggedIn)}</td>
                           <td className="py-4 px-6 border-b">     {client?.countBrandEngagements}</td>
-                          <td className="py-4 px-6 border-b">
-                            <span
+                          <td className="py-4 flex flex-col px-6 border-b">
+                            {/* <span
+                              onClick={() => loginToUserAccount(client._id)}
+                              className="bg-green-500  flex items-center w-fit px-4 py-2 rounded-xl text-white uppercase text-sm cursor-pointer"
+                            >
+                              Login
+                              <span className="ml-2">  <FontAwesomeIcon icon={faRightToBracket} /></span>
+                            </span>*/}   <span
                               onClick={() => deleteUser(client._id)}
-                              className="bg-red-500 flex items-center w-fit px-4 py-2 rounded-xl text-white uppercase text-sm cursor-pointer"
+                              className="bg-red-500 mt-1 flex items-center w-fit px-4 py-2 rounded-xl text-white uppercase text-sm cursor-pointer"
                             >
                               Delete
                               <FontAwesomeIcon
-                                className="ml-2 mb-1"
+                                className="ml-2"
                                 icon={faTrashAlt}
                               />
                             </span>
+
                           </td>
                         </tr>
                       ))}
@@ -283,7 +276,7 @@ function Users() {
               {numberOfPages > 1 && (
                 <div class="flex my-2 items-center  justify-center space-x-2">
                   <button
-                    className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                    className="bg-blue-600 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
                     onClick={gotoPrevious}
                   >
                     Previous
@@ -292,7 +285,7 @@ function Users() {
                   <select
                     value={pageNumber}
                     onChange={(e) => setPageNumber(parseInt(e.target.value))}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-16 p-2.5 "
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-16 p-2.5 "
                   >
                     {pages.map((pageIndex) => (
                       <option
@@ -306,7 +299,7 @@ function Users() {
                   </select>
 
                   <button
-                    className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                    className="bg-blue-600 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
                     onClick={gotoNext}
                   >
                     Next
@@ -316,9 +309,9 @@ function Users() {
             </div>
           </div>
         </main>
-      </div>
+      </div >
       {/* Toast container */}
-      <ToastContainer
+      < ToastContainer
         position="top-right"
         autoClose={5000}
         hideProgressBar={false}
@@ -336,7 +329,7 @@ function Users() {
         onCancel={closeModal}
 
       />
-    </div>
+    </div >
   );
 }
 

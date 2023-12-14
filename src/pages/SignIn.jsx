@@ -35,12 +35,13 @@ function SignIn() {
   const loginUser = async (currentUser) => {
     setLoading(true);
     try {
-      const { data } = await axios.post("https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/login", currentUser);
+      const { data } = await axios.post("http://localhost:5000/api/v1/auth/login", currentUser);
       const { user, token } = data;
       console.log("Data : " + data);
       navigate("/brand-engagement-builder");
       dispatch(switchLoginStatus(token));
       dispatch(setUserData(user));
+
     } catch (error) {
       // alert(error.response.data.msg)
       setMessage(error.response.data.msg);
