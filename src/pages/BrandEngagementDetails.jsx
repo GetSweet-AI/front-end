@@ -216,8 +216,14 @@ function BrandEngagementDetails() {
 
     const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
     console.log("isAnAccountConnected :" + isAnAccountConnected)
+
+
+
+
+
     return (
         <div className="flex h-screen overflow-hidden">
+           
 
             {/* Sidebar */}
             <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />

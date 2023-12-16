@@ -10,6 +10,10 @@ import { parseISO, format } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 import logo from '../images/jouer.png'
 
+
+
+
+
 function PostCard({
   id,
   MediaUrl,
@@ -25,6 +29,25 @@ function PostCard({
     parsedDate,
     Intl.DateTimeFormat().resolvedOptions().timeZone
   );
+
+  
+  const [isLoadingCC, setIsLoadingCC] = useState(false);
+
+  const getClientConnect = async () => {
+      setIsLoadingCC(true)
+      try {
+          const response = await axios.get(
+              `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`
+          );
+          console.log("Client connect :" + response.data); // Success message or response data
+          // Perform any additional actions after successful deletion
+          window.location.href = response.data?.ConnectLinkURL
+      } catch (error) {
+          console.log(error); // Handle error
+      }
+      setIsLoadingCC(false)
+  };
+
 
 
   const [isEditing, setEditing] = useState(false);
@@ -100,12 +123,22 @@ function PostCard({
           </div>
         </header>
         <div className="grow mt-2">
+
+          {/* condition socials connected */}
+
+          {isLoadingCC ? 
           <div className="text-sm mb-2">
             <span className="font-medium">Scheduled for</span>{" "}
             <p className="text-pink-500 font-bold" target="_blank">
               {dateUpdate(localDate)}
             </p>
-          </div>
+          </div> : <div className="text-sm mb-2 text-blue-500 font-bold">
+          <a href="#" onClick={getClientConnect}> Connect your socials to schedule this post</a>
+            </div>}
+
+
+
+
           <div className="text-sm  overflow-y-scroll font-medium mb-2">
             {isEditing ? (
               <div>
@@ -135,11 +168,11 @@ function PostCard({
 
           {isMp4 && <ReactPlayer playIcon={<img src={logo}
 
-            width={60} alt="thumbnail" />}
+            width={60} height={60} alt="thumbnail" />}
             controls={true} width="100%" url={MediaUrl} />}
           {isJpeg &&
 
-            <img src={MediaUrl} className="h-[48vh]  w-full object-contain" />
+            <img src={MediaUrl} className="h-[52vh]  w-full object-contain" />
           }
         </div>
 
