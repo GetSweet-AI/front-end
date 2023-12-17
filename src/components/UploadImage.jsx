@@ -3,6 +3,10 @@ import { useState } from "react";
 import assets from "../images/assets.gif";
 import axios from "axios";
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Puff } from "react-loader-spinner";
+
 export default function UploadImage({ brandEngagementId, fetchEngagements }) {
     const [loading, setLoading] = useState(false);
     const [url, setUrl] = useState("");
@@ -23,19 +27,71 @@ export default function UploadImage({ brandEngagementId, fetchEngagements }) {
         });
     };
 
+    // we need to keep a reference of the toastId to be able to update it
+    // const toastId = React.useRef(null);
+    // async function uploadSingleImage(base64) {
+    //     setLoading(true);
+    //     await axios
+    //         .post("http://localhost:5000/api/uploadImage", { image: base64, brandEId: brandEngagementId }, {
+    //             onUploadProgress: (progressEvent) => {
+    //                 const progress = (progressEvent.loaded / progressEvent.total) * 100;
+
+    //                 // Check if we already displayed a toast
+    //                 if (toastId.current === null) {
+    //                     toastId.current = toast('Upload in Progress', { progress });
+    //                 } else {
+    //                     toast.update(toastId.current, { progress });
+    //                 }
+    //             }
+    //         })
+    //         .then((res) => {
+    //             setUrl(res.data);
+    //             // toast.success("Image uploaded Succesfully");
+    //             toast.done(toastId.current);
+    //             // alert("Image uploaded Succesfully");
+    //         })
+    //         .then(() => {
+    //             fetchEngagements()
+    //             setLoading(false)
+    //         })
+    //         .catch(console.log);
+    // }
+
+    const [toastId, setToastId] = useState(null);
+
     async function uploadSingleImage(base64) {
-        setLoading(true);
-        await axios
-            .post("http://localhost:5000/api/uploadImage", { image: base64, brandEId: brandEngagementId })
-            .then((res) => {
-                setUrl(res.data);
-                alert("Image uploaded Succesfully");
-            })
-            .then(() => {
-                fetchEngagements()
-                setLoading(false)
-            })
-            .catch(console.log);
+        try {
+            setLoading(true);
+
+            // Check if we already displayed a toast
+            if (toastId === null) {
+                setToastId(toast('Upload in Progress'));
+            }
+
+            const res = await axios.post("http://localhost:5000/api/uploadImage", { image: base64, brandEId: brandEngagementId }, {
+                onUploadProgress: (progressEvent) => {
+                    const progress = (progressEvent.loaded / progressEvent.total) * 100;
+                    toast.update(toastId, { progress });
+                }
+            });
+
+            setUrl(res.data);
+            toast.success("Image uploaded Successfully");
+            fetchEngagements();
+            setToastId(null)
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            toast.error("Error uploading image");
+            setToastId(null)
+        } finally {
+            setLoading(false);
+
+            // Upload is done!
+            // The remaining progress bar will be filled up
+            // The toast will be closed when the transition ends
+            toast.done(toastId);
+            setToastId(null)
+        }
     }
 
     async function uploadImages(files) {
@@ -84,6 +140,8 @@ export default function UploadImage({ brandEngagementId, fetchEngagements }) {
     function UploadInput() {
         return (
             <div className="flex items-center justify-center w-full">
+
+
                 <label
                     htmlFor="dropzone-file"
                     className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
@@ -115,6 +173,7 @@ export default function UploadImage({ brandEngagementId, fetchEngagements }) {
                     <input
                         onChange={uploadImage}
                         id="dropzone-file"
+                        disabled={loading}
                         type="file"
                         className="hidden"
                         multiple
@@ -137,13 +196,26 @@ export default function UploadImage({ brandEngagementId, fetchEngagements }) {
             </div>
 
             <div>
-                {loading ? (
+                {/* {loading ? (
                     <div className="flex items-center justify-center">
-                        <img src={assets} />{" "}
+                          <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
+                            {" "}
+                            <Progr
+                              height="100"
+                              width="100"
+                              color="#4446e4"
+                              secondaryColor="#4446e4"
+                              radius="12.5"
+                              ariaLabel="mutating-dots-loading"
+                              wrapperStyle={{}}
+                              wrapperClass=""
+                              visible={true}
+                            />
+                          </div>
                     </div>
-                ) : (
-                    <UploadInput />
-                )}
+                ) : ( */}
+                <UploadInput />
+                {/* )} */}
             </div>
             {/* <div>
                 {url && (

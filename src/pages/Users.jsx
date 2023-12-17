@@ -158,10 +158,7 @@ function Users() {
           <div className="px-4 sm:px-6 lg:px-8 pt-8 w-full max-w-9xl mx-auto">
             {/* Page header */}
             <div className="h-screen ">
-              <div className="flex space-x-3">
-                <button>SuperAmin</button>
-                <button>User</button>
-              </div>
+
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0 flex md:justify-between md:flex-row flex-col">
                 <h1 className="text-2xl md:text-3xl text-blue-600 font-bold">

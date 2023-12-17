@@ -255,7 +255,7 @@ function TheProfile() {
                             className="block text-gray-700 text-sm font-medium mb-1"
                             htmlFor="email"
                           >
-                            Work email address
+                            Email address
                           </label>
                           <input
                             type="email"
@@ -385,7 +385,7 @@ function TheProfile() {
                         </div>
                         <div className="w-full px-3">
                           <label
-                            className="block text-gray-700 text-sm font-medium mb-1"
+                            className="block my-2 text-gray-700 text-sm font-medium mb-1"
                             htmlFor="email"
                           >
                             Company or Brand name
@@ -396,7 +396,7 @@ function TheProfile() {
                             value={values.company}
                             onChange={handleChange}
                             className="form-input w-full rounded-full text-gray-700"
-                            placeholder="Enter your company "
+                            placeholder="Enter your brand name "
                             required
                           />
                         </div>
