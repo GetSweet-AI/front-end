@@ -66,21 +66,6 @@ function Settings() {
 
     console.log("newTemplate :" + JSON.stringify(newTemplate))
 
-    // const addNewTemplate = async (e) => {
-
-
-    //     // alert(JSON.stringify(postData))
-    //     try {
-
-    //         await axios.post(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/add-template?userId=${user?._id}`,
-    //             newTemplate
-    //         )
-    //     } catch (error) {
-
-    //     }
-
-
-    // };
 
     const dispatch = useDispatch()
 
@@ -114,7 +99,7 @@ function Settings() {
     };
 
 
-    console.log(JSON.stringify(values))
+    // console.log(JSON.stringify(values))
 
     const handleReset = () => {
         setValues({
@@ -214,7 +199,7 @@ function Settings() {
 
                         <div>
 
-                            <div className="max-w-8xl md:mx-auto px-4 md:px-6 ">
+                            <div className="max-w-8xl bg-blue-50 pb-2 md:mx-auto px-4 md:px-6 ">
                                 <div
                                     className="pt-10 pb-10 md:translate-y-[20%]  lg:translate-y-0   lg:pb-16 
             flex justify-center items-center"

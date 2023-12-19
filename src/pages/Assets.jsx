@@ -16,6 +16,9 @@ import UploadImage from "../components/UploadImage";
 import Select from "react-select";
 import { Link } from 'react-router-dom'
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function Assets() {
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -111,9 +114,12 @@ function Assets() {
         try {
             await axios.delete(`https://seal-app-dk3kg.ondigitalocean.app/api/delete-image?brandEngagementID=${activeBrandId}&imageUrl=${picture}`, {
                 imageUrl: picture
+            }).then(() => {
+                toast.success("Picture deleted successfully");
+                fetchEngagements()
             })
 
-            fetchEngagements()
+
         } catch (error) {
             console.log('An error ocurred')
         }
@@ -124,7 +130,19 @@ function Assets() {
         <div className="flex h-screen overflow-hidden">
             {/* Sidebar */}
             <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-
+            {/* Toast container */}
+            < ToastContainer
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
             {/* Content area */}
             <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
                 {/*  Site header */}
@@ -249,8 +267,12 @@ function Assets() {
                                         {brandEngagement.attachedPicture.length > 0 ?
                                             <> {brandEngagement.attachedPicture.map((picture, index) => (
                                                 <div className="p-2">
-                                                    <button onClick={() => deleteImage(picture)} className="flex text-end justify-end w-6   m-1">
-                                                        <p className="border-2 border-red-400 cursor-pointer w-full hover:bg-red-400  text-center px-[2px] rounded-full font-bold hover:text-white text-red-500  ">x</p>
+                                                    <button onClick={() => deleteImage(picture)} className="flex  text-end justify-end">
+
+                                                        <p className="border-2 border-red-400 
+                                                        cursor-pointer  hover:bg-red-400 
+                                                        text-center px-[8px] rounded-full font-bold
+                                                          hover:text-white text-red-500  ">x</p>
                                                     </button>
                                                     <Link to={picture}>
                                                         <img

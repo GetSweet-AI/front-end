@@ -1,256 +1,181 @@
-import { faClone, faEye, faImage, faPaperclip, faTrash, faVideo } from "@fortawesome/free-solid-svg-icons";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
-import { ThreeDots } from "react-loader-spinner";
-import { Link, useNavigate } from "react-router-dom";
+import { faDownload, faTrash, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import ReactHtmlParser from "react-html-parser";
-import { useDispatch } from "react-redux";
-import { clearActiveBrandEngagement, setActiveBrandEngagement } from "../redux/message";
+import axios from "axios";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import ReactPlayer from "react-player";
+import Video from "./Video";
+import { dateUpdate } from "./Time";
+import { parseISO, format } from "date-fns";
+import { utcToZonedTime } from "date-fns-tz";
+import logo from '../images/jouer.png'
 
-function BrandEngagementCard({
+function PostCard({
   id,
-  brandName,
-  websiteUrl,
-  timeZone,
-  companySector,
-  brandTone,
-  targetAudience,
-  postType,
-  fetchEngagements,
-  relatedPostsStatus,
-  postContent,
-  checkConnectLinkExistsByBrandEngagementID,
-  isArchive,
-  userId,
-  setFormValues,
-  isAdminPage,
-  setIsVisible,
-  endDate,
-  lifeCycleStatus,
-  setSelectedOption,
-  setEndDate,
-  setEnabled
+  MediaUrl,
+  Caption,
+  Date: postDate,
+  deleteFeedPost,
+  handleCopyText,
+  Accounts,
+  DownloadButton,
 }) {
-  const navigate = useNavigate();
+  const parsedDate = parseISO(postDate);
+  const localDate = utcToZonedTime(
+    parsedDate,
+    Intl.DateTimeFormat().resolvedOptions().timeZone
+  );
 
-  const [isArchiveLoading, setIsArchiveLoading] = useState(false)
-  const deleteBrandEngagement = async (brandEngagementId) => {
-    setIsArchiveLoading(true)
+
+  const [isEditing, setEditing] = useState(false);
+  const [caption, setCaption] = useState(Caption);
+
+  const handleEditClick = () => {
+    setEditing(true);
+  };
+
+  const handleSaveClick = async () => {
+    // Save the edited caption and exit edit mode
+    setEditing(true);
+    //Update caption on the backend + setSaving(true)
     try {
-      const response = await axios.delete(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${brandEngagementId}`
-      );
-      console.log(response.data); // Success message or response data
-      fetchEngagements();
-      // Perform any additional actions after successful deletion
+      const response = await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${id}`, {
+        NewCaption: caption
+      });
     } catch (error) {
-      console.log(error); // Handle error
+      console.log("error :" + error)
+    } finally {
+      setEditing(false);
     }
-    setIsArchiveLoading(false)
+
+
+
   };
-
-  const handleCloneClick = () => {
-    // Create an object with the current brand engagement data
-    const brandEngagementData = {
-      brandName,
-      websiteUrl,
-      timeZone: { label: timeZone, value: timeZone },
-      companySector,
-      brandTone: { label: brandTone, value: brandTone },
-      targetAudience,
-      postType,
-    };
-
-    // Call the setFormValues function to set the form values
-    setFormValues(brandEngagementData);
-    setIsVisible(true)
-
-    console.log("End Date : " + endDate)
-
-    //Apply life cycle status here
-    // const endDateValue = lifeCycleStatus === "HasEndDate" ? endDate : ""
-    // setEndDate(endDateValue)
-    // setSelectedOption(lifeCycleStatus)
-    // lifeCycleStatus === "HasEndDate" ? setEnabled(true) : ""
-
+  const handleCancelClick = () => {
+    setEditing(false);
+    setCaption(Caption)
   };
 
 
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(clearActiveBrandEngagement())
-  }, [])
-  const handleAttachAssets = () => {
-    navigate('/assets')
-    dispatch(setActiveBrandEngagement(id))
-  }
+  const isJpeg = MediaUrl.endsWith('.jpeg');
+  const isMp4 = MediaUrl.endsWith('.mp4');
+
+  // const navigate = useNavigate
 
   return (
-    <div className="col-span-full sm:col-span-6 xl:col-span-4">
-      <div className="bg-white shadow-lg rounded-lg border border-slate-200 hover:shadow-blue-200 hover:shadow-xl hover:border-blue-500">
-
-        <div className="flex flex-col h-full p-5">
-          <header className="bg-blue-500 max-h-[4.4rem]  overflow-hidden text-white py-4 px-6 rounded-t-lg">
-            <div className="flex items-center justify-between h-full">
-              <h2 className="text-xl leading-tight font-semibold overflow-hidden">
-                {brandName}
-              </h2>
-            </div>
-          </header>
-          {/* <div className="text-sm my-1 flex"> */}
-          {/* <span className="font-medium">Post Type : </span> */}
-          <div className="flex justify-center bg-blue-50 rounded-es-xl rounded-ee-xl  p-2 space-x-2 pt-2">
-            {postType === "TextImagePost" && <FontAwesomeIcon icon={faImage} color="#0967eb" size="xl" />}
-            {postType === "TextVideoPost" && <FontAwesomeIcon icon={faVideo} color="#0967eb" size="xl" />}
-            {postType === "Both" &&
-              <>
-                <FontAwesomeIcon icon={faImage} color="#0967eb" size="xl" />
-                <FontAwesomeIcon icon={faVideo} color="#0967eb" size="xl" />
-              </>
-            }
-
-
-          </div>
-          {/* </div> */}
-
-          <div className="grow mt-2">
-            {websiteUrl ?
-              <div className="text-sm mb-2 ">
-                <span className="font-medium">websiteUrl</span> :{" "}
-                <a
-                  className="underline text-blue-500"
-                  href={websiteUrl}
-                  target="_blank"
+    <div className="col-span-full sm:col-span-6 xl:col-span-4
+     bg-white shadow-md rounded-md border
+      border-slate-200 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-200">
+      <div className="flex flex-col h-full p-5">
+        <header>
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl leading-snug font-semibold">{Accounts}</h2>
+            <div className="flex">
+              <div
+                onClick={() => handleCopyText(Caption)}
+                className="text-xl cursor-pointer leading-snug font-semibold"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="icon icon-tabler icon-tabler-copy"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="#00abfb"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
                 >
-                  {websiteUrl}
-                </a>
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M8 8m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z" />
+                  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2" />
+                </svg>
+              </div>
+              {!isEditing && <div className="mt-1">
+                <button className="" onClick={handleEditClick}>
+                  <FontAwesomeIcon icon={faPencil} className="border-2 border-[#00abfb] ml-1 p-[5px] w-3 h-3  rounded-full" color='#00abfb' /></button>
+              </div>}
+            </div>
+          </div>
+        </header>
+        <div className="grow mt-2">
+          <div className="text-sm mb-2">
+            <span className="font-medium">Scheduled for</span>{" "}
+            <p className="text-pink-500 font-bold" target="_blank">
+              {dateUpdate(localDate)}
+            </p>
+          </div>
+          <div className="text-sm  overflow-y-scroll font-medium mb-2">
+            {isEditing ? (
+              <div>
+                <textarea
+                  className='w-full text-sm'
+                  value={caption}
+                  onChange={(e) => setCaption(e.target.value)}
+                />
+                <div className='flex'>
+                  <button className="bg-green-500 w-[15%] cursor-pointer
+                           text-center rounded-lg py-1 mr-2 text-white"
+                    onClick={handleSaveClick}>Save</button>
+                  <button className='text-red-400'
+                    onClick={handleSaveClick}>Cancel</button>
+
+                </div>
+              </div>
+            ) : (
+              <div className='flex flex-col max-h-[90px] overflow-y-scroll'>
+                <p className='pr-2'> {caption}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="my-3 h-[60%] relative">
+
+          {isMp4 && <ReactPlayer playIcon={<img src={logo}
+
+            width={60} alt="thumbnail" />}
+            controls={true} width="100%" url={MediaUrl} />}
+          {isJpeg &&
+
+            <img src={MediaUrl} className="h-[50vh]  w-full object-contain" />
+          }
+        </div>
+
+        <div className="my-2">{/* Engagement card link */}</div>
+        <footer className="mt-2">
+          <div className="flex justify-between items-center">
+            <div
+              onClick={() => deleteFeedPost(id)}
+              className="text-sm text-white rounded bg-[#ef3d22] p-2  cursor-pointer"
+            >
+              {/* Not Active */}
+              <FontAwesomeIcon className="px-2" icon={faTrash} />
+            </div>
+            {isMp4 ?
+              <div
+                onClick={() => DownloadButton(MediaUrl)}
+                className="text-sm text-white rounded bg-[#36d74b] p-2 cursor-pointer"
+              >
+                <FontAwesomeIcon className=" px-2" icon={faDownload} />
               </div>
               :
-              <div className="text-sm mb-2"></div>
-            }
-            <div className="text-sm mb-2 ">
-              <span className="font-medium">Time Zone</span>: {timeZone}
-            </div>
-            {" "}
-            <div className="text-sm mb-2 ">
-              <span className="font-medium">Brand Tone</span>: {brandTone}
-            </div>
-            <div className="text-sm mb-2 h-12 overflow-y-hidden">
-              <span className="font-medium">Brand Description</span>:{" "}
-              {companySector}
-            </div>
-            {/* {endDate && <div className="text-sm mb-2 h-6 bg-slate-400 overflow-y-hidden">
-            <span className="font-medium">End Date</span>:{" "}
-            {endDate}
-          </div>} */}
-            {postContent && <div className="flex flex-col">
-              <div className="text-sm mb-2 text-center col-span-1">
-                <div className="flex items-center">
-                  <div className="flex-1 h-0.5 bg-gray-300 mr-2"></div>
-                  <span className="font-bold">Post Content</span>
-                  <div className="flex-1 h-0.5 bg-gray-300 ml-2"></div>
+
+              <Link to={MediaUrl}>
+                <div
+                  // onClick={() => DownloadButton(MediaUrl)}
+                  className="text-sm text-white rounded bg-[#36d74b] p-2 cursor-pointer"
+                >
+                  <FontAwesomeIcon className=" px-2" icon={faDownload} />
                 </div>
-              </div>
-              <div className={`text-sm mb-2 h-16 text-gray-900 ${postContent ? "overflow-y-scroll" : ""} col-span-3`}>
-                {postContent && ReactHtmlParser(postContent)}
-              </div>
-            </div>}
-            <div class="bg-blue-500 text-white p-[1px] my-4"></div>
-            {
-              !isArchive && <div className="text-sm mb-2">
-                {relatedPostsStatus === "Posts generating..." ? (
-                  <div className="flex my-2 justify-center space-x-4 items-center">
-                    <p className="text-lg font-semibold text-blue-500">Posts generating...</p>
-                    <ThreeDots
-                      height="10"
-                      width="40"
-                      radius="9"
-                      color="#0967eb"
-                      ariaLabel="three-dots-loading"
-                      wrapperStyle={{}}
-                      wrapperClassName=""
-                      visible={true}
-                    />
-                  </div>
-                ) : (
-                  <div className="flex my-2 justify-center space-x-4 items-center">
-                    {" "}
-                    <p className="text-lg font-semibold text-blue-500">Posts are ready</p>
-                    <FontAwesomeIcon icon={faCheck} color="#0967eb" size={24} />
-                  </div>
-                )}
-              </div>
+              </Link>
             }
           </div>
-          {!isArchive &&
-            <footer className="mt-2 flex-col">
-              <div className="flex justify-between space-x-2 items-center">
-                {
-                  !isAdminPage &&
-                  <button
-
-                    onClick={handleCloneClick}
-                    className="text-sm flex justify-center
-             items-center font-medium md:flex-[0.3]
-              flex-[0.3] bg-white hover:text-white text-blue-700 
-                p-2.5 cursor-pointer
-                    shadow-md rounded-lg
-               hover:bg-blue-700
-               "
-
-                  >
-                    {/* Not Active */}
-
-                    <FontAwesomeIcon className="mr-2" icon={faClone} /> Clone
-                  </button>
-                }
-                <div
-
-                  onClick={() => navigate(`/brand-engagements/${id}`)}
-                  className="text-sm flex justify-center
-                  items-center font-medium md:flex-[0.3]
-                   flex-[0.3] bg-white text-blue-700
-                    rounded-md  p-2 cursor-pointer
-                    border-2 border-blue-600
-                    hover:bg-gray-100
-                    "
-                >
-                  {/* Not Active */}
-                  <FontAwesomeIcon className="mr-2" icon={faEye} />
-                  View
-                </div>
-
-
-                <button
-                  className="text-sm text-white rounded text-center bg-[#d7364b] flex-[0.3] p-2 cursor-pointer"
-                  onClick={() => deleteBrandEngagement(id)}
-                  disabled={isArchiveLoading}
-                >
-                  {isArchiveLoading ? "Archiving.." : <> <FontAwesomeIcon className="mr-2" icon={faTrash} />
-                    Archive</>}
-                </button>
-              </div>
-              <div className="mt-4 flex justify-center">
-                <button className="text-md flex justify-center
-             items-center font-medium 
-              bg-white text-blue-700
-               rounded-md  p-2 cursor-pointer  
-               "
-                  onClick={handleAttachAssets}
-                >
-                  Attach assets
-                  <FontAwesomeIcon className="ml-2" icon={faPaperclip} />
-                  {/* <FontAwesomeIcon icon="fa-solid fa-paperclip" /> */}
-                </button>
-              </div>
-            </footer>}
-        </div>
-      </div >
-    </div >
+        </footer>
+      </div>
+    </div>
   );
 }
 
-export default BrandEngagementCard;
+export default PostCard;

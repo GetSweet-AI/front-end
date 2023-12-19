@@ -189,15 +189,16 @@ function BrandEngagementCard({
             <footer className="mt-2 flex-col">
               <div className="flex justify-between space-x-2 items-center">
                 {
-                  !isAdminPage && <button
+                  !isAdminPage &&
+                  <button
 
                     onClick={handleCloneClick}
                     className="text-sm flex justify-center
              items-center font-medium md:flex-[0.3]
-              flex-[0.3] bg-white text-blue-700
-               rounded-md  p-2 cursor-pointer
-               border-2 border-blue-600
-               hover:bg-gray-100
+              flex-[0.3] bg-white hover:text-white text-blue-700 
+                p-2.5 cursor-pointer
+                    shadow-md rounded-lg
+               hover:bg-blue-700
                "
 
                   >
@@ -209,7 +210,13 @@ function BrandEngagementCard({
                 <div
 
                   onClick={() => navigate(`/brand-engagements/${id}`)}
-                  className="text-sm flex justify-center shadow-xl items-center font-medium md:flex-[0.3] flex-[0.3] bg-slate-100 hover:text-white hover:bg-blue-600 text-blue-700 rounded  p-2 cursor-pointer"
+                  className="text-sm flex justify-center
+                  items-center font-medium md:flex-[0.3]
+                   flex-[0.3] bg-white text-blue-700
+                    rounded-md  p-2 cursor-pointer
+                    border-2 border-blue-600
+                    hover:bg-gray-100
+                    "
                 >
                   {/* Not Active */}
                   <FontAwesomeIcon className="mr-2" icon={faEye} />
