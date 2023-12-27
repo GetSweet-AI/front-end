@@ -52,7 +52,7 @@ export default function EmailConfirmed() {
 
                                 <div className="max-w-sm mx-auto flex flex-col justify-center items-center text-start pb-12 md:pb-10">
                                     <h1 className="h4 font-cabinet-grotesk text-[#6366F1]">       {!showSignIn ? " Please wait... Until email is confirmed" : "Email has been confirmed "}</h1>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check mt-6" width="100" height="100" viewBox="0 0 24 24" stroke-width="1.5" stroke="#6366F1" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check mt-6" width="100" height="100" viewBox="0 0 24 24" stroke-width="1.5" stroke="#6366F1" fill="none" stroke-linecap="round" strokeLinejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
                                         <path d="M9 12l2 2l4 -4" />

@@ -1,17 +1,19 @@
 import { faDownload, faTrash, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import ReactPlayer from "react-player";
 import Video from "./Video";
 import { dateUpdate } from "./Time";
 import { parseISO, format } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 import logo from '../images/jouer.png'
+import CheckConnectedAccount from '../utils/ChechConnectedAccount';
+
 
 function PostCard({
-  id,
+  
   MediaUrl,
   Caption,
   Date: postDate,
@@ -27,6 +29,92 @@ function PostCard({
   );
 
 
+ 
+//https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/6509eb6b6a20f499452b2186
+
+
+
+let { id } = useParams();
+
+const [isConnected, setIsConnected] = useState(false);
+const [isLoadingCC, setIsLoadingCC] = useState(false);
+
+const checkConnectLinkExists = async () => {
+  try {
+    if (id) {
+      const response = await axios.get(
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/check-connect-link-exists/${id}`
+      );
+      setIsConnected(response.data?.hasConnectLinkURL);
+    }
+  } catch (error) {
+    console.error('Error: ', error);
+  }
+}
+
+useEffect(() => {
+  checkConnectLinkExists();
+}, [id]);
+
+
+useEffect(() => {
+  checkConnectLinkExists();
+}, [id]);
+
+
+    //Fetch client connect data
+    const [clientConnectData, setClientConnectData] = useState("")
+    const getClientConnectData = async () => {
+        try {
+            const response = await axios.get(
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`
+            );
+            console.log("Client connect data :" + JSON.stringify(response.data)); // Success message or response data
+            // Perform any additional actions after successful deletion
+            setClientConnectData(response.data)
+
+        } catch (error) {
+            console.log(error); // Handle error
+        }
+    };
+
+    useEffect(() => {
+        getClientConnectData()
+    }, [])
+
+
+
+
+
+    const getClientConnect = async () => {
+      if (id) {
+        setIsLoadingCC(true);
+    
+        try {
+          const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`);
+    
+          if (response.status === 200) {
+            console.log("Client connect: ", response.data);
+            setIsConnected(true);
+            window.location.href = response.data?.ConnectLinkURL;
+          } else {
+            console.error("Error en la respuesta: ", response.status);
+          }
+        } catch (error) {
+          console.log("Error en la solicitud: ", error.message);
+        } finally {
+          setIsLoadingCC(false);
+        };
+      }
+    };
+    
+
+
+
+
+const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
+
+
   const [isEditing, setEditing] = useState(false);
   const [caption, setCaption] = useState(Caption);
 
@@ -39,7 +127,9 @@ function PostCard({
     setEditing(true);
     //Update caption on the backend + setSaving(true)
     try {
-      const response = await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${id}`, {
+      const response = await axios.put(
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${id}`, 
+        {
         NewCaption: caption
       });
     } catch (error) {
@@ -100,12 +190,29 @@ function PostCard({
           </div>
         </header>
         <div className="grow mt-2">
+
+          {/* condition socials connected */}
+
+          {isAnAccountConnected ? (
           <div className="text-sm mb-2">
             <span className="font-medium">Scheduled for</span>{" "}
             <p className="text-pink-500 font-bold" target="_blank">
               {dateUpdate(localDate)}
             </p>
           </div>
+        ) : (
+          <div className="text-sm mb-2 text-blue-500 font-bold">
+            
+              <button onClick={getClientConnect} className="hover:underline">
+                Connect your socials to schedule this post
+              </button>
+           
+            
+          </div>
+        )}
+
+
+
           <div className="text-sm  overflow-y-scroll font-medium mb-2">
             {isEditing ? (
               <div>
@@ -135,11 +242,11 @@ function PostCard({
 
           {isMp4 && <ReactPlayer playIcon={<img src={logo}
 
-            width={60} alt="thumbnail" />}
+            width={60} height={60} alt="thumbnail" />}
             controls={true} width="100%" url={MediaUrl} />}
           {isJpeg &&
 
-            <img src={MediaUrl} className="h-[48vh]  w-full object-contain" />
+            <img src={MediaUrl} className="h-[52vh]  w-full object-contain" />
           }
         </div>
 
