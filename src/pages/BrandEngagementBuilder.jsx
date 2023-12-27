@@ -93,17 +93,7 @@ function BrandEngagementBuilder() {
 
   });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    // console.log(value.length)
-    // if (name === "companySector" && value.length > 50) {
-    getTargetAudiences()
-    // }
-    setValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
-  };
+
 
   const handleSelectChange = (name, selectedOption) => {
     setValues((prevValues) => ({
@@ -353,6 +343,20 @@ function BrandEngagementBuilder() {
   useEffect(() => {
     getTemplates()
   }, [])
+
+  //handleInputChange
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    // console.log(value.length)
+    // if (name === "companySector" && value.length > 50) {
+    getTargetAudiences()
+    // }
+    setValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
   //Get target audiences
   const [targetAudiences, setTargetAudiences] = useState([])
   const getTargetAudiences = async () => {
@@ -368,8 +372,6 @@ function BrandEngagementBuilder() {
       console.log('error :' + error)
     }
   }
-
-
 
 
   const handleOptionChange = (e) => {
@@ -454,10 +456,10 @@ function BrandEngagementBuilder() {
                   Brand Engagement Builder
                 </h1>
                 <button
-                  className="px-2 md:py-1 py-2 bg-pink-500 md:mt-0 mt-2 font-bold  text-center text-white rounded text-sm flex items-center font-normal"
+                  className="px-2 md:py-1 py-2 bg-pink-500 md:mt-0 mt-2  text-center text-white rounded text-sm flex items-center font-normal"
                   onClick={() => setIsVisible(!isVisible)}
                 >
-                  <FontAwesomeIcon icon={faPlus} className="mr-1" />
+                  <FontAwesomeIcon icon={faPlus} className="mr-1 text-pink-500 text-center bg-white py-1 px-[5px] mb-[1px] rounded-full" />
                   Add brand voice
                 </button>
               </div>
@@ -510,11 +512,11 @@ function BrandEngagementBuilder() {
                     No tokens remaining. Purchase more to continue.
                   </a>
                 ) : (
-                  <div id="Brand_Form" className="flex flex-wrap bg-white md:p-4 rounded-lg sm:mb-12">
+                  <div id="Brand_Form" className="flex flex-wrap bg-blue-50 md:p-4 rounded-lg sm:mb-12">
                     <div className="w-full md:w-1/2">
                       <form className="rounded px-4" onSubmit={handlePreview}>
-                        <div className="bg-white flex-col rounded-md  flex flex-wrap">
-                          <label htmlFor="select3" className="block mb-2">
+                        <div className="  flex-col rounded-md  flex flex-wrap">
+                          <label htmlFor="select3" className="block pl-2  mb-2">
                             Please choose the post type
                           </label>
                           <div className="w-full flex flex-wrap">
@@ -595,7 +597,7 @@ function BrandEngagementBuilder() {
                             />
 
                           </div>
-                          {/* {targetAudiences.length > 0 && <div className="w-full  p-2">
+                          {targetAudiences.length > 0 && <div className="w-full  p-2">
                             <label htmlFor="select1" className="block mb-1">
                               Target Audience -<span className="text-blue-300 text-sm"> Generated with ai</span>
                             </label>
@@ -608,7 +610,7 @@ function BrandEngagementBuilder() {
                               }
                               options={targetAudiences && JSON.parse(targetAudiences)}
                             />
-                          </div>} */}
+                          </div>}
 
                           <div className="w-full md:w-1/2 p-2">
                             <label htmlFor="input2" className="block mb-1">

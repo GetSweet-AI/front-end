@@ -29,7 +29,15 @@ module.exports = {
         wider: "0.02em",
         widest: "0.4em",
       },
+      colors: {
+        'gsBlue': '#A2D2FF',
+        'gsBlueTwo': '#BDE0FE',
+        'gsPink': '#FFAFCC',
+        'gsPinkTwo': '#FFC8DD',
+        'gsBlueThree': '#CDB4DB',
+      },
     },
+   
   },
   plugins: [
     // eslint-disable-next-line global-require

@@ -9,9 +9,6 @@ const initialState = {
   user: null,
   subscription:"",
   clientsecret: "",
-  code:"",
-  email:"",
-  authData:"",
   token:"",
   hasSubscription:false
 };

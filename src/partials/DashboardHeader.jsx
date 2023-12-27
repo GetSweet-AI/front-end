@@ -199,7 +199,7 @@ function DashboardHeader({
               to="/signin"
               onClick={logOut}
             >
-              <svg
+              <span className="hidden md:block mr-2">Sign Out</span><svg
                 fill="#000000"
                 width="16px"
                 height="16x"
@@ -224,7 +224,7 @@ function DashboardHeader({
                     points="6 15 3 12 6 9"
                     style={{
                       fill: "none",
-                      stroke: "#6d7eef",
+                      stroke: "pink",
                       strokeLinecap: "round",
                       strokeLinejoin: "round",
                       strokeWidth: "2.4",
@@ -239,7 +239,7 @@ function DashboardHeader({
                     y2="12"
                     style={{
                       fill: "none",
-                      stroke: "#6d7eef",
+                      stroke: "pink",
                       strokeLinecap: "round",
                       strokeLinejoin: "round",
                       strokeWidth: "2.4",
@@ -258,7 +258,7 @@ function DashboardHeader({
                   ></path>
                 </g>
               </svg>{" "}
-              <span className="ml-2">Sign Out</span>
+
             </div>
             
             */}
