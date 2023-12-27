@@ -15,6 +15,7 @@ import MyModal from "../partials/Modal";
 const initialState = {
   email: "",
   password: "",
+  confirmPassword: "",
   company: "",
   fullName: "",
 };
@@ -46,7 +47,7 @@ function TheProfile() {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         setUser(res.data);
@@ -70,25 +71,31 @@ function TheProfile() {
   const updateAuthInfos = async (currentUser) => {
     setLoading(true);
 
+    const { password, confirmPassword } = values
+
     try {
       if (isChecked) {
+
         await axios
           .put(
-            `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
+            `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
             { email: currentUser?.email }
           )
           .then((res) => {
             axios.post(
-              "https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/reset-password",
+              "https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/reset-password",
               {
                 email: res?.data.user?.email,
                 newPassword: values.password,
               }
-            );
+            ).then((res) => {
+              dispatch(clearMessage())
+            })
           });
+
       } else {
         await axios.put(
-          `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
+          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/update/${user?._id}`,
           currentUser
         );
       }
@@ -123,7 +130,7 @@ function TheProfile() {
     try {
 
       await axios.put(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/update-general-info/${user?._id}`,
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/update-general-info/${user?._id}`,
         currentUser
       );
       fetchUserData()
@@ -151,7 +158,7 @@ function TheProfile() {
 
   const deleteUser = async () => {
     await axios.delete(
-      `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${user?._id}`, {
+      `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`, {
       email: user?.email
     }
     )
@@ -170,10 +177,15 @@ function TheProfile() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const { email, fullName, company } = values;
+    const { email, fullName, company, password, confirmPassword } = values;
 
-    updateAuthInfos(values);
-    console.log(JSON.stringify(values));
+    if (isChecked && (password !== confirmPassword)) {
+      dispatch(setMessage("Passwords do not match"))
+    } else {
+      updateAuthInfos(values);
+      console.log(JSON.stringify(values));
+    }
+
   };
   const onSubmitTwo = async (e) => {
     e.preventDefault();
@@ -216,43 +228,24 @@ function TheProfile() {
               <div className="mb-4 sm:mb-0">
                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
                   {" "}
-                  Update User Information
+                  Edit personal info
                 </h1>
               </div>
             </div>
-            <div className='flex flex-col justify-center'>
-              <div className='flex md:flex-row flex-col md:space-x-3'>
-                <div onClick={() => {
-                  setEditGeneralInfo(true);
-                  dispatch(clearMessage())
-                }} className='mb-2 rounded-md  cursor-pointer font-bold text-center z-6 text-white bg-gradient-to-r from-[#6366ff] to-[#373afd] py-3 w-full md:w-1/2' >
-                  Edit General Info
-                </div>
-                <button
-                  onClick={() => {
-                    setEditGeneralInfo(false);
-                    dispatch(clearMessage())
-                  }}
-                  className='mb-2 rounded-md  cursor-pointer 
-                   font-bold text-center z-6 text-white bg-gradient-to-r
-                    from-[#eb59d2] to-[#f016e9] py-3  w-full md:w-1/2' >
-                  Edit Auth Info
-                </button>
-              </div>
-            </div>
-
 
             <div>
-              <div className="max-w-7xl md:mx-auto px-4 md:px-6 ">
+              <div className="max-w-8xl shadow-md bg-blue-50 md:mx-auto px-4 md:px-6 ">
                 <div
                   className="pt-10 pb-10 md:translate-y-[20%]  lg:translate-y-0   lg:pb-16 
             flex justify-center items-center"
                 >
 
-                  <div className="bg-white bg-opacity-10 px-2 shadow-2xl py-5 opacity-90 md:w-[70%] lg:w-[45%] w-full rounded-xl">
+                  <div className="bg-white bg-opacity-10 px-2 
+                   py-5 opacity-90 md:space-y-0 space-x-3
+                    rounded-xl  grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
 
                     {/* Update General Infos form */}
-                    {!editGeneralInfo && <form
+                    <form
                       onSubmit={onSubmit}
                       className="max-w-sm mx-auto md:mt-8 "
                     >
@@ -262,7 +255,7 @@ function TheProfile() {
                             className="block text-gray-700 text-sm font-medium mb-1"
                             htmlFor="email"
                           >
-                            Work email address
+                            Email address
                           </label>
                           <input
                             type="email"
@@ -291,21 +284,39 @@ function TheProfile() {
                           </label>
                         </div>
                         {isChecked && (
-                          <div className="w-full px-3">
-                            <label
-                              className="block text-gray-700 text-sm font-medium mb-1"
-                              htmlFor="email"
-                            >
-                              Password
-                            </label>
-                            <input
-                              type="password"
-                              name="password"
-                              value={values.password}
-                              onChange={handleChange}
-                              className="form-input w-full rounded-full text-gray-700"
-                              placeholder="Password"
-                            />
+                          <div className="flex w-full flex-col">
+                            <div className="w-full px-3">
+                              <label
+                                className="block mb-2 text-gray-700 text-sm font-medium "
+                                htmlFor="email"
+                              >
+                                Password
+                              </label>
+                              <input
+                                type="password"
+                                name="password"
+                                value={values.password}
+                                onChange={handleChange}
+                                className="form-input w-full rounded-full text-gray-700"
+                                placeholder="Password"
+                              />
+                            </div>
+                            <div className="w-full px-3">
+                              <label
+                                className="block text-gray-700 text-sm font-medium my-2"
+                                htmlFor="email"
+                              >
+                                Confirm Password
+                              </label>
+                              <input
+                                type="password"
+                                name="confirmPassword"
+                                value={values.confirmPassword}
+                                onChange={handleChange}
+                                className="form-input w-full rounded-full text-gray-700"
+                                placeholder="Confirm Password"
+                              />
+                            </div>
                           </div>
                         )}
                       </div>
@@ -319,9 +330,11 @@ function TheProfile() {
                           {/* <Link to="/services"> */}
                           <button
                             type="submit"
-                            className="font-bold  text-white bg-gradient-to-r from-[#9394d2] to-[#4446e4] py-3 w-full"
+                            className="font-bold 
+                             text-gray-800 bg-gradient-to-r
+                              from-gsBlue to-gsBlueTwo py-3 w-full"
                           >
-                            UPDATE
+                            Update
                           </button>
 
                           {loading && (
@@ -343,10 +356,11 @@ function TheProfile() {
                           {/* </Link> */}
                         </div>
                       </div>
-                    </form>}
+                    </form>
+
 
                     {/* Update AUth Infos form */}
-                    {editGeneralInfo && <form
+                    <div> <form
                       onSubmit={onSubmitTwo}
                       className="max-w-sm mx-auto md:mt-8 "
                     >
@@ -371,7 +385,7 @@ function TheProfile() {
                         </div>
                         <div className="w-full px-3">
                           <label
-                            className="block text-gray-700 text-sm font-medium mb-1"
+                            className="block my-2 text-gray-700 text-sm font-medium mb-1"
                             htmlFor="email"
                           >
                             Company or Brand name
@@ -382,7 +396,7 @@ function TheProfile() {
                             value={values.company}
                             onChange={handleChange}
                             className="form-input w-full rounded-full text-gray-700"
-                            placeholder="Enter your company "
+                            placeholder="Enter your brand name "
                             required
                           />
                         </div>
@@ -398,7 +412,9 @@ function TheProfile() {
                           {/* <Link to="/services"> */}
                           <button
                             type="submit"
-                            className="font-bold  text-white bg-gradient-to-r from-[#9394d2] to-[#4446e4] py-3 w-full"
+                            className="font-bold 
+                            text-gray-800 bg-gradient-to-r
+                             from-gsBlue to-gsBlueTwo py-3 w-full"
                           >
                             Update
                           </button>
@@ -422,15 +438,16 @@ function TheProfile() {
                           {/* </Link> */}
                         </div>
                       </div>
-                    </form>}
+                    </form>
 
-                    <div className="max-w-sm mx-auto">
-                      <button
-                        onClick={openModal}
-                        className="font-bold w-full text-white mt-3 bg-[#ef3717] py-3"
-                      >
-                        Delete my account
-                      </button>
+                      <div className="max-w-sm mx-auto">
+                        <button
+                          onClick={openModal}
+                          className="font-bold w-full text-white mt-3 bg-[#ef3717] py-3"
+                        >
+                          Delete my account
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

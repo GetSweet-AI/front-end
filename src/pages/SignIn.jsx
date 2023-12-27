@@ -35,12 +35,13 @@ function SignIn() {
   const loginUser = async (currentUser) => {
     setLoading(true);
     try {
-      const { data } = await axios.post("https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/login", currentUser);
+      const { data } = await axios.post("https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/login", currentUser);
       const { user, token } = data;
       console.log("Data : " + data);
       navigate("/brand-engagement-builder");
       dispatch(switchLoginStatus(token));
       dispatch(setUserData(user));
+
     } catch (error) {
       // alert(error.response.data.msg)
       setMessage(error.response.data.msg);
@@ -62,7 +63,7 @@ function SignIn() {
 
 
   return (
-    <div className="flex flex-col min-h-screen  relative overflow-hidden ">
+    <div className="flex flex-col h-screen  relative overflow-hidden ">
       {/*  Site header */}
 
       {/*  Page content */}
@@ -72,7 +73,7 @@ function SignIn() {
         <section className="relative   ">
           <div className="max-w-7xl md:mx-auto px-4 md:px-6 ">
             <div
-              className="pt-32 pb-10 md:translate-y-[20%]  lg:translate-y-0   lg:pb-16 
+              className="mt-[5%] md:translate-y-[20%]  lg:translate-y-0   lg:pb-16 
             flex justify-center items-center"
             >
               <div className="bg-white bg-opacity-10 px-2 shadow-2xl py-5 opacity-90 md:w-[70%] lg:w-[45%] w-full rounded-xl">

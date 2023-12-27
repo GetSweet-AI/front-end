@@ -25,6 +25,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { useSelector } from "react-redux";
+import Onboarding from "../components/OnBoarding/Onboarding";
 
 const navigation = [
   { name: 'Sign up', href: '/signup', gtmtrigger: 'header_create_account_btn' },
@@ -148,6 +149,10 @@ export default function Home() {
 
   const { isLoggedIn } = useSelector((state) => state.auth)
   console.log("isLoggedIn :" + isLoggedIn)
+
+
+
+
   return (
     <div className="bg-white#">
       {/* embed videos script */}
@@ -204,7 +209,9 @@ export default function Home() {
             {
               isLoggedIn && <a
                 href="/brand-engagement-builder"
-                className="text-sm  font-semibold leading-6 text-gray-900"
+                className="text-sm  font-semibold leading-6
+                border-2 border-gray-400 p-2 rounded-xl
+                text-gray-900 hover:bg-pink-600 hover:text-white"
 
               >
                 Get Started
@@ -235,13 +242,13 @@ export default function Home() {
               </button>
             </div>
             <div className="mt-6 flow-root">
-              <div className="-my-6 divide-y divide-gray-500/10">
+              {!isLoggedIn ? <div className="-my-6 divide-y divide-gray-500/10">
                 <div className="space-y-2 py-6">
                   {navigation.map((item) => (
                     <a
                       key={item.name}
                       href={item.href}
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-200"
                       // GA code
                       onClick={(e) => {
                         handleLinkClick('mobile_' + item.gtmtrigger);
@@ -252,6 +259,20 @@ export default function Home() {
                   ))}
                 </div>
               </div>
+                :
+                <div className="space-y-2 py-6">
+
+                  <a
+                    href='/brand-engagement-builder'
+                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold
+                       leading-7 text-gray-900 hover:bg-gray-200"
+
+                  >
+                    Get Started
+                  </a>
+
+                </div>
+              }
             </div>
           </Dialog.Panel>
         </Dialog>
@@ -274,15 +295,15 @@ export default function Home() {
           </div>
           <div className="py-8 sm:py-16">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
-              <div className="mx-auto max-w-2xl text-center">
+              <div className="mx-auto max-w-3xl text-center">
                 <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
                   100% Automate your{" "}
                   <span className="text-pink-600">social media</span> with AI
+
+                  {/* Fully automate your business’s <span className="text-pink-600"> social media posts!</span> */}
                 </h1>
                 <p className="mt-4 text-md leading-8 text-gray-600">
-                  Replace ChatGPT and other tools you use for social media with
-                  GetSweet.AI to 100% automate your content creation and
-                  posting.
+                  Ditch ChatGPT and all the other tools your business might use and get on board with Sweet.AI; the revolutionary social media that will fully automate your posts seamlessly!
                 </p>
                 <div className="mt-6 flex items-center justify-center gap-x-6">
                   <Link to="/signup"

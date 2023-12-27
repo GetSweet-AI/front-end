@@ -15,9 +15,9 @@ export default function EmailConfirmed() {
 
 
     useEffect(() => {
-        const confirmationLink = `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/confirm-email/${userId}`;
+        const confirmationLink = `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/confirm-email/${userId}`;
 
-        axios.get(`https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${userId}`).then((res) => {
+        axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${userId}`).then((res) => {
             axios.put(confirmationLink)
                 .then(response => {
                     // Handle the response if needed

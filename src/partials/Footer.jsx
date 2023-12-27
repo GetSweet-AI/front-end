@@ -114,10 +114,10 @@ export function Footer() {
           </div>
           <div className="mt-10 xl:mt-0">
             <h3 className="text-sm font-semibold leading-6 text-white">
-              Get sweet updates
+              Stay Sweet with our newsletter!
             </h3>
             <p className="mt-2 text-sm leading-6 text-gray-300">
-              Keep up to date with our latest news, releases, and promotions. 
+              Get the latest news with our newsletter providing updates, releases, and promotions!
             </p>
             <MailchimpForm />
           </div>
@@ -125,7 +125,7 @@ export function Footer() {
         <div className="mt-16 border-t border-white/10 pt-8 sm:mt-20 md:flex md:items-center md:justify-between lg:mt-24">
           <div className="flex space-x-6 md:order-2">
             {navigation.social.map((item) => (
-              <Link 
+              <Link
                 to={item.href}
                 key={item.name}
                 className="text-gray-500 hover:text-gray-400"

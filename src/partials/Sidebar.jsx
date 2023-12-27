@@ -4,13 +4,13 @@ import logo from "../images/logogetsweet.png";
 // import shortLogo from "../images/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBlog, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faArchive, faBlog, faCog, faImage, faUsers } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { setUserData } from "../redux/auth";
 import AvailableTokens from "./AvailableTokens";
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
-  const { isLoggedIn, usuario } = useSelector((state) => state.auth);
+  const { isLoggedIn } = useSelector((state) => state.auth);
 
   const location = useLocation();
   const { pathname } = location;
@@ -30,7 +30,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seashell-app-2-n2die.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         setUser(res.data);
@@ -41,6 +41,26 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         console.log(err);
       });
   };
+
+  useEffect(() => {
+    localStorage.setItem("sidebar-expanded", sidebarExpanded);
+    if (sidebarExpanded) {
+      document.querySelector("body").classList.add("sidebar-expanded");
+    } else {
+      document.querySelector("body").classList.remove("sidebar-expanded");
+    }
+  }, [sidebarExpanded]);
+
+
+  useEffect(() => {
+    sidebarOpen && !sidebarExpanded && setSidebarExpanded(true);
+  }, [sidebarOpen]);
+
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }) => {
@@ -57,33 +77,6 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
     return () => document.removeEventListener("click", clickHandler);
   });
 
-  // close if the esc key is pressed
-  useEffect(() => {
-    const keyHandler = ({ keyCode }) => {
-      if (!sidebarOpen || keyCode !== 27) return;
-      setSidebarOpen(false);
-    };
-    document.addEventListener("keydown", keyHandler);
-    return () => document.removeEventListener("keydown", keyHandler);
-  });
-
-  useEffect(() => {
-    localStorage.setItem("sidebar-expanded", sidebarExpanded);
-    if (sidebarExpanded) {
-      document.querySelector("body").classList.add("sidebar-expanded");
-    } else {
-      document.querySelector("body").classList.remove("sidebar-expanded");
-    }
-  }, [sidebarExpanded]);
-
-  useEffect(() => {
-    sidebarOpen && !sidebarExpanded && setSidebarExpanded(true);
-  }, [sidebarOpen]);
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
-
   return (
     <div>
       {/* Sidebar backdrop (mobile only) */}
@@ -97,7 +90,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
       <div
         id="sidebar"
         ref={sidebar}
-        className={`flex bg-purple-500 flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-72 lg:w-20 lg:sidebar-expanded:!w-72 2xl:!w-68 shrink-0 p-4 pr-0 transition-all duration-200 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-72"
+        className={`flex bg-gradient-to-b via-blue-600 from-blue-500 to-pink-500 flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-72 lg:w-20 lg:sidebar-expanded:!w-72 2xl:!w-68 shrink-0 p-4 pr-0 transition-all duration-200 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-72"
           }`}
       >
         {/* Sidebar header */}
@@ -151,7 +144,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               </li>
               {/* Home */}
               <li
-                className={`px-3 py-3 last:mb-0 ${pathname === "/brand-engagement-builder"
+                className={`px-3 mt-1 py-3 last:mb-0 ${pathname === "/brand-engagement-builder"
                   ? "bg-white rounded-l-full"
                   : ""
                   }`}
@@ -192,7 +185,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                         "text-[#3b82f6]"
                         }`}
                     >
-                      Brand Builder
+                      {sidebarExpanded ? "Brand Builder" : ""}
                     </span>
                   </div>
                 </NavLink>
@@ -232,37 +225,14 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                       className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/posts-feed" && "text-[#3b82f6]"
                         }`}
                     >
-                      Posts Feed
+                      {sidebarExpanded ? "Posts Feed" : ""}
+
                     </span>
                   </div>
                 </NavLink>
               </li>
-              {/* {user?.role === "admin" && (
-                <li
-                  className={`px-3 py-3 last:mb-0 ${pathname === "/users" ? "bg-white rounded-l-full" : ""
-                    }`}
-                >
-                  <NavLink
-                    end
-                    to="/users"
-                    className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/users" && "hover:text-white"
-                      }`}
-                  >
-                    <div>
-                      <FontAwesomeIcon className={pathname === "/users" ? "text-[#3b82f6]" : "text-[#fff]"} icon={faUsers} />
-                    </div>
-                    <div className="flex items-center overflow-hidden">
-                      <span
-                        className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/users" && "text-[#3b82f6]"
-                          }`}
-                      >
-                        Users
-                      </span>
-                    </div>
-                  </NavLink>
-                </li>
-              )} */}
-              {/* Home */}
+
+              {/* payment */}
               <li
                 className={`px-3 py-3 last:mb-0 ${pathname === "/payment" ? "bg-white rounded-l-full" : ""
                   }`}
@@ -295,12 +265,12 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                       className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/payment" && "text-[#3b82f6]"
                         }`}
                     >
-                      Payment
+                      {sidebarExpanded ? "Payment" : ""}
                     </span>
                   </div>
                 </NavLink>
               </li>
-              {/* Home */}
+              {/* profile */}
               <li
                 className={`px-3 py-3 last:mb-0 ${pathname === "/profile" ? "bg-white rounded-l-full" : ""
                   }`}
@@ -335,14 +305,46 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                       className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/profile" && "text-[#3b82f6]"
                         }`}
                     >
-                      Account settings
+                      {sidebarExpanded ? "Account settings" : ""}
+
                     </span>
+
                   </div>
                 </NavLink>
               </li>
+              {/*Assets page    */}
+              <li
+                className={`px-3 ml-1 py-3 last:mb-0 ${pathname === "/assets" ? "bg-white rounded-l-full" : ""
+                  }`}
+              >
+                <NavLink
+                  end
+                  to="/assets"
+                  className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname === "/assets" && "hover:text-white"
+                    }`}
+                >
+                  <div>
+                    <FontAwesomeIcon icon={faImage} color={`${pathname === "/assets" ? 'blue' : 'white'}`} size={24} />
+
+                  </div>
+                  <div className="flex items-center overflow-hidden">
+                    <span
+                      className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/assets" && "text-[#3b82f6]"
+                        }`}
+                    >
+                      {sidebarExpanded ? "Assets" : ""}
+
+                    </span>
+
+                  </div>
+                </NavLink>
+              </li>
+
+              <div className="h-[2px] my-2 bg-gray-400" />
+
               {user?.role === "admin" && (
                 <li
-                  className={`px-3 py-3 last:mb-0 ${pathname === "/users" ? "bg-white rounded-l-full" : ""
+                  className={`px-3 ml-1 py-3 last:mb-0 ${pathname === "/users" ? "bg-white rounded-l-full" : ""
                     }`}
                 >
                   <NavLink
@@ -366,7 +368,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                         className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname === "/users" && "text-[#3b82f6]"
                           }`}
                       >
-                        Users
+                        {sidebarExpanded ? " Users" : ""}
+
                       </span>
                     </div>
                   </NavLink>
@@ -374,7 +377,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               )}
               {user?.role === "admin" && (
                 <li
-                  className={`px-3 py-3 last:mb-0 ${pathname.startsWith("/brand-engagements")
+                  className={`px-3 ml-1 py-3 last:mb-0 ${pathname.startsWith("/brand-engagements")
                     ? "bg-white rounded-l-full"
                     : ""
                     }`}
@@ -402,22 +405,97 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                           "text-[#3b82f6]"
                           }`}
                       >
-                        Brand engagements
+                        {sidebarExpanded ? "Brand engagements" : ""}
+
+                      </span>
+                    </div>
+                  </NavLink>
+                </li>
+              )}
+              {user?.role === "admin" && (
+                <li
+                  className={`px-3 ml-1 py-3 last:mb-0 ${pathname.startsWith("/archive")
+                    ? "bg-white rounded-l-full"
+                    : ""
+                    }`}
+                >
+                  <NavLink
+                    end
+                    to="/archive"
+                    className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname.startsWith("/archive") &&
+                      "hover:text-white"
+                      }`}
+                  >
+                    <div>
+                      <FontAwesomeIcon
+                        className={
+                          pathname.startsWith("/archive")
+                            ? "text-[#3b82f6]"
+                            : "text-[#fff]"
+                        }
+                        icon={faArchive}
+                      />
+                    </div>
+                    <div className="flex items-center overflow-hidden">
+                      <span
+                        className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname.startsWith("/archive") &&
+                          "text-[#3b82f6]"
+                          }`}
+                      >
+                        {sidebarExpanded ? "Archive" : ""}
+
+                      </span>
+                    </div>
+                  </NavLink>
+                </li>
+              )}
+              {user?.role === "admin" && (
+                <li
+                  className={`px-3 ml-1 py-3 last:mb-0 ${pathname.startsWith("/settings")
+                    ? "bg-white rounded-l-full"
+                    : ""
+                    }`}
+                >
+                  <NavLink
+                    end
+                    to="/settings"
+                    className={`block flex text-white hover:text-white truncate transition duration-150 ${pathname.startsWith("/settings") &&
+                      "hover:text-white"
+                      }`}
+                  >
+                    <div>
+                      <FontAwesomeIcon
+                        className={
+                          pathname.startsWith("/settings")
+                            ? "text-[#3b82f6]"
+                            : "text-[#fff]"
+                        }
+                        icon={faCog}
+                      />
+                    </div>
+                    <div className="flex items-center overflow-hidden">
+                      <span
+                        className={`text-sm font-semibold ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${pathname.startsWith("/settings") &&
+                          "text-[#3b82f6]"
+                          }`}
+                      >
+                        {sidebarExpanded ? "Settings" : ""}
+
                       </span>
                     </div>
                   </NavLink>
                 </li>
               )}
 
-              <li
+              {/* <li
                 className={`px-3 py-3 rounded-sm last:mb-0 bg-purple-500`}
-              ></li>
+              ></li> */}
             </ul>
           </div>
         </div>
 
         {/* Expand / collapse button */}
-        <div className="pt-3 hidden lg:inline-flex 2xl:hidden justify-end mt-auto">
+        <div className="pt-3 hidden md:inline-flex  justify-end mt-auto">
           <div className="px-3 py-3">
             <button onClick={() => setSidebarExpanded(!sidebarExpanded)}>
               <span className="sr-only">Expand / collapse sidebar</span>

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Dropdown from '../utils/Dropdown';
 import Transition from '../utils/Transition';
 import logo from '../images/logogetsweet.png'
@@ -61,6 +61,8 @@ function Header() {
   // }, [darkMode]);
 
   console.log("isLoggedIn :" + isLoggedIn)
+
+  const navigate = useNavigate()
 
   return (
     <header className=" shadow-xl shadow-gray-100 fixed     w-full z-30">
@@ -181,27 +183,15 @@ function Header() {
                         Create Account
                       </Link>
                     </li>
-                    {/* <li className="py-2 my-2 border-t border-b border-gray-200 dark:border-gray-800">
-                      <span className="flex text-gray-600 dark:text-gray-400 py-2">Resources</span>
-                      <ul className="pl-4">
-                        <li>
-                          <Link
-                            to="/help"
-                            className="text-sm flex font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 py-2"
-                          >
-                            Help center
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            to="/404"
-                            className="text-sm flex font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 py-2"
-                          >
-                            404
-                          </Link>
-                        </li>
-                      </ul>
-                    </li> */}
+
+                    {isLoggedIn &&
+                      <li className="ml-3">
+                        <Link
+                          onClick={() => navigate("brand-engagement-builder")}
+                          className="text-sm flex font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 py-2" to="/signup">
+                          Get Started
+                        </Link>
+                      </li>}
 
                   </ul>
                 </div>

@@ -20,24 +20,29 @@
     }
 }
 
-/* Firefox */
-* {
-    scrollbar-width: thin;
-    scrollbar-color: orange;
+/* styles.css */
+
+/* Track */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 10px;
 }
 
-/* Chrome, Edge, and Safari */
-/* *::-webkit-scrollbar {
-    width: 5px;
-} */
-
-*::-webkit-scrollbar-track {
-    background: white;
-    border-radius: 5px;
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background-color: #00abfb;
+    border-radius: 3px;
 }
 
-*::-webkit-scrollbar-thumb {
-    background-color: white;
-    border-radius: 14px;
-    border: 1px solid orange;
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+
+
+/* Tailwind CSS utility classes (example) */
+.container {
+    @apply p-4;
+    /* Add your Tailwind CSS utility classes here */
 }

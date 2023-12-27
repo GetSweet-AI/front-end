@@ -14,31 +14,35 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { MutatingDots } from "react-loader-spinner";
 
-function BrandEngagements() {
+function Archive() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [engagements, setEngagements] = useState([]);
+  const [templates, setTemplates] = useState([])
+
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
   const { token, user } = useSelector((state) => state.auth);
-
-
 
   //pagination
   const [pageNumber, setPageNumber] = useState(0);
   const [numberOfPages, setNumberOfPages] = useState(0);
 
+
+  //creates an array called pages and initializes it with a sequence of numbers from 0 to numberOfPages - 1
   const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
 
+  //Fetch archive of brand engagements and templates
   const fetchEngagements = async () => {
     setIsLoading(true);
     try {
-      fetch(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+      fetch(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
         .then((response) => response.json())
-        .then(({ totalPages, brandEngagements }) => {
-          setEngagements(brandEngagements);
+        .then(({ totalPages, archive }) => {
+          setEngagements(archive);
           setNumberOfPages(totalPages);
+
         });
     } catch (error) {
       console.log(error);
@@ -48,10 +52,10 @@ function BrandEngagements() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+    fetch(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/archive?userId=${user?._id}&page=${pageNumber}`)
       .then((response) => response.json())
-      .then(({ totalPages, brandEngagements }) => {
-        setEngagements(brandEngagements);
+      .then(({ totalPages, archive }) => {
+        setEngagements(archive);
         setNumberOfPages(totalPages);
       });
     setIsLoading(false);
@@ -67,22 +71,36 @@ function BrandEngagements() {
     setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
   };
 
-  // useEffect(() => {
-  //   fetchEngagements();
-  // }, []);
+
   const [search, setSearch] = useState('')
   const handleChange = (e) => {
     setSearch(e.target.value)
   };
 
-
-
-  console.log('Search : ' + search)
-
   //Get ClientConnect by BrandEngagementId
   const [connectLinkURL, setConnectLinkURL] = useState("")
   const [isLoadingCC, setIsLoadingCC] = useState(false);
 
+
+  //Get template + add delete icon
+
+  const [loadingTemplates, setLoadingTemplates] = useState(false)
+  const getTemplates = async () => {
+    setLoadingTemplates(true)
+    try {
+      await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/templates-archive?userId=${user?._id}`).then((res) => {
+        setTemplates(res.data.templateArchive)
+      })
+
+    } catch (error) {
+
+    }
+    setLoadingTemplates(false)
+  }
+
+  useEffect(() => {
+    getTemplates()
+  }, [])
 
 
   return (
@@ -106,71 +124,25 @@ function BrandEngagements() {
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0 ">
                 <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
-                  Brand Engagements
+                  Brand Engagements Archive
                 </h1>
 
               </div>
 
               {/* Right: Actions */}
-              <div className="flex justify-center items-center">
+              <div className="">
 
-                {/* <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2"> */}
-                {/* Search form */}
-                {/* <SearchForm /> */}
-                {/* Filter button */}
-                {/* <FilterButton align="right" /> */}
-                {/* Create campaign button */}
-                {/* <button className="btn bg-indigo-500 hover:bg-indigo-600 ">
-                                    <svg className="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
-                                        <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
-                                    </svg>
-                                    <span className="hidden xs:block ml-2">Create Worflow</span>
-                                </button> */}
-
-                <div>
-                  {numberOfPages > 0 && <div className="mr-4">
-                    <div class="flex items-center justify-center space-x-2">
-                      <button
-                        className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
-                        onClick={gotoPrevious}
-                      >
-                        Previous
-                      </button>
-
-                      <select
-                        value={pageNumber}
-                        onChange={(e) => setPageNumber(parseInt(e.target.value))}
-                        className="rounded-md h-9 block bg-white border border-gray-300 text-gray-600 "
-                      >
-                        {pages.map((pageIndex) => (
-                          <option
-                            key={pageIndex}
-                            value={pageIndex}
-                            className="text-black"
-                          >
-                            {pageIndex + 1}
-                          </option>
-                        ))}
-                      </select>
-                      <button
-                        className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
-                        onClick={gotoNext}
-                      >
-                        Next
-                      </button>
-                    </div>
-                    {/* <PaginationNumeric /> */}</div>}
-                </div>
-                <div><input
+                <input
                   type="text"
                   name="search"
                   placeholder="Search by brandName or website"
                   onChange={handleChange}
                   className="form-input focus:border-slate-300"
                 />
-                </div>
               </div>
             </div>
+
+
 
             {/* Cards */}
             {isLoading && (
@@ -217,8 +189,7 @@ function BrandEngagements() {
                           postType={item.PostType}
                           relatedPostsStatus={item.relatedPostsStatus}
                           fetchEngagements={fetchEngagements}
-                          isArchive={false}
-                          isAdminPage={true}
+                          isArchive={true}
 
                         />
                       );
@@ -237,7 +208,7 @@ function BrandEngagements() {
                   Previous
                 </button>
 
-                {/* {pages.map((pageIndex) => (
+                {pages.map((pageIndex) => (
                   <button
                     key={pageIndex}
                     className={`${pageNumber === pageIndex
@@ -248,23 +219,7 @@ function BrandEngagements() {
                   >
                     {pageIndex + 1}
                   </button>
-                ))} */}
-                <select
-                  value={pageNumber}
-                  onChange={(e) => setPageNumber(parseInt(e.target.value))}
-                  className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
-                >
-                  {pages.map((pageIndex) => (
-                    <option
-                      key={pageIndex}
-                      value={pageIndex}
-                      className="text-black"
-                    >
-                      {pageIndex + 1}
-                    </option>
-                  ))}
-                </select>
-
+                ))}
 
                 <button
                   className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
@@ -275,11 +230,42 @@ function BrandEngagements() {
               </div>
               {/* <PaginationNumeric /> */}</div>}
 
+
+            {/* Page header */}
+            <div className="sm:flex sm:justify-between sm:items-center mb-8">
+              {/* Left: Title */}
+              <div className="mb-4 sm:mb-0 ">
+                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
+                  Templates Archive
+                </h1>
+
+              </div>
+
+            </div>
+            <div className="flex flex-wrap">
+              {
+                templates?.map((template, idx) => (
+                  <div
+                    key={idx}
+                    className="flex border-2 text-sm m-1 text-md 
+                                                        border-blue-600 py-1 px-2 rounded-xl"
+                  // onClick={ }
+                  >
+                    <button className="">
+                      {template.Title}
+                    </button>
+
+                  </div>
+                ))
+              }</div>
           </div>
+
+
+
         </main>
       </div>
     </div>
   );
 }
 
-export default BrandEngagements;
+export default Archive;

@@ -5,6 +5,9 @@ import "./css/style.css";
 import AOS from "aos";
 import { useSelector } from "react-redux";
 import { Puff } from "react-loader-spinner";
+import Archive from "./pages/Archive";
+import Settings from "./pages/Settings";
+import Assets from "./pages/Assets";
 
 const Home = lazy(() => import("./pages/Home"));
 const SignIn = lazy(() => import("./pages/SignIn"));
@@ -63,8 +66,10 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route path="/brand-engagements" element={isLoggedIn ? <BrandEngagements /> : <SignIn />} />
+        <Route path="/archive" element={isLoggedIn ? <Archive /> : <SignIn />} />
         <Route path="/brand-engagement-builder" element={isLoggedIn ? <BrandEngagementBuilder /> : <SignIn />} />
         <Route path="/profile" element={isLoggedIn ? <TheProfile /> : <SignIn />} />
+        <Route path="/assets" element={isLoggedIn ? <Assets /> : <SignIn />} />
         <Route path="/payment" element={isLoggedIn ? <Payment /> : <SignIn />} />
         <Route path="/payment/manage-subscription" element={isLoggedIn ? <ManageSubscription /> : <SignIn />} />
         <Route path="/success" element={isLoggedIn ? <Success /> : <SignIn />} />
@@ -77,6 +82,7 @@ function App() {
         <Route path="/posts-feed" element={<PostsFeed />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/check-email" element={<CheckEmail />} />
+        <Route path="/settings" element={<Settings />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/confirm-email/:userId" element={<EmailConfirmed />} />
         <Route path="*" element={<NotFound />} />
