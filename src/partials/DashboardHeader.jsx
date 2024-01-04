@@ -18,7 +18,7 @@ function DashboardHeader({
 }) {
 
   const { user } = useSelector((state) => state.auth); 
-  const fullName = user ? user.fullName : "Invitado";
+  const fullName = user ? user.fullName : "";
   const greeting = Greeting();
   const userPicture = userPic;
   const capiFullname = fullName.charAt(0).toUpperCase() + fullName.slice(1);
@@ -138,7 +138,6 @@ function DashboardHeader({
                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                        <g
                          id="SVGRepo_tracerCarrier"
-                         strokeLinecap="round"
                          strokeLinejoin="round"
                          stroke="#CCCCCC"
                          stroke-width="0.72"
@@ -198,8 +197,11 @@ function DashboardHeader({
               className="font-medium cursor-pointer text-sm text-slate-800 hover:text-slate-600 flex items-center py-1 px-3"
               to="/signin"
               onClick={logOut}
+
+
             >
-              <span className="hidden md:block mr-2">Sign Out</span><svg
+              
+          
                 fill="#000000"
                 width="16px"
                 height="16x"
@@ -213,7 +215,7 @@ function DashboardHeader({
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g
                   id="SVGRepo_tracerCarrier"
-                  strokeLinecap="round"
+                  
                   strokeLinejoin="round"
                   stroke="#CCCCCC"
                   stroke-width="0.72"
@@ -224,7 +226,7 @@ function DashboardHeader({
                     points="6 15 3 12 6 9"
                     style={{
                       fill: "none",
-                      stroke: "pink",
+                      
                       strokeLinecap: "round",
                       strokeLinejoin: "round",
                       strokeWidth: "2.4",
@@ -239,7 +241,7 @@ function DashboardHeader({
                     y2="12"
                     style={{
                       fill: "none",
-                      stroke: "pink",
+                    
                       strokeLinecap: "round",
                       strokeLinejoin: "round",
                       strokeWidth: "2.4",
@@ -258,7 +260,7 @@ function DashboardHeader({
                   ></path>
                 </g>
               </svg>{" "}
-
+              <span className="ml-2">Sign Out</span>
             </div>
             
             */}

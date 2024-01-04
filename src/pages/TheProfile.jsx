@@ -11,6 +11,9 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { logoutUser, setUserData } from "../redux/auth";
 import MyModal from "../partials/Modal";
+import ChangePic from "../partials/ChangePic";
+import { updateUserPicture } from "../partials/ChangePic";
+import userPic from "../images/user.png";
 
 const initialState = {
   email: "",
@@ -22,6 +25,7 @@ const initialState = {
 
 function TheProfile() {
   let [isOpen, setIsOpen] = useState(false);
+  let [isOpenPic, setIsOpenPic] = useState(false);
 
   function closeModal() {
     setIsOpen(false);
@@ -29,6 +33,13 @@ function TheProfile() {
 
   function openModal() {
     setIsOpen(true);
+  }
+  function closeModalPic() {
+    setIsOpenPic(false);
+  }
+
+  function openModalPic() {
+    setIsOpenPic(true);
   }
 
   const navigate = useNavigate();
@@ -250,6 +261,30 @@ function TheProfile() {
                       className="max-w-sm mx-auto md:mt-8 "
                     >
                       <div className="flex flex-wrap -mx-3 mb-4">
+
+                        {/*Profile picture */}
+                        <div className="flex items-center justify-center mx-3 flex-col">
+                          <img
+                          className="block mx-auto w-1/2 rounded-full ring-2 ring-blue-500"
+                          src={userPic}
+                          alt=""
+                          />
+                        <button
+                        onClick={openModalPic}
+                        className=" font-bold w-[75%] text-[#4361ee] mt-5 py-3 "
+                        >
+                        Change profile picture
+                        </button>
+                      <ChangePic
+                        isOpen={isOpenPic}
+                        setIsOpenPic={setIsOpenPic}
+                        onCancel={closeModalPic}
+                        updateUserPicture={updateUserPicture}
+                      />
+                    </div>
+
+
+
                         <div className="w-full px-3">
                           <label
                             className="block text-gray-700 text-sm font-medium mb-1"
