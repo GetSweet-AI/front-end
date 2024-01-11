@@ -31,7 +31,7 @@ function ResetPassword() {
   const resetPassword = async () => {
     setIsLoading(true)
     try {
-      await axios.post("https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/reset-password", {
+      await axios.post("http://localhost:5000/api/v1/auth/reset-password", {
         email: email,
         newPassword: values.password
       });

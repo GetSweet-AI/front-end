@@ -58,7 +58,7 @@ function BrandEngagementBuilder() {
 
   useEffect(() => {
     fetch(
-      `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+      `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
@@ -70,7 +70,7 @@ function BrandEngagementBuilder() {
   const getUserData = async () => {
     await axios
       .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         dispatch(setUserData(res?.data.user));
@@ -136,7 +136,7 @@ function BrandEngagementBuilder() {
       setPreviewLoading(true);
       await axios
         .post(
-          "https://seal-app-dk3kg.ondigitalocean.app/api/v1/generate-blog-post",
+          "http://localhost:5000/api/v1/generate-blog-post",
           {
             tone: brandTone?.value,
             brandName: brandName,
@@ -173,7 +173,7 @@ function BrandEngagementBuilder() {
     } else {
       await axios
         .post(
-          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/save-brand-engagement/${user?._id}`,
+          `http://localhost:5000/api/v1/save-brand-engagement/${user?._id}`,
           postData
         )
         .then((res) => {
@@ -182,7 +182,7 @@ function BrandEngagementBuilder() {
           setSaveLoading(false);
           // console.log(res.data);
           axios.get(
-            `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+            `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
           )
             .then((response) => response.json())
             .then(({ totalPages, brandEngagements }) => {
@@ -225,7 +225,7 @@ function BrandEngagementBuilder() {
 
   const fetchEngagements = async () => {
     await fetch(
-      `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+      `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
@@ -234,7 +234,7 @@ function BrandEngagementBuilder() {
       });
   };
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     dispatch(clearMessage());
@@ -271,7 +271,7 @@ function BrandEngagementBuilder() {
     try {
       // Make a POST request to update the notificationMessage in the backend using Axios
       // Replace 'YOUR_UPDATE_NOTIFICATION_ENDPOINT' with your actual endpoint
-      await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/update-notification-message/${user._id}`, {
+      await axios.put(`http://localhost:5000/api/v1/auth/update-notification-message/${user._id}`, {
         notificationMessage: 'none',
       }).then((res) => {
         fetchUserData()
@@ -284,7 +284,7 @@ function BrandEngagementBuilder() {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         dispatch(setUserData(res.data.user));
@@ -331,7 +331,7 @@ function BrandEngagementBuilder() {
   const [templates, setTemplates] = useState([])
   const getTemplates = async () => {
     try {
-      await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
+      await axios.get(`http://localhost:5000/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
         setTemplates(res.data.templates)
       })
 
@@ -361,7 +361,7 @@ function BrandEngagementBuilder() {
   const [targetAudiences, setTargetAudiences] = useState([])
   const getTargetAudiences = async () => {
     try {
-      await axios.post(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/generate-ta-options`, {
+      await axios.post(`http://localhost:5000/api/v1/generate-ta-options`, {
         companySector: values.companySector
       }).then((res) => {
         setTargetAudiences(res.data.targetAudiences)
@@ -424,7 +424,7 @@ function BrandEngagementBuilder() {
   const disableFirstLogin = async () => {
     try {
 
-      await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/disable-first-login/${user?._id}`);
+      await axios.put(`http://localhost:5000/api/v1/auth/users/disable-first-login/${user?._id}`);
 
     } catch (error) {
       console.log(error)
@@ -736,8 +736,9 @@ function BrandEngagementBuilder() {
                               Reset form
                             </button>
                             <button
+                              disabled={previewLoading}
                               type={!previewLoading ? "submit" : "button"}
-                              className="md:w-[80%] flex justify-center items-center w-full bg-purple-500 text-white rounded p-2 mt-2 md:mt-0 md:ml-2"
+                              className={`${previewLoading ? "cursor-not-allowed" : ""} md:w-[80%] flex justify-center items-center w-full bg-purple-500 text-white rounded p-2 mt-2 md:mt-0 md:ml-2`}
                             >
                               {previewLoading ? (
                                 <>

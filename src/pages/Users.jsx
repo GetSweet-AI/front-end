@@ -45,7 +45,7 @@ function Users() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [users, setUsers] = useState([]);
 
@@ -59,7 +59,7 @@ function Users() {
   async function fetchUsersData(user, pageNumber) {
     try {
       const response = await axios.get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`
+        `http://localhost:5000/api/v1/admin/users?userId=${user?._id}&page=${pageNumber}`
       );
       const { totalPages, users } = response.data;
       setUsers(users);
@@ -76,7 +76,7 @@ function Users() {
   const updateRole = async (userId) => {
     await axios
       .put(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/users/${userId}/update-role`
+        `http://localhost:5000/api/v1/admin/users/${userId}/update-role`
       )
       .then((res) => {
         fetchUsersData(user, pageNumber);
@@ -89,7 +89,7 @@ function Users() {
   const deleteUser = async (userId) => {
     await axios
       .delete(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${userId}`
+        `http://localhost:5000/api/v1/auth/users/${userId}`
       )
       .then((res) => {
         fetchUsersData(user, pageNumber);
