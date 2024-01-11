@@ -45,7 +45,7 @@ function Users() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [users, setUsers] = useState([]);
 
