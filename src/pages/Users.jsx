@@ -223,7 +223,7 @@ function Users() {
                           <td className="py-4 px-6 md:px-8 border-b">
                             {client.fullName}
                           </td>
-                          <td className="py-4 px-2 border-b">{client.email}</td>
+                          <td className="py-4 px-2 border-b">{client.email}1</td>
                           <td className="py-4 px-6 border-b">{client.company}</td>
                           <td className="py-4 px-6 border-b">{client.Plan}</td>
                           <td className="py-4 px-6 border-b text-center">
