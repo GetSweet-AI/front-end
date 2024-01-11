@@ -8,6 +8,7 @@ import { Puff } from "react-loader-spinner";
 import Archive from "./pages/Archive";
 import Settings from "./pages/Settings";
 import Assets from "./pages/Assets";
+import PaymentFailed from "./pages/PaymentFailed";
 
 const Home = lazy(() => import("./pages/Home"));
 const SignIn = lazy(() => import("./pages/SignIn"));
@@ -82,6 +83,7 @@ function App() {
         <Route path="/posts-feed" element={<PostsFeed />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/check-email" element={<CheckEmail />} />
+        <Route path="/payment-failed" element={<PaymentFailed />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/confirm-email/:userId" element={<EmailConfirmed />} />
