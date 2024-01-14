@@ -26,7 +26,7 @@ import PaymentSuccessMessage from "../partials/PaymentSuccessMessage ";
 import Onboarding from "../components/OnBoarding/Onboarding";
 import SwitchButton from "../partials/SwitchButton";
 import RadioButton from "../components/RadioButton";
-import { Text } from "@chakra-ui/react";
+import { debounce } from 'lodash';
 
 function BrandEngagementBuilder() {
   const dispatch = useDispatch();
@@ -48,8 +48,15 @@ function BrandEngagementBuilder() {
 
   const [selectedOption, setSelectedOption] = useState('RunForEver');
 
+
+  // Create a new Date object for the current date
+  const currentDate = new Date();
+
+  // Format the date to yyyy-mm-dd
+  const formattedDate = currentDate.toISOString().split('T')[0];
+
   const [endDate, setEndDate] = useState(''); // Initialize endDate state
-  const [startDate, setStartDate] = useState(''); // Initialize endDate state
+  const [startDate, setStartDate] = useState(formattedDate); // Initialize endDate state
   const [selectedPostType, setSelectedPostType] = useState('TextImagePost');
 
 
@@ -93,8 +100,6 @@ function BrandEngagementBuilder() {
 
   });
 
-
-
   const handleSelectChange = (name, selectedOption) => {
     setValues((prevValues) => ({
       ...prevValues,
@@ -116,7 +121,7 @@ function BrandEngagementBuilder() {
     PostType: selectedPostType
   };
 
-  console.log('selectedPostType :' + selectedPostType)
+  // console.log('selectedPostType :' + selectedPostType)
 
   const handlePreview = async (e) => {
     setResult("");
@@ -304,8 +309,6 @@ function BrandEngagementBuilder() {
     setIsOpen(true);
   }
 
-
-
   //Handle template button clicked
   const handleButtonClick = (template) => {
     setValues({
@@ -325,8 +328,6 @@ function BrandEngagementBuilder() {
 
   };
 
-
-
   //Get template + add delete icon
   const [templates, setTemplates] = useState([])
   const getTemplates = async () => {
@@ -344,18 +345,19 @@ function BrandEngagementBuilder() {
     getTemplates()
   }, [])
 
-  //handleInputChange
+  // Create the debounced function (outside of your component)
+  const debouncedGetTargetAudiences = debounce(() => {
+    getTargetAudiences();
+  }, 500); // Adjust the delay time (in milliseconds) as needed
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    // console.log(value.length)
-    // if (name === "companySector" && value.length > 50) {
-    getTargetAudiences()
-    // }
     setValues((prevValues) => ({
       ...prevValues,
       [name]: value,
     }));
   };
+
 
   //Get target audiences
   const [targetAudiences, setTargetAudiences] = useState([])
@@ -372,6 +374,18 @@ function BrandEngagementBuilder() {
       console.log('error :' + error)
     }
   }
+
+  const handleTargetAudienceInputChange = (e) => {
+    const { name, value } = e.target;
+
+    // Call the debounced function
+    // debouncedGetTargetAudiences();
+
+    setValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
 
 
   const handleOptionChange = (e) => {
@@ -593,11 +607,11 @@ function BrandEngagementBuilder() {
                               name="companySector"
                               placeholder="Enter your brand description "
                               value={values.companySector}
-                              onChange={handleInputChange}
+                              onChange={handleTargetAudienceInputChange}
                             />
 
                           </div>
-                          {targetAudiences.length > 0 && <div className="w-full  p-2">
+                          {/* {targetAudiences.length > 0 && <div className="w-full  p-2">
                             <label htmlFor="select1" className="block mb-1">
                               Target Audience -<span className="text-blue-300 text-sm"> Generated with ai</span>
                             </label>
@@ -610,7 +624,7 @@ function BrandEngagementBuilder() {
                               }
                               options={targetAudiences && JSON.parse(targetAudiences)}
                             />
-                          </div>}
+                          </div>} */}
 
                           <div className="w-full md:w-1/2 p-2">
                             <label htmlFor="input2" className="block mb-1">

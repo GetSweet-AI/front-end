@@ -215,7 +215,9 @@ function Assets() {
                                     />
                                 </div>
 
-                                <UploadImage brandEngagementId={values.brandEngagementId?.value} fetchEngagements={fetchEngagements} />
+                                <UploadImage
+                                    brandEngagementId={values.brandEngagementId?.value}
+                                    fetchEngagements={fetchEngagements} />
 
                                 <div className="my-4 sm:mb-0  ">
                                     <h1 className="text-xl md:text-3xl text-gray-600 font-bold">

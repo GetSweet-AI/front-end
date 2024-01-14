@@ -28,90 +28,90 @@ function PostCard({
   );
 
 
- 
-//https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/6509eb6b6a20f499452b2186
+
+  //https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/6509eb6b6a20f499452b2186
 
 
 
-let { id } = useParams();
+  let { id } = useParams();
 
-const [isConnected, setIsConnected] = useState(false);
-const [isLoadingCC, setIsLoadingCC] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const [isLoadingCC, setIsLoadingCC] = useState(false);
 
-const checkConnectLinkExists = async () => {
-  try {
-    if (id) {
-      const response = await axios.get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/check-connect-link-exists/${id}`
-      );
-      setIsConnected(response.data?.hasConnectLinkURL);
-    }
-  } catch (error) {
-    console.error('Error: ', error);
-  }
-}
-
-useEffect(() => {
-  checkConnectLinkExists();
-}, [id]);
-
-
-useEffect(() => {
-  checkConnectLinkExists();
-}, [id]);
-
-
-    //Fetch client connect data
-    const [clientConnectData, setClientConnectData] = useState("")
-    const getClientConnectData = async () => {
-        try {
-            const response = await axios.get(
-                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`
-            );
-            console.log("Client connect data :" + JSON.stringify(response.data)); // Success message or response data
-            // Perform any additional actions after successful deletion
-            setClientConnectData(response.data)
-
-        } catch (error) {
-            console.log(error); // Handle error
-        }
-    };
-
-    useEffect(() => {
-        getClientConnectData()
-    }, [])
-
-
-
-
-
-    const getClientConnect = async () => {
+  const checkConnectLinkExists = async () => {
+    try {
       if (id) {
-        setIsLoadingCC(true);
-    
-        try {
-          const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`);
-    
-          if (response.status === 200) {
-            console.log("Client connect: ", response.data);
-            setIsConnected(true);
-            window.location.href = response.data?.ConnectLinkURL;
-          } else {
-            console.error("Error en la respuesta: ", response.status);
-          }
-        } catch (error) {
-          console.log("Error en la solicitud: ", error.message);
-        } finally {
-          setIsLoadingCC(false);
-        };
+        const response = await axios.get(
+          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/check-connect-link-exists/${id}`
+        );
+        setIsConnected(response.data?.hasConnectLinkURL);
       }
-    };
-    
+    } catch (error) {
+      console.error('Error: ', error);
+    }
+  }
+
+  useEffect(() => {
+    checkConnectLinkExists();
+  }, [id]);
+
+
+  useEffect(() => {
+    checkConnectLinkExists();
+  }, [id]);
+
+
+  //Fetch client connect data
+  const [clientConnectData, setClientConnectData] = useState("")
+  const getClientConnectData = async () => {
+    try {
+      const response = await axios.get(
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`
+      );
+      console.log("Client connect data :" + JSON.stringify(response.data)); // Success message or response data
+      // Perform any additional actions after successful deletion
+      setClientConnectData(response.data)
+
+    } catch (error) {
+      console.log(error); // Handle error
+    }
+  };
+
+  useEffect(() => {
+    getClientConnectData()
+  }, [])
 
 
 
 
-const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
+
+  const getClientConnect = async () => {
+    if (id) {
+      setIsLoadingCC(true);
+
+      try {
+        const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`);
+
+        if (response.status === 200) {
+          console.log("Client connect: ", response.data);
+          setIsConnected(true);
+          window.location.href = response.data?.ConnectLinkURL;
+        } else {
+          console.error("Error en la respuesta: ", response.status);
+        }
+      } catch (error) {
+        console.log("Error en la solicitud: ", error.message);
+      } finally {
+        setIsLoadingCC(false);
+      };
+    }
+  };
+
+
+
+
+
+  const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
 
 
   const [isEditing, setEditing] = useState(false);
@@ -127,10 +127,10 @@ const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
     //Update caption on the backend + setSaving(true)
     try {
       const response = await axios.put(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${id}`, 
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${id}`,
         {
-        NewCaption: caption
-      });
+          NewCaption: caption
+        });
     } catch (error) {
       console.log("error :" + error)
     } finally {
@@ -194,22 +194,22 @@ const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
 
           {isAnAccountConnected ? (
 
-          <div className="text-sm mb-2">
-            <span className="font-medium">Scheduled for</span>{" "}
-            <p className="text-pink-500 font-bold" target="_blank">
-              {dateUpdate(localDate)}
-            </p>
-          </div>
-        ) : (
-          <div className="text-sm mb-2 text-blue-500 font-bold">
-            
+            <div className="text-sm mb-2">
+              <span className="font-medium">Scheduled for</span>{" "}
+              <p className="text-pink-500 font-bold" target="_blank">
+                {dateUpdate(localDate)}
+              </p>
+            </div>
+          ) : (
+            <div className="text-sm mb-2 text-blue-500 font-bold">
+
               <button onClick={getClientConnect} className="hover:underline">
                 Connect your socials to schedule this post
               </button>
-           
-            
-          </div>
-        )}
+
+
+            </div>
+          )}
 
 
 

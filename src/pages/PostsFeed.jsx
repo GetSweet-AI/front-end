@@ -176,7 +176,7 @@ function PostsFeed() {
 
 
   const [clientConnectData, setClientConnectData] = useState("")
-    
+
 
   const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
   console.log("isAnAccountConnected :" + isAnAccountConnected)

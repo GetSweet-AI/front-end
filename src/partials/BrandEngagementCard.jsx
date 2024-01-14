@@ -234,18 +234,14 @@ function BrandEngagementCard({
                 </button>
               </div>
               <div className="mt-4 flex justify-center">
-                <button className="text-md flex justify-center
-             items-center font-medium 
-              bg-white text-blue-700
-               rounded-md  p-2 cursor-pointer  
-               "
+                <button
+                  className="text-md flex justify-center items-center font-medium bg-white text-blue-700 rounded-md p-2 cursor-pointer hover:bg-blue-700 hover:text-white transition duration-300 ease-in-out"
                   onClick={handleAttachAssets}
                 >
                   Attach assets
                   <FontAwesomeIcon className="ml-2" icon={faPaperclip} />
-                  {/* <FontAwesomeIcon icon="fa-solid fa-paperclip" /> */}
-                </button>
-              </div>
+                </button></div>
+
             </footer>}
         </div>
       </div >
