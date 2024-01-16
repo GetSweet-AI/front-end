@@ -236,7 +236,7 @@ function PostsFeed() {
 
               </div>
               <div className=" flex  items-center flex-row space-x-3 ">
-                <div className="flex justify-center items-center ">
+                {/* <div className="flex justify-center items-center ">
                   <input
                     type="text"
                     name="search"
@@ -244,7 +244,8 @@ function PostsFeed() {
                     onChange={handleChange}
                     className="form-input focus:border-slate-300"
                   />
-                </div> <div
+                </div> */}
+                <div
                   className="flex justify-center mt-1 items-center"> {user?.role === "admin" ? (
                     <SwitchButton enabled={enabled} setEnabled={setEnabled} />
                   ) : (

@@ -27,6 +27,9 @@ import Onboarding from "../components/OnBoarding/Onboarding";
 import SwitchButton from "../partials/SwitchButton";
 import RadioButton from "../components/RadioButton";
 import { debounce } from 'lodash';
+import { Line } from 'rc-progress';
+
+
 
 function BrandEngagementBuilder() {
   const dispatch = useDispatch();
@@ -35,9 +38,13 @@ function BrandEngagementBuilder() {
   const [pageNumber, setPageNumber] = useState(0);
   const [numberOfPages, setNumberOfPages] = useState(0);
 
+
   const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
 
   const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewProgress, setPreviewProgress] = useState(0);
+  const [progressMessage, setProgressMessage] = useState("Starting Generation Process");
+
   const [saveLoading, setSaveLoading] = useState(false);
   const [engagements, setEngagements] = useState([]);
   const [result, setResult] = useState(null);
@@ -124,10 +131,11 @@ function BrandEngagementBuilder() {
   // console.log('selectedPostType :' + selectedPostType)
 
   const handlePreview = async (e) => {
-    setResult("");
     e.preventDefault();
-    const { brandName, brandTone, companySector, websiteUrl, timeZone, targetAudience } =
-      values;
+    setResult("");
+    dispatch(clearMessage())
+    const { brandName, brandTone, companySector, timeZone, targetAudience } = values;
+
     if (!brandTone) {
       dispatch(setMessage("Please provide the brand tone"));
     } else if (!companySector) {
@@ -137,10 +145,33 @@ function BrandEngagementBuilder() {
     } else if (!timeZone) {
       dispatch(setMessage("Please provide the time zone"));
     } else {
-      setResult(null);
       setPreviewLoading(true);
-      await axios
-        .post(
+      setPreviewProgress(0);
+
+      let interval = setInterval(() => {
+        setPreviewProgress(oldProgress => {
+          if (oldProgress < 90) {
+            let newProgress = oldProgress + 10;
+
+            // Update the message based on progress
+            if (newProgress >= 20 && newProgress < 40) {
+              setProgressMessage("Tailoring Unique Voice Traits");
+            } else if (newProgress >= 40 && newProgress < 60) {
+              setProgressMessage("Crafting a Distinctive Brand Voice");
+            } else if (newProgress >= 60 && newProgress < 90) {
+              setProgressMessage("Polishing Your Brand's Voice");
+            }
+
+            return newProgress;
+          } else {
+            clearInterval(interval);
+            return oldProgress;
+          }
+        });
+      }, 1500); // Adjust the interval as needed
+
+      try {
+        const res = await axios.post(
           "https://seal-app-dk3kg.ondigitalocean.app/api/v1/generate-blog-post",
           {
             tone: brandTone?.value,
@@ -148,21 +179,19 @@ function BrandEngagementBuilder() {
             CompanySector: companySector,
             targetAudience: targetAudience?.value
           }
-        )
-        .then((res) => {
-          // console.log(res.data);
-          setPreviewLoading(false);
-          setResult(res.data.postContent);
-          // console.log("res.data.postContent :" + res.data.postContent)
-        })
-        .catch((err) => {
-          // console.log(err);
-          setPreviewLoading(false);
-        });
+        );
+        setResult(res.data.postContent);
+      } catch (err) {
+        console.error(err);
+        dispatch(setMessage("An error occurred"));
+      } finally {
+        clearInterval(interval);
+        setPreviewProgress(100); // Set progress to 100% on completion
+        setPreviewLoading(false);
+      }
     }
-
-    // alert(JSON.stringify(postData))
   };
+
 
   const handleSave = async () => {
     setSaveLoading(true);
@@ -185,6 +214,7 @@ function BrandEngagementBuilder() {
           getUserData();
           handleReset();
           setSaveLoading(false);
+          toast.success("Brand Engagement saved successfully");
           // console.log(res.data);
           axios.get(
             `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
@@ -203,6 +233,7 @@ function BrandEngagementBuilder() {
           // console.log("err :" + error.message);
           if (error.message === "Request failed with status code 400") {
             dispatch(setMessage('BrandName must be unique'))
+
           } else {
             dispatch(setMessage('An error occurred'))
           }
@@ -741,7 +772,12 @@ function BrandEngagementBuilder() {
                               {message ? message : ""}
                             </p>
                           </div>
-                          <div className="md:flex w-full p-2">
+
+                          {previewLoading ? <div className="flex flex-col w-full p-2"> <Line percent={previewProgress} strokeWidth={2} strokeColor="#f60c9c" /> <p className="text-center text-blue-600 mt-3 font-semibold">
+                            {progressMessage} <span className="text-gray-500"> </span>
+                            <span className="text-pink-500 font-bold">{previewProgress}%</span>
+                          </p>
+                            {/* Display the message */}</div> : <div className="md:flex w-full p-2">
                             <button
                               type="reset"
                               onClick={handleReset}
@@ -754,7 +790,7 @@ function BrandEngagementBuilder() {
                               type={!previewLoading ? "submit" : "button"}
                               className={`${previewLoading ? "cursor-not-allowed" : ""} md:w-[80%] flex justify-center items-center w-full bg-purple-500 text-white rounded p-2 mt-2 md:mt-0 md:ml-2`}
                             >
-                              {previewLoading ? (
+                              {/* {previewLoading ? (
                                 <>
                                   <img
                                     className="mr-2"
@@ -763,35 +799,36 @@ function BrandEngagementBuilder() {
                                   />
                                   Generating...
                                 </>
-                              ) : (
-                                "Preview"
-                              )}
+                              ) : ( */}
+                              Preview
+                              {/* )} */}
                             </button>
-                          </div>
-                          {result !== null && (
-                            <div className="w-full px-2">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  !saveLoading && handleSave();
-                                }}
-                                className="flex justify-center items-center w-full bg-[#33cc00] text-white rounded p-2"
-                              >
-                                {saveLoading ? (
-                                  <>
-                                    <img
-                                      className="mr-2"
-                                      width={20}
-                                      src={rolling}
-                                    />
-                                    Saving...
-                                  </>
-                                ) : (
-                                  "Save"
-                                )}
-                              </button>
-                            </div>
-                          )}
+                          </div>}
+                          {result !== null && !previewLoading &&
+                            (
+                              <div className="w-full px-2">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    !saveLoading && handleSave();
+                                  }}
+                                  className="flex justify-center items-center w-full bg-[#33cc00] text-white rounded p-2"
+                                >
+                                  {saveLoading ? (
+                                    <>
+                                      <img
+                                        className="mr-2"
+                                        width={20}
+                                        src={rolling}
+                                      />
+                                      Saving...
+                                    </>
+                                  ) : (
+                                    "Save"
+                                  )}
+                                </button>
+                              </div>
+                            )}
                         </div>
 
                       </form>
@@ -840,8 +877,7 @@ function BrandEngagementBuilder() {
             </div>
             {/*End Brand Engagement Card Form*/}
 
-            {/* Toast container */}
-            <ToastContainer />
+
 
             {/* OnBoarding */}
             {user?.firstLogin && <Onboarding
@@ -935,6 +971,19 @@ function BrandEngagementBuilder() {
             )}
           </div>
         </main>
+
+        < ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
     </div>
   );

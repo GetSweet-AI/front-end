@@ -1,7 +1,7 @@
 import { faClone, faEye, faImage, faPaperclip, faTrash, faVideo } from "@fortawesome/free-solid-svg-icons";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +9,8 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import ReactHtmlParser from "react-html-parser";
 import { useDispatch } from "react-redux";
 import { clearActiveBrandEngagement, setActiveBrandEngagement } from "../redux/message";
+import { Dialog, Transition } from '@headlessui/react'
+
 
 function BrandEngagementCard({
   id,
@@ -88,8 +90,22 @@ function BrandEngagementCard({
     dispatch(setActiveBrandEngagement(id))
   }
 
+
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const confirmDelete = () => {
+    deleteBrandEngagement(id); // Call your delete function
+    toggleModal(); // Close the modal
+  };
+
+
   return (
-    <div className="col-span-full sm:col-span-6 xl:col-span-4">
+    <><div className="col-span-full sm:col-span-6 xl:col-span-4">
       <div className="bg-white shadow-lg rounded-lg border border-slate-200 hover:shadow-blue-200 hover:shadow-xl hover:border-blue-500">
 
         <div className="flex flex-col h-full p-5">
@@ -225,9 +241,8 @@ function BrandEngagementCard({
 
 
                 <button
+                  onClick={toggleModal}
                   className="text-sm text-white rounded text-center bg-[#d7364b] flex-[0.3] p-2 cursor-pointer"
-                  onClick={() => deleteBrandEngagement(id)}
-                  disabled={isArchiveLoading}
                 >
                   {isArchiveLoading ? "Archiving.." : <> <FontAwesomeIcon className="mr-2" icon={faTrash} />
                     Archive</>}
@@ -245,7 +260,55 @@ function BrandEngagementCard({
             </footer>}
         </div>
       </div >
-    </div >
+      <Transition appear show={isModalOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={toggleModal}>
+
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full w-full bg-black bg-opacity-30 items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <div className="mt-4">
+
+                    <p className="mt-3 text-xl text-start text-red-500 font-bold">
+                      Archiving is irreversible. </p>
+                    <p className="mb-6 mt-3 text-xl">
+                      Are you sure you want to proceed?</p>
+                    <div className="flex justify-between">
+                      <button
+                        type="button"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        onClick={confirmDelete}
+                      >
+                        Yes, Archive
+                      </button>
+                      <button
+                        type="button"
+                        className="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 ml-4"
+                        onClick={toggleModal}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+
+    </div >{/* Modal for archive confirmation */}
+    </>
+
   );
 }
 
