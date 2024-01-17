@@ -2,7 +2,12 @@ export default function CheckConnectedAccount(obj) {
     const propertiesToCheck = [
       "TwitterConnected",
       "FacebookConnected",
-      "YoutubeConnected"
+      "YoutubeConnected",
+      "InstagramConnected",
+      "TikTokConnected",
+      "GoogleBusinessConnected",
+      "PinterestConnected",
+      "LinkedInConnected"
       // Add more properties if needed
     ];
   

@@ -8,7 +8,7 @@ import BrandEngagementCard from '../partials/BrandEngagementCard';
 import PaginationNumeric from '../partials/PaginationNumeric';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFacebook, faTwitter, faInstagram, faPinterest, faSnapchat, faTiktok, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { faFacebook, faTwitter, faInstagram, faPinterest, faSnapchat, faTiktok, faYoutube, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { faArchive, faBlog, faFaceMehBlank, faUsers } from "@fortawesome/free-solid-svg-icons";
 import Image01 from '../images/user-28-01.jpg';
 import Image02 from '../images/user-28-02.jpg';
@@ -263,6 +263,10 @@ function BrandEngagementDetails() {
                                 <span> {clientConnectData?.TwitterConnected !== "no" && <FontAwesomeIcon
                                     className="text-[#3b82f6]"
                                     icon={faTwitter}
+                                />}   </span>
+                                <span> {clientConnectData?.LinkedInConnected !== "no" && <FontAwesomeIcon
+                                    className="text-[#3b82f6]"
+                                    icon={faLinkedin}
                                 />}   </span>
                                 <span> {clientConnectData?.TikTokConnected !== "no" && <FontAwesomeIcon
                                     className="text-[#3b82f6]"
