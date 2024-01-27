@@ -9,7 +9,7 @@ import PaginationNumeric from '../partials/PaginationNumeric';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faTwitter, faInstagram, faPinterest, faSnapchat, faTiktok, faYoutube, faLinkedin } from "@fortawesome/free-brands-svg-icons";
-import { faArchive, faBlog, faFaceMehBlank, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faArchive, faBlog, faFaceMehBlank, faLink, faUsers } from "@fortawesome/free-solid-svg-icons";
 import Image01 from '../images/user-28-01.jpg';
 import Image02 from '../images/user-28-02.jpg';
 import DashboardHeader from '../partials/DashboardHeader';
@@ -288,7 +288,7 @@ function BrandEngagementDetails() {
                               text-white  hover:font-bold shadow-xl bg-blue-500 md:w-auto w-full  rounded  p-3 cursor-pointer"
                                 >
 
-                                    {isLoadingCC ? "Connecting" : " Connect it to social media Account"}
+                                    {isLoadingCC ? "Connecting" : " Connect it to social media Account"} <FontAwesomeIcon className='mt-1 ml-1' icon={faLink} color="white" size={24} />
 
 
                                 </button> : <div className='text-center text-red-500 font-medium my-2'>
@@ -331,7 +331,7 @@ function BrandEngagementDetails() {
                         </div>
                         {feedPosts.length > 0 && <>
                             <div className='text-xl font-bold mt-2 mb-4  text-white'>
-                                <span className='bg-slate-500 w-auto p-3  '> Generated feed posts
+                                <span className='text-blue-600 w-auto p-3  '> Generated feed posts
                                 </span>
                             </div>
                             <div className="grid grid-cols-12 gap-6">
@@ -347,46 +347,49 @@ function BrandEngagementDetails() {
                                             handleCopyText={handleCopyText}
                                             Accounts={item.Accounts}
                                             DownloadButton={downloadVideo}
+                                            unixTimestamp={item.unixTimestamp}
                                         />
                                     );
                                 })}
                             </div>
                         </>}
 
-                        <div className="mt-8">
-                            <div class="flex flex-wrap md:flex-nowrap  md:mx-4 items-center md:mt-4 overflow-x-scroll py-2  justify-center space-x-2">
-                                <button
-                                    className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
-                                    onClick={gotoPrevious}
-                                >
-                                    Previous
-                                </button>
+                        {
+                            feedPosts.length > 0 && <div className="mt-8">
+                                <div class="flex flex-wrap md:flex-nowrap  md:mx-4 items-center md:mt-4 overflow-x-scroll py-2  justify-center space-x-2">
+                                    <button
+                                        className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                                        onClick={gotoPrevious}
+                                    >
+                                        Previous
+                                    </button>
 
-                                <select
-                                    value={pageNumber}
-                                    onChange={(e) => setPageNumber(parseInt(e.target.value))}
-                                    className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
-                                >
-                                    {pages.map((pageIndex) => (
-                                        <option
-                                            key={pageIndex}
-                                            value={pageIndex}
-                                            className="text-black"
-                                        >
-                                            {pageIndex + 1}
-                                        </option>
-                                    ))}
-                                </select>
+                                    <select
+                                        value={pageNumber}
+                                        onChange={(e) => setPageNumber(parseInt(e.target.value))}
+                                        className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
+                                    >
+                                        {pages.map((pageIndex) => (
+                                            <option
+                                                key={pageIndex}
+                                                value={pageIndex}
+                                                className="text-black"
+                                            >
+                                                {pageIndex + 1}
+                                            </option>
+                                        ))}
+                                    </select>
 
 
-                                <button
-                                    className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
-                                    onClick={gotoNext}
-                                >
-                                    Next
-                                </button>
+                                    <button
+                                        className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                                        onClick={gotoNext}
+                                    >
+                                        Next
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        }
                         {(engagement?.relatedPostsStatus === "Posts generating..." && isCloseVisible) ?
                             <div id="toast-success" className="flex items-center w-full p-4 mt-8 mb-4 text-gray-600 bg-gray-800 text-white rounded-lg shadow  " role="alert">
 

@@ -20,6 +20,7 @@ function PostCard({
   handleCopyText,
   Accounts,
   DownloadButton,
+  unixTimestamp
 }) {
   const parsedDate = parseISO(postDate);
   const localDate = utcToZonedTime(
@@ -81,10 +82,6 @@ function PostCard({
     getClientConnectData()
   }, [])
 
-
-
-
-
   const getClientConnect = async () => {
     if (id) {
       setIsLoadingCC(true);
@@ -106,9 +103,6 @@ function PostCard({
       };
     }
   };
-
-
-
 
 
   const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
@@ -197,7 +191,7 @@ function PostCard({
             <div className="text-sm mb-2">
               <span className="font-medium">Scheduled for</span>{" "}
               <p className="text-pink-500 font-bold" target="_blank">
-                {dateUpdate(localDate)}
+                {dateUpdate(unixTimestamp)}
               </p>
             </div>
           ) : (

@@ -13,7 +13,7 @@ import Select from "react-select";
 import axios from "axios";
 import ReactHtmlParser from "react-html-parser";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faL, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faL, faPlus, faRefresh, faSave, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { targetAudienceOptions } from "../constants/objects";
 import brandTones from "../constants/brandTones";
@@ -28,7 +28,6 @@ import SwitchButton from "../partials/SwitchButton";
 import RadioButton from "../components/RadioButton";
 import { debounce } from 'lodash';
 import { Line } from 'rc-progress';
-
 
 
 function BrandEngagementBuilder() {
@@ -501,11 +500,11 @@ function BrandEngagementBuilder() {
                   Brand Engagement Builder
                 </h1>
                 <button
-                  className="px-2 md:py-1 py-2 bg-pink-500 md:mt-0 mt-2  text-center text-white rounded text-sm flex items-center font-normal"
+                  className="px-2 py-2.5 bg-pink-500 md:mt-0 mt-2  text-center text-white rounded text-sm flex items-center font-normal"
                   onClick={() => setIsVisible(!isVisible)}
                 >
-                  <FontAwesomeIcon icon={faPlus} className="mr-1 text-pink-500 text-center bg-white py-1 px-[5px] mb-[1px] rounded-full" />
-                  Add brand voice
+                  <FontAwesomeIcon icon={faPlus} className="mr-2 text-pink-500 text-center  bg-white py-1 px-[5px] mb-[1px] rounded-full" />
+                  <span className="hover:font-bold"> Add brand voice</span>
                 </button>
               </div>
 
@@ -781,54 +780,50 @@ function BrandEngagementBuilder() {
                             <button
                               type="reset"
                               onClick={handleReset}
-                              className="md:w-[40%] w-full bg-[#60696d] text-white rounded p-2"
+                              className="md:w-[40%] w-full bg-blue-500 hover:font-bold  text-white rounded p-2"
                             >
-                              Reset form
+                              <span className="mr-2">Reset form</span>   <FontAwesomeIcon icon={faRefresh} color="white" size={24} />
                             </button>
                             <button
                               disabled={previewLoading}
                               type={!previewLoading ? "submit" : "button"}
-                              className={`${previewLoading ? "cursor-not-allowed" : ""} md:w-[80%] flex justify-center items-center w-full bg-purple-500 text-white rounded p-2 mt-2 md:mt-0 md:ml-2`}
+                              className={`${previewLoading ? "cursor-not-allowed" : ""} md:w-[80%] flex justify-center items-center w-full
+                               bg-pink-500 text-white rounded hover:font-bold  
+                                p-2 mt-2 md:mt-0 md:ml-2`}
                             >
-                              {/* {previewLoading ? (
-                                <>
-                                  <img
-                                    className="mr-2"
-                                    width={20}
-                                    src={rolling}
-                                  />
-                                  Generating...
-                                </>
-                              ) : ( */}
-                              Preview
-                              {/* )} */}
+
+                              <span className="mr-2"> Preview
+                              </span>    <FontAwesomeIcon icon={faEye} color="white" size={24} />
                             </button>
                           </div>}
-                          {result !== null && !previewLoading &&
-                            (
-                              <div className="w-full px-2">
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    !saveLoading && handleSave();
-                                  }}
-                                  className="flex justify-center items-center w-full bg-[#33cc00] text-white rounded p-2"
-                                >
-                                  {saveLoading ? (
-                                    <>
-                                      <img
-                                        className="mr-2"
-                                        width={20}
-                                        src={rolling}
-                                      />
-                                      Saving...
-                                    </>
-                                  ) : (
-                                    "Save"
-                                  )}
-                                </button>
-                              </div>
-                            )}
+                          {(result && !previewLoading) ?
+
+                            <div className="w-full px-2">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  !saveLoading && handleSave();
+                                }}
+                                className="flex justify-center items-center w-full hover:bg-green-600 hover:font-bold bg-green-500 text-white rounded p-2"
+                              >
+                                {saveLoading ? (
+                                  <>
+                                    <img
+                                      className="mr-2"
+                                      width={20}
+                                      src={rolling}
+                                    />
+                                    Saving...
+                                  </>
+                                ) : (
+                                  "Save your brand engagement"
+                                )}  <FontAwesomeIcon className="ml-2" icon={faSave} color="white" size={24} />
+                              </button>
+                            </div>
+                            :
+                            <></>
+
+                          }
                         </div>
 
                       </form>

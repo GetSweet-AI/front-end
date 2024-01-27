@@ -214,7 +214,7 @@ function BrandEngagementCard({
               flex-[0.3] bg-white hover:text-white text-blue-700 
                 p-2.5 cursor-pointer
                     shadow-md rounded-lg
-               hover:bg-blue-700
+               hover:bg-blue-700 hover:font-bold 
                "
 
                   >
@@ -230,8 +230,8 @@ function BrandEngagementCard({
                   items-center font-medium md:flex-[0.3]
                    flex-[0.3] bg-white text-blue-700
                     rounded-md  p-2 cursor-pointer
-                    border-2 border-blue-600
-                    hover:bg-gray-100
+                    border-2 border-blue-600 hover:bg-blue-600
+                    hover:text-white hover:font-bold 
                     "
                 >
                   {/* Not Active */}
@@ -242,7 +242,7 @@ function BrandEngagementCard({
 
                 <button
                   onClick={toggleModal}
-                  className="text-sm text-white rounded text-center bg-[#d7364b] flex-[0.3] p-2 cursor-pointer"
+                  className="text-sm text-white hover:font-bold rounded text-center bg-red-500 hover:bg-red-600 flex-[0.3] p-2 cursor-pointer"
                 >
                   {isArchiveLoading ? "Archiving.." : <> <FontAwesomeIcon className="mr-2" icon={faTrash} />
                     Archive</>}
@@ -250,7 +250,7 @@ function BrandEngagementCard({
               </div>
               <div className="mt-4 flex justify-center">
                 <button
-                  className="text-md flex justify-center items-center font-medium bg-white text-blue-700 rounded-md p-2 cursor-pointer hover:bg-blue-700 hover:text-white transition duration-300 ease-in-out"
+                  className="text-md flex justify-center items-center font-medium bg-white text-blue-700 rounded-md py-2 px-3 cursor-pointer hover:bg-blue-700 hover:text-white transition duration-300 ease-in-out"
                   onClick={handleAttachAssets}
                 >
                   Attach assets

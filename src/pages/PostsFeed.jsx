@@ -286,6 +286,7 @@ function PostsFeed() {
                               handleCopyText={handleCopyText}
                               Accounts={item.Accounts}
                               DownloadButton={downloadVideo}
+                              unixTimestamp={item.unixTimestamp}
                             />
                           );
                         })}
@@ -316,6 +317,7 @@ function PostsFeed() {
                             handleCopyText={handleCopyText}
                             Accounts={item.Accounts}
                             DownloadButton={downloadVideo}
+                            unixTimestamp={item.unixTimestamp}
                           />
                         );
                       })}

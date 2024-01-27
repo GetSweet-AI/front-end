@@ -31,6 +31,7 @@ import { MutatingDots } from "react-loader-spinner";
 import AddNewUserModal from "../partials/AddNewUserModal";
 import { formatReadableDate } from "../utils/formatReadableDate";
 import { setUserData, switchLoginStatus } from "../redux/auth";
+import userPic from "../images/user.png";
 
 function Users() {
   const dispatch = useDispatch();
@@ -42,7 +43,6 @@ function Users() {
   const [result, setResult] = useState(null);
   const { token, user } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
-
   const [isLoading, setIsLoading] = useState(false);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -171,19 +171,22 @@ function Users() {
                   <FontAwesomeIcon icon={faPlus} className="mr-1 w-4 h-4 mb-[2px]" />
                   Add New User
                 </button>
-                <input
+                {/* <input
                   type="text"
                   name="search"
                   placeholder="Search by name or email"
                   onChange={handleChange}
                   className="form-input focus:border-slate-300 mb-1"
-                />
+                /> */}
               </div>
               <div className="w-full h-auto mt-10 overflow-x-auto scrollbar-thin scrollbar-thumb-blue-600 scrollbar-track-blue-300 overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
                 <table className="min-w-full">
                   <thead>
                     <tr className="bg-blue-600 text-white">
                       <th className="py-3 px-6 text-left rounded-tl-lg">
+
+                      </th>
+                      <th className="py-3 px-6 text-left ">
                         Name
                       </th>
                       <th className="py-3 px-6 text-left">Email</th>
@@ -221,8 +224,19 @@ function Users() {
                           }
                         >
                           <td className="py-4 px-6 md:px-8 border-b">
+                            {client.picture ? <img
+                              className="h-8 w-8 rounded-full"
+                              src={client.picture}
+                              alt="/user.png"
+                            /> : <img
+                              className="h-8 w-8 rounded-full"
+                              src={userPic}
+                              alt="/user.png"
+                            />}
+                          </td> <td className="py-4 px-6 md:px-8 border-b">
                             {client.fullName}
                           </td>
+
                           <td className="py-4 px-2 border-b">{client.email}1</td>
                           <td className="py-4 px-6 border-b">{client.company}</td>
                           <td className="py-4 px-6 border-b">{client.Plan}</td>
