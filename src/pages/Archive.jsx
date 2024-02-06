@@ -115,6 +115,7 @@ function Archive() {
         <DashboardHeader
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
+          header="Archive"
         />
 
         <main>
@@ -123,7 +124,7 @@ function Archive() {
             <div className="sm:flex sm:justify-between sm:items-center mb-8">
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0 ">
-                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
+                <h1 className="text-xl text-blue-500 font-bold">
                   Brand Engagements Archive
                 </h1>
 
@@ -132,13 +133,7 @@ function Archive() {
               {/* Right: Actions */}
               <div className="">
 
-                <input
-                  type="text"
-                  name="search"
-                  placeholder="Search by brandName or website"
-                  onChange={handleChange}
-                  className="form-input focus:border-slate-300"
-                />
+
               </div>
             </div>
 
@@ -164,16 +159,6 @@ function Archive() {
               <div className="">
                 <div className="grid grid-cols-12 gap-6">
                   {engagements.
-                    filter((brand) => {
-                      // const { email } = brand?.user;
-                      if (search == "") {
-                        return brand;
-                      } else if (brand?.email !== null &&
-                        (brand?.WebSite.toLowerCase().includes(search.toLocaleLowerCase()) || brand?.BrandName.toLowerCase().includes(search.toLocaleLowerCase()))
-                      ) {
-                        return brand;
-                      }
-                    }).
                     map((item) => {
                       return (
                         <BrandEngagementCard

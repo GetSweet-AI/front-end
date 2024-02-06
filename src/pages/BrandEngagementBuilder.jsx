@@ -8,6 +8,8 @@ import PaginationNumeric from "../partials/PaginationNumeric";
 import rolling from "../images/rolling.svg";
 import Image01 from "../images/user-28-01.jpg";
 import Image02 from "../images/user-28-02.jpg";
+import image from "../images/photo.png";
+import video from "../images/movie.png";
 import DashboardHeader from "../partials/DashboardHeader";
 import Select from "react-select";
 import axios from "axios";
@@ -28,6 +30,7 @@ import SwitchButton from "../partials/SwitchButton";
 import RadioButton from "../components/RadioButton";
 import { debounce } from 'lodash';
 import { Line } from 'rc-progress';
+import DayPicker from "../components/DaysPicker";
 
 
 function BrandEngagementBuilder() {
@@ -487,6 +490,7 @@ function BrandEngagementBuilder() {
         <DashboardHeader
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
+          header="Brand Engagement Builder"
         />
 
         <main>
@@ -496,8 +500,8 @@ function BrandEngagementBuilder() {
             <div className="md mb-8">
               {/* Left: Title */}
               <div className="mb-4 flex md:justify-between md:flex-row flex-col sm:mb-0">
-                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold flex justify-between items-center">
-                  Brand Engagement Builder
+                <h1 className="text-xl   text-blue-500 font-bold flex justify-between items-center">
+                  <span className="md:hidden ">  Brand Engagement Builder</span>
                 </h1>
                 <button
                   className="px-2 py-2.5 bg-pink-500 md:mt-0 mt-2  text-center text-white rounded text-sm flex items-center font-normal"
@@ -522,7 +526,7 @@ function BrandEngagementBuilder() {
                 {
                   isVisible &&
                   <>
-                    <h1 className="text-md md:text-xl mt-3 text-gray-500 font-bold flex justify-between items-center">
+                    <h1 className="text-md md:text-xl my-3 text-gray-500 font-bold flex justify-between items-center">
                       Start from template
                     </h1>
 
@@ -569,7 +573,8 @@ function BrandEngagementBuilder() {
                               value="TextImagePost"
                               checked={selectedPostType === 'TextImagePost'}
                               onChange={handlePostTypeChange}
-                              label="Text Image Post"
+                              label="Text-Image Posts"
+                              img={image}
                             />
 
                             <RadioButton
@@ -577,7 +582,8 @@ function BrandEngagementBuilder() {
                               value="TextVideoPost"
                               checked={selectedPostType === 'TextVideoPost'}
                               onChange={handlePostTypeChange}
-                              label="Text Video Post"
+                              label="Text-Video Posts"
+                              img={video}
                             />
                             <RadioButton
                               type="radio"
@@ -585,10 +591,21 @@ function BrandEngagementBuilder() {
                               value="Both"
                               checked={selectedPostType === 'Both'}
                               onChange={handlePostTypeChange}
-                              label="Both"
+                              label="Mixed Media Posts"
+                              img={image}
+                              imgTwo={video}
 
                             />
                           </div>
+
+
+                        </div>
+                        <div className="  flex-col rounded-md  flex flex-wrap">
+                          <label htmlFor="select3" className="block pl-2">
+                            Schedule Your Posts On
+                          </label>
+                          <DayPicker />
+
 
                         </div>
 
@@ -884,7 +901,7 @@ function BrandEngagementBuilder() {
 
             {engagements?.length > 0 && (
               <div className="">
-                <h5 className="md:text-2xl text-xl text-blue-500 
+                <h5 className=" text-xl text-blue-500 
                  mb-2 font-bold sm:mb-4">
                   Your saved brand voices
                 </h5>

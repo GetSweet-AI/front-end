@@ -231,16 +231,17 @@ function TheProfile() {
         <DashboardHeader
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
+          header="Edit personal info"
         />
 
         <main>
-          <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+          <div className="px-4 sm:px-6 lg:px-8 py-6 w-full max-w-9xl mx-auto">
             {/* Page header */}
 
 
             <div className="sm:flex sm:justify-between sm:items-center mb-8">
               <div className="mb-4 sm:mb-0">
-                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
+                <h1 className="text-xl md:hidden text-blue-500 font-bold">
                   {" "}
                   Edit personal info
                 </h1>
@@ -284,91 +285,92 @@ function TheProfile() {
 
 
                     {/* Update AUth Infos form */}
-                    <div> <form
-                      onSubmit={onSubmitTwo}
-                      className="max-w-sm mx-auto md:mt-8 "
-                    >
-                      <div className="flex flex-wrap -mx-3 mb-4">
+                    <div>
+                      <form
+                        onSubmit={onSubmitTwo}
+                        className="max-w-sm mx-auto  shadow-md bg-blue-50 rounded-md p-3"
+                      >
+                        <div className="flex flex-wrap -mx-3 mb-4">
 
-                        <div className="w-full px-3">
-                          <label
-                            className="block text-gray-700 text-sm font-medium mb-1"
-                            htmlFor="email"
-                          >
-                            Full name
-                          </label>
-                          <input
-                            type="text"
-                            name="fullName"
-                            value={values.fullName}
-                            onChange={handleChange}
-                            className="form-input w-full rounded-full text-gray-700"
-                            placeholder="Enter your fullName "
-                            required
-                          />
+                          <div className="w-full px-3">
+                            <label
+                              className="block text-gray-700 text-sm font-medium mb-1"
+                              htmlFor="email"
+                            >
+                              Full name
+                            </label>
+                            <input
+                              type="text"
+                              name="fullName"
+                              value={values.fullName}
+                              onChange={handleChange}
+                              className="form-input w-full rounded-full text-gray-700"
+                              placeholder="Enter your fullName "
+                              required
+                            />
+                          </div>
+                          <div className="w-full px-3">
+                            <label
+                              className="block my-2 text-gray-700 text-sm font-medium mb-1"
+                              htmlFor="email"
+                            >
+                              Company or Brand name
+                            </label>
+                            <input
+                              type="text"
+                              name="company"
+                              value={values.company}
+                              onChange={handleChange}
+                              className="form-input w-full rounded-full text-gray-700"
+                              placeholder="Enter your brand name "
+                              required
+                            />
+                          </div>
+
                         </div>
-                        <div className="w-full px-3">
-                          <label
-                            className="block my-2 text-gray-700 text-sm font-medium mb-1"
-                            htmlFor="email"
-                          >
-                            Company or Brand name
-                          </label>
-                          <input
-                            type="text"
-                            name="company"
-                            value={values.company}
-                            onChange={handleChange}
-                            className="form-input w-full rounded-full text-gray-700"
-                            placeholder="Enter your brand name "
-                            required
-                          />
-                        </div>
 
-                      </div>
+                        <p className="flex justify-center items-center text-red-600">
+                          {message}
+                        </p>
 
-                      <p className="flex justify-center items-center text-red-600">
-                        {message}
-                      </p>
-
-                      <div className="flex flex-wrap -mx-3 mt-6">
-                        <div className="w-full px-3">
-                          {/* <Link to="/services"> */}
-                          <button
-                            type="submit"
-                            className="font-bold 
+                        <div className="flex flex-wrap -mx-3 mt-6">
+                          <div className="w-full px-3">
+                            {/* <Link to="/services"> */}
+                            <button
+                              type="submit"
+                              className="font-bold 
                             text-gray-800 bg-gradient-to-r
                              from-gsBlue to-gsBlueTwo py-3 w-full"
-                          >
-                            Update
-                          </button>
+                            >
+                              Update
+                            </button>
 
-                          {loading && (
-                            <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
-                              {" "}
-                              <Puff
-                                height="100"
-                                width="100"
-                                color="#4446e4"
-                                secondaryColor="#4446e4"
-                                radius="12.5"
-                                ariaLabel="mutating-dots-loading"
-                                wrapperStyle={{}}
-                                wrapperClass=""
-                                visible={true}
-                              />
-                            </div>
-                          )}
-                          {/* </Link> */}
+                            {loading && (
+                              <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
+                                {" "}
+                                <Puff
+                                  height="100"
+                                  width="100"
+                                  color="#4446e4"
+                                  secondaryColor="#4446e4"
+                                  radius="12.5"
+                                  ariaLabel="mutating-dots-loading"
+                                  wrapperStyle={{}}
+                                  wrapperClass=""
+                                  visible={true}
+                                />
+                              </div>
+                            )}
+                            {/* </Link> */}
+                          </div>
                         </div>
-                      </div>
-                    </form>
+                      </form>
 
 
                       {/* Update General Infos form */}
                       <form
                         onSubmit={onSubmit}
-                        className="max-w-sm mx-auto md:mt-8 "
+                        className="max-w-sm mx-auto md:mt-8 shadow-md bg-blue-50 rounded-md p-3"
                       >
                         <div className="flex flex-wrap -mx-3 mb-4">
 

@@ -163,7 +163,9 @@ function BrandEngagementDetails() {
             );
             console.log("Client connect :" + response.data); // Success message or response data
             // Perform any additional actions after successful deletion
-            window.location.href = response.data?.ConnectLinkURL
+            // window.location.href = response.data?.ConnectLinkURL
+            // Open the URL in a new window or tab
+            window.open(response.data?.ConnectLinkURL, '_blank');
         } catch (error) {
             console.log(error); // Handle error
         }

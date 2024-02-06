@@ -178,16 +178,17 @@ function Settings() {
                 <DashboardHeader
                     sidebarOpen={sidebarOpen}
                     setSidebarOpen={setSidebarOpen}
+                    header="Settings"
                 />
 
                 <main>
-                    <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+                    <div className="px-4 sm:px-6 lg:px-8 py-4 w-full max-w-9xl mx-auto">
                         {/* Page header */}
 
 
                         <div className="sm:flex sm:justify-between sm:items-center mb-8">
                             <div className="mb-4 sm:mb-0">
-                                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
+                                <h1 className="text-xl md:hidden text-blue-500 font-bold">
                                     Settings
                                 </h1>
                             </div>
@@ -209,7 +210,7 @@ function Settings() {
                                         onSubmit={addNewTemplate}>
                                         <div className="flex flex-wrap">
                                             <div className="w-full p-3">
-                                                <h2 className="font-medium md:w-1/2 p-2 rounded-md  text-md  md:text-2xl mb-2">
+                                                <h2 className="font-medium md:w-1/2 text-blue-600 p-2 rounded-md  text-md  md:text-2xl mb-2">
                                                     Add New Template
                                                 </h2>
                                             </div>

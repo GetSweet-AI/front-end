@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import Sidebar from "../partials/Sidebar";
 import Header from "../partials/Header";
 import SearchForm from "../partials/SearchForm";
@@ -67,17 +66,10 @@ function BrandEngagements() {
     setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
   };
 
-  // useEffect(() => {
-  //   fetchEngagements();
-  // }, []);
-  const [search, setSearch] = useState('')
-  const handleChange = (e) => {
-    setSearch(e.target.value)
-  };
 
 
 
-  console.log('Search : ' + search)
+
 
   //Get ClientConnect by BrandEngagementId
   const [connectLinkURL, setConnectLinkURL] = useState("")
@@ -97,6 +89,7 @@ function BrandEngagements() {
         <DashboardHeader
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
+          header="Brand Engagements"
         />
 
         <main>
@@ -104,8 +97,8 @@ function BrandEngagements() {
             {/* Page header */}
             <div className="sm:flex sm:justify-between sm:items-center mb-8">
               {/* Left: Title */}
-              <div className="mb-4 sm:mb-0 ">
-                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold">
+              <div className="mb-4 sm:mb-0  ">
+                <h1 className="text-xl md:hidden  text-blue-500 font-bold">
                   Brand Engagements
                 </h1>
 
@@ -114,18 +107,7 @@ function BrandEngagements() {
               {/* Right: Actions */}
               <div className="flex justify-center items-center">
 
-                {/* <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2"> */}
-                {/* Search form */}
-                {/* <SearchForm /> */}
-                {/* Filter button */}
-                {/* <FilterButton align="right" /> */}
-                {/* Create campaign button */}
-                {/* <button className="btn bg-indigo-500 hover:bg-indigo-600 ">
-                                    <svg className="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
-                                        <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
-                                    </svg>
-                                    <span className="hidden xs:block ml-2">Create Worflow</span>
-                                </button> */}
+
 
                 <div>
                   {numberOfPages > 0 && <div className="mr-4">
@@ -161,14 +143,7 @@ function BrandEngagements() {
                     </div>
                     {/* <PaginationNumeric /> */}</div>}
                 </div>
-                <div><input
-                  type="text"
-                  name="search"
-                  placeholder="Search by brandName or website"
-                  onChange={handleChange}
-                  className="form-input focus:border-slate-300"
-                />
-                </div>
+
               </div>
             </div>
 
@@ -191,38 +166,27 @@ function BrandEngagements() {
             {engagements?.length > 0 && (
               <div className="">
                 <div className="grid grid-cols-12 gap-6">
-                  {engagements.
-                    filter((brand) => {
-                      // const { email } = brand?.user;
-                      if (search == "") {
-                        return brand;
-                      } else if (brand?.email !== null &&
-                        (brand?.WebSite.toLowerCase().includes(search.toLocaleLowerCase()) || brand?.BrandName.toLowerCase().includes(search.toLocaleLowerCase()))
-                      ) {
-                        return brand;
-                      }
-                    }).
-                    map((item) => {
-                      return (
-                        <BrandEngagementCard
-                          key={item._id}
-                          id={item._id}
-                          brandName={item?.BrandName}
-                          postContent={item?.postContent}
-                          website={item.WebSite}
-                          timeZone={item.Timezone}
-                          companySector={item.CompanySector}
-                          brandTone={item.BrandTone}
-                          targetAudience={item.TargetAudience}
-                          postType={item.PostType}
-                          relatedPostsStatus={item.relatedPostsStatus}
-                          fetchEngagements={fetchEngagements}
-                          isArchive={false}
-                          isAdminPage={true}
+                  {engagements.map((item) => {
+                    return (
+                      <BrandEngagementCard
+                        key={item._id}
+                        id={item._id}
+                        brandName={item?.BrandName}
+                        postContent={item?.postContent}
+                        website={item.WebSite}
+                        timeZone={item.Timezone}
+                        companySector={item.CompanySector}
+                        brandTone={item.BrandTone}
+                        targetAudience={item.TargetAudience}
+                        postType={item.PostType}
+                        relatedPostsStatus={item.relatedPostsStatus}
+                        fetchEngagements={fetchEngagements}
+                        isArchive={false}
+                        isAdminPage={true}
 
-                        />
-                      );
-                    })}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -237,18 +201,7 @@ function BrandEngagements() {
                   Previous
                 </button>
 
-                {/* {pages.map((pageIndex) => (
-                  <button
-                    key={pageIndex}
-                    className={`${pageNumber === pageIndex
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
-                      } px-3 py-1 rounded-lg`}
-                    onClick={() => setPageNumber(pageIndex)}
-                  >
-                    {pageIndex + 1}
-                  </button>
-                ))} */}
+
                 <select
                   value={pageNumber}
                   onChange={(e) => setPageNumber(parseInt(e.target.value))}

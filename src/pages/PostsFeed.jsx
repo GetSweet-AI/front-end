@@ -193,6 +193,7 @@ function PostsFeed() {
         <DashboardHeader
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
+          header={`${enabled ? "Admin" : "My"} Feed Posts`}
         />
 
         <main>
@@ -230,7 +231,7 @@ function PostsFeed() {
             {/* Page header */}
             <div className="flex flex-col md:flex-row justify-between  p-2 ">
               <div className="mb-4 sm:mb-0 flex flex-col">
-                <h1 className="text-2xl md:text-3xl mb-2 text-blue-500 font-bold" >
+                <h1 className="text-xl mb-2 text-blue-500 md:hidden font-bold" >
                   {enabled ? "Admin" : "My"} Feed Posts
                 </h1>
 

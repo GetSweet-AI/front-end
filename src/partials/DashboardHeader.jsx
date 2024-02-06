@@ -11,7 +11,7 @@ import { faUserEdit } from "@fortawesome/free-solid-svg-icons";
 function DashboardHeader({
   sidebarOpen,
   setSidebarOpen,
-
+  header
 }) {
 
   const { user } = useSelector((state) => state.auth);
@@ -39,6 +39,11 @@ function DashboardHeader({
 
           {/* Header: Left side */}
           <div className="flex">
+
+            {/* Header on desktop */}
+            <div className='hidden text-xl md:block text-blue-500 font-bold'>
+              {header}
+            </div>
 
             {/* Hamburger button */}
             <button

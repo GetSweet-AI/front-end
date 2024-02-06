@@ -29,7 +29,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MutatingDots } from "react-loader-spinner";
 import AddNewUserModal from "../partials/AddNewUserModal";
-import { formatReadableDate } from "../utils/formatReadableDate";
+import { formatReadableDate, formatTimeSince } from "../utils/formatReadableDate";
 import { setUserData, switchLoginStatus } from "../redux/auth";
 import userPic from "../images/user.png";
 
@@ -137,6 +137,7 @@ function Users() {
         <DashboardHeader
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
+          header="Users"
         />
 
         <main>
@@ -161,11 +162,11 @@ function Users() {
 
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0 flex md:justify-between md:flex-row flex-col">
-                <h1 className="text-2xl md:text-3xl text-blue-600 font-bold">
+                <h1 className="text-xl md:hidden text-blue-600 font-bold">
                   Users
                 </h1>
                 <button
-                  className="px-2 md:py-1 py-2 bg-blue-600 md:mt-0 mt-2  text-center text-white rounded text-sm flex items-center font-medium"
+                  className="px-3 py-2 bg-blue-600 md:mt-0 mt-2  text-center text-white rounded text-sm flex items-center font-medium"
                   onClick={() => setIsOpen(true)}
                 >
                   <FontAwesomeIcon icon={faPlus} className="mr-1 w-4 h-4 mb-[2px]" />
@@ -237,7 +238,7 @@ function Users() {
                             {client.fullName}
                           </td>
 
-                          <td className="py-4 px-2 border-b">{client.email}1</td>
+                          <td className="py-4 px-2 border-b">{client.email}</td>
                           <td className="py-4 px-6 border-b">{client.company}</td>
                           <td className="py-4 px-6 border-b">{client.Plan}</td>
                           <td className="py-4 px-6 border-b text-center">
@@ -258,7 +259,7 @@ function Users() {
                               />
                             </span>
                           </td>
-                          <td className="py-4 px-6 border-b">     {client?.lastLoggedIn && formatReadableDate(client?.lastLoggedIn)}</td>
+                          <td className="py-4 px-6 border-b">     {client?.lastLoggedIn && formatTimeSince(client?.lastLoggedIn)}</td>
                           <td className="py-4 px-6 border-b">     {client?.countBrandEngagements}</td>
                           <td className="py-4 flex flex-col px-6 border-b">
                             {/* <span

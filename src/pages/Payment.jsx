@@ -97,7 +97,7 @@ function Payment() {
 
                 {/*  Site header */}
                 {/*  Site header */}
-                <DashboardHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+                <DashboardHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} header="Purchase tokens" />
 
                 <main>
                     <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
@@ -105,7 +105,7 @@ function Payment() {
                         {/* Page header */}
                         <div className="sm:flex sm:justify-between sm:items-center mb-8">
                             <div className="mb-4 sm:mb-0">
-                                <h1 className="text-2xl md:text-3xl text-blue-500 font-bold"> Purchase tokens</h1>
+                                <h1 className="text-xl md:hidden text-blue-500 font-bold"> Purchase tokens</h1>
                             </div>
                         </div>
 
