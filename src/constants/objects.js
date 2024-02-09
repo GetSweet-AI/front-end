@@ -1,3 +1,9 @@
+export const languageOptions = [
+  { value: "English", label: "🍵 English" }, // Tea emoji, representing the UK's tea culture.
+  { value: "Spanish", label: "🎸 Spanish" }, // Guitar emoji, hinting at Spain's rich musical tradition, notably classical and flamenco guitar.
+  { value: "French", label: "🎨 French" }    // Painting palette emoji, reflecting France's historical contribution to art.
+];
+
 export const targetAudienceOptions = [
     { value: "youngProfessionals", label: "Young professionals" },
     { value: "parentsOfYoungChildren", label: "Parents of young children" },
@@ -17,23 +23,44 @@ export const targetAudienceOptions = [
     {value:'other', label:'other'}
   ];
 
-  export const timeZoneOptions = [
-    { value: "utc", label: "UTC (Coordinated Universal Time)" },
-    { value: "gmt", label: "GMT (Greenwich Mean Time)" },
-    { value: "est", label: "EST (Eastern Standard Time)" },
-    { value: "cst", label: "CST (Central Standard Time)" },
-    { value: "mst", label: "MST (Mountain Standard Time)" },
-    { value: "pst", label: "PST (Pacific Standard Time)" },
-    { value: "ist", label: "IST (Indian Standard Time)" },
-    { value: "jst", label: "JST (Japan Standard Time)" },
-    { value: "aest", label: "AEST (Australian Eastern Standard Time)" },
-    { value: "bst", label: "BST (British Summer Time)" },
-    { value: "cet", label: "CET (Central European Time)" },
-    { value: "hkt", label: "HKT (Hong Kong Time)" },
-    { value: "nzdt", label: "NZDT (New Zealand Daylight Time)" },
-    { value: "art", label: "ART (Argentina Time)" },
-    { value: "ast", label: "AST (Arabian Standard Time)" },
-  ];
+  export const timeZoneOptions =[
+    {
+      value: "UTC (Coordinated Universal Time)",
+      label: "UTC (Coordinated Universal Time)",
+    },
+    {
+      value: "BST (British Summer Time)",
+      label: "BST (British Summer Time)",
+    },
+    {
+      value: "JST (Japan Standard Time)",
+      label: "JST (Japan Standard Time)",
+    },
+    {
+      value: "IST (Indian Standard Time)",
+      label: "IST (Indian Standard Time)",
+    },
+    {
+      value: "PST (Pacific Standard Time)",
+      label: "PST (Pacific Standard Time)",
+    },
+    {
+      value: "MST (Mountain Standard Time)",
+      label: "MST (Mountain Standard Time)",
+    },
+    {
+      value: "CST (Central Standard Time)",
+      label: "CST (Central Standard Time)",
+    },
+    {
+      value: "EST (Eastern Standard Time)",
+      label: "EST (Eastern Standard Time)",
+    },
+    {
+      value: "GMT (Greenwich Mean Time)",
+      label: "GMT (Greenwich Mean Time)",
+    },
+  ]
   
   export const companySectors = [
     { value: "technology", label: "Technology" },

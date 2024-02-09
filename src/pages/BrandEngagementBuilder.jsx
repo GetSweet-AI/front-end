@@ -17,7 +17,7 @@ import ReactHtmlParser from "react-html-parser";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faL, faPlus, faRefresh, faSave, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { targetAudienceOptions } from "../constants/objects";
+import { languageOptions, targetAudienceOptions, timeZoneOptions } from "../constants/objects";
 import brandTones from "../constants/brandTones";
 import postTypeOptions from "../constants/postTypeOtions";
 import { clearMessage, setMessage } from "../redux/message";
@@ -68,7 +68,6 @@ function BrandEngagementBuilder() {
   const [startDate, setStartDate] = useState(formattedDate); // Initialize endDate state
   const [selectedPostType, setSelectedPostType] = useState('TextImagePost');
 
-
   // console.log("User :" + JSON.stringify(user))
 
 
@@ -101,11 +100,11 @@ function BrandEngagementBuilder() {
     brandName: "",
     websiteUrl: "",
     timeZone: null,
+    language: { value: "English", label: "🍵 English" },
     companySector: null,
     brandTone: null,
     targetAudience: null,
     postType: "",
-    other: "",
 
   });
 
@@ -118,6 +117,7 @@ function BrandEngagementBuilder() {
 
   const postData = {
     Timezone: values.timeZone?.value,
+    language: values.language?.value,
     CompanySector: values.companySector,
     BrandTone: values.brandTone?.value,
     TargetAudience: values.targetAudience?.value,
@@ -293,7 +293,6 @@ function BrandEngagementBuilder() {
   };
 
   // console.log("Post type :" + JSON.stringify(values.postType));
-
   const gotoPrevious = () => {
     setPageNumber(Math.max(0, pageNumber - 1));
   };
@@ -367,6 +366,7 @@ function BrandEngagementBuilder() {
     try {
       await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
         setTemplates(res.data.templates)
+        console.log(res.data.templates)
       })
 
     } catch (error) {
@@ -378,10 +378,7 @@ function BrandEngagementBuilder() {
     getTemplates()
   }, [])
 
-  // Create the debounced function (outside of your component)
-  const debouncedGetTargetAudiences = debounce(() => {
-    getTargetAudiences();
-  }, 500); // Adjust the delay time (in milliseconds) as needed
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -511,7 +508,6 @@ function BrandEngagementBuilder() {
                   <span className="hover:font-bold"> Add brand voice</span>
                 </button>
               </div>
-
 
 
               <div className="my-4 sm:mb-8 flex flex-col">  {/* Increased the bottom margin to mb-8 */}
@@ -700,44 +696,23 @@ function BrandEngagementBuilder() {
                               onChange={(selectedOption) =>
                                 handleSelectChange("timeZone", selectedOption)
                               }
-                              options={[
-                                {
-                                  value: "UTC (Coordinated Universal Time)",
-                                  label: "UTC (Coordinated Universal Time)",
-                                },
-                                {
-                                  value: "BST (British Summer Time)",
-                                  label: "BST (British Summer Time)",
-                                },
-                                {
-                                  value: "JST (Japan Standard Time)",
-                                  label: "JST (Japan Standard Time)",
-                                },
-                                {
-                                  value: "IST (Indian Standard Time)",
-                                  label: "IST (Indian Standard Time)",
-                                },
-                                {
-                                  value: "PST (Pacific Standard Time)",
-                                  label: "PST (Pacific Standard Time)",
-                                },
-                                {
-                                  value: "MST (Mountain Standard Time)",
-                                  label: "MST (Mountain Standard Time)",
-                                },
-                                {
-                                  value: "CST (Central Standard Time)",
-                                  label: "CST (Central Standard Time)",
-                                },
-                                {
-                                  value: "EST (Eastern Standard Time)",
-                                  label: "EST (Eastern Standard Time)",
-                                },
-                                {
-                                  value: "GMT (Greenwich Mean Time)",
-                                  label: "GMT (Greenwich Mean Time)",
-                                },
-                              ]}
+                              options={timeZoneOptions}
+                            />
+                          </div>
+                          <div className="w-full p-2">
+                            <label htmlFor="select1" className="block mb-1">
+                              Posts language
+                            </label>
+                            <Select
+                              id="language"
+                              className="w-full"
+                              // name="timeZone"
+                              placeholder="Language of the posts"
+                              value={values.language}
+                              onChange={(selectedOption) =>
+                                handleSelectChange("language", selectedOption)
+                              }
+                              options={languageOptions}
                             />
                           </div>
 
@@ -861,7 +836,7 @@ function BrandEngagementBuilder() {
                           </div>
                         </div>
                       )}
-                      <div className=" md:space-y-3">
+                      <div className=" md:space-y-3 md:mt-0 mt-2">
                         {isEditing ? (
                           <div>
                             <textarea

@@ -33,8 +33,13 @@ function Settings() {
 
     const [selectedOption, setSelectedOption] = useState('RunForEver');
 
+    // Create a new Date object for the current date
+    const currentDate = new Date();
+
+    // Format the date to yyyy-mm-dd
+    const formattedTodayDate = currentDate.toISOString().split('T')[0];
     const [endDate, setEndDate] = useState(''); // Initialize endDate state
-    const [startDate, setStartDate] = useState(''); // Initialize endDate state
+    const [startDate, setStartDate] = useState(formattedTodayDate); // Initialize endDate state
 
     const { message } = useSelector((state) => state.message);
     const { user } = useSelector((state) => state.auth);
@@ -53,6 +58,8 @@ function Settings() {
             [name]: selectedOption,
         }));
     };
+
+
 
     const newTemplate = {
         Title: values?.Title,

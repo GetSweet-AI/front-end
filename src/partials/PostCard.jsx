@@ -151,6 +151,28 @@ function PostCard({
       border-slate-200 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-200">
       <div className="flex flex-col h-full p-5">
         <header>
+
+          {isAnAccountConnected ? (
+
+            <div className="text-sm flex mb-2">
+              <svg className="w-6 h-6 mt-[1px] text-pink-600 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <span className="font-medium p-1">Scheduled for</span>{" "}
+              <p className="text-pink-500 font-bold rounded-lg ml-2 p-1 bg-gray-100" target="_blank">
+                {dateUpdate(unixTimestamp)}
+              </p>
+            </div>
+          ) : (
+            <div className="text-sm mb-2 text-blue-500 font-bold">
+
+              <button onClick={getClientConnect} className="hover:underline">
+                Connect your socials to schedule this post
+              </button>
+
+
+            </div>
+          )}
           <div className="flex items-center justify-between">
             <h2 className="text-xl leading-snug font-semibold">{Accounts}</h2>
             <div className="flex">
@@ -186,24 +208,6 @@ function PostCard({
 
           {/* condition socials connected */}
 
-          {isAnAccountConnected ? (
-
-            <div className="text-sm mb-2">
-              <span className="font-medium">Scheduled for</span>{" "}
-              <p className="text-pink-500 font-bold" target="_blank">
-                {dateUpdate(unixTimestamp)}
-              </p>
-            </div>
-          ) : (
-            <div className="text-sm mb-2 text-blue-500 font-bold">
-
-              <button onClick={getClientConnect} className="hover:underline">
-                Connect your socials to schedule this post
-              </button>
-
-
-            </div>
-          )}
 
 
 
