@@ -41,7 +41,7 @@ function DashboardHeader({
           <div className="flex">
 
             {/* Header on desktop */}
-            <div className='hidden text-xl md:block text-blue-500 font-bold'>
+            <div className='hidden text-xl sm:block md:block text-blue-500 font-bold'>
               {header}
             </div>
 

@@ -56,7 +56,7 @@ function PostsFeed() {
   //   setIsUserDataLoading(true);
   //   await axios
   //     .get(
-  //       `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${user?._id}`
+  //       `http://localhost:5000/api/v1/feed-posts/${user?._id}`
   //     )
   //     .then((res) => {
   //       setFeedPosts(res.data?.feedPosts);
@@ -67,12 +67,13 @@ function PostsFeed() {
   //     });
   //   setIsUserDataLoading(false);
   // };
+
   const fetchAllFeedPosts = async () => {
     setIsLoading(true);
 
     await axios
       .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}`
+        `http://localhost:5000/api/v1/admin/feedposts?userId=${user?._id}`
       )
       .then((res) => {
         setAdminFeedPosts(res.data);
@@ -86,12 +87,12 @@ function PostsFeed() {
   const deletePostFeed = async (id) => {
     await axios
       .delete(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${id}`
+        `http://localhost:5000/api/v1/feed-posts/${id}`
       )
       .then((res) => {
         console.log("Post feed deleted");
         fetch(
-          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${user?._id}?page=${pageNumber}`
+          `http://localhost:5000/api/v1/feed-posts/${user?._id}?page=${pageNumber}`
         )
           .then((response) => response.json())
           .then(({ totalPages, feedPosts }) => {
@@ -133,7 +134,7 @@ function PostsFeed() {
 
   useEffect(() => {
     fetch(
-      `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${user?._id}?page=${pageNumber}`
+      `http://localhost:5000/api/v1/feed-posts/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, feedPosts }) => {
@@ -144,7 +145,7 @@ function PostsFeed() {
 
   useEffect(() => {
     fetch(
-      `https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}&page=${adminPageNumber}`
+      `http://localhost:5000/api/v1/admin/feedposts?userId=${user?._id}&page=${adminPageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, feedPosts }) => {
@@ -185,6 +186,8 @@ function PostsFeed() {
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+
+
 
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">

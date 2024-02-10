@@ -4,7 +4,7 @@ import "aos/dist/aos.css";
 import "./css/style.css";
 import AOS from "aos";
 import { useSelector } from "react-redux";
-import { Puff } from "react-loader-spinner";
+import { Puff, ThreeDots } from "react-loader-spinner";
 import Archive from "./pages/Archive";
 import Settings from "./pages/Settings";
 import Assets from "./pages/Assets";
@@ -53,7 +53,7 @@ function App() {
   const { isLoggedIn, user } = useSelector((state) => state.auth);
 
   return (
-    <Suspense fallback={<div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"><Puff
+    <Suspense fallback={<div className="flex justify-center items-center min-h-screen"><ThreeDots
       height="100"
       width="100"
       color="#4446e4"

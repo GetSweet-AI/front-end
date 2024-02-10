@@ -31,6 +31,7 @@ import RadioButton from "../components/RadioButton";
 import { debounce } from 'lodash';
 import { Line } from 'rc-progress';
 import DayPicker from "../components/DaysPicker";
+import { Dialog, Flex, Text, Button, TextField } from "@radix-ui/themes";
 
 
 function BrandEngagementBuilder() {
@@ -73,7 +74,7 @@ function BrandEngagementBuilder() {
 
   useEffect(() => {
     fetch(
-      `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+      `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
@@ -85,7 +86,7 @@ function BrandEngagementBuilder() {
   const getUserData = async () => {
     await axios
       .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         dispatch(setUserData(res?.data.user));
@@ -174,7 +175,7 @@ function BrandEngagementBuilder() {
 
       try {
         const res = await axios.post(
-          "https://seal-app-dk3kg.ondigitalocean.app/api/v1/generate-blog-post",
+          "http://localhost:5000/api/v1/generate-blog-post",
           {
             tone: brandTone?.value,
             brandName: brandName,
@@ -209,7 +210,7 @@ function BrandEngagementBuilder() {
     } else {
       await axios
         .post(
-          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/save-brand-engagement/${user?._id}`,
+          `http://localhost:5000/api/v1/save-brand-engagement/${user?._id}`,
           postData
         )
         .then((res) => {
@@ -219,7 +220,7 @@ function BrandEngagementBuilder() {
           toast.success("Brand Engagement saved successfully");
           // console.log(res.data);
           axios.get(
-            `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+            `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
           )
             .then((response) => response.json())
             .then(({ totalPages, brandEngagements }) => {
@@ -263,7 +264,7 @@ function BrandEngagementBuilder() {
 
   const fetchEngagements = async () => {
     await fetch(
-      `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+      `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
@@ -308,7 +309,7 @@ function BrandEngagementBuilder() {
     try {
       // Make a POST request to update the notificationMessage in the backend using Axios
       // Replace 'YOUR_UPDATE_NOTIFICATION_ENDPOINT' with your actual endpoint
-      await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/update-notification-message/${user._id}`, {
+      await axios.put(`http://localhost:5000/api/v1/auth/update-notification-message/${user._id}`, {
         notificationMessage: 'none',
       }).then((res) => {
         fetchUserData()
@@ -321,7 +322,7 @@ function BrandEngagementBuilder() {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         dispatch(setUserData(res.data.user));
@@ -364,7 +365,7 @@ function BrandEngagementBuilder() {
   const [templates, setTemplates] = useState([])
   const getTemplates = async () => {
     try {
-      await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
+      await axios.get(`http://localhost:5000/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
         setTemplates(res.data.templates)
         console.log(res.data.templates)
       })
@@ -377,8 +378,6 @@ function BrandEngagementBuilder() {
   useEffect(() => {
     getTemplates()
   }, [])
-
-
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -393,7 +392,7 @@ function BrandEngagementBuilder() {
   const [targetAudiences, setTargetAudiences] = useState([])
   const getTargetAudiences = async () => {
     try {
-      await axios.post(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/generate-ta-options`, {
+      await axios.post(`http://localhost:5000/api/v1/generate-ta-options`, {
         companySector: values.companySector
       }).then((res) => {
         setTargetAudiences(res.data.targetAudiences)
@@ -468,7 +467,7 @@ function BrandEngagementBuilder() {
   const disableFirstLogin = async () => {
     try {
 
-      await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/disable-first-login/${user?._id}`);
+      await axios.put(`http://localhost:5000/api/v1/auth/users/disable-first-login/${user?._id}`);
 
     } catch (error) {
       console.log(error)
@@ -498,18 +497,61 @@ function BrandEngagementBuilder() {
               {/* Left: Title */}
               <div className="mb-4 flex md:justify-between md:flex-row flex-col sm:mb-0">
                 <h1 className="text-xl   text-blue-500 font-bold flex justify-between items-center">
-                  <span className="md:hidden ">  Brand Engagement Builder</span>
+                  <span className="md:hidden ">Brand Builder</span>
                 </h1>
                 <button
                   className="px-2 py-2.5 bg-pink-500 md:mt-0 mt-2  text-center text-white rounded text-sm flex items-center font-normal"
                   onClick={() => setIsVisible(!isVisible)}
                 >
                   <FontAwesomeIcon icon={faPlus} className="mr-2 text-pink-500 text-center  bg-white py-1 px-[5px] mb-[1px] rounded-full" />
-                  <span className="hover:font-bold"> Add brand voice</span>
+                  <span className="hover:font-bold"> Add Brands</span>
                 </button>
               </div>
 
+              {/* <Dialog.Root>
+                <Dialog.Trigger>
+                  <Button>Edit profile</Button>
+                </Dialog.Trigger>
 
+                <Dialog.Content style={{ maxWidth: 450 }}>
+                  <Dialog.Title>Edit profile</Dialog.Title>
+                  <Dialog.Description size="2" mb="4">
+                    Make changes to your profile.
+                  </Dialog.Description>
+
+                  <Flex direction="column" gap="3">
+                    <label>
+                      <Text as="div" size="2" mb="1" weight="bold">
+                        Name
+                      </Text>
+                      <TextField.Input
+                        defaultValue="Freja Johnsen"
+                        placeholder="Enter your full name"
+                      />
+                    </label>
+                    <label>
+                      <Text as="div" size="2" mb="1" weight="bold">
+                        Email
+                      </Text>
+                      <TextField.Input
+                        defaultValue="freja@example.com"
+                        placeholder="Enter your email"
+                      />
+                    </label>
+                  </Flex>
+
+                  <Flex gap="3" mt="4" justify="end">
+                    <Dialog.Close>
+                      <Button variant="soft" color="gray">
+                        Cancel
+                      </Button>
+                    </Dialog.Close>
+                    <Dialog.Close>
+                      <Button>Save</Button>
+                    </Dialog.Close>
+                  </Flex>
+                </Dialog.Content>
+              </Dialog.Root> */}
               <div className="my-4 sm:mb-8 flex flex-col">  {/* Increased the bottom margin to mb-8 */}
                 {user.notificationMessage !== 'none' &&
                   <PaymentSuccessMessage
@@ -522,9 +564,11 @@ function BrandEngagementBuilder() {
                 {
                   isVisible &&
                   <>
-                    <h1 className="text-md md:text-xl my-3 text-gray-500 font-bold flex justify-between items-center">
-                      Start from template
-                    </h1>
+                    {
+                      templates.length > 0 && <h1 className="text-md md:text-xl my-3 text-gray-500 font-bold flex justify-between items-center">
+                        Start from template
+                      </h1>
+                    }
 
 
                     <div className="flex flex-wrap">
@@ -808,7 +852,7 @@ function BrandEngagementBuilder() {
                                     Saving...
                                   </>
                                 ) : (
-                                  "Save your brand engagement"
+                                  "Save your brand "
                                 )}  <FontAwesomeIcon className="ml-2" icon={faSave} color="white" size={24} />
                               </button>
                             </div>
@@ -878,7 +922,7 @@ function BrandEngagementBuilder() {
               <div className="">
                 <h5 className=" text-xl text-blue-500 
                  mb-2 font-bold sm:mb-4">
-                  Your saved brand voices
+                  Your saved brands
                 </h5>
                 <div className="grid grid-cols-12 gap-6">
                   {engagements.map((item) => {

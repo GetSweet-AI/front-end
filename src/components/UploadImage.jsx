@@ -19,7 +19,7 @@ export default function UploadImage({ brandEngagementId, fetchEngagements }) {
     // async function uploadSingleImage(base64) {
     //     setLoading(true);
     //     await axios
-    //         .post("https://seal-app-dk3kg.ondigitalocean.app/api/uploadImage", { image: base64, brandEId: brandEngagementId }, {
+    //         .post("http://localhost:5000/api/uploadImage", { image: base64, brandEId: brandEngagementId }, {
     //             onUploadProgress: (progressEvent) => {
     //                 const progress = (progressEvent.loaded / progressEvent.total) * 100;
 
@@ -68,7 +68,7 @@ export default function UploadImage({ brandEngagementId, fetchEngagements }) {
                 setToastId(toast('Upload in Progress'));
             }
 
-            const res = await axios.post("https://seal-app-dk3kg.ondigitalocean.app/api/uploadImage", { image: base64, brandEId: brandEngagementId }, {
+            const res = await axios.post("http://localhost:5000/api/uploadImage", { image: base64, brandEId: brandEngagementId }, {
                 onUploadProgress: (progressEvent) => {
                     const progress = (progressEvent.loaded / progressEvent.total) * 100;
                     toast.update(toastId, { progress });
@@ -98,7 +98,7 @@ export default function UploadImage({ brandEngagementId, fetchEngagements }) {
         setLoading(true);
         const uploadPromises = Array.from(files).map(async (file) => {
             const base64 = await convertBase64(file);
-            return axios.post("https://seal-app-dk3kg.ondigitalocean.app/api/uploadImage", {
+            return axios.post("http://localhost:5000/api/uploadImage", {
                 image: base64,
                 brandEId: brandEngagementId,
             });

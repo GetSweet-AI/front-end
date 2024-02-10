@@ -67,7 +67,7 @@ function Settings() {
         BrandTone: values.brandTone?.value,
         TargetAudience: values.targetAudience?.value,
         endDate: endDate,
-        startDate: startDate,
+        startDate: selectedOption === "HasEndDate" ? startDate : "",
         lifeCycleStatus: selectedOption
     };
 
@@ -86,7 +86,7 @@ function Settings() {
         setIsLoading(true)
         await axios
             .post(
-                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/add-template/${user?._id}`,
+                `http://localhost:5000/api/v1/admin/add-template/${user?._id}`,
                 newTemplate
             )
             .then((res) => {
@@ -127,7 +127,7 @@ function Settings() {
     const [templates, setTemplates] = useState([])
     const getTemplates = async () => {
         try {
-            await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
+            await axios.get(`http://localhost:5000/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
                 setTemplates(res.data.templates)
             })
 
@@ -143,7 +143,7 @@ function Settings() {
 
     const deleteTemplate = async (id) => {
         try {
-            await axios.delete(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/templates/${user._id}?temId=${id}`).then((res) => {
+            await axios.delete(`http://localhost:5000/api/v1/admin/templates/${user._id}?temId=${id}`).then((res) => {
                 getTemplates()
             })
 
