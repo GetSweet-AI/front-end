@@ -30,7 +30,7 @@ function PostCard({
 
 
 
-  //http://localhost:5000/api/v1/client-connect/6509eb6b6a20f499452b2186
+  //https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/6509eb6b6a20f499452b2186
 
 
 
@@ -43,7 +43,7 @@ function PostCard({
     try {
       if (id) {
         const response = await axios.get(
-          `http://localhost:5000/api/v1/check-connect-link-exists/${id}`
+          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/check-connect-link-exists/${id}`
         );
         setIsConnected(response.data?.hasConnectLinkURL);
       }
@@ -67,7 +67,7 @@ function PostCard({
   const getClientConnectData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/v1/client-connect/${id}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`
       );
       console.log("Client connect data :" + JSON.stringify(response.data)); // Success message or response data
       // Perform any additional actions after successful deletion
@@ -87,7 +87,7 @@ function PostCard({
       setIsLoadingCC(true);
 
       try {
-        const response = await axios.get(`http://localhost:5000/api/v1/client-connect/${id}`);
+        const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`);
 
         if (response.status === 200) {
           console.log("Client connect: ", response.data);
@@ -121,7 +121,7 @@ function PostCard({
     //Update caption on the backend + setSaving(true)
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/v1/feed-posts/${id}`,
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${id}`,
         {
           NewCaption: caption
         });
