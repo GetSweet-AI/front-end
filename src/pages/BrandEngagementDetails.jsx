@@ -216,8 +216,10 @@ function BrandEngagementDetails() {
     }, [])
 
 
+
+
     const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
-    console.log("isAnAccountConnected :" + isAnAccountConnected)
+    // console.log("isAnAccountConnected :" + isAnAccountConnected)
     return (
         <div className="flex h-screen overflow-hidden">
 
@@ -341,7 +343,7 @@ function BrandEngagementDetails() {
                                     return (
                                         <PostCard
                                             key={item._id}
-                                            id={item._id}
+                                            feedPostId={item._id}
                                             MediaUrl={item.MediaUrl}
                                             deleteFeedPost={deletePostFeed}
                                             Caption={item.Caption}
@@ -350,6 +352,15 @@ function BrandEngagementDetails() {
                                             Accounts={item.Accounts}
                                             DownloadButton={downloadVideo}
                                             unixTimestamp={item.unixTimestamp}
+                                            fetchFeedPosts={fetchFeedPosts}
+                                        // isEditing={isEditing}
+                                        // setEditing={setEditing}
+                                        // handleCancelClick={handleCancelClick}
+                                        // handleSaveClick={handleSaveClick}
+                                        // handleEditClick={handleEditClick}
+                                        // NewCaption={NewCaption}
+                                        // setNewCaption={setNewCaption}
+
                                         />
                                     );
                                 })}

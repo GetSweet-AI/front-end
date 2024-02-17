@@ -10,7 +10,7 @@ import ReactHtmlParser from "react-html-parser";
 import { useDispatch } from "react-redux";
 import { clearActiveBrandEngagement, setActiveBrandEngagement } from "../redux/message";
 import { Dialog, Transition } from '@headlessui/react'
-
+import { Badge } from '@radix-ui/themes';
 
 function BrandEngagementCard({
   id,
@@ -179,24 +179,11 @@ function BrandEngagementCard({
               !isArchive && <div className="text-sm mb-2">
                 {relatedPostsStatus === "Posts generating..." ? (
                   <div className="flex my-2 justify-center space-x-4 items-center">
-                    <p className="text-lg font-semibold text-blue-500">Posts generating...</p>
-                    <ThreeDots
-                      height="10"
-                      width="40"
-                      radius="9"
-                      color="#0967eb"
-                      ariaLabel="three-dots-loading"
-                      wrapperStyle={{}}
-                      wrapperClassName=""
-                      visible={true}
-                    />
+                    <Badge color="orange" size={"2"}>Generating posts...</Badge>
                   </div>
                 ) : (
                   <div className="flex my-2 justify-center space-x-4 items-center">
-                    {" "}
-                    <p className="text-lg font-semibold text-blue-500">Posts are ready</p>
-                    <FontAwesomeIcon icon={faCheck} color="#0967eb" size={24} />
-                  </div>
+                    <Badge color="green" size={"2"}>Posts are ready</Badge>   </div>
                 )}
               </div>
             }
