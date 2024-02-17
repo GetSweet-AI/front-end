@@ -255,7 +255,7 @@ function BrandEngagementBuilder() {
       timeZone: null,
       companySector: "",
       brandTone: null,
-      targetAudience: null,
+      targetAudience: null
     });
     setResult(null);
     dispatch(clearMessage());
