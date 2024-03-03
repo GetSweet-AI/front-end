@@ -56,7 +56,7 @@ function BrandEngagementBuilder() {
   // State to track visibility
   const [isVisible, setIsVisible] = useState(false);
 
-  const [selectedOption, setSelectedOption] = useState('RunForEver');
+  const [selectedOption, setSelectedOption] = useState('HasEndDate');
 
 
   // Create a new Date object for the current date
@@ -74,7 +74,7 @@ function BrandEngagementBuilder() {
 
   useEffect(() => {
     fetch(
-      `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+      `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
@@ -86,7 +86,7 @@ function BrandEngagementBuilder() {
   const getUserData = async () => {
     await axios
       .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         dispatch(setUserData(res?.data.user));
@@ -100,10 +100,10 @@ function BrandEngagementBuilder() {
   const [values, setValues] = useState({
     brandName: "",
     websiteUrl: "",
-    timeZone: null,
-    language: { value: "English", label: "🍵 English" },
+    timeZone: { value: "UTC (Coordinated Universal Time)", label: "UTC (Coordinated Universal Time)" },
+    language: { value: "English", label: "English" },
     companySector: null,
-    brandTone: null,
+    brandTone: { value: "Friendly", label: "Friendly" },
     targetAudience: null,
     postType: "",
 
@@ -175,7 +175,7 @@ function BrandEngagementBuilder() {
 
       try {
         const res = await axios.post(
-          "https://seal-app-dk3kg.ondigitalocean.app/api/v1/generate-blog-post",
+          "http://localhost:5000/api/v1/generate-blog-post",
           {
             tone: brandTone?.value,
             brandName: brandName,
@@ -210,7 +210,7 @@ function BrandEngagementBuilder() {
     } else {
       await axios
         .post(
-          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/save-brand-engagement/${user?._id}`,
+          `http://localhost:5000/api/v1/save-brand-engagement/${user?._id}`,
           postData
         )
         .then((res) => {
@@ -220,7 +220,7 @@ function BrandEngagementBuilder() {
           toast.success("Brand Engagement saved successfully");
           // console.log(res.data);
           axios.get(
-            `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+            `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
           )
             .then((response) => response.json())
             .then(({ totalPages, brandEngagements }) => {
@@ -264,7 +264,7 @@ function BrandEngagementBuilder() {
 
   const fetchEngagements = async () => {
     await fetch(
-      `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+      `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
@@ -309,7 +309,7 @@ function BrandEngagementBuilder() {
     try {
       // Make a POST request to update the notificationMessage in the backend using Axios
       // Replace 'YOUR_UPDATE_NOTIFICATION_ENDPOINT' with your actual endpoint
-      await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/update-notification-message/${user._id}`, {
+      await axios.put(`http://localhost:5000/api/v1/auth/update-notification-message/${user._id}`, {
         notificationMessage: 'none',
       }).then((res) => {
         fetchUserData()
@@ -322,7 +322,7 @@ function BrandEngagementBuilder() {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         dispatch(setUserData(res.data.user));
@@ -365,7 +365,7 @@ function BrandEngagementBuilder() {
   const [templates, setTemplates] = useState([])
   const getTemplates = async () => {
     try {
-      await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
+      await axios.get(`http://localhost:5000/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
         setTemplates(res.data.templates)
         console.log(res.data.templates)
       })
@@ -392,7 +392,7 @@ function BrandEngagementBuilder() {
   const [targetAudiences, setTargetAudiences] = useState([])
   const getTargetAudiences = async () => {
     try {
-      await axios.post(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/generate-ta-options`, {
+      await axios.post(`http://localhost:5000/api/v1/generate-ta-options`, {
         companySector: values.companySector
       }).then((res) => {
         setTargetAudiences(res.data.targetAudiences)
@@ -429,7 +429,7 @@ function BrandEngagementBuilder() {
   };
 
 
-  const [enabled, setEnabled] = useState(false);
+  const [enabled, setEnabled] = useState(true);
   useEffect(() => {
     if (enabled) {
       //Show endDate field
@@ -467,12 +467,22 @@ function BrandEngagementBuilder() {
   const disableFirstLogin = async () => {
     try {
 
-      await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/disable-first-login/${user?._id}`);
+      await axios.put(`http://localhost:5000/api/v1/auth/users/disable-first-login/${user?._id}`);
 
     } catch (error) {
       console.log(error)
     }
   }
+
+
+
+  const [selectedDays, setSelectedDays] = useState(["Mon", "Wed", "Fri"]);
+
+
+
+  useEffect(() => {
+    console.log("Selected Days:", selectedDays);
+  }, [selectedDays]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -601,11 +611,12 @@ function BrandEngagementBuilder() {
                   </a>
                 ) : (
                   <div id="Brand_Form" className="flex flex-wrap bg-blue-50 md:p-4 rounded-lg sm:mb-12">
-                    <div className="w-full md:w-1/2">
+                    <div className="w-full ">
+                      {/* Form goes here */}
                       <form className="rounded px-4" onSubmit={handlePreview}>
                         <div className="  flex-col rounded-md  flex flex-wrap">
                           <label htmlFor="select3" className="block pl-2  mb-2">
-                            Please choose the post type
+                            Post type
                           </label>
                           <div className="w-full flex flex-wrap">
                             <RadioButton
@@ -637,14 +648,6 @@ function BrandEngagementBuilder() {
 
                             />
                           </div>
-
-
-                        </div>
-                        <div className="  flex-col rounded-md  flex flex-wrap">
-                          <label htmlFor="select3" className="block pl-2">
-                            Schedule Your Posts On
-                          </label>
-                          <DayPicker />
 
 
                         </div>
@@ -743,7 +746,7 @@ function BrandEngagementBuilder() {
                               options={timeZoneOptions}
                             />
                           </div>
-                          <div className="w-full p-2">
+                          <div className="w-full p-2 mb-1">
                             <label htmlFor="select1" className="block mb-1">
                               Posts language
                             </label>
@@ -759,21 +762,16 @@ function BrandEngagementBuilder() {
                               options={languageOptions}
                             />
                           </div>
-
-
-                          <div className=" mt-2 flex w-full justify-center items-center p-2">
-                            <label className={`mr-4 ${selectedOption === 'RunForEver' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
-                              <span className="mr-2 text-md  font-medium">Run forever</span>
+                          <div className="  flex-col w-full  rounded-md  flex flex-wrap">
+                            <label htmlFor="select3" className="block pl-2">
+                              Schedule
                             </label>
+                            <DayPicker selectedDays={selectedDays} setSelectedDays={setSelectedDays} />
 
-                            <SwitchButton enabled={enabled} setEnabled={setEnabled} />
 
-                            <label className={`ml-4 ${selectedOption === 'HasEndDate' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
-                              <span className="ml-2 text-md  font-medium">Set Date Range</span>
-                            </label>
                           </div>
 
-                          <div className="w-full my-2  p-2">
+                          <div className="w-full   p-2">
                             {selectedOption === 'HasEndDate' && (
                               <div className="flex md:flex-row flex-col md:space-x-2">
                                 <div className="md:w-1/2 w-full">
@@ -801,6 +799,19 @@ function BrandEngagementBuilder() {
                               </div>
                             )}
                           </div>
+                          <div className=" mt-2 flex w-full justify-center items-center p-2">
+                            <label className={`mr-4 ${selectedOption === 'RunForEver' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
+                              <span className="mr-2 text-md  font-medium">Run forever</span>
+                            </label>
+
+                            <SwitchButton enabled={enabled} setEnabled={setEnabled} />
+
+                            <label className={`ml-4 ${selectedOption === 'HasEndDate' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
+                              <span className="ml-2 text-md  font-medium">Set Date Range</span>
+                            </label>
+                          </div>
+
+
 
                           <div className="flex w-full justify-center items-center">
                             <p className="text-red-500 text-sm my-2  text-center">
@@ -808,7 +819,7 @@ function BrandEngagementBuilder() {
                             </p>
                           </div>
 
-                          {previewLoading ? <div className="flex flex-col w-full p-2"> <Line percent={previewProgress} strokeWidth={2} strokeColor="#f60c9c" /> <p className="text-center text-blue-600 mt-3 font-semibold">
+                          {previewLoading ? <div className="flex flex-col w-full p-2"> <Line percent={previewProgress} strokeWidth={1} strokeColor="#f60c9c" /> <p className="text-center text-blue-600 mt-3 font-semibold">
                             {progressMessage} <span className="text-gray-500"> </span>
                             <span className="text-pink-500 font-bold">{previewProgress}%</span>
                           </p>
@@ -864,7 +875,7 @@ function BrandEngagementBuilder() {
 
                       </form>
                     </div>
-                    <div className="w-full flex-col  text-white md:w-1/2 bg-[#333333] rounded-lg p-4">
+                    {result && <div className="w-full flex-col mt-2 md:mx-4  text-white md:px-4  bg-[#333333] rounded-lg p-4">
                       {result && (
                         <div className="flex justify-end mb-4">
                           {!isEditing && <button className="bg-green-500 w-[15%] cursor-pointer
@@ -900,7 +911,7 @@ function BrandEngagementBuilder() {
                           </pre>
                         )}
                       </div>
-                    </div>
+                    </div>}
                   </div>
                 )}
               </div>

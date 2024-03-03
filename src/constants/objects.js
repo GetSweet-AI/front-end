@@ -1,7 +1,7 @@
 export const languageOptions = [
-  { value: "English", label: "🍵 English" }, // Tea emoji, representing the UK's tea culture.
-  { value: "Spanish", label: "🎸 Spanish" }, // Guitar emoji, hinting at Spain's rich musical tradition, notably classical and flamenco guitar.
-  { value: "French", label: "🎨 French" }    // Painting palette emoji, reflecting France's historical contribution to art.
+  { value: "English", label: "English" }, // Tea emoji, representing the UK's tea culture.
+  { value: "Spanish", label: "Spanish" }, // Guitar emoji, hinting at Spain's rich musical tradition, notably classical and flamenco guitar.
+  { value: "French", label: "French" }    // Painting palette emoji, reflecting France's historical contribution to art.
 ];
 
 export const targetAudienceOptions = [
