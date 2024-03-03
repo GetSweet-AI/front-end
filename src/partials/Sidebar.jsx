@@ -30,7 +30,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         setUser(res.data);
@@ -271,7 +271,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 </NavLink>
               </li>
               {/* profile */}
-              <li
+              {/* <li
                 className={`px-3 py-3 last:mb-0 ${pathname === "/profile" ? "bg-white rounded-l-full" : ""
                   }`}
               >
@@ -311,7 +311,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
                   </div>
                 </NavLink>
-              </li>
+              </li> */}
               {/*Assets page    */}
               <li
                 className={`px-3 ml-1 py-3 last:mb-0 ${pathname === "/assets" ? "bg-white rounded-l-full" : ""

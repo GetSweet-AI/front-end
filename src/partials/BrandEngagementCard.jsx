@@ -43,7 +43,7 @@ function BrandEngagementCard({
     setIsArchiveLoading(true)
     try {
       const response = await axios.delete(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${brandEngagementId}`
+        `http://localhost:5000/api/v1/brand-engagements/${brandEngagementId}`
       );
       console.log(response.data); // Success message or response data
       fetchEngagements();
@@ -105,7 +105,7 @@ function BrandEngagementCard({
 
 
   return (
-    <><div className="col-span-full sm:col-span-6 xl:col-span-4">
+    <><div className=" col-span-full sm:col-span-6 xl:col-span-4">
       <div className="bg-white shadow-lg rounded-lg border border-slate-200 hover:shadow-blue-200 hover:shadow-xl hover:border-blue-500">
 
         <div className="flex flex-col h-full p-5">
