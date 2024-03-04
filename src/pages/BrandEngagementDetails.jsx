@@ -74,7 +74,7 @@ function BrandEngagementDetails() {
         setIsLoading(true)
         await axios
             .get(
-                `http://localhost:5000/api/v1/brand-engagement/${id}`
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagement/${id}`
             )
             .then((res) => {
                 setEngagement(res.data?.brandEngagement);
@@ -105,7 +105,7 @@ function BrandEngagementDetails() {
         setIsLoading(true)
         await axios
             .get(
-                `http://localhost:5000/api/v1/feed-posts-engagements/${id}?page=${pageNumber}`
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${id}?page=${pageNumber}`
             ).then((response) => {
                 setFeedPosts(response.data?.feedPosts);
                 setNumberOfPages(response.data?.totalPages)
@@ -143,7 +143,7 @@ function BrandEngagementDetails() {
     const deletePostFeed = async (id) => {
         await axios
             .delete(
-                `http://localhost:5000/api/v1/feed-posts/${id}`
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${id}`
             )
             .then((res) => {
                 console.log("Post feed deleted")
@@ -159,7 +159,7 @@ function BrandEngagementDetails() {
         setIsLoadingCC(true)
         try {
             const response = await axios.get(
-                `http://localhost:5000/api/v1/client-connect/${id}`
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`
             );
             console.log("Client connect :" + response.data); // Success message or response data
             // Perform any additional actions after successful deletion
@@ -174,12 +174,11 @@ function BrandEngagementDetails() {
 
     //Check if BE has connectURL or no
     const [hasConnectUrl, setHasConnectUrl] = useState(false)
-
     async function checkConnectLinkExistsByBrandEngagementID() {
         // setIsLoadingCC(true)
         try {
             // Make a request to the endpoint to get the ConnectLinkURL
-            const response = await axios.get(`http://localhost:5000/api/v1/check-connect-link-exists/${id}`);
+            const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/check-connect-link-exists/${id}`);
 
             // Extract the hasConnectLinkURL from the response
             setHasConnectUrl(response.data?.hasConnectLinkURL)
@@ -200,7 +199,7 @@ function BrandEngagementDetails() {
     const getClientConnectData = async () => {
         try {
             const response = await axios.get(
-                `http://localhost:5000/api/v1/client-connect/${id}`
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`
             );
             console.log("Client connect data :" + JSON.stringify(response.data)); // Success message or response data
             // Perform any additional actions after successful deletion
@@ -215,11 +214,8 @@ function BrandEngagementDetails() {
         getClientConnectData()
     }, [])
 
-
-
-
     const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
-    // console.log("isAnAccountConnected :" + isAnAccountConnected)
+    console.log("isAnAccountConnected :" + isAnAccountConnected)
     return (
         <div className="flex h-screen overflow-hidden">
 
@@ -257,30 +253,31 @@ function BrandEngagementDetails() {
                                     <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z" /></svg>
                                     <p>No socials connected</p>
                                 </div>}
-                                <span> {clientConnectData?.FacebookConnected !== "no" &&
-                                    <> <FontAwesomeIcon
-                                        className="text-[#3e4ef5]"
-                                        icon={faFacebook}
-                                    />
-                                    </>
-                                }  </span>
-                                <span> {clientConnectData?.TwitterConnected !== "no" && <FontAwesomeIcon
+                                <span>
+                                    {clientConnectData?.FacebookConnected && clientConnectData?.FacebookConnected !== "no" &&
+                                        <> <FontAwesomeIcon
+                                            className="text-[#3e4ef5]"
+                                            icon={faFacebook}
+                                        />
+                                        </>
+                                    }  </span>
+                                <span> {clientConnectData?.TwitterConnected && clientConnectData?.TwitterConnected !== "no" && <FontAwesomeIcon
                                     className="text-[#3b82f6]"
                                     icon={faTwitter}
                                 />}   </span>
-                                <span> {clientConnectData?.LinkedInConnected !== "no" && <FontAwesomeIcon
+                                <span> {clientConnectData?.LinkedInConnected && clientConnectData?.LinkedInConnected !== "no" && <FontAwesomeIcon
                                     className="text-[#3b82f6]"
                                     icon={faLinkedin}
                                 />}   </span>
-                                <span> {clientConnectData?.TikTokConnected !== "no" && <FontAwesomeIcon
+                                <span> {clientConnectData?.TikTokConnected && clientConnectData?.TikTokConnected !== "no" && <FontAwesomeIcon
                                     className="text-[#3b82f6]"
                                     icon={faTiktok}
                                 />}   </span>
-                                <span> {clientConnectData?.YoutubeConnected !== "no" && <FontAwesomeIcon
+                                <span> {clientConnectData?.YoutubeConnected && clientConnectData?.YoutubeConnected !== "no" && <FontAwesomeIcon
                                     className="text-[#f63e3b]"
                                     icon={faYoutube}
                                 />}   </span>
-                                <span> {clientConnectData?.InstagramConnected !== "no" && <FontAwesomeIcon
+                                <span> {clientConnectData?.InstagramConnected && clientConnectData?.InstagramConnected !== "no" && <FontAwesomeIcon
                                     // className="text-[#3b82f6]"
                                     icon={faInstagram}
                                 />}   </span>
