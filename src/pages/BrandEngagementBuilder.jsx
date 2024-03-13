@@ -15,7 +15,7 @@ import Select from "react-select";
 import axios from "axios";
 import ReactHtmlParser from "react-html-parser";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faL, faPlus, faRefresh, faSave, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faL, faPlus, faRefresh, faSave, faUser, faInfo } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { languageOptions, targetAudienceOptions, timeZoneOptions } from "../constants/objects";
 import brandTones from "../constants/brandTones";
@@ -32,7 +32,8 @@ import { debounce } from 'lodash';
 import { Line } from 'rc-progress';
 import DayPicker from "../components/DaysPicker";
 import { Dialog, Flex, Text, Button, TextField } from "@radix-ui/themes";
-
+import { Callout } from '@radix-ui/themes';
+import { Link, useNavigate } from "react-router-dom";
 
 function BrandEngagementBuilder() {
   const dispatch = useDispatch();
@@ -68,6 +69,7 @@ function BrandEngagementBuilder() {
   const [endDate, setEndDate] = useState(''); // Initialize endDate state
   const [startDate, setStartDate] = useState(formattedDate); // Initialize endDate state
   const [selectedPostType, setSelectedPostType] = useState('TextImagePost');
+  const [selectedDays, setSelectedDays] = useState(["Mon", "Wed", "Fri"]);
 
   // console.log("User :" + JSON.stringify(user))
 
@@ -128,7 +130,8 @@ function BrandEngagementBuilder() {
     endDate: endDate,
     startDate: startDate,
     lifeCycleStatus: selectedOption,
-    PostType: selectedPostType
+    PostType: selectedPostType,
+    days: selectedDays
   };
 
   // console.log('selectedPostType :' + selectedPostType)
@@ -196,6 +199,7 @@ function BrandEngagementBuilder() {
   };
 
 
+  const navigate = useNavigate()
   const handleSave = async () => {
     setSaveLoading(true);
 
@@ -217,15 +221,21 @@ function BrandEngagementBuilder() {
           getUserData();
           handleReset();
           setSaveLoading(false);
+
+
+          //This tost should be in the other page
           toast.success("Brand Engagement saved successfully");
           // console.log(res.data);
           axios.get(
             `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
           )
-            .then((response) => response.json())
-            .then(({ totalPages, brandEngagements }) => {
+            .then((response) => {
+              const { totalPages, brandEngagements } = response.data; // Accessing response data directly
               setEngagements(brandEngagements);
               setNumberOfPages(totalPages);
+              //Redirect the user to the newly created branch
+              navigate(`/brand-engagements/${brandEngagements[0]?._id}?modal=congratulations`)
+
             });
           fetchEngagements()
           dispatch(clearMessage());
@@ -476,13 +486,14 @@ function BrandEngagementBuilder() {
 
 
 
-  const [selectedDays, setSelectedDays] = useState(["Mon", "Wed", "Fri"]);
-
-
 
   useEffect(() => {
     console.log("Selected Days:", selectedDays);
   }, [selectedDays]);
+
+  useEffect(() => {
+    setIsVisible(!(engagements.length > 0));
+  }, [engagements]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -603,12 +614,22 @@ function BrandEngagementBuilder() {
 
                 {/*Brand Engagement Card Form*/}
                 {user?.availableTokens === 0 ? (
-                  <a
-                    className="flex justify-center items-center md:text-xl p-3 text-red-600 my-4"
-                    href="/payment"
-                  >
-                    No tokens remaining. Purchase more to continue.
-                  </a>
+                  // <a
+                  //   className="flex justify-center items-center md:text-xl p-3 text-red-600 my-4"
+                  //   href="/payment"
+                  // >
+                  <div className=''>
+                    <Callout.Root color="red">
+                      <Callout.Icon>
+                        <FontAwesomeIcon className="mb-[2px]" icon={faInfo} color="red" size={24} />
+                      </Callout.Icon>
+                      <Callout.Text>
+                        No tokens remaining. <Link to="/payment">Purchase more to continue.</Link>
+                      </Callout.Text>
+                    </Callout.Root>
+                  </div>
+
+                  // </a>
                 ) : (
                   <div id="Brand_Form" className="flex flex-wrap bg-blue-50 md:p-4 rounded-lg sm:mb-12">
                     <div className="w-full ">
@@ -869,7 +890,6 @@ function BrandEngagementBuilder() {
                             </div>
                             :
                             <></>
-
                           }
                         </div>
 
@@ -953,7 +973,7 @@ function BrandEngagementBuilder() {
                         setFormValues={setValues}
                         isAdminPage={false}
                         setIsVisible={setIsVisible}
-
+                        campaignTitle={item?.campaignTitle}
                         endDate={item?.endDate}
                         setEndDate={setEndDate}
                         setSelectedOption={setSelectedOption}
