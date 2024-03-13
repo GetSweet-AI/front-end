@@ -106,7 +106,6 @@ function PostsFeed() {
       });
   };
 
-
   const handleCopyText = (result) => {
     // Convert HTML to plain text
     const tempElement = document.createElement("div");
@@ -282,6 +281,7 @@ function PostsFeed() {
                           return (
                             <PostCard
                               key={idx}
+                              feedPostId={item._id}
                               id={item._id}
                               MediaUrl={item.MediaUrl}
                               deleteFeedPost={deletePostFeed}
@@ -312,6 +312,7 @@ function PostsFeed() {
                       }).map((item) => {
                         return (
                           <PostCard
+                            feedPostId={item._id}
                             key={item._id}
                             id={item._id}
                             MediaUrl={item.MediaUrl}

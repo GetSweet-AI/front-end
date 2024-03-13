@@ -332,7 +332,7 @@ function PostCard({
         <footer className="mt-2">
           <div className="flex justify-between items-center">
             <div
-              onClick={() => deleteFeedPost(id)}
+              onClick={() => deleteFeedPost(feedPostId)}
               className="text-sm text-white rounded bg-[#ef3d22] p-2  cursor-pointer"
             >
               {/* Not Active */}
