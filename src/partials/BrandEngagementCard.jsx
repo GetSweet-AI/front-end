@@ -34,7 +34,8 @@ function BrandEngagementCard({
   lifeCycleStatus,
   setSelectedOption,
   setEndDate,
-  setEnabled
+  setEnabled,
+  campaignTitle
 }) {
   const navigate = useNavigate();
 
@@ -105,7 +106,7 @@ function BrandEngagementCard({
 
 
   return (
-    <><div className="col-span-full sm:col-span-6 xl:col-span-4">
+    <><div className=" col-span-full sm:col-span-6 xl:col-span-4">
       <div className="bg-white shadow-lg rounded-lg border border-slate-200 hover:shadow-blue-200 hover:shadow-xl hover:border-blue-500">
 
         <div className="flex flex-col h-full p-5">
@@ -118,15 +119,19 @@ function BrandEngagementCard({
           </header>
           {/* <div className="text-sm my-1 flex"> */}
           {/* <span className="font-medium">Post Type : </span> */}
-          <div className="flex justify-center bg-blue-50 rounded-es-xl rounded-ee-xl  p-2 space-x-2 pt-2">
-            {postType === "TextImagePost" && <FontAwesomeIcon icon={faImage} color="#0967eb" size="xl" />}
-            {postType === "TextVideoPost" && <FontAwesomeIcon icon={faVideo} color="#0967eb" size="xl" />}
-            {postType === "Both" &&
-              <>
-                <FontAwesomeIcon icon={faImage} color="#0967eb" size="xl" />
-                <FontAwesomeIcon icon={faVideo} color="#0967eb" size="xl" />
-              </>
-            }
+          <div className="flex justify-between bg-blue-50 rounded-es-xl rounded-ee-xl  p-2 space-x-2 pt-2">
+            <p className="font-bold  text-blue-600">
+              {campaignTitle && campaignTitle}
+            </p>
+            <div className="flex space-x-2">{postType === "TextImagePost" && <FontAwesomeIcon icon={faImage} color="#0967eb" size="xl" />}
+              {postType === "TextVideoPost" && <FontAwesomeIcon icon={faVideo} color="#0967eb" size="xl" />}
+              {postType === "Both" &&
+                <>
+                  <FontAwesomeIcon icon={faImage} color="#0967eb" size="xl" />
+                  <FontAwesomeIcon icon={faVideo} color="#0967eb" size="xl" />
+                </>
+              }
+            </div>
 
 
           </div>
@@ -242,7 +247,10 @@ function BrandEngagementCard({
                 >
                   Attach assets
                   <FontAwesomeIcon className="ml-2" icon={faPaperclip} />
-                </button></div>
+                </button>
+
+              </div>
+
 
             </footer>}
         </div>

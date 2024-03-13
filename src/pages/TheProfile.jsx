@@ -220,297 +220,266 @@ function TheProfile() {
 
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
-      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-      {/* Content area */}
-      <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-        {/*  Site header */}
-        {/*  Site header */}
-        <DashboardHeader
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-          header="Edit personal info"
-        />
+    <main>
+      <div className=" sm:px-6  py-6 w-full  ">
+        {/* Page header */}
 
-        <main>
-          <div className="px-4 sm:px-6 lg:px-8 py-6 w-full max-w-9xl mx-auto">
-            {/* Page header */}
+        <div>
 
 
-            <div className="sm:flex sm:justify-between sm:items-center mb-8">
-              <div className="mb-4 sm:mb-0">
-                <h1 className="text-xl md:hidden text-blue-500 font-bold">
-                  {" "}
-                  Edit personal info
-                </h1>
+
+          <div className="bg-white bg-opacity-10 px-2 
+                   py-5 opacity-90 md:space-y-0 
+                    rounded-xl  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-3 gap-4 w-full">
+
+            {/*Profile picture */}
+            <div className="flex items-center shadow-md justify-center p-2  flex-col">
+              <img
+                className="block mx-auto w-24 rounded-full ring-2 ring-blue-500"
+                src={user?.picture || userPic}
+                alt=""
+              />
+              <button
+                onClick={openModalPic}
+                className=" font-bold text-[#4361ee] mt-5 py-3 "
+              >
+                Change profile picture
+              </button>
+              <ChangePic
+                isOpen={isOpenPic}
+                setIsOpenPic={setIsOpenPic}
+                onCancel={closeModalPic}
+                userId={user._id}
+                fetchUserData={fetchUserData}
+              />
+
+              <div className="max-w-sm  mx-auto">
+                <button
+                  onClick={openModal}
+                  className="font-bold px-4 w-full text-white mt-3 bg-[#ef3717] py-3"
+                >
+                  Delete my account
+                </button>
               </div>
             </div>
 
-            <div>
-              <div className="max-w-8xl shadow-md bg-blue-50 md:mx-auto px-4 md:px-6 ">
-                <div
-                  className="pt-10 pb-10 md:translate-y-[20%]  lg:translate-y-0   lg:pb-16 
-            flex justify-center items-center"
-                >
+            {/* Update AUth Infos form */}
+            <form
+              onSubmit={onSubmitTwo}
+              className="max-w-sm mx-auto  shadow-md bg-blue-50 rounded-md p-3"
+            >
+              <div className="flex flex-wrap -mx-3 mb-4">
 
-                  <div className="bg-white bg-opacity-10 px-2 
-                   py-5 opacity-90 md:space-y-0 space-x-3
-                    rounded-xl  grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
+                <div className="w-full px-3">
+                  <label
+                    className="block text-gray-700 text-sm font-medium mb-1"
+                    htmlFor="email"
+                  >
+                    Full name
+                  </label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={values.fullName}
+                    onChange={handleChange}
+                    className="form-input w-full rounded-full text-gray-700"
+                    placeholder="Enter your fullName "
+                    required
+                  />
+                </div>
+                <div className="w-full px-3">
+                  <label
+                    className="block my-2 text-gray-700 text-sm font-medium mb-1"
+                    htmlFor="email"
+                  >
+                    Company or Brand name
+                  </label>
+                  <input
+                    type="text"
+                    name="company"
+                    value={values.company}
+                    onChange={handleChange}
+                    className="form-input w-full rounded-full text-gray-700"
+                    placeholder="Enter your brand name "
+                    required
+                  />
+                </div>
 
-                    {/*Profile picture */}
-                    <div className="flex items-center justify-center mx-3 flex-col">
-                      <img
-                        className="block mx-auto w-1/2 rounded-full ring-2 ring-blue-500"
-                        src={user?.picture || userPic}
-                        alt=""
-                      />
-                      <button
-                        onClick={openModalPic}
-                        className=" font-bold w-[75%] text-[#4361ee] mt-5 py-3 "
-                      >
-                        Change profile picture
-                      </button>
-                      <ChangePic
-                        isOpen={isOpenPic}
-                        setIsOpenPic={setIsOpenPic}
-                        onCancel={closeModalPic}
-                        userId={user._id}
-                        fetchUserData={fetchUserData}
-                      />
-                    </div>
+              </div>
 
+              <p className="flex justify-center items-center text-red-600">
+                {message}
+              </p>
 
-
-
-                    {/* Update AUth Infos form */}
-                    <div>
-                      <form
-                        onSubmit={onSubmitTwo}
-                        className="max-w-sm mx-auto  shadow-md bg-blue-50 rounded-md p-3"
-                      >
-                        <div className="flex flex-wrap -mx-3 mb-4">
-
-                          <div className="w-full px-3">
-                            <label
-                              className="block text-gray-700 text-sm font-medium mb-1"
-                              htmlFor="email"
-                            >
-                              Full name
-                            </label>
-                            <input
-                              type="text"
-                              name="fullName"
-                              value={values.fullName}
-                              onChange={handleChange}
-                              className="form-input w-full rounded-full text-gray-700"
-                              placeholder="Enter your fullName "
-                              required
-                            />
-                          </div>
-                          <div className="w-full px-3">
-                            <label
-                              className="block my-2 text-gray-700 text-sm font-medium mb-1"
-                              htmlFor="email"
-                            >
-                              Company or Brand name
-                            </label>
-                            <input
-                              type="text"
-                              name="company"
-                              value={values.company}
-                              onChange={handleChange}
-                              className="form-input w-full rounded-full text-gray-700"
-                              placeholder="Enter your brand name "
-                              required
-                            />
-                          </div>
-
-                        </div>
-
-                        <p className="flex justify-center items-center text-red-600">
-                          {message}
-                        </p>
-
-                        <div className="flex flex-wrap -mx-3 mt-6">
-                          <div className="w-full px-3">
-                            {/* <Link to="/services"> */}
-                            <button
-                              type="submit"
-                              className="font-bold 
+              <div className="flex flex-wrap -mx-3 mt-6">
+                <div className="w-full px-3">
+                  {/* <Link to="/services"> */}
+                  <button
+                    type="submit"
+                    className="font-bold 
                             text-gray-800 bg-gradient-to-r
                              from-gsBlue to-gsBlueTwo py-3 w-full"
-                            >
-                              Update
-                            </button>
+                  >
+                    Update
+                  </button>
 
-                            {loading && (
-                              <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
-                                {" "}
-                                <Puff
-                                  height="100"
-                                  width="100"
-                                  color="#4446e4"
-                                  secondaryColor="#4446e4"
-                                  radius="12.5"
-                                  ariaLabel="mutating-dots-loading"
-                                  wrapperStyle={{}}
-                                  wrapperClass=""
-                                  visible={true}
-                                />
-                              </div>
-                            )}
-                            {/* </Link> */}
-                          </div>
-                        </div>
-                      </form>
-
-
-                      {/* Update General Infos form */}
-                      <form
-                        onSubmit={onSubmit}
-                        className="max-w-sm mx-auto md:mt-8 shadow-md bg-blue-50 rounded-md p-3"
-                      >
-                        <div className="flex flex-wrap -mx-3 mb-4">
-
-
-                          <div className="w-full px-3">
-                            <label
-                              className="block text-gray-700 text-sm font-medium mb-1"
-                              htmlFor="email"
-                            >
-                              Email address
-                            </label>
-                            <input
-                              type="email"
-                              name="email"
-                              value={values.email}
-                              onChange={handleChange}
-                              className="form-input w-full rounded-full text-gray-700"
-                              placeholder="Enter your email "
-                              required
-                            />
-                          </div>
-
-                          <div className="w-full my-4 flex px-3">
-                            <input
-                              type="checkbox"
-                              checked={isChecked}
-                              onChange={handleCheckboxChange}
-                              className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
-                            />
-                            <label
-                              className="block ml-2 text-gray-700 text-sm font-medium mb-1"
-                              htmlFor="email"
-                            >
-                              {" "}
-                              Reset password
-                            </label>
-                          </div>
-                          {isChecked && (
-                            <div className="flex w-full flex-col">
-                              <div className="w-full px-3">
-                                <label
-                                  className="block mb-2 text-gray-700 text-sm font-medium "
-                                  htmlFor="email"
-                                >
-                                  Password
-                                </label>
-                                <input
-                                  type="password"
-                                  name="password"
-                                  value={values.password}
-                                  onChange={handleChange}
-                                  className="form-input w-full rounded-full text-gray-700"
-                                  placeholder="Password"
-                                />
-                              </div>
-                              <div className="w-full px-3">
-                                <label
-                                  className="block text-gray-700 text-sm font-medium my-2"
-                                  htmlFor="email"
-                                >
-                                  Confirm Password
-                                </label>
-                                <input
-                                  type="password"
-                                  name="confirmPassword"
-                                  value={values.confirmPassword}
-                                  onChange={handleChange}
-                                  className="form-input w-full rounded-full text-gray-700"
-                                  placeholder="Confirm Password"
-                                />
-                              </div>
-                            </div>
-                          )}
-                        </div>
-
-                        <p className="flex justify-center items-center text-red-600">
-                          {message}
-                        </p>
-
-                        <div className="flex flex-wrap -mx-3 mt-6">
-                          <div className="w-full px-3">
-                            {/* <Link to="/services"> */}
-                            <button
-                              type="submit"
-                              className="font-bold 
-                             text-gray-800 bg-gradient-to-r
-                              from-gsBlue to-gsBlueTwo py-3 w-full"
-                            >
-                              Update
-                            </button>
-
-                            {loading && (
-                              <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
-                                {" "}
-                                <Puff
-                                  height="100"
-                                  width="100"
-                                  color="#4446e4"
-                                  secondaryColor="#4446e4"
-                                  radius="12.5"
-                                  ariaLabel="mutating-dots-loading"
-                                  wrapperStyle={{}}
-                                  wrapperClass=""
-                                  visible={true}
-                                />
-                              </div>
-                            )}
-                            {/* </Link> */}
-                          </div>
-                        </div>
-                      </form>
-
-
-
-                      <div className="max-w-sm mx-auto">
-                        <button
-                          onClick={openModal}
-                          className="font-bold w-full text-white mt-3 bg-[#ef3717] py-3"
-                        >
-                          Delete my account
-                        </button>
-                      </div>
+                  {loading && (
+                    <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
+                      {" "}
+                      <Puff
+                        height="100"
+                        width="100"
+                        color="#4446e4"
+                        secondaryColor="#4446e4"
+                        radius="12.5"
+                        ariaLabel="mutating-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                      />
                     </div>
-                  </div>
+                  )}
+                  {/* </Link> */}
                 </div>
               </div>
-            </div>
-            {/* Toast container */}
-            <ToastContainer />
+            </form>
 
-            <MyModal
-              isOpen={isOpen}
-              openModal={openModal}
-              closeModal={closeModal}
-              deleteAccount={deleteUser}
-            />
+            {/* Update General Infos form */}
+            <form
+              onSubmit={onSubmit}
+              className="max-w-sm mx-auto md:mt-8 shadow-md bg-blue-50 rounded-md p-3"
+            >
+              <div className="flex flex-wrap -mx-3 mb-4">
+
+
+                <div className="w-full px-3">
+                  <label
+                    className="block text-gray-700 text-sm font-medium mb-1"
+                    htmlFor="email"
+                  >
+                    Email address
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    className="form-input w-full rounded-full text-gray-700"
+                    placeholder="Enter your email "
+                    required
+                  />
+                </div>
+
+                <div className="w-full my-4 flex px-3">
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={handleCheckboxChange}
+                    className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
+                  />
+                  <label
+                    className="block ml-2 text-gray-700 text-sm font-medium mb-1"
+                    htmlFor="email"
+                  >
+                    {" "}
+                    Reset password
+                  </label>
+                </div>
+                {isChecked && (
+                  <div className="flex w-full flex-col">
+                    <div className="w-full px-3">
+                      <label
+                        className="block mb-2 text-gray-700 text-sm font-medium "
+                        htmlFor="email"
+                      >
+                        Password
+                      </label>
+                      <input
+                        type="password"
+                        name="password"
+                        value={values.password}
+                        onChange={handleChange}
+                        className="form-input w-full rounded-full text-gray-700"
+                        placeholder="Password"
+                      />
+                    </div>
+                    <div className="w-full px-3">
+                      <label
+                        className="block text-gray-700 text-sm font-medium my-2"
+                        htmlFor="email"
+                      >
+                        Confirm Password
+                      </label>
+                      <input
+                        type="password"
+                        name="confirmPassword"
+                        value={values.confirmPassword}
+                        onChange={handleChange}
+                        className="form-input w-full rounded-full text-gray-700"
+                        placeholder="Confirm Password"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <p className="flex justify-center items-center text-red-600">
+                {message}
+              </p>
+
+              <div className="flex flex-wrap -mx-3 mt-6">
+                <div className="w-full px-3">
+                  {/* <Link to="/services"> */}
+                  <button
+                    type="submit"
+                    className="font-bold 
+                             text-gray-800 bg-gradient-to-r
+                              from-gsBlue to-gsBlueTwo py-3 w-full"
+                  >
+                    Update
+                  </button>
+
+                  {loading && (
+                    <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
+                      {" "}
+                      <Puff
+                        height="100"
+                        width="100"
+                        color="#4446e4"
+                        secondaryColor="#4446e4"
+                        radius="12.5"
+                        ariaLabel="mutating-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                      />
+                    </div>
+                  )}
+                  {/* </Link> */}
+                </div>
+              </div>
+            </form>
+
+
+
+
+
           </div>
-        </main>
+
+
+        </div>
+        {/* Toast container */}
+        <ToastContainer />
+
+        <MyModal
+          isOpen={isOpen}
+          openModal={openModal}
+          closeModal={closeModal}
+          deleteAccount={deleteUser}
+        />
       </div>
-    </div>
+    </main>
   );
 }
 

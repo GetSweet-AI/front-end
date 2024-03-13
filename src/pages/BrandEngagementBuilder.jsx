@@ -15,7 +15,7 @@ import Select from "react-select";
 import axios from "axios";
 import ReactHtmlParser from "react-html-parser";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faL, faPlus, faRefresh, faSave, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faL, faPlus, faRefresh, faSave, faUser, faInfo } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { languageOptions, targetAudienceOptions, timeZoneOptions } from "../constants/objects";
 import brandTones from "../constants/brandTones";
@@ -32,7 +32,8 @@ import { debounce } from 'lodash';
 import { Line } from 'rc-progress';
 import DayPicker from "../components/DaysPicker";
 import { Dialog, Flex, Text, Button, TextField } from "@radix-ui/themes";
-
+import { Callout } from '@radix-ui/themes';
+import { Link, useNavigate } from "react-router-dom";
 
 function BrandEngagementBuilder() {
   const dispatch = useDispatch();
@@ -56,7 +57,7 @@ function BrandEngagementBuilder() {
   // State to track visibility
   const [isVisible, setIsVisible] = useState(false);
 
-  const [selectedOption, setSelectedOption] = useState('RunForEver');
+  const [selectedOption, setSelectedOption] = useState('HasEndDate');
 
 
   // Create a new Date object for the current date
@@ -68,6 +69,7 @@ function BrandEngagementBuilder() {
   const [endDate, setEndDate] = useState(''); // Initialize endDate state
   const [startDate, setStartDate] = useState(formattedDate); // Initialize endDate state
   const [selectedPostType, setSelectedPostType] = useState('TextImagePost');
+  const [selectedDays, setSelectedDays] = useState(["Mon", "Wed", "Fri"]);
 
   // console.log("User :" + JSON.stringify(user))
 
@@ -100,10 +102,10 @@ function BrandEngagementBuilder() {
   const [values, setValues] = useState({
     brandName: "",
     websiteUrl: "",
-    timeZone: null,
-    language: { value: "English", label: "🍵 English" },
+    timeZone: { value: "UTC (Coordinated Universal Time)", label: "UTC (Coordinated Universal Time)" },
+    language: { value: "English", label: "English" },
     companySector: null,
-    brandTone: null,
+    brandTone: { value: "Friendly", label: "Friendly" },
     targetAudience: null,
     postType: "",
 
@@ -128,7 +130,8 @@ function BrandEngagementBuilder() {
     endDate: endDate,
     startDate: startDate,
     lifeCycleStatus: selectedOption,
-    PostType: selectedPostType
+    PostType: selectedPostType,
+    days: selectedDays
   };
 
   // console.log('selectedPostType :' + selectedPostType)
@@ -196,6 +199,7 @@ function BrandEngagementBuilder() {
   };
 
 
+  const navigate = useNavigate()
   const handleSave = async () => {
     setSaveLoading(true);
 
@@ -217,15 +221,21 @@ function BrandEngagementBuilder() {
           getUserData();
           handleReset();
           setSaveLoading(false);
+
+
+          //This tost should be in the other page
           toast.success("Brand Engagement saved successfully");
           // console.log(res.data);
           axios.get(
             `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
           )
-            .then((response) => response.json())
-            .then(({ totalPages, brandEngagements }) => {
+            .then((response) => {
+              const { totalPages, brandEngagements } = response.data; // Accessing response data directly
               setEngagements(brandEngagements);
               setNumberOfPages(totalPages);
+              //Redirect the user to the newly created branch
+              navigate(`/brand-engagements/${brandEngagements[0]?._id}?modal=congratulations`)
+
             });
           fetchEngagements()
           dispatch(clearMessage());
@@ -429,7 +439,7 @@ function BrandEngagementBuilder() {
   };
 
 
-  const [enabled, setEnabled] = useState(false);
+  const [enabled, setEnabled] = useState(true);
   useEffect(() => {
     if (enabled) {
       //Show endDate field
@@ -473,6 +483,17 @@ function BrandEngagementBuilder() {
       console.log(error)
     }
   }
+
+
+
+
+  useEffect(() => {
+    console.log("Selected Days:", selectedDays);
+  }, [selectedDays]);
+
+  useEffect(() => {
+    setIsVisible(!(engagements.length > 0));
+  }, [engagements]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -593,19 +614,30 @@ function BrandEngagementBuilder() {
 
                 {/*Brand Engagement Card Form*/}
                 {user?.availableTokens === 0 ? (
-                  <a
-                    className="flex justify-center items-center md:text-xl p-3 text-red-600 my-4"
-                    href="/payment"
-                  >
-                    No tokens remaining. Purchase more to continue.
-                  </a>
+                  // <a
+                  //   className="flex justify-center items-center md:text-xl p-3 text-red-600 my-4"
+                  //   href="/payment"
+                  // >
+                  <div className=''>
+                    <Callout.Root color="red">
+                      <Callout.Icon>
+                        <FontAwesomeIcon className="mb-[2px]" icon={faInfo} color="red" size={24} />
+                      </Callout.Icon>
+                      <Callout.Text>
+                        No tokens remaining. <Link to="/payment">Purchase more to continue.</Link>
+                      </Callout.Text>
+                    </Callout.Root>
+                  </div>
+
+                  // </a>
                 ) : (
                   <div id="Brand_Form" className="flex flex-wrap bg-blue-50 md:p-4 rounded-lg sm:mb-12">
-                    <div className="w-full md:w-1/2">
+                    <div className="w-full ">
+                      {/* Form goes here */}
                       <form className="rounded px-4" onSubmit={handlePreview}>
                         <div className="  flex-col rounded-md  flex flex-wrap">
                           <label htmlFor="select3" className="block pl-2  mb-2">
-                            Please choose the post type
+                            Post type
                           </label>
                           <div className="w-full flex flex-wrap">
                             <RadioButton
@@ -637,14 +669,6 @@ function BrandEngagementBuilder() {
 
                             />
                           </div>
-
-
-                        </div>
-                        <div className="  flex-col rounded-md  flex flex-wrap">
-                          <label htmlFor="select3" className="block pl-2">
-                            Schedule Your Posts On
-                          </label>
-                          <DayPicker />
 
 
                         </div>
@@ -743,7 +767,7 @@ function BrandEngagementBuilder() {
                               options={timeZoneOptions}
                             />
                           </div>
-                          <div className="w-full p-2">
+                          <div className="w-full p-2 mb-1">
                             <label htmlFor="select1" className="block mb-1">
                               Posts language
                             </label>
@@ -759,21 +783,16 @@ function BrandEngagementBuilder() {
                               options={languageOptions}
                             />
                           </div>
-
-
-                          <div className=" mt-2 flex w-full justify-center items-center p-2">
-                            <label className={`mr-4 ${selectedOption === 'RunForEver' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
-                              <span className="mr-2 text-md  font-medium">Run forever</span>
+                          <div className="  flex-col w-full  rounded-md  flex flex-wrap">
+                            <label htmlFor="select3" className="block pl-2">
+                              Schedule
                             </label>
+                            <DayPicker selectedDays={selectedDays} setSelectedDays={setSelectedDays} />
 
-                            <SwitchButton enabled={enabled} setEnabled={setEnabled} />
 
-                            <label className={`ml-4 ${selectedOption === 'HasEndDate' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
-                              <span className="ml-2 text-md  font-medium">Set Date Range</span>
-                            </label>
                           </div>
 
-                          <div className="w-full my-2  p-2">
+                          <div className="w-full   p-2">
                             {selectedOption === 'HasEndDate' && (
                               <div className="flex md:flex-row flex-col md:space-x-2">
                                 <div className="md:w-1/2 w-full">
@@ -801,6 +820,19 @@ function BrandEngagementBuilder() {
                               </div>
                             )}
                           </div>
+                          <div className=" mt-2 flex w-full justify-center items-center p-2">
+                            <label className={`mr-4 ${selectedOption === 'RunForEver' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
+                              <span className="mr-2 text-md  font-medium">Run forever</span>
+                            </label>
+
+                            <SwitchButton enabled={enabled} setEnabled={setEnabled} />
+
+                            <label className={`ml-4 ${selectedOption === 'HasEndDate' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
+                              <span className="ml-2 text-md  font-medium">Set Date Range</span>
+                            </label>
+                          </div>
+
+
 
                           <div className="flex w-full justify-center items-center">
                             <p className="text-red-500 text-sm my-2  text-center">
@@ -808,7 +840,7 @@ function BrandEngagementBuilder() {
                             </p>
                           </div>
 
-                          {previewLoading ? <div className="flex flex-col w-full p-2"> <Line percent={previewProgress} strokeWidth={2} strokeColor="#f60c9c" /> <p className="text-center text-blue-600 mt-3 font-semibold">
+                          {previewLoading ? <div className="flex flex-col w-full p-2"> <Line percent={previewProgress} strokeWidth={1} strokeColor="#f60c9c" /> <p className="text-center text-blue-600 mt-3 font-semibold">
                             {progressMessage} <span className="text-gray-500"> </span>
                             <span className="text-pink-500 font-bold">{previewProgress}%</span>
                           </p>
@@ -858,13 +890,12 @@ function BrandEngagementBuilder() {
                             </div>
                             :
                             <></>
-
                           }
                         </div>
 
                       </form>
                     </div>
-                    <div className="w-full flex-col  text-white md:w-1/2 bg-[#333333] rounded-lg p-4">
+                    {result && <div className="w-full flex-col mt-2 md:mx-4  text-white md:px-4  bg-[#333333] rounded-lg p-4">
                       {result && (
                         <div className="flex justify-end mb-4">
                           {!isEditing && <button className="bg-green-500 w-[15%] cursor-pointer
@@ -900,15 +931,13 @@ function BrandEngagementBuilder() {
                           </pre>
                         )}
                       </div>
-                    </div>
+                    </div>}
                   </div>
                 )}
               </div>
               {/* Element that will be shown/hidden */}
             </div>
             {/*End Brand Engagement Card Form*/}
-
-
 
             {/* OnBoarding */}
             {user?.firstLogin && <Onboarding
@@ -944,7 +973,7 @@ function BrandEngagementBuilder() {
                         setFormValues={setValues}
                         isAdminPage={false}
                         setIsVisible={setIsVisible}
-
+                        campaignTitle={item?.campaignTitle}
                         endDate={item?.endDate}
                         setEndDate={setEndDate}
                         setSelectedOption={setSelectedOption}
