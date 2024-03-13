@@ -19,7 +19,9 @@ import { MutatingDots, ThreeDots } from 'react-loader-spinner';
 import { useParams } from 'react-router-dom';
 import PostCard from '../partials/PostCard';
 import CheckConnectedAccount from '../utils/ChechConnectedAccount';
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Confetti from '../components/Confetti';
 
 async function downloadVideo(url) {
     try {
@@ -216,6 +218,21 @@ function BrandEngagementDetails() {
 
     const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
     console.log("isAnAccountConnected :" + isAnAccountConnected)
+
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const [showConfetti, setShowConfetti] = useState(false); // Initialize as false
+    useEffect(() => {
+        // In the component where you render the modal, check for the modal parameter in the URL
+        const modalType = urlParams.get('modal');
+
+        // Then, conditionally render the modal based on the modalType
+        if (modalType === 'congratulations') {
+            // Render your congratulations modal
+            setShowConfetti(true)
+        }
+    }, [])
+
     return (
         <div className="flex h-screen overflow-hidden">
 
@@ -229,6 +246,7 @@ function BrandEngagementDetails() {
                 {/*  Site header */}
                 <DashboardHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
+                {showConfetti && <Confetti />}
                 <main>
                     <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
 
@@ -241,7 +259,6 @@ function BrandEngagementDetails() {
                             </div>
 
                             {/* Center */}
-
 
                             {/* Right: Actions */}
 
@@ -421,7 +438,18 @@ function BrandEngagementDetails() {
 
 
                 </main>
-
+                < ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                />
             </div>
             {isLoading && (
                 <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">

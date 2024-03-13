@@ -20,6 +20,8 @@ import TheProfile from './TheProfile'
 function Settings() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
+    // const { user } = useSelector((state) => state.auth);
+
     const [values, setValues] = useState({
         Title: "",
         brandName: "",
@@ -154,8 +156,6 @@ function Settings() {
         }
     }
 
-
-
     const handleEndDateChange = (e) => {
         setEndDate(e.target.value);
     };
@@ -209,8 +209,8 @@ function Settings() {
                         <Tabs.Root defaultValue="account">
                             <Tabs.List>
                                 <Tabs.Trigger value="account">Account</Tabs.Trigger>
-                                <Tabs.Trigger value="settings">Settings</Tabs.Trigger>
-                                <Tabs.Trigger value="manageBilling">Manage Billing</Tabs.Trigger>
+                                {user?.role === "admin" && <Tabs.Trigger value="settings">Settings</Tabs.Trigger>}
+                                {/* <Tabs.Trigger value="manageBilling">Manage Billing</Tabs.Trigger> */}
                             </Tabs.List>
 
                             <Box px="4" pt="3" pb="2">
