@@ -22,6 +22,7 @@ import CheckConnectedAccount from '../utils/ChechConnectedAccount';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Confetti from '../components/Confetti';
+import ProgressBarWithMessages from '../components/ProgressBarWithMessages';
 
 async function downloadVideo(url) {
     try {
@@ -217,7 +218,7 @@ function BrandEngagementDetails() {
     }, [])
 
     const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
-    console.log("isAnAccountConnected :" + isAnAccountConnected)
+    // console.log("isAnAccountConnected :" + isAnAccountConnected)
 
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -232,6 +233,48 @@ function BrandEngagementDetails() {
             setShowConfetti(true)
         }
     }, [])
+
+
+
+    //  ProgressBarWithMessages 
+    const [previewProgress, setPreviewProgress] = useState(0);
+    const [progressMessage, setProgressMessage] = useState("Starting Generation Process");
+
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            // Increment progress every second until it reaches 100
+            setPreviewProgress(prevProgress =>
+                prevProgress < 100 ? prevProgress + 1 : prevProgress
+            );
+        }, 6000); // Delay to simulate the progress (6000 milliseconds = 6 seconds)
+
+        return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
+        if (previewProgress >= 90) {
+            setProgressMessage("Rounding up emojis and hashtags... 🚀 #AlmostThere");
+        } else if (previewProgress >= 80) {
+            setProgressMessage("Brewing some fresh content... ☕ Stay tuned!");
+        } else if (previewProgress >= 70) {
+            setProgressMessage("Gathering your likes and shares from the digital universe... 🌌");
+        } else if (previewProgress >= 60) {
+            setProgressMessage("Putting the final sparkle on your post... ✨ Almost done!");
+        } else if (previewProgress >= 50) {
+            setProgressMessage("Consulting the meme lords for inspiration... 🐸");
+        } else if (previewProgress >= 40) {
+            setProgressMessage("Mixing the perfect blend of wit and wisdom... 🧠💬");
+        } else if (previewProgress >= 30) {
+            setProgressMessage("Summoning viral vibes... 🌟 Your post is coming up!");
+        } else if (previewProgress >= 20) {
+            setProgressMessage("Charging up with social media magic... 🔮");
+        } else if (previewProgress >= 10) {
+            setProgressMessage("Crafting your post with care... 🛠️ Perfection takes time!");
+        } else {
+            setProgressMessage("Dancing through the algorithms... 💃🕺 Just a moment more!");
+        }
+    }, [previewProgress]);
 
     return (
         <div className="flex h-screen overflow-hidden">
@@ -312,11 +355,7 @@ function BrandEngagementDetails() {
                                 </button> : <div className='text-center text-red-500 font-medium my-2'>
                                     This Brand Engagement has no ConnectUrl
                                 </div>}
-                            {/* :
-                                <div className="grid grid-flow-col bg-blue-100 rounded-lg p-2 hover:bg-blue-200 sm:auto-cols-max justify-start sm:justify-end gap-2">
-                                    <span className="font-medium text-red-400"> Not connected to any social media account</span></div>
 
-                            } */}
 
                         </div>
 
@@ -367,20 +406,18 @@ function BrandEngagementDetails() {
                                             DownloadButton={downloadVideo}
                                             unixTimestamp={item.unixTimestamp}
                                             fetchFeedPosts={fetchFeedPosts}
-                                        // isEditing={isEditing}
-                                        // setEditing={setEditing}
-                                        // handleCancelClick={handleCancelClick}
-                                        // handleSaveClick={handleSaveClick}
-                                        // handleEditClick={handleEditClick}
-                                        // NewCaption={NewCaption}
-                                        // setNewCaption={setNewCaption}
 
                                         />
                                     );
                                 })}
                             </div>
                         </>}
-
+                        {engagement?.relatedPostsStatus === "Posts generating..." ?
+                            <ProgressBarWithMessages
+                                previewProgress={previewProgress}
+                                progressMessage={progressMessage}
+                            />
+                            : <></>}
                         {
                             feedPosts.length > 0 && <div className="mt-8">
                                 <div class="flex flex-wrap md:flex-nowrap  md:mx-4 items-center md:mt-4 overflow-x-scroll py-2  justify-center space-x-2">
@@ -406,8 +443,6 @@ function BrandEngagementDetails() {
                                             </option>
                                         ))}
                                     </select>
-
-
                                     <button
                                         className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
                                         onClick={gotoNext}
@@ -417,22 +452,7 @@ function BrandEngagementDetails() {
                                 </div>
                             </div>
                         }
-                        {(engagement?.relatedPostsStatus === "Posts generating..." && isCloseVisible) ?
-                            <div id="toast-success" className="flex items-center w-full p-4 mt-8 mb-4 text-gray-600 bg-gray-800 text-white rounded-lg shadow  " role="alert">
 
-                                <ThreeDots
-                                    height="10"
-                                    width="40"
-                                    radius="9"
-                                    color="#f725b6"
-                                    ariaLabel="three-dots-loading"
-                                    wrapperStyle={{}}
-                                    wrapperClassName=""
-                                    visible={true}
-                                />
-                                <div className="ml-3 text-sm font-medium">New posts are currently generating</div>
-                            </div>
-                            : <></>}
 
                     </div>
 

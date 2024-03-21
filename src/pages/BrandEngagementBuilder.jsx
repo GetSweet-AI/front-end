@@ -4,7 +4,6 @@ import Header from "../partials/Header";
 import SearchForm from "../partials/SearchForm";
 import FilterButton from "../components/DropdownFilter";
 import BrandEngagementCard from "../partials/BrandEngagementCard";
-import PaginationNumeric from "../partials/PaginationNumeric";
 import rolling from "../images/rolling.svg";
 import Image01 from "../images/user-28-01.jpg";
 import Image02 from "../images/user-28-02.jpg";
@@ -41,7 +40,6 @@ function BrandEngagementBuilder() {
   //pagination
   const [pageNumber, setPageNumber] = useState(0);
   const [numberOfPages, setNumberOfPages] = useState(0);
-
 
   const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
 
@@ -167,7 +165,6 @@ function BrandEngagementBuilder() {
             } else if (newProgress >= 60 && newProgress < 90) {
               setProgressMessage("Polishing Your Brand's Voice");
             }
-
             return newProgress;
           } else {
             clearInterval(interval);
@@ -666,13 +663,9 @@ function BrandEngagementBuilder() {
                               label="Mixed Media Posts"
                               img={image}
                               imgTwo={video}
-
                             />
                           </div>
-
-
                         </div>
-
 
                         <div className="flex flex-wrap">
                           <div className="w-full md:w-1/2 p-2">
@@ -840,98 +833,107 @@ function BrandEngagementBuilder() {
                             </p>
                           </div>
 
-                          {previewLoading ? <div className="flex flex-col w-full p-2"> <Line percent={previewProgress} strokeWidth={1} strokeColor="#f60c9c" /> <p className="text-center text-blue-600 mt-3 font-semibold">
-                            {progressMessage} <span className="text-gray-500"> </span>
-                            <span className="text-pink-500 font-bold">{previewProgress}%</span>
-                          </p>
-                            {/* Display the message */}</div> : <div className="md:flex w-full p-2">
-                            <button
-                              type="reset"
-                              onClick={handleReset}
-                              className="md:w-[40%] w-full bg-blue-500 hover:font-bold  text-white rounded p-2"
-                            >
-                              <span className="mr-2">Reset form</span>   <FontAwesomeIcon icon={faRefresh} color="white" size={24} />
-                            </button>
-                            <button
-                              disabled={previewLoading}
-                              type={!previewLoading ? "submit" : "button"}
-                              className={`${previewLoading ? "cursor-not-allowed" : ""} md:w-[80%] flex justify-center items-center w-full
+                          {previewLoading ?
+                            <div className="flex flex-col w-full p-2">
+                              <Line percent={previewProgress} strokeWidth={1} strokeColor="#f60c9c" />
+                              <p className="text-center text-blue-600 mt-3 font-semibold">
+                                {progressMessage} <span className="text-gray-500"> </span>
+                                <span className="text-pink-500 font-bold">{previewProgress}%</span>
+                              </p>
+                              {/* Display the message */}</div> : <div className="md:flex w-full p-2">
+                              <button
+                                type="reset"
+                                onClick={handleReset}
+                                className="md:w-[40%] w-full bg-blue-500 hover:font-bold  text-white rounded p-2"
+                              >
+                                <span className="mr-2">Reset form</span>
+                                <FontAwesomeIcon icon={faRefresh} color="white" size={24} />
+                              </button>
+                              <button
+                                disabled={previewLoading}
+                                type={!previewLoading ? "submit" : "button"}
+                                className={`${previewLoading ? "cursor-not-allowed" : ""} md:w-[80%] flex justify-center items-center w-full
                                bg-pink-500 text-white rounded hover:font-bold  
                                 p-2 mt-2 md:mt-0 md:ml-2`}
-                            >
-
-                              <span className="mr-2"> Preview
-                              </span>    <FontAwesomeIcon icon={faEye} color="white" size={24} />
-                            </button>
-                          </div>}
-                          {(result && !previewLoading) ?
-
-                            <div className="w-full px-2">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  !saveLoading && handleSave();
-                                }}
-                                className="flex justify-center items-center w-full hover:bg-green-600 hover:font-bold bg-green-500 text-white rounded p-2"
                               >
-                                {saveLoading ? (
-                                  <>
-                                    <img
-                                      className="mr-2"
-                                      width={20}
-                                      src={rolling}
-                                    />
-                                    Saving...
-                                  </>
-                                ) : (
-                                  "Save your brand "
-                                )}  <FontAwesomeIcon className="ml-2" icon={faSave} color="white" size={24} />
+
+                                <span className="mr-2"> Preview
+                                </span>
+                                <FontAwesomeIcon icon={faEye} color="white" size={24} />
                               </button>
-                            </div>
-                            :
-                            <></>
-                          }
+                            </div>}
+
                         </div>
 
                       </form>
                     </div>
-                    {result && <div className="w-full flex-col mt-2 md:mx-4  text-white md:px-4  bg-[#333333] rounded-lg p-4">
-                      {result && (
-                        <div className="flex justify-end mb-4">
-                          {!isEditing && <button className="bg-green-500 w-[15%] cursor-pointer
+                    {result &&
+                      <div className="w-full flex-col mt-2 md:mx-4  text-white md:px-4  bg-[#333333] rounded-lg p-4">
+                        {result && (
+                          <div className="flex justify-end mb-4">
+                            {!isEditing && <button className="bg-green-500 w-[15%] cursor-pointer
                            text-center rounded-lg py-1 mr-2" onClick={handleEditClick}>Edit</button>}
-                          <div
-                            onClick={handleCopyText}
-                            className="bg-slate-600 w-[15%] cursor-pointer text-center  rounded-lg py-1 "
-                          >
-                            <p className=" ">
+                            <div
+                              onClick={handleCopyText}
+                              className="bg-slate-600 w-[15%] cursor-pointer text-center  rounded-lg py-1 "
+                            >
+                              <p className=" ">
 
-                              Copy
-                            </p>
+                                Copy
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      )}
-                      <div className=" md:space-y-3 md:mt-0 mt-2">
-                        {isEditing ? (
-                          <div>
-                            <textarea
-                              value={result}
-                              rows={10}
-                              onChange={handleResultChange}
-                              className="text-white bg-[#333333] w-full"
-                            />
-                            <div className="flex mt-3">  <button className="bg-green-500 w-[15%] cursor-pointer
-                           text-center rounded-lg py-1 mr-2" onClick={handleSaveClick}>Save</button>
-                              <button className="text-red-400" onClick={handleCancelClick}>Cancel</button></div>
-                          </div>
-                        ) : (
-                          <pre className="whitespace-pre-wrap font-medium">
-                            {result !== null ? ReactHtmlParser(result) : "Results will be added here."}
-
-                          </pre>
                         )}
+                        <div className=" md:space-y-3 md:mt-0 mt-2">
+                          {isEditing ? (
+                            <div>
+                              <textarea
+                                value={result}
+                                rows={10}
+                                onChange={handleResultChange}
+                                className="text-white bg-[#333333] w-full"
+                              />
+                              <div className="flex mt-3">  <button className="bg-green-500 w-[15%] cursor-pointer
+                           text-center rounded-lg py-1 mr-2" onClick={handleSaveClick}>Save</button>
+                                <button className="text-red-400" onClick={handleCancelClick}>Cancel</button></div>
+                            </div>
+                          ) : (
+                            <pre className="whitespace-pre-wrap font-medium">
+                              {result !== null ? ReactHtmlParser(result) : "Results will be added here."}
+
+                            </pre>
+                          )}
+                        </div>
                       </div>
-                    </div>}
+                    }
+                    {(result && !previewLoading) ?
+
+                      <div className="w-full px-2 mt-2 mx-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            !saveLoading && handleSave();
+                          }}
+                          className="flex justify-center items-center w-full hover:bg-green-600 hover:font-bold bg-green-500 text-white rounded p-2"
+                        >
+                          {saveLoading ? (
+                            <>
+                              <img
+                                className="mr-2"
+                                width={20}
+                                src={rolling}
+                              />
+                              Saving...
+                            </>
+                          ) : (
+                            "Save your brand "
+                          )}
+                          <FontAwesomeIcon className="ml-2" icon={faSave} color="white" size={24} />
+                        </button>
+                      </div>
+                      :
+                      <></>
+                    }
                   </div>
                 )}
               </div>
@@ -946,7 +948,6 @@ function BrandEngagementBuilder() {
               disableFirstLogin={disableFirstLogin}
             />
             }
-
             {engagements?.length > 0 && (
               <div className="">
                 <h5 className=" text-xl text-blue-500 
@@ -1032,7 +1033,7 @@ function BrandEngagementBuilder() {
           </div>
         </main>
 
-        < ToastContainer
+        <ToastContainer
           position="top-right"
           autoClose={5000}
           hideProgressBar={false}
