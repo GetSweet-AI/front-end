@@ -104,6 +104,30 @@ function BrandEngagementCard({
     toggleModal(); // Close the modal
   };
 
+  const [editedCampaignTitle, setEditedCampaignTitle] = useState(campaignTitle);
+
+  const handleCampaignTitleChange = (e) => {
+    setEditedCampaignTitle(e.target.value);
+  };
+
+
+
+  const [isSaving, setIsSaving] = useState(false);
+  const handleSaveCampaignTitle = async () => {
+    setIsSaving(true);
+    try {
+      const response = await axios.put(`http://localhost:5000/api/v1/update-campaign/${id}`, {
+        campaignTitle: editedCampaignTitle
+      });
+      // Assuming successful update, update campaign title locally
+      setCampaignTitle(editedCampaignTitle);
+    } catch (error) {
+      console.error("Error updating campaign title:", error);
+    }
+    setIsSaving(false);
+  };
+
+
 
   return (
     <><div className=" col-span-full sm:col-span-6 xl:col-span-4">
@@ -120,10 +144,27 @@ function BrandEngagementCard({
           {/* <div className="text-sm my-1 flex"> */}
           {/* <span className="font-medium">Post Type : </span> */}
           <div className="flex justify-between bg-blue-50 rounded-es-xl rounded-ee-xl  p-2 space-x-2 pt-2">
-            <p className="font-bold  text-blue-600">
+            {/* <p className="font-bold  text-blue-600">
               {campaignTitle && campaignTitle}
-            </p>
-            <div className="flex space-x-2">{postType === "TextImagePost" && <FontAwesomeIcon icon={faImage} color="#0967eb" size="xl" />}
+            </p> */}
+            <div className="relative flex">
+              <input
+                type="text"
+                value={editedCampaignTitle}
+                onChange={handleCampaignTitleChange}
+                className="font-bold text-blue-600 outline-none border-none rounded-lg pr-10"
+              />
+              <button
+                onClick={handleSaveCampaignTitle}
+                className="absolute right-0 top-0 bottom-0 bg-blue-100 text-blue-600 cursor-pointer py-1 px-2 rounded-r-lg"
+              >
+                {isSaving ? "Saving..." : "Save"}
+              </button>
+            </div>
+
+
+
+            <div className="flex space-x-2 pt-2">{postType === "TextImagePost" && <FontAwesomeIcon icon={faImage} color="#0967eb" size="xl" />}
               {postType === "TextVideoPost" && <FontAwesomeIcon icon={faVideo} color="#0967eb" size="xl" />}
               {postType === "Both" &&
                 <>

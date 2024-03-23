@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../partials/Header";
 import Footer from "../partials/Footer";
 import logo from "../images/logogetsweet.png";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Helmet } from "react-helmet";
 import GAHandler from "../partials/ga_gtm_handler";
@@ -151,6 +151,11 @@ export default function Home() {
   console.log("isLoggedIn :" + isLoggedIn)
 
 
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    isLoggedIn && navigate('/posts-feed')
+  }, [])
 
 
   return (
