@@ -116,7 +116,7 @@ function BrandEngagementCard({
   const handleSaveCampaignTitle = async () => {
     setIsSaving(true);
     try {
-      const response = await axios.put(`http://localhost:5000/api/v1/update-campaign/${id}`, {
+      const response = await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/update-campaign/${id}`, {
         campaignTitle: editedCampaignTitle
       });
       // Assuming successful update, update campaign title locally
@@ -151,6 +151,7 @@ function BrandEngagementCard({
               <input
                 type="text"
                 value={editedCampaignTitle}
+                placeholder='Campaign title'
                 onChange={handleCampaignTitleChange}
                 className="font-bold text-blue-600 outline-none border-none rounded-lg pr-10"
               />
