@@ -15,6 +15,7 @@ import PostCard from "../partials/PostCard";
 import Video from "../partials/Video";
 import SwitchButton from "../partials/SwitchButton";
 import CheckConnectedAccount from '../utils/ChechConnectedAccount';
+import FeedPostCard from "../partials/FeedPostCard";
 
 async function downloadVideo(url) {
   try {
@@ -266,7 +267,7 @@ function PostsFeed() {
                 ?
                 adminFeedPosts?.length > 0 && (
                   <div className="">
-                    <div className="grid grid-cols-12 gap-6">
+                    <div className="grid grid-cols-1 gap-3">
                       {adminFeedPosts.
                         filter((feedPost) => {
                           // const { email } = feedPost?.user;
@@ -279,7 +280,7 @@ function PostsFeed() {
                           }
                         }).map((item, idx) => {
                           return (
-                            <PostCard
+                            <FeedPostCard
                               key={idx}
                               feedPostId={item._id}
                               id={item._id}
@@ -291,6 +292,7 @@ function PostsFeed() {
                               Accounts={item.Accounts}
                               DownloadButton={downloadVideo}
                               unixTimestamp={item.unixTimestamp}
+                              BrandEngagementID={item.BrandEngagementID}
                             />
                           );
                         })}
@@ -299,7 +301,7 @@ function PostsFeed() {
                 ) :
                 feedPosts?.length > 0 && (
                   <div className="">
-                    <div className="grid grid-cols-12 gap-6">
+                    <div className="grid grid-cols-1 gap-3">
                       {feedPosts.filter((feedPost) => {
                         // const { email } = feedPost?.user;
                         if (search == "") {
@@ -311,7 +313,7 @@ function PostsFeed() {
                         }
                       }).map((item) => {
                         return (
-                          <PostCard
+                          <FeedPostCard
                             feedPostId={item._id}
                             key={item._id}
                             id={item._id}
@@ -323,6 +325,7 @@ function PostsFeed() {
                             Accounts={item.Accounts}
                             DownloadButton={downloadVideo}
                             unixTimestamp={item.unixTimestamp}
+                            BrandEngagementID={item.BrandEngagementID}
                           />
                         );
                       })}
