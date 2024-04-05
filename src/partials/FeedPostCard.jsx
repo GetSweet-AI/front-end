@@ -27,7 +27,7 @@ function FeedPostCard({
   fetchFeedPosts,
   feedPostId,
   BrandEngagementID,
-  fetchBrandEngagementData
+  brandEngagementData
 }) {
   const parsedDate = parseISO(postDate);
 
@@ -35,7 +35,6 @@ function FeedPostCard({
     parsedDate,
     Intl.DateTimeFormat().resolvedOptions().timeZone
   );
-
 
   const [isConnected, setIsConnected] = useState(false);
   const [isLoadingCC, setIsLoadingCC] = useState(false);
@@ -204,15 +203,8 @@ function FeedPostCard({
   // Check if the pathname starts with '/posts-feed'
   const isPostsFeed = currentPath.startsWith('/posts-feed');
 
-  const [brandEngagementData, setBrandEngagementData] = useState('')
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchBrandEngagementData(BrandEngagementID);
-      setBrandEngagementData(data);
-    };
-    fetchData();
-  }, [BrandEngagementID, fetchBrandEngagementData]);
+
 
   return (
     <div className="col-span-full sm:col-span-6 xl:col-span-4

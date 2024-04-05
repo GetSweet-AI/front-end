@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import DashboardHeader from "../partials/DashboardHeader";
 import Sidebar from "../partials/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
-import { MutatingDots, Puff } from "react-loader-spinner";
+import { Bars, MutatingDots, Puff } from "react-loader-spinner";
 import { clearMessage, setMessage } from "../redux/message";
 // import Sidebar from "../partials/Sidebar";
 import { toast, ToastContainer } from "react-toastify";
@@ -20,6 +20,7 @@ import FilterComponent from "../components/FilterComponent";
 import PostBadge from "../components/PostBadge";
 import { faCalendar, faCalendarCheck, faCalendarXmark } from "@fortawesome/free-solid-svg-icons";
 import Select from "../components/Select";
+import noData from '../images/NoData.svg'
 
 async function downloadVideo(url) {
   try {
@@ -183,6 +184,7 @@ function PostsFeed() {
   const [clientConnectData, setClientConnectData] = useState("")
   const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
 
+
   // Function to fetch brand engagement data
   const fetchBrandEngagementData = async (BrandEngagementID) => {
     try {
@@ -192,6 +194,13 @@ function PostsFeed() {
       console.error("Error fetching brand engagement data: ", error);
       return null;
     }
+  };
+
+
+  const [brandEngagementData, setBrandEngagementData] = useState('')
+  const fetchData = async () => {
+    const data = await fetchBrandEngagementData(selectedBrand);
+    setBrandEngagementData(data);
   };
 
   const [campaigns, setCampaigns] = useState(null);
@@ -208,8 +217,11 @@ function PostsFeed() {
     }
   };
 
-  const [filterOptions, setFilterOptions] = useState('')
   const [engagements, setEngagements] = useState([]);
+  const [selectedBrand, setSelectedBrand] = useState('');
+  const handleBEChange = (e) => {
+    setSelectedBrand(e.target.value);
+  };
   const fetchEngagements = async (brandId) => {
     setIsLoading(true);
     try {
@@ -222,10 +234,12 @@ function PostsFeed() {
             fetchFeedPosts(brandId)
             setSelectedBrand(brandId)
             fetchCampaigns(brandId)
+            fetchData(brandId)
           } else {
             fetchFeedPosts(brandEngagements[0]?._id)
             setSelectedBrand(brandEngagements[0]?._id)
             fetchCampaigns(brandEngagements[0]?._id)
+            fetchData(brandEngagements[0]?._id)
           }
 
           // Create unique filter options
@@ -253,14 +267,10 @@ function PostsFeed() {
     fetchEngagements()
   }, [])
 
-  const [selectedBrand, setSelectedBrand] = useState('');
-  const handleBEChange = (e) => {
-    setSelectedBrand(e.target.value);
-  };
 
-  useEffect(() => {
-    fetchEngagements(selectedBrand)
-  }, [selectedBrand])
+  // useEffect(() => {
+  //   fetchEngagements(selectedBrand)
+  // }, [selectedBrand])
 
   const fetchFeedPosts = async (selectedBrand) => {
     setIsLoading(true)
@@ -309,19 +319,63 @@ function PostsFeed() {
   }, []);
 
 
+  const [filterOptions, setFilterOptions] = useState({
+    isImage: true,
+    isVideo: true,
+  });
 
   const applyFilter = (filterOptions) => {
-    const filteredPosts = feedPosts.filter((item) => {
-      const isJpeg = item.MediaUrl.endsWith('.jpeg');
-      const isMp4 = item.MediaUrl.endsWith('.mp4');
+    const { isImage, isVideo } = filterOptions;
 
-      // Apply filter logic based on filterOptions
-      return (filterOptions.isImage && isJpeg) || (filterOptions.isVideo && isMp4);
-    });
-    setFilteredFeedPosts(filteredPosts);
+    // No filter applied
+    if (!isImage && !isVideo) {
+      setFilteredFeedPosts(feedPosts); // Set filteredPosts to feedPosts values
+      return;
+    }
 
-    console.log(filteredPosts)
+    // Both image and video filters applied
+    if (isImage && isVideo) {
+      const filteredPosts = feedPosts.filter((item) => {
+        const isJpeg = item.MediaUrl.endsWith('.jpeg');
+        const isMp4 = item.MediaUrl.endsWith('.mp4');
+        return isJpeg || isMp4;
+      });
+      setFilteredFeedPosts(filteredPosts);
+      return;
+    }
+
+    // Image filter applied
+    if (isImage) {
+      const filteredPosts = feedPosts.filter((item) => {
+        const isJpeg = item.MediaUrl.endsWith('.jpeg');
+        return isJpeg;
+      });
+      setFilteredFeedPosts(filteredPosts);
+      return;
+    }
+
+    // Video filter applied
+    if (isVideo) {
+      const filteredPosts = feedPosts.filter((item) => {
+        const isMp4 = item.MediaUrl.endsWith('.mp4');
+        return isMp4;
+      });
+      setFilteredFeedPosts(filteredPosts);
+      return;
+    }
   };
+
+
+  // useEffect(() => {
+  //   setFilterOptions({
+  //     isImage: true,
+  //     isVideo: true,
+  //   }) && applyFilter(filterOptions)
+  // }, [])
+  useEffect(() => {
+    applyFilter(filterOptions)
+  }, [filterOptions])
+
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -353,7 +407,7 @@ function PostsFeed() {
 
           {isLoading && enabled && (
             <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
-              <MutatingDots
+              <Bars
                 height="100"
                 width="100"
                 color="#1c7aed"
@@ -369,7 +423,7 @@ function PostsFeed() {
 
           {isUserDataLoading && !enabled && (
             <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
-              <MutatingDots
+              <Bars
                 height="100"
                 width="100"
                 color="#1c7aed"
@@ -427,7 +481,7 @@ function PostsFeed() {
           <div className="flex flex-col md:flex-row px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto ">
             {/* Page header */}
 
-            <div className="flex flex-col w-full h-full space-y-2  flex-[0.25] p-2">
+            <div className="flex flex-col w-full h-full space-y-2 bg-white  flex-[0.25] p-2">
 
               {/* {
                 campaigns && <FilterComponent
@@ -435,7 +489,7 @@ function PostsFeed() {
                   label="Campaigns"
                 />
               } */}
-              <FilterComponent label="Media Type" applyFilter={applyFilter} />
+              <FilterComponent label="Media Type" applyFilter={applyFilter} filterOptions={filterOptions} setFilterOptions={setFilterOptions} />
               {/* <FilterComponent options={statusOptions} label="Status" /> */}
             </div>
 
@@ -528,12 +582,15 @@ function PostsFeed() {
                               DownloadButton={downloadVideo}
                               unixTimestamp={item.unixTimestamp}
                               BrandEngagementID={item.BrandEngagementID}
-                              fetchBrandEngagementData={fetchBrandEngagementData}
+                              brandEngagementData={brandEngagementData}
 
                             />
                           );
                         }) :
-                        <p>No Feed posts is generated yet for this Brand Engagement</p>
+                        <div className="flex flex-col justify-center items-center">
+                          <img src={noData} alt="no data" className="w-20 h-20" />
+                          <p className="p-3">No Feed posts Found</p>
+                        </div>
                     }
 
                   </div>
