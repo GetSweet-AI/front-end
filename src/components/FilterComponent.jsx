@@ -1,33 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Disclosure } from '@headlessui/react'
 import { faUpDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
-const FilterComponent = ({ applyFilter }) => {
+const FilterComponent = ({ applyFilter, filterOptions, setFilterOptions }) => {
 
     const [open, setOpen] = useState(false);
 
-    const [filterOptions, setFilterOptions] = useState({
-        isImage: true,
-        isVideo: true,
-    });
 
     const handleCheckboxChange = (event) => {
         const { name, checked } = event.target;
         setFilterOptions({ ...filterOptions, [name]: checked });
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    useEffect(() => {
         if (!filterOptions.isImage && !filterOptions.isVideo) {
-            alert('Please select at least one option');
+            // alert('Please select at least one option');
             return;
         }
         applyFilter(filterOptions);
-        console.log(filterOptions)
-    };
 
+    }, [filterOptions]);
 
 
     return (
@@ -58,7 +52,7 @@ const FilterComponent = ({ applyFilter }) => {
                                 <div className='h-[1px] bg-gray-300 mb-2 w-full ' />
 
                                 <Disclosure.Panel className="px-4 pb-2 pt-4 text-sm text-gray-500">
-                                    <form onSubmit={handleSubmit}>
+                                    <div>
                                         <div className="flex flex-col">
                                             <label className="mb-2">
                                                 <input
@@ -81,13 +75,8 @@ const FilterComponent = ({ applyFilter }) => {
                                                 Video
                                             </label>
                                         </div>
-                                        <button
-                                            type="submit"
-                                            className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
-                                        >
-                                            Apply Filter
-                                        </button>
-                                    </form>
+
+                                    </div>
                                 </Disclosure.Panel>
                             </>
                         )}
