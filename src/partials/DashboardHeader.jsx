@@ -108,7 +108,7 @@ function DashboardHeader({
                     {({ active }) => (
                       <a
                         className="font-medium cursor-pointer text-sm text-slate-800 hover:text-slate-600 flex items-center py-1 px-3"
-                        href="/profile"
+                        href="/settings"
                       >
                         <FontAwesomeIcon
                           icon={faUserEdit}

@@ -1,4 +1,4 @@
-import { faDownload, faTrash, faPencil, faMicrochip, faLink } from "@fortawesome/free-solid-svg-icons";
+import { faDownload, faTrash, faPencil, faMicrochip, faLink, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
@@ -12,7 +12,7 @@ import logo from '../images/jouer.png'
 import CheckConnectedAccount from '../utils/ChechConnectedAccount';
 import EditCaptionModal from "../components/EditCaptionModal";
 import CustomActionItem from "../components/CustomActionItem";
-import { faInstagram, faLinkedin, faTiktok, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { faFacebook, faInstagram, faLinkedin, faTiktok, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
 
 
 function FeedPostCard({
@@ -26,7 +26,8 @@ function FeedPostCard({
   unixTimestamp,
   fetchFeedPosts,
   feedPostId,
-  BrandEngagementID
+  BrandEngagementID,
+  fetchBrandEngagementData
 }) {
   const parsedDate = parseISO(postDate);
 
@@ -35,9 +36,6 @@ function FeedPostCard({
     Intl.DateTimeFormat().resolvedOptions().timeZone
   );
 
-  //https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/6509eb6b6a20f499452b2186
-
-  let { id } = useParams();
 
   const [isConnected, setIsConnected] = useState(false);
   const [isLoadingCC, setIsLoadingCC] = useState(false);
@@ -45,9 +43,9 @@ function FeedPostCard({
 
   const checkConnectLinkExists = async () => {
     try {
-      if (id) {
+      if (BrandEngagementID) {
         const response = await axios.get(
-          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/check-connect-link-exists/${id}`
+          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/check-connect-link-exists/${BrandEngagementID}`
         );
         setIsConnected(response.data?.hasConnectLinkURL);
       }
@@ -58,18 +56,18 @@ function FeedPostCard({
 
   useEffect(() => {
     checkConnectLinkExists();
-  }, [id]);
+  }, [BrandEngagementID]);
 
   useEffect(() => {
     checkConnectLinkExists();
-  }, [id]);
+  }, [BrandEngagementID]);
 
   //Fetch client connect data
   const [clientConnectData, setClientConnectData] = useState("")
   const getClientConnectData = async () => {
     try {
       const response = await axios.get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${BrandEngagementID}`
       );
       console.log("Client connect data :" + JSON.stringify(response.data)); // Success message or response data
       // Perform any additional actions after successful deletion
@@ -85,14 +83,14 @@ function FeedPostCard({
   }, [])
 
   const getClientConnect = async () => {
-    if (id) {
+    if (BrandEngagementID) {
       setIsLoadingCC(true);
 
       try {
-        const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`);
+        const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${BrandEngagementID}`);
 
         if (response.status === 200) {
-          console.log("Client connect: ", response.data);
+          // console.log("Client connect: ", response.data);
           setIsConnected(true);
           window.location.href = response.data?.ConnectLinkURL;
         } else {
@@ -206,17 +204,15 @@ function FeedPostCard({
   // Check if the pathname starts with '/posts-feed'
   const isPostsFeed = currentPath.startsWith('/posts-feed');
 
-
   const [brandEngagementData, setBrandEngagementData] = useState('')
-  const getBrandEngagementData = async () => {
-    await axios.get(`http://localhost:5000/api/v1/brand-engagement/${BrandEngagementID}`).then((res) => {
-      setBrandEngagementData(res?.data.brandEngagement)
-      console.log(res?.data.brandEngagement)
-    })
-  }
+
   useEffect(() => {
-    getBrandEngagementData()
-  }, [])
+    const fetchData = async () => {
+      const data = await fetchBrandEngagementData(BrandEngagementID);
+      setBrandEngagementData(data);
+    };
+    fetchData();
+  }, [BrandEngagementID, fetchBrandEngagementData]);
 
   return (
     <div className="col-span-full sm:col-span-6 xl:col-span-4
@@ -237,7 +233,7 @@ function FeedPostCard({
         <div className="flex-[0.7] md:px-0 px-2 py-3 flex flex-col flex-wrap">
           <header className="">
             {/* Connected accounts */}
-            {isAnAccountConnected ? (
+            {isAnAccountConnected &&
               <div className="text-sm flex mb-2">
                 <svg className="w-6 h-6 mt-[1px] text-pink-600 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                   <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -246,19 +242,19 @@ function FeedPostCard({
                 <p className="text-pink-500 font-bold rounded-lg ml-2 p-1 bg-gray-100" target="_blank">
                   {dateUpdate(unixTimestamp)}
                 </p>
-              </div>
-            ) : (
-              <div className="text-sm mb-2 text-blue-500 font-bold">
-                <button onClick={getClientConnect} className="hover:underline flex items-center my-1">
-                  <span>Connect your socials to schedule this post</span>
-                  <FontAwesomeIcon
-                    icon={faLink}
-                    className="ml-2 w-4 h-4 rounded-full"
-                    color="#058cfb"
-                  />
-                </button>
-              </div>
-            )}
+              </div>}
+
+            {/* <div className="text-sm mb-2 text-blue-500 font-bold">
+              <button onClick={getClientConnect} className="hover:underline flex items-center my-1">
+                <span>Connect your socials to schedule this post</span>
+                <FontAwesomeIcon
+                  icon={faLink}
+                  className="ml-2 w-4 h-4 rounded-full"
+                  color="#058cfb"
+                />
+              </button>
+            </div> */}
+
           </header>
 
           <div className="h-[1px] mb-2 bg-gray-200" />
@@ -278,33 +274,62 @@ function FeedPostCard({
 
           <div className="grow mt-2 ">
             {/* condition socials connected */}
-            <div className="my-1 space-x-2">
-              <FontAwesomeIcon
-                className="text-blue-500 "
-                icon={faTwitter}
-                style={{ color: "#1DA1F2" }}
-              />
-              <FontAwesomeIcon
-                className="text-pink-500 "
-                icon={faInstagram}
-                style={{ color: "#C13584" }}
-              />
-              <FontAwesomeIcon
-                className="text-red-500 "
-                icon={faYoutube}
-                style={{ color: "#FF0000" }}
-              />
-              <FontAwesomeIcon
-                className="text-green-500"
-                icon={faTiktok}
-                style={{ color: "#69C9D0" }}
-              />
-              <FontAwesomeIcon
-                className="text-blue-700"
-                icon={faLinkedin}
-                style={{ color: "#0A66C2" }}
-              />
+
+            {/* {!isAnAccountConnected && <div className="flex items-center  text-gray-500 text-sm font-bold px-4 " role="alert">
+              <p>No socials connected</p>
+            </div>} */}
+            <div className="flex justify-between">
+              <div className="flex space-x-2">
+                <span>
+                  {clientConnectData?.FacebookConnected && clientConnectData?.FacebookConnected !== "no" &&
+                    <> <FontAwesomeIcon
+                      className="text-[#3e4ef5]"
+                      icon={faFacebook}
+                    />
+                    </>
+                  }  </span>
+                <span>
+                  {clientConnectData?.TwitterConnected && clientConnectData?.TwitterConnected !== "no" && <FontAwesomeIcon
+                    className="text-[#3b82f6]"
+                    icon={faTwitter}
+                  />}
+                </span>
+                <span> {clientConnectData?.LinkedInConnected && clientConnectData?.LinkedInConnected !== "no" && <FontAwesomeIcon
+                  className="text-[#3b82f6]"
+                  icon={faLinkedin}
+                />}
+                </span>
+                <span>
+                  {clientConnectData?.TikTokConnected && clientConnectData?.TikTokConnected !== "no" && <FontAwesomeIcon
+                    className="text-[#3b82f6]"
+                    icon={faTiktok}
+                  />}
+                </span>
+                <span>
+                  {clientConnectData?.YoutubeConnected && clientConnectData?.YoutubeConnected !== "no" && <FontAwesomeIcon
+                    className="text-[#f63e3b]"
+                    icon={faYoutube}
+                  />}
+                </span>
+                <span>
+                  {clientConnectData?.InstagramConnected && clientConnectData?.InstagramConnected !== "no" &&
+                    <FontAwesomeIcon
+                      // className="text-[#3b82f6]"
+                      icon={faInstagram}
+                    />}
+                </span>
+              </div>
+
+              <button className="mr-6 flex" onClick={getClientConnect}>
+                <span className="pb-1 text-sm text-gray-500 hover:font-bold">Connect socials</span>
+                <FontAwesomeIcon
+                  className="ml-2 mt-[4px] text-gray-700"
+                  icon={faEllipsisV}
+                  className='w-5 h-5'
+                />
+              </button>
             </div>
+
             <div className="h-[1px] my-2 bg-gray-200" />
             <div className="text-sm overflow-y-scroll font-medium mb-2">
               {isEditing ? (
