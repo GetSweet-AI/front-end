@@ -15,6 +15,11 @@ import PostCard from "../partials/PostCard";
 import Video from "../partials/Video";
 import SwitchButton from "../partials/SwitchButton";
 import CheckConnectedAccount from '../utils/ChechConnectedAccount';
+import FeedPostCard from "../partials/FeedPostCard";
+import FilterComponent from "../components/FilterComponent";
+import PostBadge from "../components/PostBadge";
+import { faCalendar, faCalendarCheck, faCalendarXmark } from "@fortawesome/free-solid-svg-icons";
+import Select from "../components/Select";
 
 async function downloadVideo(url) {
   try {
@@ -38,19 +43,19 @@ function getFilenameFromUrl(url) {
 }
 
 function PostsFeed() {
+
   const { token, user } = useSelector((state) => state.auth);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [feedPosts, setFeedPosts] = useState([]);
+  const [filteredFeedPosts, setFilteredFeedPosts] = useState([])
+
   const [adminFeedPosts, setAdminFeedPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isUserDataLoading, setIsUserDataLoading] = useState(false);
 
   const [isAdmin, setIsAdmin] = useState(false);
 
-
   let { id } = useParams();
-  console.log("ID:", id);
-
 
   // const fetchUserFeedPosts = async () => {
   //   setIsUserDataLoading(true);
@@ -68,22 +73,22 @@ function PostsFeed() {
   //   setIsUserDataLoading(false);
   // };
 
-  const fetchAllFeedPosts = async () => {
-    setIsLoading(true);
+  // const fetchAllFeedPosts = async () => {
+  //   setIsLoading(true);
 
-    await axios
-      .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}`
-      )
-      .then((res) => {
-        setAdminFeedPosts(res.data);
-        console.log("AdminFeedPosts :" + JSON.stringify(res?.data));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    setIsLoading(false);
-  };
+  //   await axios
+  //     .get(
+  //       `https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/feedposts?userId=${user?._id}`
+  //     )
+  //     .then((res) => {
+  //       setAdminFeedPosts(res.data);
+  //       // console.log("AdminFeedPosts :" + JSON.stringify(res?.data));
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  //   setIsLoading(false);
+  // };
   const deletePostFeed = async (id) => {
     await axios
       .delete(
@@ -131,16 +136,17 @@ function PostsFeed() {
 
   const AdminPages = new Array(adminNumberOfPages).fill(null).map((v, i) => i);
 
-  useEffect(() => {
-    fetch(
-      `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${user?._id}?page=${pageNumber}`
-    )
-      .then((response) => response.json())
-      .then(({ totalPages, feedPosts }) => {
-        setFeedPosts(feedPosts);
-        setNumberOfPages(totalPages);
-      });
-  }, [pageNumber]);
+  // useEffect(() => {
+  //   fetch(
+  //     `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${user?._id}?page=${pageNumber}`
+  //   )
+  //     .then((response) => response.json())
+  //     .then(({ totalPages, feedPosts }) => {
+  //       setFeedPosts(feedPosts);
+  //       setNumberOfPages(totalPages);
+  //     });
+  // }, [pageNumber]);
+
 
   useEffect(() => {
     fetch(
@@ -174,31 +180,177 @@ function PostsFeed() {
     setSearch(e.target.value)
   };
 
-
   const [clientConnectData, setClientConnectData] = useState("")
-
-
   const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
-  console.log("isAnAccountConnected :" + isAnAccountConnected)
+
+  // Function to fetch brand engagement data
+  const fetchBrandEngagementData = async (BrandEngagementID) => {
+    try {
+      const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagement/${BrandEngagementID}`);
+      return response.data.brandEngagement;
+    } catch (error) {
+      console.error("Error fetching brand engagement data: ", error);
+      return null;
+    }
+  };
+
+  const [campaigns, setCampaigns] = useState(null);
+  const fetchCampaigns = async (BrandEngagementId) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/campaign-titles/${BrandEngagementId}`); // replace userId with the actual user ID
+      setCampaigns(response.data);
+      console.log(response.data)
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const [filterOptions, setFilterOptions] = useState('')
+  const [engagements, setEngagements] = useState([]);
+  const fetchEngagements = async (brandId) => {
+    setIsLoading(true);
+    try {
+      fetch(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements-np/${user?._id}`)
+        .then((response) => response.json())
+        .then(({ brandEngagements }) => {
+          setEngagements(brandEngagements);
+          // console.log("eee" + brandEngagements)
+          if (brandId) {
+            fetchFeedPosts(brandId)
+            setSelectedBrand(brandId)
+            fetchCampaigns(brandId)
+          } else {
+            fetchFeedPosts(brandEngagements[0]?._id)
+            setSelectedBrand(brandEngagements[0]?._id)
+            fetchCampaigns(brandEngagements[0]?._id)
+          }
+
+          // Create unique filter options
+          const uniqueFilterOptions = brandEngagements.reduce((acc, engagement) => {
+            const existingLabel = acc.find(option => option.label === engagement.campaignTitle);
+            if (!existingLabel) {
+              acc.push({
+                id: engagement._id,
+                label: engagement.campaignTitle,
+                checked: false,
+              });
+            }
+            return acc;
+          }, []);
+
+          setFilterOptions(uniqueFilterOptions);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    fetchEngagements()
+  }, [])
+
+  const [selectedBrand, setSelectedBrand] = useState('');
+  const handleBEChange = (e) => {
+    setSelectedBrand(e.target.value);
+  };
+
+  useEffect(() => {
+    fetchEngagements(selectedBrand)
+  }, [selectedBrand])
+
+  const fetchFeedPosts = async (selectedBrand) => {
+    setIsLoading(true)
+    await axios
+      .get(
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${selectedBrand}?page=${pageNumber}`
+      ).then((response) => {
+        setFeedPosts(response.data?.feedPosts);
+        setFilteredFeedPosts(response.data?.feedPosts)
+        setNumberOfPages(response.data?.totalPages)
+        // console.log("feedPosts" + JSON.stringify(response?.data))
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setIsLoading(false)
+  };
+
+  useEffect(() => {
+    fetchFeedPosts(selectedBrand)
+  }, [pageNumber, selectedBrand])
+  // useEffect(() => {
+  //   fetchFeedPosts(engagements[0]?._id)
+  // }, [])
+
+  useEffect(() => {
+    setPageNumber(0)
+  }, [selectedBrand])
+
+  const [staData, setData] = useState(null);
+  useEffect(() => {
+    const fetchStatusData = async () => {
+      const url = `https://seal-app-dk3kg.ondigitalocean.app/api/v1/total-client-connect-status/${user?._id}`;
+      try {
+        setIsLoading(true);
+        const response = await axios.get(url);
+        setData(response.data);
+        console.log(response.data)
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchStatusData();
+  }, []);
+
+
+
+  const applyFilter = (filterOptions) => {
+    const filteredPosts = feedPosts.filter((item) => {
+      const isJpeg = item.MediaUrl.endsWith('.jpeg');
+      const isMp4 = item.MediaUrl.endsWith('.mp4');
+
+      // Apply filter logic based on filterOptions
+      return (filterOptions.isImage && isJpeg) || (filterOptions.isVideo && isMp4);
+    });
+    setFilteredFeedPosts(filteredPosts);
+
+    console.log(filteredPosts)
+  };
 
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-
-
       {/* Content area */}
-      <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-        {/*  Site header */}
+      <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden md:p-4">
         {/*  Site header */}
         <DashboardHeader
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
           header={`${enabled ? "Admin" : "My"} Feed Posts`}
         />
-
         <main>
+          {isLoading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
+            <MutatingDots
+              height="100"
+              width="100"
+              color="#1c7aed"
+              secondaryColor="#3078fd"
+              radius="12.5"
+              ariaLabel="mutating-dots-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+          </div>}
+
           {isLoading && enabled && (
             <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
               <MutatingDots
@@ -214,6 +366,7 @@ function PostsFeed() {
               />
             </div>
           )}
+
           {isUserDataLoading && !enabled && (
             <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
               <MutatingDots
@@ -229,17 +382,72 @@ function PostsFeed() {
               />
             </div>
           )}
-          <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
-            {/* Page header */}
-            <div className="flex flex-col md:flex-row justify-between  p-2 ">
-              <div className="mb-4 sm:mb-0 flex flex-col">
-                <h1 className="text-xl mb-2 text-blue-500 md:hidden font-bold" >
-                  {enabled ? "Admin" : "My"} Feed Posts
-                </h1>
-
+          <div className="flex justify-around space-x-2  w-full p-5">
+            <PostBadge
+              icon={faCalendarXmark}
+              number={staData?.totalPostsNeedSocial}
+              label="Posts need socials"
+              bgColor="red-400"
+              iconColor="white"
+            />
+            <PostBadge
+              icon={faCalendar}
+              number={staData?.totalPostsScheduled}
+              label="Scheduled posts"
+              bgColor="blue-400"
+              iconColor="white"
+            />
+            <PostBadge
+              icon={faCalendarCheck}
+              number={staData?.totalPostsLive}
+              label="Posts are live"
+              bgColor="red-400"
+              iconColor="white"
+            />
+            {/* Add more instances of PostBadge with different data as needed */}
+          </div>
+          <div className="p-5">
+            {/* Get brand engagement */}
+            <div className="flex justify-between mx-auto py-4 bg-white-50 rounded-lg shadow-md p-2 ">
+              <div className="md:w-1/3 w-full">
+                <Select
+                  options={engagements.map(brand => ({
+                    value: brand._id,
+                    label: brand.BrandName
+                  }))}
+                  value={selectedBrand}
+                  onChange={handleBEChange}
+                />
               </div>
-              <div className=" flex  items-center flex-row space-x-3 ">
-                {/* <div className="flex justify-center items-center ">
+              <div className="md:w-full">
+              </div>
+
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto ">
+            {/* Page header */}
+
+            <div className="flex flex-col w-full h-full space-y-2  flex-[0.25] p-2">
+
+              {/* {
+                campaigns && <FilterComponent
+                  options={campaigns}
+                  label="Campaigns"
+                />
+              } */}
+              <FilterComponent label="Media Type" applyFilter={applyFilter} />
+              {/* <FilterComponent options={statusOptions} label="Status" /> */}
+            </div>
+
+            <div className="flex flex-col flex-[0.75]">
+              <div className="flex flex-col md:flex-row justify-between  p-2 ">
+                <div className="mb-4 sm:mb-0 flex flex-col">
+                  <h1 className="text-xl mb-2 text-blue-500 md:hidden font-bold" >
+                    {enabled ? "Admin" : "My"} Feed Posts
+                  </h1>
+                </div>
+                <div className=" flex  items-center flex-row space-x-3 ">
+                  {/* <div className="flex justify-center items-center ">
                   <input
                     type="text"
                     name="search"
@@ -248,40 +456,68 @@ function PostsFeed() {
                     className="form-input focus:border-slate-300"
                   />
                 </div> */}
-                <div
-                  className="flex justify-center mt-1 items-center"> {user?.role === "admin" ? (
-                    <SwitchButton enabled={enabled} setEnabled={setEnabled} />
-                  ) : (
-                    <></>
-                  )}
+                  <div
+                    className="flex justify-center items-center"> {user?.role === "admin" ? (
+                      <>
+
+                        {/* <SwitchButton enabled={enabled} setEnabled={setEnabled} /> */}
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+
                 </div>
-
               </div>
-            </div>
 
-            <div>
-              <ToastContainer />
+              <div>
+                <ToastContainer />
+                {/* {enabled ?
+                  adminFeedPosts?.length > 0 && (
+                    <div className="">
+                      <div className="grid grid-cols-1 gap-3">
+                        {adminFeedPosts.
+                          filter((feedPost) => {
+                            // const { email } = feedPost?.user;
+                            if (search == "") {
+                              return feedPost;
+                            } else if (feedPost?.email !== null &&
+                              (feedPost?.Caption.toLowerCase().includes(search.toLocaleLowerCase()))
+                            ) {
+                              return feedPost;
+                            }
+                          }).map((item, idx) => {
+                            return (
+                              <FeedPostCard
+                                key={idx}
+                                feedPostId={item._id}
+                                id={item._id}
+                                MediaUrl={item.MediaUrl}
+                                deleteFeedPost={deletePostFeed}
+                                Caption={item.Caption}
+                                Date={item.Date}
+                                handleCopyText={handleCopyText}
+                                Accounts={item.Accounts}
+                                DownloadButton={downloadVideo}
+                                unixTimestamp={item.unixTimestamp}
+                                BrandEngagementID={item.BrandEngagementID}
+                                fetchBrandEngagementData={fetchBrandEngagementData}
+                              />
+                            );
+                          })}
+                      </div>
+                    </div>
+                  ) : */}
 
-              {enabled
-                ?
-                adminFeedPosts?.length > 0 && (
-                  <div className="">
-                    <div className="grid grid-cols-12 gap-6">
-                      {adminFeedPosts.
-                        filter((feedPost) => {
-                          // const { email } = feedPost?.user;
-                          if (search == "") {
-                            return feedPost;
-                          } else if (feedPost?.email !== null &&
-                            (feedPost?.Caption.toLowerCase().includes(search.toLocaleLowerCase()))
-                          ) {
-                            return feedPost;
-                          }
-                        }).map((item, idx) => {
+                <div className="">
+                  <div className="grid grid-cols-1 gap-3">
+                    {
+                      (filteredFeedPosts.length > 0 && engagements.length > 0) ?
+                        filteredFeedPosts?.map((item) => {
                           return (
-                            <PostCard
-                              key={idx}
+                            <FeedPostCard
                               feedPostId={item._id}
+                              key={item._id}
                               id={item._id}
                               MediaUrl={item.MediaUrl}
                               deleteFeedPost={deletePostFeed}
@@ -291,123 +527,94 @@ function PostsFeed() {
                               Accounts={item.Accounts}
                               DownloadButton={downloadVideo}
                               unixTimestamp={item.unixTimestamp}
+                              BrandEngagementID={item.BrandEngagementID}
+                              fetchBrandEngagementData={fetchBrandEngagementData}
+
                             />
                           );
-                        })}
+                        }) :
+                        <p>No Feed posts is generated yet for this Brand Engagement</p>
+                    }
+
+                  </div>
+                </div>
+                {/* )} */}
+
+                {/* {enabled && adminFeedPosts.length > 5 && (
+                  <div className="mt-8">
+                    <div class="flex flex-wrap md:flex-nowrap  md:mx-4 items-center md:mt-4 overflow-x-scroll py-2  justify-center space-x-2">
+                      <button
+                        className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                        onClick={gotoPreviousAdmin}
+                      >
+                        Previous
+                      </button>
+
+                      <select
+                        value={adminPageNumber}
+                        onChange={(e) => setAdminPageNumber(parseInt(e.target.value))}
+                        className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
+                      >
+                        {AdminPages.map((pageIndex) => (
+                          <option
+                            key={pageIndex}
+                            value={pageIndex}
+                            className="text-black"
+                          >
+                            {pageIndex + 1}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                        onClick={gotoNextAdmin}
+                      >
+                        Next
+                      </button>
                     </div>
                   </div>
-                ) :
-                feedPosts?.length > 0 && (
-                  <div className="">
-                    <div className="grid grid-cols-12 gap-6">
-                      {feedPosts.filter((feedPost) => {
-                        // const { email } = feedPost?.user;
-                        if (search == "") {
-                          return feedPost;
-                        } else if (feedPost?.email !== null &&
-                          (feedPost?.Caption.toLowerCase().includes(search.toLocaleLowerCase()) || feedPost?.MediaUrl.toLowerCase().includes(search.toLocaleLowerCase()))
-                        ) {
-                          return feedPost;
-                        }
-                      }).map((item) => {
-                        return (
-                          <PostCard
-                            feedPostId={item._id}
-                            key={item._id}
-                            id={item._id}
-                            MediaUrl={item.MediaUrl}
-                            deleteFeedPost={deletePostFeed}
-                            Caption={item.Caption}
-                            Date={item.Date}
-                            handleCopyText={handleCopyText}
-                            Accounts={item.Accounts}
-                            DownloadButton={downloadVideo}
-                            unixTimestamp={item.unixTimestamp}
-                          />
-                        );
-                      })}
+                )} */}
+                {filteredFeedPosts.length > 0 && (
+                  <div className="mt-8">
+                    <div class="flex items-center md:mt-4 py-2 md:overflow-hidden overflow-x-scroll  justify-center space-x-2">
+
+                      {pages.length === 0 &&
+                        <div> Hmmm… it seems as though you do not have any posts generated right now.  <a className="text-[#6366F1]" href="/brand-engagement-builder">Let us fix that!.</a>
+                        </div>}
+                      {pages.length !== 0 && <button
+                        className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                        onClick={gotoPrevious}
+                      >
+                        Previous
+                      </button>}
+
+                      {pages.length !== 0 && <select
+                        value={pageNumber}
+                        onChange={(e) => setPageNumber(parseInt(e.target.value))}
+                        className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
+                      >
+                        {pages.map((pageIndex) => (
+                          <option
+                            key={pageIndex}
+                            value={pageIndex}
+                            className="text-black"
+                          >
+                            {pageIndex + 1}
+                          </option>
+                        ))}
+                      </select>}
+
+                      {pages.length !== 0 && <button
+                        className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                        onClick={gotoNext}
+                      >
+                        Next
+                      </button>}
                     </div>
                   </div>
                 )}
-
-              {enabled && (
-                <div className="mt-8">
-                  <div class="flex flex-wrap md:flex-nowrap  md:mx-4 items-center md:mt-4 overflow-x-scroll py-2  justify-center space-x-2">
-                    <button
-                      className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
-                      onClick={gotoPreviousAdmin}
-                    >
-                      Previous
-                    </button>
-
-                    <select
-                      value={adminPageNumber}
-                      onChange={(e) => setAdminPageNumber(parseInt(e.target.value))}
-                      className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
-                    >
-                      {AdminPages.map((pageIndex) => (
-                        <option
-                          key={pageIndex}
-                          value={pageIndex}
-                          className="text-black"
-                        >
-                          {pageIndex + 1}
-                        </option>
-                      ))}
-                    </select>
-
-
-                    <button
-                      className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
-                      onClick={gotoNextAdmin}
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div>
-              )}
-              {!enabled && (
-                <div className="mt-8">
-                  <div class="flex items-center md:mt-4 py-2 md:overflow-hidden overflow-x-scroll  justify-center space-x-2">
-
-                    {pages.length === 0 &&
-                      <div> Hmmm… it seems as though you do not have any posts generated right now.  <a className="text-[#6366F1]" href="/brand-engagement-builder">Let us fix that!.</a>
-                      </div>}
-                    {pages.length !== 0 && <button
-                      className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
-                      onClick={gotoPrevious}
-                    >
-                      Previous
-                    </button>}
-
-                    {pages.length !== 0 && <select
-                      value={pageNumber}
-                      onChange={(e) => setPageNumber(parseInt(e.target.value))}
-                      className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
-                    >
-                      {pages.map((pageIndex) => (
-                        <option
-                          key={pageIndex}
-                          value={pageIndex}
-                          className="text-black"
-                        >
-                          {pageIndex + 1}
-                        </option>
-                      ))}
-                    </select>}
-
-
-                    {pages.length !== 0 && <button
-                      className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
-                      onClick={gotoNext}
-                    >
-                      Next
-                    </button>}
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
-            {/* Toast container */}
           </div>
         </main>
       </div>

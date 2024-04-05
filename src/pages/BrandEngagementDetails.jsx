@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import SearchForm from '../partials/SearchForm';
 import FilterButton from '../components/DropdownFilter';
 import BrandEngagementCard from '../partials/BrandEngagementCard';
 import PaginationNumeric from '../partials/PaginationNumeric';
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faTwitter, faInstagram, faPinterest, faSnapchat, faTiktok, faYoutube, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { faArchive, faBlog, faFaceMehBlank, faLink, faUsers } from "@fortawesome/free-solid-svg-icons";
@@ -70,7 +68,6 @@ function BrandEngagementDetails() {
     const { token, user } = useSelector((state) => state.auth)
 
     let { id } = useParams();
-
 
     //Fetch brand engagements by ID
     const fetchEngagement = async () => {
@@ -234,8 +231,6 @@ function BrandEngagementDetails() {
         }
     }, [])
 
-
-
     //  ProgressBarWithMessages 
     const [previewProgress, setPreviewProgress] = useState(0);
     const [progressMessage, setProgressMessage] = useState("Starting Generation Process");
@@ -280,12 +275,14 @@ function BrandEngagementDetails() {
         <div className="flex h-screen overflow-hidden">
 
             {/* Sidebar */}
-            <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+            <Sidebar
+                sidebarOpen={sidebarOpen}
+                setSidebarOpen={setSidebarOpen}
+            />
 
             {/* Content area */}
             <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
 
-                {/*  Site header */}
                 {/*  Site header */}
                 <DashboardHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
@@ -406,6 +403,7 @@ function BrandEngagementDetails() {
                                             DownloadButton={downloadVideo}
                                             unixTimestamp={item.unixTimestamp}
                                             fetchFeedPosts={fetchFeedPosts}
+
 
                                         />
                                     );

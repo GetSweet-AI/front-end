@@ -5,7 +5,6 @@ import SearchForm from "../partials/SearchForm";
 import FilterButton from "../components/DropdownFilter";
 import BrandEngagementCard from "../partials/BrandEngagementCard";
 import PaginationNumeric from "../partials/PaginationNumeric";
-
 import Image01 from "../images/user-28-01.jpg";
 import Image02 from "../images/user-28-02.jpg";
 import DashboardHeader from "../partials/DashboardHeader";
@@ -21,8 +20,6 @@ function BrandEngagements() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
   const { token, user } = useSelector((state) => state.auth);
-
-
 
   //pagination
   const [pageNumber, setPageNumber] = useState(0);
@@ -66,16 +63,9 @@ function BrandEngagements() {
     setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
   };
 
-
-
-
-
-
   //Get ClientConnect by BrandEngagementId
   const [connectLinkURL, setConnectLinkURL] = useState("")
   const [isLoadingCC, setIsLoadingCC] = useState(false);
-
-
 
   return (
     <div className="flex h-screen overflow-hidden">
