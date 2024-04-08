@@ -6,7 +6,7 @@ import { Skeleton } from '@radix-ui/themes';
 export default function PostBadge({ icon, number, label, bgColor, iconColor }) {
     return (
         <div className='rounded-sm flex md:flex-row flex-col  shadow-sm px-4 py-4 bg-white w-full'>
-            <div className={`w-12 h-12 ml-1 bg-${bgColor} flex justify-center items-center rounded-md`}>
+            <div className={`w-12 h-12 ml-1 ${bgColor ? `bg-${bgColor}` : 'bg-green-500'} flex justify-center items-center rounded-md`}>
                 <FontAwesomeIcon
                     className={`text-${iconColor}`}
                     icon={icon}

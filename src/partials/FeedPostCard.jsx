@@ -27,7 +27,11 @@ function FeedPostCard({
   fetchFeedPosts,
   feedPostId,
   BrandEngagementID,
-  brandEngagementData
+  brandEngagementData,
+  isConnected,
+  setIsConnected,
+  clientConnectData,
+  getClientConnectData
 }) {
   const parsedDate = parseISO(postDate);
 
@@ -36,74 +40,14 @@ function FeedPostCard({
     Intl.DateTimeFormat().resolvedOptions().timeZone
   );
 
-  const [isConnected, setIsConnected] = useState(false);
   const [isLoadingCC, setIsLoadingCC] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const checkConnectLinkExists = async () => {
-    try {
-      if (BrandEngagementID) {
-        const response = await axios.get(
-          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/check-connect-link-exists/${BrandEngagementID}`
-        );
-        setIsConnected(response.data?.hasConnectLinkURL);
-      }
-    } catch (error) {
-      console.error('Error: ', error);
-    }
-  }
+  const [isAnAccountConnected, setIsAnAccountConnected] = useState()
 
   useEffect(() => {
-    checkConnectLinkExists();
-  }, [BrandEngagementID]);
-
-  useEffect(() => {
-    checkConnectLinkExists();
-  }, [BrandEngagementID]);
-
-  //Fetch client connect data
-  const [clientConnectData, setClientConnectData] = useState("")
-  const getClientConnectData = async () => {
-    try {
-      const response = await axios.get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${BrandEngagementID}`
-      );
-      console.log("Client connect data :" + JSON.stringify(response.data)); // Success message or response data
-      // Perform any additional actions after successful deletion
-      setClientConnectData(response.data)
-
-    } catch (error) {
-      console.log(error); // Handle error
-    }
-  };
-
-  useEffect(() => {
-    getClientConnectData()
-  }, [])
-
-  const getClientConnect = async () => {
-    if (BrandEngagementID) {
-      setIsLoadingCC(true);
-
-      try {
-        const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${BrandEngagementID}`);
-
-        if (response.status === 200) {
-          // console.log("Client connect: ", response.data);
-          setIsConnected(true);
-          window.location.href = response.data?.ConnectLinkURL;
-        } else {
-          console.error("Error en la respuesta: ", response.status);
-        }
-      } catch (error) {
-        console.log("Error en la solicitud: ", error.message);
-      } finally {
-        setIsLoadingCC(false);
-      };
-    }
-  };
-
-  const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
+    clientConnectData && setIsAnAccountConnected(CheckConnectedAccount(clientConnectData))
+  }, [clientConnectData])
 
   const [isEditing, setEditing] = useState(false);
   const [caption, setCaption] = useState(Caption);
@@ -204,15 +148,13 @@ function FeedPostCard({
   const isPostsFeed = currentPath.startsWith('/posts-feed');
 
 
-
-
   return (
-    <div className="col-span-full sm:col-span-6 xl:col-span-4
-     bg-white shadow-md rounded-md border relative
+    <div className="col-span-full sm:col-span-6 xl:col-span-4 
+     bg-white shadow-md rounded-md border relative  
       border-slate-200 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-200">
-      <div className="flex md:flex-row flex-col h-full  py-2">
+      <div className="flex md:flex-row flex-col   py-2">
         {/* Image Section */}
-        <div className=" flex-[0.3] h-[70%] p-2 w-full  relative">
+        <div className=" flex-[0.3] h-[100%] p-2 w-full  relative">
 
           {isMp4 && <ReactPlayer playIcon={<img src={logo}
             width={60} height={60} alt="thumbnail" />}
@@ -221,8 +163,9 @@ function FeedPostCard({
             <img src={MediaUrl} className="h-[50vh]   w-full object-contain rounded-md" />
           }
         </div>
+
         {/* Right side section */}
-        <div className="flex-[0.7] md:px-0 px-2 py-3 flex flex-col flex-wrap">
+        <div className="flex-[0.7] h- md:px-0 px-2 py-3 flex flex-col flex-wrap">
           <header className="">
             {/* Connected accounts */}
             {isAnAccountConnected &&
@@ -249,7 +192,6 @@ function FeedPostCard({
 
           </header>
 
-          <div className="h-[1px] mb-2 bg-gray-200" />
           <section className="flex  md:space-x-2 flex-wrap py-1">
             {
               brandEngagementData?.campaignTitle && <div className="bg-gray-200 m-1 text-gray-700 py-1 px-2 text-sm  rounded-2xl w-max">
@@ -312,14 +254,21 @@ function FeedPostCard({
                 </span>
               </div>
 
-              <button className="mr-6 flex" onClick={getClientConnect}>
-                <span className="pb-1 text-sm text-gray-500 hover:font-bold">Connect socials</span>
-                <FontAwesomeIcon
-                  className="ml-2 mt-[4px] text-gray-700"
-                  icon={faEllipsisV}
-                  className='w-5 h-5'
-                />
-              </button>
+
+
+              {
+                clientConnectData?.ConnectLinkURL &&
+                <Link to={clientConnectData?.ConnectLinkURL}>
+                  <div className="mr-6 flex cursor-pointer" >
+                    <span className="pb-1 text-sm text-gray-500 hover:font-bold">Connect socials</span>
+                    <FontAwesomeIcon
+                      className="ml-2 mt-[4px] text-gray-700"
+                      icon={faEllipsisV}
+                      className='w-5 h-5'
+                    />
+                  </div>
+                </Link>
+              }
             </div>
 
             <div className="h-[1px] my-2 bg-gray-200" />
