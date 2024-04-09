@@ -217,7 +217,7 @@ function PostsFeed() {
 
   const applyFilter = async () => {
     const { isImage, isVideo } = filterOptions;
-    const url = `http://localhost:5000/api/v1/brandEngagement/65c8e30f11aca36eb817197d/filter?isImage=${isImage}&isVideo=${isVideo}`;
+    const url = `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brandEngagement/65c8e30f11aca36eb817197d/filter?isImage=${isImage}&isVideo=${isVideo}`;
 
     try {
       const response = await axios.get(url);
