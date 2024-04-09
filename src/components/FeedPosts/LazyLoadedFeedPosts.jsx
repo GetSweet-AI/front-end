@@ -13,7 +13,9 @@ const LazyLoadedFeedPosts = ({
     clientConnect,
     getClientConnectData,
     clientConnectData,
-    isConnected
+    isConnected,
+    feedPosts
+
 }) => {
     const [visiblePosts, setVisiblePosts] = useState([]);
 
@@ -41,6 +43,8 @@ const LazyLoadedFeedPosts = ({
 
         setVisiblePosts(prevPosts => [...prevPosts, ...postsToLoad]);
     };
+
+
 
     const Row = ({ index, style }) => {
         const post = visiblePosts[index];
@@ -90,6 +94,7 @@ const LazyLoadedFeedPosts = ({
             />
         );
     }
+
     return (
         <div style={{ width: '100%' }}>
             <List

@@ -4,7 +4,7 @@ import { faUpDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
-const FilterComponent = ({ applyFilter, filterOptions, setFilterOptions }) => {
+const FilterComponent = ({ label, filterOptions, setFilterOptions }) => {
 
     const [open, setOpen] = useState(false);
 
@@ -13,15 +13,6 @@ const FilterComponent = ({ applyFilter, filterOptions, setFilterOptions }) => {
         const { name, checked } = event.target;
         setFilterOptions({ ...filterOptions, [name]: checked });
     };
-
-    useEffect(() => {
-        if (!filterOptions.isImage && !filterOptions.isVideo) {
-            // alert('Please select at least one option');
-            return;
-        }
-        applyFilter(filterOptions);
-
-    }, [filterOptions]);
 
 
     return (
@@ -34,7 +25,7 @@ const FilterComponent = ({ applyFilter, filterOptions, setFilterOptions }) => {
                         {({ open }) => (
                             <>
                                 <Disclosure.Button className="flex w-full justify-between rounded-lg  px-4 py-2 text-left text-sm font-medium text-gray-600 hover:bg-blue-100 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75">
-                                    <span>Media Type</span>
+                                    <span>{label}</span>
                                     {/* <ChevronUpIcon
                                         className={`${open ? 'rotate-180 transform' : ''
                                             } h-5 w-5 text-purple-500`}
