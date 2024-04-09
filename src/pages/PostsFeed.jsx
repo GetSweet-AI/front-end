@@ -52,19 +52,14 @@ function PostsFeed() {
   const [feedPosts, setFeedPosts] = useState([]);
   const [filteredFeedPosts, setFilteredFeedPosts] = useState([])
 
-  const [adminFeedPosts, setAdminFeedPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFeedPostsLoading, setIsFeedPostsLoading] = useState(false);
   const [isUserDataLoading, setIsUserDataLoading] = useState(false);
 
-
   const [engagements, setEngagements] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState('');
 
-  const [isAdmin, setIsAdmin] = useState(false);
-
   const [campaigns, setCampaigns] = useState(null);
-
 
   const [staData, setData] = useState(null);
 
@@ -112,7 +107,6 @@ function PostsFeed() {
 
   // Function to fetch brand engagement data
   const fetchBrandEngagementData = async (BrandEngagementID) => {
-
     try {
       const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagement/${BrandEngagementID}`);
       setBrandEngagementData(response.data.brandEngagement);
@@ -120,14 +114,11 @@ function PostsFeed() {
       console.error("Error fetching brand engagement data: ", error);
       return null;
     }
-
-
   };
 
   useEffect(() => {
     fetchBrandEngagementData(selectedBrand)
   }, [selectedBrand])
-
 
   const fetchData = async () => {
     const data = await fetchBrandEngagementData(selectedBrand);
@@ -147,43 +138,33 @@ function PostsFeed() {
 
   };
 
-
   const handleBEChange = (e) => {
     setSelectedBrand(e.target.value);
   };
 
   const fetchFeedPosts = async (brandId) => {
-    setIsFeedPostsLoading(true)
 
-    await axios
-      .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}`
-      ).then((response) => {
-        setFeedPosts(response.data?.feedPosts);
-        setFilteredFeedPosts(response.data?.feedPosts)
-        // if (brandId) {
-        //   fetchData(brandId)
-        //   getClientConnectData(brandId)
-        //   checkConnectLinkExists(brandId)
-        //   // getClientConnect(brandId)
-        // } else {
+    if (brandId) {
+      setIsFeedPostsLoading(true)
+      await axios
+        .get(
+          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}`
+        ).then((response) => {
+          setFeedPosts(response.data?.feedPosts);
+          setFilteredFeedPosts(response.data?.feedPosts)
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+      setIsFeedPostsLoading(false)
+    }
 
-
-        // }
-
-        // console.log("feedPosts" + JSON.stringify(response?.data))
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-    setIsFeedPostsLoading(false)
 
   };
 
   useEffect(() => {
     fetchFeedPosts(selectedBrand)
   }, [selectedBrand])
-
 
   const fetchEngagements = async () => {
     setIsLoading(true);
@@ -234,39 +215,29 @@ function PostsFeed() {
     isVideo: true,
   });
 
-  const applyFilter = (filterOptions) => {
+  const applyFilter = async () => {
     const { isImage, isVideo } = filterOptions;
+    const url = `http://localhost:5000/api/v1/brandEngagement/65c8e30f11aca36eb817197d/filter?isImage=${isImage}&isVideo=${isVideo}`;
 
-    // No filter applied or both are selected
-    if ((!isImage && !isVideo) || (isImage && isVideo)) {
-      setFilteredFeedPosts(feedPosts); // Set filteredPosts to feedPosts values
-      return;
-    }
+    try {
+      const response = await axios.get(url);
+      const filteredData = response.data.feedPosts;
 
-    // Image filter applied
-    if (isImage) {
-      const filteredPosts = feedPosts.filter((item) => {
-        const isJpeg = item.MediaUrl.endsWith('.jpeg');
-        return isJpeg;
-      });
-      setFilteredFeedPosts(filteredPosts);
-      return;
-    }
+      // Set the filtered feed posts
+      setFilteredFeedPosts(filteredData);
 
-    // Video filter applied
-    if (isVideo) {
-      const filteredPosts = feedPosts.filter((item) => {
-        const isMp4 = item.MediaUrl.endsWith('.mp4');
-        return isMp4 || !item.MediaUrl.endsWith('.mp4'); // Include non-video posts as well
-      });
-      setFilteredFeedPosts(filteredPosts);
-      return;
+      // Set all feed posts (optional, if needed)
+      setFeedPosts(response.data.feedPosts);
+    } catch (error) {
+      // Handle errors
+      console.error('Error fetching filtered data:', error);
     }
   };
 
   useEffect(() => {
-    applyFilter(filterOptions)
+    applyFilter()
   }, [filterOptions])
+
 
   // console.log(filterOptions)
 
@@ -311,6 +282,7 @@ function PostsFeed() {
 
   // console.log(engagements?.filter(engagement => engagement._id === selectedBrand))
 
+  console.log("filterOptions :" + JSON.stringify(filterOptions))
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -412,7 +384,7 @@ function PostsFeed() {
                   label="Campaigns"
                 />
               } */}
-              <FilterComponent label="Media Type" applyFilter={applyFilter} filterOptions={filterOptions} setFilterOptions={setFilterOptions} />
+              <FilterComponent label="Media Type" filterOptions={filterOptions} setFilterOptions={setFilterOptions} applyFilter={applyFilter} />
               {/* <FilterComponent options={statusOptions} label="Status" /> */}
             </div>
 
@@ -479,6 +451,10 @@ function PostsFeed() {
                         filteredFeedPosts={filteredFeedPosts}
                         engagements={engagements}
                         BrandEngagementID={selectedBrand}
+                        feedPosts={feedPosts}
+                        filterOptions={filterOptions}
+                        setFilteredFeedPosts={setFilteredFeedPosts}
+                        feedPosts={feedPosts}
                       />
                     ) : (
                       <div className="flex flex-col justify-center items-center">
