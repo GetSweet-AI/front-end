@@ -222,12 +222,12 @@ function PostsFeed() {
     try {
       const response = await axios.get(url);
       const filteredData = response.data.feedPosts;
-
+      s
       // Set the filtered feed posts
       setFilteredFeedPosts(filteredData);
 
-      // Set all feed posts (optional, if needed)
-      setFeedPosts(response.data.feedPosts);
+      // // Set all feed posts (optional, if needed)
+      // setFeedPosts(response.data.feedPosts);
     } catch (error) {
       // Handle errors
       console.error('Error fetching filtered data:', error);
