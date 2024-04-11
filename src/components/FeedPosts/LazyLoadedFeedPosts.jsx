@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import FeedPostCard from '../../partials/FeedPostCard';
 import noData from '../../images/NoData.svg';
+import isMobile from 'is-mobile';
 
 const LazyLoadedFeedPosts = ({
     filteredFeedPosts,
@@ -44,13 +45,16 @@ const LazyLoadedFeedPosts = ({
         setVisiblePosts(prevPosts => [...prevPosts, ...postsToLoad]);
     };
 
-
-
     const Row = ({ index, style }) => {
         const post = visiblePosts[index];
+        // Adjust the style to include margin for spacing between items
+        const adjustedStyle = {
+            ...style,
+            // marginBottom: "10px", // Add a bottom margin to each item for spacing
+        };
 
         return (
-            <div key={post._id} className='  py-2' style={style}>
+            <div key={post._id} style={style}>
                 <FeedPostCard
                     feedPostId={post._id}
                     id={post._id}
@@ -74,6 +78,7 @@ const LazyLoadedFeedPosts = ({
     };
 
 
+
     if (filteredFeedPosts.length === 1) {
         // Render single item differently
         const item = filteredFeedPosts[0];
@@ -95,31 +100,30 @@ const LazyLoadedFeedPosts = ({
         );
     }
 
-    return (
-        <div style={{ width: '100%' }}>
-            <List
-                height={800} // Specify the height of the list
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(1, minmax(0, 1fr))',
-                    gap: '0.75rem',
-                    margin: '4px'
+    const isMobileDevice = isMobile()
 
-                    /* Add any additional custom styles here */
-                }}  // Add your custom styles here
-                itemCount={visiblePosts.length} // Total number of visible posts
-                itemSize={450} // Specify the height of each item
-                width={'100%'} // Specify the width of the list as 100%
-                onItemsRendered={({ visibleRowStartIndex, visibleRowStopIndex }) => {
-                    // If the user scrolls to the end, load more posts
-                    if (visibleRowStopIndex === visiblePosts.length - 1) {
-                        loadVisiblePosts();
-                    }
-                }}
-            >
-                {Row}
-            </List>
-        </div>
+    console.log(isMobileDevice)
+
+
+
+
+
+    return (
+        <List
+            height={900} // Dynamic height based on content length
+            itemCount={visiblePosts.length} // Total number of visible posts
+            itemSize={isMobileDevice ? 680 : 420} // Height of each item including the margin
+            onItemsRendered={({ visibleRowStartIndex, visibleRowStopIndex }) => {
+                // Load more posts at the end of the list
+                if (visibleRowStopIndex === visiblePosts.length - 1) {
+                    loadVisiblePosts();
+                }
+            }}
+            className='display '
+        >
+            {Row}
+        </List>
+
     );
 };
 

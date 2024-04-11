@@ -13,7 +13,7 @@ import CheckConnectedAccount from '../utils/ChechConnectedAccount';
 import EditCaptionModal from "../components/EditCaptionModal";
 import CustomActionItem from "../components/CustomActionItem";
 import { faFacebook, faInstagram, faLinkedin, faTiktok, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
-
+import isMobile from 'is-mobile';
 
 function FeedPostCard({
   MediaUrl,
@@ -62,7 +62,7 @@ function FeedPostCard({
     // //Update caption on the backend + setSaving(true)
     try {
       const response = await axios.put(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${feedPostId}`,
+        `http://localhost:5000/api/v1/feed-posts/${feedPostId}`,
         {
           NewCaption: Caption
         });
@@ -93,7 +93,7 @@ function FeedPostCard({
     setIsLoading(true)
     try {
       const response = await axios.post(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/new-caption`,
+        `http://localhost:5000/api/v1/new-caption`,
         {
           prompt: promptInput,
           caption: Caption
@@ -104,7 +104,7 @@ function FeedPostCard({
 
       // Update the feed post with the new caption
       await axios.put(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${feedPostId}`,
+        `http://localhost:5000/api/v1/feed-posts/${feedPostId}`,
         {
           NewCaption: response.data.newCaption
         }
@@ -148,20 +148,32 @@ function FeedPostCard({
   const isPostsFeed = currentPath.startsWith('/posts-feed');
 
 
-  return (
-    <div className="col-span-full sm:col-span-6 xl:col-span-4 
-     bg-white shadow-md rounded-md border relative  
-      border-slate-200 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-200">
-      <div className="flex md:flex-row flex-col   py-2">
-        {/* Image Section */}
-        <div className=" flex-[0.3] h-[100%] p-2 w-full  relative">
+  const isMobileDevice = isMobile()
 
-          {isMp4 && <ReactPlayer playIcon={<img src={logo}
-            width={60} height={60} alt="thumbnail" />}
-            controls={true} width="100%" url={MediaUrl} />}
-          {isJpeg &&
-            <img src={MediaUrl} className="h-[50vh]   w-full object-contain rounded-md" />
-          }
+  return (
+    <div className={`col-span-full sm:col-span-6 xl:col-span-4
+     bg-white shadow-md rounded-md border 
+    relative border-slate-200 hover:border-blue-500
+     hover:shadow-xl`}>
+      <div className="flex md:flex-row flex-col ">
+        {/* Image/Video Section */}
+        <div className="md:flex-[0.3] justify-center items-center h-[50vh] md:p-2 relative">
+          {/* Adjustments for both mobile and desktop */}
+          {isMp4 && (
+            <ReactPlayer
+              playIcon={<img src={logo} width={60} height={60} alt="thumbnail" />}
+              controls={true}
+              width="100%"
+              height="100%" // Ensure ReactPlayer covers the container height
+              url={MediaUrl}
+            />
+          )}
+          {isJpeg && (
+            <img
+              src={MediaUrl}
+              className="h-full w-full object-cover rounded-md" // Adjusted for consistent height and to cover the area
+            />
+          )}
         </div>
 
         {/* Right side section */}
