@@ -169,20 +169,18 @@ function PostsFeed() {
   const fetchEngagements = async () => {
     setIsLoading(true);
     try {
-      fetch(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements-np/${user?._id}`)
-        .then((response) => response.json())
-        .then(({ brandEngagements }) => {
+      const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements-np/${user?._id}`);
+      const { brandEngagements } = response.data;
 
-          fetchBrandEngagementData(brandEngagements[0]?._id)
-          setEngagements(brandEngagements);
-          fetchFeedPosts(brandEngagements[0]?._id)
-          checkConnectLinkExists(brandEngagements[0]?._id)
+      fetchBrandEngagementData(brandEngagements[0]?._id);
+      setEngagements(brandEngagements);
+      fetchFeedPosts(brandEngagements[0]?._id);
+      checkConnectLinkExists(brandEngagements[0]?._id);
 
-          setSelectedBrand(brandEngagements[0]?._id)
-          fetchData(brandEngagements[0]?._id)
-          getClientConnectData(brandEngagements[0]?._id)
+      setSelectedBrand(brandEngagements[0]?._id);
+      fetchData(brandEngagements[0]?._id);
+      getClientConnectData(brandEngagements[0]?._id);
 
-        });
     } catch (error) {
       console.log(error);
     }
@@ -210,13 +208,15 @@ function PostsFeed() {
     fetchStatusData();
   }, []);
 
-  const [filterOptions, setFilterOptions] = useState({
-    isImage: true,
-    isVideo: true,
-  });
+  // const [filterOptions, setFilterOptions] = useState({
+  //   isImage: true,
+  //   isVideo: true,
+  // });
+
+  const [isImage, setIsImage] = useState(false)
+  const [isVideo, setIsVideo] = useState(false)
 
   const applyFilter = async () => {
-    const { isImage, isVideo } = filterOptions;
     const url = `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brandEngagement/${selectedBrand}/filter?isImage=${isImage}&isVideo=${isVideo}`;
 
     try {
@@ -227,7 +227,7 @@ function PostsFeed() {
       setFilteredFeedPosts(filteredData);
 
       // // Set all feed posts (optional, if needed)
-      setFeedPosts(response.data.feedPosts);
+      // setFeedPosts(response.data.feedPosts);
     } catch (error) {
       // Handle errors
       console.error('Error fetching filtered data:', error);
@@ -236,7 +236,7 @@ function PostsFeed() {
 
   useEffect(() => {
     applyFilter()
-  }, [filterOptions])
+  }, [isImage, isVideo])
 
 
   // console.log(filterOptions)
@@ -384,7 +384,8 @@ function PostsFeed() {
                   label="Campaigns"
                 />
               } */}
-              <FilterComponent label="Media Type" filterOptions={filterOptions} setFilterOptions={setFilterOptions} applyFilter={applyFilter} />
+              <FilterComponent label="Media Type" isImage={isImage} isVideo={isVideo}
+                setIsImage={setIsImage} setIsVideo={setIsVideo} applyFilter={applyFilter} />
               {/* <FilterComponent options={statusOptions} label="Status" /> */}
             </div>
 
@@ -452,7 +453,7 @@ function PostsFeed() {
                         engagements={engagements}
                         BrandEngagementID={selectedBrand}
                         feedPosts={feedPosts}
-                        filterOptions={filterOptions}
+                        // filterOptions={filterOptions}
                         setFilteredFeedPosts={setFilteredFeedPosts}
                         feedPosts={feedPosts}
                       />
