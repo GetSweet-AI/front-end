@@ -17,12 +17,17 @@ const LazyLoadedFeedPosts = ({ filteredFeedPosts, deletePostFeed, handleCopyText
         setVisiblePosts(prevPosts => [...prevPosts, ...postsToLoad]);
     };
 
-    const getItemSize = index => isMobile() ? 680 : 420; // Size depends on whether the device is mobile
+    const getItemSize = index => isMobile() ? 690 : 420; // Size depends on whether the device is mobile
 
     const Row = ({ index, style }) => {
         const post = visiblePosts[index];
+
+        const adjustedStyle = {
+            ...style,
+            marginBottom: '10px', // Add bottom margin to each item
+        };
         return (
-            <div key={post._id} style={style}>
+            <div key={post._id} style={adjustedStyle}>
                 <FeedPostCard
                     feedPostId={post._id}
                     MediaUrl={post.MediaUrl}
@@ -49,7 +54,7 @@ const LazyLoadedFeedPosts = ({ filteredFeedPosts, deletePostFeed, handleCopyText
 
     return (
         <List
-            height={900}
+            height={isMobile() ? 400 : 900}
             itemCount={visiblePosts.length}
             itemSize={getItemSize}
             onItemsRendered={({ visibleRowStartIndex, visibleRowStopIndex }) => {
@@ -57,7 +62,9 @@ const LazyLoadedFeedPosts = ({ filteredFeedPosts, deletePostFeed, handleCopyText
                     loadVisiblePosts();
                 }
             }}
-            className='display'
+
+            className='space-y-3 m-2 '
+
         >
             {Row}
         </List>
