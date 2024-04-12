@@ -152,12 +152,12 @@ function FeedPostCard({
 
   return (
     <div className={`col-span-full sm:col-span-6 xl:col-span-4
-     bg-white shadow-md rounded-md border 
+     bg-white shadow-md rounded-md border  
     relative border-slate-200 hover:border-blue-500
-     hover:shadow-xl`}>
-      <div className="flex md:flex-row flex-col ">
+     hover:shadow-xl `}>
+      <div className="flex h-full md:flex-row flex-col ">
         {/* Image/Video Section */}
-        <div className="md:flex-[0.3] justify-center items-center h-[50vh] md:p-2 relative">
+        <div className="md:flex-[0.3] justify-center items-center h-[300px] p-2 relative">
           {/* Adjustments for both mobile and desktop */}
           {isMp4 && (
             <ReactPlayer
@@ -171,7 +171,7 @@ function FeedPostCard({
           {isJpeg && (
             <img
               src={MediaUrl}
-              className="h-full w-full object-cover rounded-md" // Adjusted for consistent height and to cover the area
+              className="h-full w-full object-contain rounded-md" // Adjusted for consistent height and to cover the area
             />
           )}
         </div>
