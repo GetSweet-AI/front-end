@@ -14,7 +14,7 @@ const FilterComponent = ({ label, isImage, isVideo, setIsImage, setIsVideo }) =>
     };
 
     return (
-        <div className="w-full max-w-md mx-auto bg-white shadow-lg -mt-5 md:mt-2 rounded-lg">
+        <div className="w-full max-w-md mx-auto bg-white shadow-sm -mt-5 md:mt-2 rounded-lg">
             <div className='p-3'>
                 <div className="mx-auto w-full max-w-md rounded-2xl bg-white p-2">
                     <Disclosure>

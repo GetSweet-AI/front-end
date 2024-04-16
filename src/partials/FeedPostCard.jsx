@@ -28,13 +28,11 @@ function FeedPostCard({
   feedPostId,
   BrandEngagementID,
   brandEngagementData,
-  isConnected,
-  setIsConnected,
-  clientConnectData,
-  getClientConnectData
+  clientConnectData
 }) {
-  const parsedDate = parseISO(postDate);
 
+
+  const parsedDate = parseISO(postDate);
   const localDate = utcToZonedTime(
     parsedDate,
     Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -43,11 +41,14 @@ function FeedPostCard({
   const [isLoadingCC, setIsLoadingCC] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [isAnAccountConnected, setIsAnAccountConnected] = useState()
+  const [isAnAccountConnected, setIsAnAccountConnected] = useState(false)
 
   useEffect(() => {
     clientConnectData && setIsAnAccountConnected(CheckConnectedAccount(clientConnectData))
   }, [clientConnectData])
+  useEffect(() => {
+    clientConnectData && setIsAnAccountConnected(CheckConnectedAccount(clientConnectData))
+  }, [])
 
   const [isEditing, setEditing] = useState(false);
   const [caption, setCaption] = useState(Caption);
@@ -143,11 +144,8 @@ function FeedPostCard({
 
   // Get the current pathname
   const currentPath = window.location.pathname;
-
   // Check if the pathname starts with '/posts-feed'
   const isPostsFeed = currentPath.startsWith('/posts-feed');
-
-
   const isMobileDevice = isMobile()
 
   return (
@@ -177,7 +175,7 @@ function FeedPostCard({
         </div>
 
         {/* Right side section */}
-        <div className="md:flex-[0.7] h-[50vh] md:px-0 px-2 py-3 flex flex-col flex-wrap">
+        <div className="md:flex-[0.7]  md:px-0 px-2 py-3 flex flex-col flex-wrap">
           <header className="">
             {/* Connected accounts */}
             {isAnAccountConnected &&

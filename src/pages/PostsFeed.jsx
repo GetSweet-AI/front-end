@@ -65,8 +65,10 @@ function PostsFeed() {
 
   const [brandEngagementData, setBrandEngagementData] = useState('')
 
+  const [isConnected, setIsConnected] = useState(false);
 
-  let { id } = useParams();
+  //Fetch client connect data
+  const [clientConnectData, setClientConnectData] = useState("")
 
   const deletePostFeed = async (id) => {
     await axios
@@ -142,29 +144,47 @@ function PostsFeed() {
     setSelectedBrand(e.target.value);
   };
 
-  const fetchFeedPosts = async (brandId) => {
+  const getClientConnectData = async (selectedBrand) => {
+    try {
+      const response = await axios.get(
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${selectedBrand}`
+      );
+      console.log("Client connect data :" + JSON.stringify(response.data)); // Success message or response data
+      // Perform any additional actions after successful deletion
+      setClientConnectData(response.data)
 
-    if (brandId) {
-      setIsFeedPostsLoading(true)
-      await axios
-        .get(
-          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}`
-        ).then((response) => {
-          setFeedPosts(response.data?.feedPosts);
-          setFilteredFeedPosts(response.data?.feedPosts)
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-      setIsFeedPostsLoading(false)
+    } catch (error) {
+      console.log(error); // Handle error
     }
+  };
 
+  const [pageNumber, setPageNumber] = useState(0);
+  const [numberOfPages, setNumberOfPages] = useState(0);
+  const fetchFeedPosts = async (brandId) => {
+    setIsFeedPostsLoading(true)
+    await axios
+      .get(
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}`
+      ).then((response) => {
+        setFeedPosts(response.data?.feedPosts);
+        setFilteredFeedPosts(response.data?.feedPosts)
+        getClientConnectData(brandId)
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    setIsFeedPostsLoading(false)
+
+    const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}?page=${pageNumber}`);
+
+    setNumberOfPages(response.data?.totalPages);
 
   };
 
   useEffect(() => {
     fetchFeedPosts(selectedBrand)
   }, [selectedBrand])
+
 
   const fetchEngagements = async () => {
     setIsLoading(true);
@@ -238,26 +258,10 @@ function PostsFeed() {
     applyFilter()
   }, [isImage, isVideo])
 
-
   // console.log(filterOptions)
 
-  const [isConnected, setIsConnected] = useState(false);
 
-  //Fetch client connect data
-  const [clientConnectData, setClientConnectData] = useState("")
-  const getClientConnectData = async (selectedBrand) => {
-    try {
-      const response = await axios.get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${selectedBrand}`
-      );
-      console.log("Client connect data :" + JSON.stringify(response.data)); // Success message or response data
-      // Perform any additional actions after successful deletion
-      setClientConnectData(response.data)
 
-    } catch (error) {
-      console.log(error); // Handle error
-    }
-  };
 
   useEffect(() => {
     getClientConnectData(selectedBrand)
@@ -280,8 +284,22 @@ function PostsFeed() {
     checkConnectLinkExists(selectedBrand);
   }, [selectedBrand]);
 
-  // console.log(engagements?.filter(engagement => engagement._id === selectedBrand))
-  // console.log("filterOptiojns :" + JSON.stringify(filterOptions))
+  const handleLoadMore = async () => {
+    try {
+      const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${selectedBrand}?page=${pageNumber}`);
+      // Update the state by appending new feed posts to the existing list
+      setFilteredFeedPosts(prevFeedPosts => [
+        ...prevFeedPosts,
+        ...response.data?.feedPosts
+      ]);
+
+      setNumberOfPages(response.data?.totalPages);
+      // Optionally, increment the page number to fetch the next set of posts in subsequent calls
+      setPageNumber(prevPageNumber => prevPageNumber + 1);
+    } catch (error) {
+      console.error('Failed to load more feed posts:', error);
+    }
+  };
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -378,12 +396,6 @@ function PostsFeed() {
 
             <div className="flex flex-col w-full h-full space-y-2  flex-[0.25] p-2">
 
-              {/* {
-                campaigns && <FilterComponent
-                  options={campaigns}
-                  label="Campaigns"
-                />
-              } */}
               <FilterComponent label="Media Type" isImage={isImage} isVideo={isVideo}
                 setIsImage={setIsImage} setIsVideo={setIsVideo} applyFilter={applyFilter} />
               {/* <FilterComponent options={statusOptions} label="Status" /> */}
@@ -414,66 +426,10 @@ function PostsFeed() {
               <div>
                 <ToastContainer />
 
-                {/* {
-                  filteredFeedPosts.length === 1 &&
-                  filteredFeedPosts?.map((item) => {
-                    return (
-                      <FeedPostCard
-                        feedPostId={item._id}
-                        key={item._id}
-                        id={item._id}
-                        MediaUrl={item.MediaUrl}
-                        deleteFeedPost={deletePostFeed}
-                        Caption={item.Caption}
-                        Date={item.Date}
-                        handleCopyText={handleCopyText}
-                        Accounts={item.Accounts}
-                        DownloadButton={downloadVideo}
-                        unixTimestamp={item.unixTimestamp}
-                        BrandEngagementID={item.BrandEngagementID}
-                        brandEngagementData={brandEngagementData}
-
-                      />
-                    );
-                  })
-                } */}
-
-                {
-                  <div className="">
-                    {filteredFeedPosts.length > 0 ? (
-                      <LazyLoadedFeedPosts
-                        deleteFeedPost={deletePostFeed}
-                        handleCopyText={handleCopyText}
-                        DownloadButton={downloadVideo}
-                        brandEngagementData={brandEngagementData}
-                        getClientConnectData={getClientConnectData}
-                        clientConnectData={clientConnectData}
-                        isConnected={isConnected}
-                        filteredFeedPosts={filteredFeedPosts}
-                        engagements={engagements}
-                        BrandEngagementID={selectedBrand}
-                        feedPosts={feedPosts}
-                        // filterOptions={filterOptions}
-                        setFilteredFeedPosts={setFilteredFeedPosts}
-                        feedPosts={feedPosts}
-                      />
-                    ) : (
-                      <div className="flex flex-col justify-center items-center">
-                        <img src={noData} alt="no data" className="w-20 h-20" />
-                        <p className="p-3">No Feed posts Found</p>
-                      </div>
-                    )}
-
-
-                  </div>
-                }
-
-                {/* )}
-
-                {/* <div className="">
+                <div className="">
                   <div className="grid grid-cols-1 gap-3">
                     {
-                      (filteredFeedPosts.length > 0 && engagements.length > 0) ?
+                      (filteredFeedPosts.length > 0) ?
                         filteredFeedPosts?.map((item) => {
                           return (
                             <FeedPostCard
@@ -490,6 +446,7 @@ function PostsFeed() {
                               unixTimestamp={item.unixTimestamp}
                               BrandEngagementID={item.BrandEngagementID}
                               brandEngagementData={brandEngagementData}
+                              clientConnectData={clientConnectData}
 
                             />
                           );
@@ -498,7 +455,21 @@ function PostsFeed() {
                           <img src={noData} alt="no data" className="w-20 h-20" />
                           <p className="p-3">No Feed posts Found</p>
                         </div>
-                    }</div></div> */}
+                    }
+                  </div>
+
+                  {pageNumber < numberOfPages - 1 && (
+                    <div className="flex justify-center items-center m-2"> <button onClick={handleLoadMore}
+                      type="button"
+                      className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none
+                    bg-white rounded-lg border border-gray-200 hover:bg-gray-100
+                   hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100
+                    ">Load More</button>
+                    </div>)
+                  }
+
+                </div>
+
 
                 {isFeedPostsLoading && (
                   <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
