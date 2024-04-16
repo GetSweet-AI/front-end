@@ -7,7 +7,8 @@ export default function CheckConnectedAccount(obj) {
     "TikTokConnected",
     "GoogleBusinessConnected",
     "PinterestConnected",
-    "LinkedInConnected"
+    "LinkedInConnected",
+    
     // Add more properties if needed
   ];
 
