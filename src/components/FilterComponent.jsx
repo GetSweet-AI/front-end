@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Disclosure } from '@headlessui/react';
 import { faUpDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const FilterComponent = ({ label, isImage, isVideo, setIsImage, setIsVideo }) => {
+const FilterComponent = ({ label, isImage, isVideo, setIsImage, setIsVideo, applyFilter }) => {
 
     const handleImageChange = (event) => {
         setIsImage(event.target.checked);
@@ -12,6 +12,10 @@ const FilterComponent = ({ label, isImage, isVideo, setIsImage, setIsVideo }) =>
     const handleVideoChange = (event) => {
         setIsVideo(event.target.checked);
     };
+
+    // useEffect(() => {
+    //     applyFilter()
+    // }, [isImage, isVideo])
 
     return (
         <div className="w-full max-w-md mx-auto bg-white shadow-sm -mt-5 md:mt-2 rounded-lg">

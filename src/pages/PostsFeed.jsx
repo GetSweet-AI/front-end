@@ -76,16 +76,7 @@ function PostsFeed() {
         `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${id}`
       )
       .then((res) => {
-        console.log("Post feed deleted");
-        fetch(
-          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${user?._id}?page=${pageNumber}`
-        )
-          .then((response) => response.json())
-          .then(({ totalPages, feedPosts }) => {
-            setFeedPosts(feedPosts);
-            setNumberOfPages(totalPages);
-          });
-
+        fetchFeedPosts(selectedBrand)
       })
       .catch((err) => {
         console.log(err);
@@ -233,32 +224,20 @@ function PostsFeed() {
   //   isVideo: true,
   // });
 
-  const [isImage, setIsImage] = useState(false)
-  const [isVideo, setIsVideo] = useState(false)
+  const [isImage, setIsImage] = useState(true)
+  const [isVideo, setIsVideo] = useState(true)
 
-  const applyFilter = async () => {
-    const url = `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brandEngagement/${selectedBrand}/filter?isImage=${isImage}&isVideo=${isVideo}`;
-
-    try {
-      const response = await axios.get(url);
-      const filteredData = response.data.feedPosts;
-
-      // Set the filtered feed posts
-      setFilteredFeedPosts(filteredData);
-
-      // // Set all feed posts (optional, if needed)
-      // setFeedPosts(response.data.feedPosts);
-    } catch (error) {
-      // Handle errors
-      console.error('Error fetching filtered data:', error);
-    }
+  const applyFilter = () => {
+    const shouldApplyFilter = isImage !== isVideo;
+    shouldApplyFilter ? setFilteredFeedPosts(feedPosts.filter(post => {
+      return (isImage && post.MediaUrl.endsWith('.jpeg')) ||
+        (isVideo && post.MediaUrl.endsWith('.mp4'));
+    })) : setFilteredFeedPosts(feedPosts)
   };
 
   useEffect(() => {
-    applyFilter()
-  }, [isImage, isVideo])
-
-  // console.log(filterOptions)
+    applyFilter();
+  }, [isImage, isVideo]);
 
 
 
@@ -284,22 +263,65 @@ function PostsFeed() {
     checkConnectLinkExists(selectedBrand);
   }, [selectedBrand]);
 
+
   const handleLoadMore = async () => {
+    setPageNumber(prevPageNumber => prevPageNumber + 1);  // Optimistically increment page number
     try {
-      const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${selectedBrand}?page=${pageNumber}`);
-      // Update the state by appending new feed posts to the existing list
-      setFilteredFeedPosts(prevFeedPosts => [
-        ...prevFeedPosts,
-        ...response.data?.feedPosts
-      ]);
+      const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${selectedBrand}?page=${pageNumber + 1}`);
+      const newPosts = response.data?.feedPosts;
+
+      setFilteredFeedPosts(prevFeedPosts => {
+        const existingIds = new Set(prevFeedPosts.map(post => post._id));
+
+        // Determine if the filter should be applied based on the image/video checkbox states
+        const shouldApplyFilter = isImage !== isVideo;
+
+        // Apply the appropriate filtering logic
+        const filteredNewPosts = newPosts.filter(post => {
+          const isUnique = !existingIds.has(post._id);
+          // Apply media type filters if shouldApplyFilter is true
+          if (shouldApplyFilter) {
+            const isMediaFiltered = (isImage && post.MediaUrl.endsWith('.jpeg')) ||
+              (isVideo && post.MediaUrl.endsWith('.mp4'));
+            return isUnique && isMediaFiltered;
+          }
+          // If filter should not be applied, just check uniqueness
+          return isUnique;
+        });
+
+        // If no filter should be applied, the new posts are not filtered by type, just added if they're unique
+        return [...prevFeedPosts, ...filteredNewPosts];
+      });
 
       setNumberOfPages(response.data?.totalPages);
-      // Optionally, increment the page number to fetch the next set of posts in subsequent calls
-      setPageNumber(prevPageNumber => prevPageNumber + 1);
     } catch (error) {
       console.error('Failed to load more feed posts:', error);
     }
   };
+
+
+
+
+  // const handleLoadMore = async () => {
+  //   setPageNumber(prevPageNumber => prevPageNumber + 1);  // Optimistically increment page number
+  //   try {
+  //     const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${selectedBrand}?page=${pageNumber + 1}`);
+  //     const newPosts = response.data?.feedPosts;
+
+  //     setFilteredFeedPosts(prevFeedPosts => {
+  //       const existingIds = new Set(prevFeedPosts.map(post => post._id));
+  //       const filteredNewPosts = newPosts.filter(post => !existingIds.has(post._id));
+
+  //       return [...prevFeedPosts, ...filteredNewPosts];
+  //     });
+
+  //     setNumberOfPages(response.data?.totalPages);
+  //   } catch (error) {
+  //     console.error('Failed to load more feed posts:', error);
+  //   }
+  // };
+
+
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -447,6 +469,7 @@ function PostsFeed() {
                               BrandEngagementID={item.BrandEngagementID}
                               brandEngagementData={brandEngagementData}
                               clientConnectData={clientConnectData}
+
 
                             />
                           );
