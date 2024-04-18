@@ -325,7 +325,6 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 >
                   <div>
                     <FontAwesomeIcon icon={faImage} color={`${pathname === "/assets" ? 'blue' : 'white'}`} size={24} />
-
                   </div>
                   <div className="flex items-center overflow-hidden">
                     <span
