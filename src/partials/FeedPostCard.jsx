@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import ReactPlayer from "react-player";
 import Video from "./Video";
-import { dateUpdate } from "./Time";
+import { dateUpdate, postStatus } from "./Time";
 import { parseISO, format } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 import logo from '../images/jouer.png'
@@ -14,6 +14,7 @@ import EditCaptionModal from "../components/EditCaptionModal";
 import CustomActionItem from "../components/CustomActionItem";
 import { faFacebook, faInstagram, faLinkedin, faTiktok, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import isMobile from 'is-mobile';
+import FeedPostStatusCard from "./FeedPost/FeedPostStatusCard";
 
 function FeedPostCard({
   MediaUrl,
@@ -49,6 +50,8 @@ function FeedPostCard({
   useEffect(() => {
     clientConnectData && setIsAnAccountConnected(CheckConnectedAccount(clientConnectData))
   }, [])
+
+
 
   const [isEditing, setEditing] = useState(false);
   const [caption, setCaption] = useState(Caption);
@@ -178,16 +181,35 @@ function FeedPostCard({
         <div className="md:flex-[0.7]  md:px-0 px-2 py-3 flex flex-col flex-wrap">
           <header className="">
             {/* Connected accounts */}
-            {isAnAccountConnected &&
-              <div className="text-sm flex mb-2">
-                <svg className="w-6 h-6 mt-[1px] text-pink-600 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                  <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                <span className="font-medium p-1">Scheduled for</span>{" "}
-                <p className="text-pink-500 font-bold rounded-lg ml-2 p-1 bg-gray-100" target="_blank">
-                  {dateUpdate(unixTimestamp)}
-                </p>
-              </div>}
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center">
+              {isAnAccountConnected ? (
+                <>
+                  <div className="flex items-center mb-2 md:mb-0 bg-gray-50 p-2">
+                    <svg className="w-6 h-6 text-pink-600 mr-1" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                      <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    {/* <span className="font-medium p-1">Scheduled for</span> */}
+                    <p className="text-pink-500 text-sm font-bold rounded-lg ml-2 px-1 mt-[1px]">
+                      {dateUpdate(unixTimestamp)}
+                    </p>
+                  </div>
+                  <FeedPostStatusCard unixTimestamp={unixTimestamp} isAccountConnected={isAnAccountConnected} />
+                </>
+              ) : (
+                <div className="flex  md:justify-end md:items-end text-end mr-2">
+                  <Link to={clientConnectData?.ConnectLinkURL}>
+                    <button className="flex text-sm items-center px-4 py-2 bg-red-50 rounded-md text-red-500  space-x-2">
+                      Add Social Connect
+                      <svg xmlns="http://www.w3.org/2000/svg" className="icon ml-1 icon-tabler icon-tabler-info-circle-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffec00" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M12 2c5.523 0 10 4.477 10 10a10 10 0 0 1 -19.995 .324l-.005 -.324l.004 -.28c.148 -5.393 4.566 -9.72 9.996 -9.72zm0 9h-1l-.117 .007a1 1 0 0 0 0 1.986l.117 .007v3l.007 .117a1 1 0 0 0 .876 .876l.117 .007h1l.117 -.007a1 1 0 0 0 .876 -.876l.007 -.117l-.007 -.117a1 1 0 0 0 -.764 -.857l-.112 -.02l-.117 -.006v-3l-.007 -.117a1 1 0 0 0 -.876 -.876l-.117 -.007zm.01 -3l-.127 .007a1 1 0 0 0 0 1.986l.117 .007l.127 -.007a1 1 0 0 0 0 -1.986l-.117 -.007z" stroke-width="0" fill="currentColor" />
+                      </svg>
+                    </button>
+                  </Link>
+                </div>
+              )}
+            </div>
+
 
             {/* <div className="text-sm mb-2 text-blue-500 font-bold">
               <button onClick={getClientConnect} className="hover:underline flex items-center my-1">
@@ -204,14 +226,14 @@ function FeedPostCard({
 
           <section className="flex  md:space-x-2 flex-wrap py-1">
             {
-              brandEngagementData?.campaignTitle && <div className="bg-gray-200 m-1 text-gray-700 py-1 px-2 text-sm  rounded-2xl w-max">
+              brandEngagementData?.campaignTitle && <div className="bg-gray-100 m-1 text-gray-700 py-1 px-2 text-sm  rounded-2xl w-max">
                 {brandEngagementData?.campaignTitle}
               </div>
             }
-            <div className="bg-gray-200 m-1 text-gray-700 py-1 px-2 text-sm  rounded-2xl w-max">
+            <div className="bg-gray-100 m-1 text-gray-700 py-1 px-2 text-sm  rounded-2xl w-max">
               {brandEngagementData?.language}
             </div>
-            {(brandEngagementData?.days)?.length > 0 && <div className="bg-gray-200 m-1 text-gray-700 py-1 px-2 text-sm  rounded-2xl w-max">
+            {(brandEngagementData?.days)?.length > 0 && <div className="bg-gray-100 m-1 text-gray-700 py-1 px-2 text-sm  rounded-2xl w-max">
               {JSON.stringify(brandEngagementData.days.join(", "))}
             </div>}
           </section>
@@ -270,7 +292,7 @@ function FeedPostCard({
                 clientConnectData?.ConnectLinkURL &&
                 <Link to={clientConnectData?.ConnectLinkURL}>
                   <div className="mr-6 flex cursor-pointer" >
-                    <span className="pb-1 text-sm text-gray-500 hover:font-bold">Connect socials</span>
+                    {/* <span className="pb-1 text-sm text-gray-500 hover:font-bold">Connect socials</span> */}
                     <FontAwesomeIcon
                       className="ml-2 mt-[4px] text-gray-700"
                       icon={faEllipsisV}
@@ -397,9 +419,9 @@ function FeedPostCard({
             }
           </footer>
         </div>
-      </div>
+      </div >
 
-    </div>
+    </div >
   );
 }
 

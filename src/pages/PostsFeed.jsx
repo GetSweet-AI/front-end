@@ -354,7 +354,25 @@ function PostsFeed() {
               />
             </div>
           )}
+          <div className="p-5">
+            {/* Get brand engagement */}
+            <div className="flex justify-between bg-white border-[1px] border-gray-100 mx-auto py-4 bg-white-50 rounded-lg  p-2 ">
+              <div className="md:w-1/3 w-full">
+                <Select
+                  options={engagements.map(brand => ({
+                    value: brand._id,
+                    label: brand.BrandName
+                  }))}
+                  value={selectedBrand}
+                  onChange={handleBEChange}
+                />
+              </div>
+              <div className="md:w-full">
 
+              </div>
+
+            </div>
+          </div>
           {isUserDataLoading && !enabled && (
             <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
               <Bars
@@ -395,24 +413,7 @@ function PostsFeed() {
 
             {/* Add more instances of PostBadge with different data as needed */}
           </div>
-          <div className="p-5">
-            {/* Get brand engagement */}
-            <div className="flex justify-between mx-auto py-4 bg-white-50 rounded-lg  p-2 ">
-              <div className="md:w-1/3 w-full">
-                <Select
-                  options={engagements.map(brand => ({
-                    value: brand._id,
-                    label: brand.BrandName
-                  }))}
-                  value={selectedBrand}
-                  onChange={handleBEChange}
-                />
-              </div>
-              <div className="md:w-full">
-              </div>
 
-            </div>
-          </div>
           <div className="flex flex-col md:flex-row px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto ">
             {/* Page header */}
 
