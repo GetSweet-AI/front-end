@@ -3,23 +3,18 @@ import { Disclosure } from '@headlessui/react';
 import { faUpDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const FilterComponent = ({ label, isImage, isVideo, setIsImage, setIsVideo, applyFilter }) => {
+const FilterComponent = ({ label, isFilterOne, isFilterTwo, setIsFilterOne, setIsFilterTwo, applyFilter, filterOneLabel, filterTwoLabel }) => {
 
-    const handleImageChange = (event) => {
-        setIsImage(event.target.checked);
+    const handle1stInputChange = (event) => {
+        setIsFilterOne(event.target.checked);
     };
 
-    const handleVideoChange = (event) => {
-        setIsVideo(event.target.checked);
+    const handleNdVideoChange = (event) => {
+        setIsFilterTwo(event.target.checked);
     };
-
-    // useEffect(() => {
-    //     applyFilter()
-    // }, [isImage, isVideo])
 
     return (
         <div className="w-full  bg-white shadow-sm -mt-[8vh] md:mt-2 rounded-md">
-            {/* <div className='p-3'> */}
             <div className=" w-full rounded-2xl bg-white p-3">
                 <Disclosure>
                     {({ open }) => (
@@ -38,20 +33,20 @@ const FilterComponent = ({ label, isImage, isVideo, setIsImage, setIsVideo, appl
                                     <label className="mb-2">
                                         <input
                                             type="checkbox"
-                                            checked={isImage}
-                                            onChange={handleImageChange}
+                                            checked={isFilterOne}
+                                            onChange={handle1stInputChange}
                                             className="mr-2 text-sm"
                                         />
-                                        Image
+                                        {filterOneLabel}
                                     </label>
                                     <label className="mb-2">
                                         <input
                                             type="checkbox"
-                                            checked={isVideo}
-                                            onChange={handleVideoChange}
+                                            checked={isFilterTwo}
+                                            onChange={handleNdVideoChange}
                                             className="mr-2 text-sm"
                                         />
-                                        Video
+                                        {filterTwoLabel}
                                     </label>
                                 </div>
                             </Disclosure.Panel>
@@ -59,7 +54,6 @@ const FilterComponent = ({ label, isImage, isVideo, setIsImage, setIsVideo, appl
                     )}
                 </Disclosure>
             </div>
-            {/* </div> */}
         </div>
     );
 };
