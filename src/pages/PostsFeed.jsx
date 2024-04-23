@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DashboardHeader from "../partials/DashboardHeader";
 import Sidebar from "../partials/Sidebar";
@@ -151,24 +151,25 @@ function PostsFeed() {
 
   const [pageNumber, setPageNumber] = useState(0);
   const [numberOfPages, setNumberOfPages] = useState(0);
+
   const fetchFeedPosts = async (brandId) => {
     setIsFeedPostsLoading(true)
     await axios
       .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}?page=${pageNumber}`
       ).then((response) => {
         setFeedPosts(response.data?.feedPosts);
         setFilteredFeedPosts(response.data?.feedPosts)
         getClientConnectData(brandId)
+        setNumberOfPages(response.data?.totalPages);
       })
       .catch((err) => {
         console.log(err);
       })
     setIsFeedPostsLoading(false)
 
-    const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}?page=${pageNumber}`);
+    // const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}?page=${pageNumber}`);
 
-    setNumberOfPages(response.data?.totalPages);
 
   };
 
@@ -226,6 +227,8 @@ function PostsFeed() {
 
   const [isImage, setIsImage] = useState(true)
   const [isVideo, setIsVideo] = useState(true)
+  const [isScheduled, setIsScheduled] = useState(true)
+  const [isArchived, setIsArchived] = useState(true)
 
   const applyFilter = () => {
     const shouldApplyFilter = isImage !== isVideo;
@@ -240,10 +243,9 @@ function PostsFeed() {
   }, [isImage, isVideo]);
 
 
-
-
   useEffect(() => {
     getClientConnectData(selectedBrand)
+    setPageNumber(0)
   }, [selectedBrand])
 
   const checkConnectLinkExists = async (BrandEngagementID) => {
@@ -263,6 +265,13 @@ function PostsFeed() {
     checkConnectLinkExists(selectedBrand);
   }, [selectedBrand]);
 
+
+  // Use the find method to get the engagement with the matching _id
+  const selectedEngagement = engagements.find(engagement => engagement._id === selectedBrand);
+
+  console.log(selectedEngagement)
+
+  const buttonRef = useRef(null);
 
   const handleLoadMore = async () => {
     setPageNumber(prevPageNumber => prevPageNumber + 1);  // Optimistically increment page number
@@ -292,36 +301,37 @@ function PostsFeed() {
         // If no filter should be applied, the new posts are not filtered by type, just added if they're unique
         return [...prevFeedPosts, ...filteredNewPosts];
       });
-
       setNumberOfPages(response.data?.totalPages);
     } catch (error) {
       console.error('Failed to load more feed posts:', error);
     }
   };
 
+  useEffect(() => {
+    const button = buttonRef.current;
+    if (!button) return;
 
+    const observer = new IntersectionObserver(entries => {
+      // When the button is visible in the viewport, trigger handleLoadMore
+      if (entries[0].isIntersecting) {
+        handleLoadMore();
+      }
+    }, {
+      root: null, // Observe visibility in the viewport
+      rootMargin: '0px',
+      threshold: 0.1 // Trigger when 10% of the button is visible
+    });
 
+    // Start observing the button
+    observer.observe(button);
 
-  // const handleLoadMore = async () => {
-  //   setPageNumber(prevPageNumber => prevPageNumber + 1);  // Optimistically increment page number
-  //   try {
-  //     const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${selectedBrand}?page=${pageNumber + 1}`);
-  //     const newPosts = response.data?.feedPosts;
+    // Clean up the observer on component unmount
+    return () => {
+      observer.disconnect();
+    };
+  }, [handleLoadMore]); // Effect dependencies
 
-  //     setFilteredFeedPosts(prevFeedPosts => {
-  //       const existingIds = new Set(prevFeedPosts.map(post => post._id));
-  //       const filteredNewPosts = newPosts.filter(post => !existingIds.has(post._id));
-
-  //       return [...prevFeedPosts, ...filteredNewPosts];
-  //     });
-
-  //     setNumberOfPages(response.data?.totalPages);
-  //   } catch (error) {
-  //     console.error('Failed to load more feed posts:', error);
-  //   }
-  // };
-
-
+  console.log(selectedBrand)
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -419,16 +429,23 @@ function PostsFeed() {
 
             <div className="flex flex-col w-full h-full space-y-2  flex-[0.25] p-2">
 
-              <FilterComponent label="Media Type" isImage={isImage} isVideo={isVideo}
-                setIsImage={setIsImage} setIsVideo={setIsVideo} applyFilter={applyFilter} />
               {/* <FilterComponent options={statusOptions} label="Status" /> */}
+              <FilterComponent label="Media Type" isFilterOne={isImage} isFilterTwo={isVideo}
+                setIsFilterOne={setIsImage} setIsFilterTwo={setIsVideo} applyFilter={applyFilter}
+                filterOneLabel="Image" filterTwoLabel="Video"
+              />
+              {/* <FilterComponent label="Status" isFilterOne={isScheduled} isFilterTwo={isArchived}
+                setIsFilterOne={setIsScheduled} setIsFilterTwo={setIsArchived} applyFilter={applyFilter}
+                filterOneLabel="Scheduled" filterTwoLabel="Archived"
+              /> */}
+
             </div>
 
             <div className="flex flex-col flex-[0.75]">
               <div className="flex flex-col md:flex-row justify-between  p-2 ">
-                <div className="mb-4 sm:mb-0 flex flex-col">
-                  <h1 className="text-xl mb-2 text-blue-500 md:hidden font-bold" >
-                    {enabled ? "Admin" : "My"} Feed Posts
+                <div className="mb-4 sm:mb-0 flex flex-col md:p-4">
+                  <h1 className="md:text-2xl text-xl mb-2 text-gray-700   font-bold" >
+                    Your upcoming posts for <span className=''>{selectedEngagement?.BrandName}</span>
                   </h1>
                 </div>
                 <div className=" flex  items-center flex-row space-x-3 ">
@@ -483,13 +500,18 @@ function PostsFeed() {
                   </div>
 
                   {pageNumber < numberOfPages - 1 && (
-                    <div className="flex justify-center items-center m-2"> <button onClick={handleLoadMore}
-                      type="button"
-                      className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none
-                    bg-white rounded-lg border border-gray-200 hover:bg-gray-100
+                    <div className="flex justify-center items-center m-2">
+                      <div
+                        ref={buttonRef}
+                        // onClick={handleLoadMore}
+                        className="py-2.5 my-4 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none
                    hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100
-                    ">Load More</button>
-                    </div>)
+                    ">
+                        Loading ...
+                      </div>
+
+                    </div>
+                  )
                   }
 
                 </div>
@@ -511,7 +533,11 @@ function PostsFeed() {
                     />
                   </div>
                 )}
-
+                {/* <div className="flex flex-col justify-end items-center">
+                  <button ref={buttonRef} onClick={handleClick} className="p-4 bg-blue-500 text-white rounded">
+                    Click Me
+                  </button>
+                </div> */}
 
               </div>
             </div>

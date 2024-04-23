@@ -151,6 +151,8 @@ function FeedPostCard({
   const isPostsFeed = currentPath.startsWith('/posts-feed');
   const isMobileDevice = isMobile()
 
+  const hideDeleteAndArchive = postStatus(unixTimestamp, isAnAccountConnected)
+
   return (
     <div className={`col-span-full sm:col-span-6 xl:col-span-4
      bg-white shadow-md rounded-md border 
@@ -286,8 +288,6 @@ function FeedPostCard({
                 </span>
               </div>
 
-
-
               {
                 clientConnectData?.ConnectLinkURL &&
                 <Link to={clientConnectData?.ConnectLinkURL}>
@@ -388,36 +388,41 @@ function FeedPostCard({
             handleModalButtonClick={handleModalButtonClick}
           />
 
-          <footer className="w-full pr-3 flex space-x-2 items-end justify-end">
-            <div
-              onClick={() => deleteFeedPost(feedPostId)}
-              className="text-sm flex text-white rounded bg-[#ef3d22] p-2  cursor-pointer"
-            >
-              {/* Not Active */}
-              <FontAwesomeIcon className="mt-1" icon={faTrash} />
-              <p className="md:block hidden ml-2">Delete</p>
-            </div>
-            {isMp4 ?
-              <div
-                onClick={() => DownloadButton(MediaUrl)}
-                className="text-sm flex text-white rounded bg-[#1fb42b] p-2 cursor-pointer"
+          {
+            (hideDeleteAndArchive !== 'Successfully Posted') &&
+            <footer className="w-full pr-3 flex space-x-2 items-end justify-end">
+              <button
+                onClick={() => deleteFeedPost(feedPostId)}
+                className="text-sm flex text-white rounded bg-[#ef3d22] p-2  cursor-pointer"
               >
-                <FontAwesomeIcon className="mt-1" icon={faDownload} />
-                <p className="md:block hidden ml-2">Downlaod</p>
-              </div>
-              :
+                {/* Not Active */}
+                <FontAwesomeIcon className="mt-1" icon={faTrash} />
+                <p className="md:block hidden ml-2">Delete</p>
+              </button>
+              {
+                isMp4 ?
+                  <button
+                    onClick={() => DownloadButton(MediaUrl)}
+                    className="text-sm flex text-white rounded bg-[#1fb42b] p-2 cursor-pointer"
+                  >
+                    <FontAwesomeIcon className="mt-1" icon={faDownload} />
+                    <p className="md:block hidden ml-2">Downlaod</p>
+                  </button>
+                  :
+                  <Link to={MediaUrl}>
+                    <button
 
-              <Link to={MediaUrl}>
-                <div
-                  // onClick={() => DownloadButton(MediaUrl)}
-                  className="text-sm flex text-white rounded bg-[#36d74b] p-2 cursor-pointer"
-                >
-                  <FontAwesomeIcon className="mt-1" icon={faDownload} />
-                  <p className="md:block hidden ml-2">Downlaod</p>
-                </div>
-              </Link>
-            }
-          </footer>
+                      // onClick={() => DownloadButton(MediaUrl)}
+                      className="text-sm flex text-white rounded bg-[#36d74b] p-2 cursor-pointer"
+                    >
+                      <FontAwesomeIcon className="mt-1" icon={faDownload} />
+                      <p className="md:block hidden ml-2">Downlaod</p>
+                    </button>
+                  </Link>
+              }
+            </footer>
+          }
+
         </div>
       </div >
 
