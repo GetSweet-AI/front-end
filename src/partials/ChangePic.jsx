@@ -102,7 +102,7 @@ function ChangePic({ isOpen, setIsOpenPic, picture, userId, fetchUserData }) {
         setToastId(toast('Upload in Progress'));
       }
 
-      const res = await axios.post("http://localhost:5000/api/user-profile",
+      const res = await axios.post("https://seal-app-dk3kg.ondigitalocean.app/api/user-profile",
         { image: base64, userId: userId }, {
         onUploadProgress: (progressEvent) => {
           const progress = (progressEvent.loaded / progressEvent.total) * 100;

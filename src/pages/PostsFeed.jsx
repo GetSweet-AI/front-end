@@ -73,7 +73,7 @@ function PostsFeed() {
   const deletePostFeed = async (id) => {
     await axios
       .delete(
-        `http://localhost:5000/api/v1/feed-posts/${id}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${id}`
       )
       .then((res) => {
         fetchFeedPosts(selectedBrand)
@@ -101,7 +101,7 @@ function PostsFeed() {
   // Function to fetch brand engagement data
   const fetchBrandEngagementData = async (BrandEngagementID) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/v1/brand-engagement/${BrandEngagementID}`);
+      const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagement/${BrandEngagementID}`);
       setBrandEngagementData(response.data.brandEngagement);
     } catch (error) {
       console.error("Error fetching brand engagement data: ", error);
@@ -121,7 +121,7 @@ function PostsFeed() {
   const fetchCampaigns = async (BrandEngagementId) => {
     if (BrandEngagementId) {
       try {
-        const response = await axios.get(`http://localhost:5000/api/v1/campaign-titles/${BrandEngagementId}`); // replace userId with the actual user ID
+        const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/campaign-titles/${BrandEngagementId}`); // replace userId with the actual user ID
         setCampaigns(response.data);
         console.log(response.data)
       } catch (error) {
@@ -138,7 +138,7 @@ function PostsFeed() {
   const getClientConnectData = async (selectedBrand) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/v1/client-connect/${selectedBrand}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${selectedBrand}`
       );
       console.log("Client connect data :" + JSON.stringify(response.data)); // Success message or response data
       // Perform any additional actions after successful deletion
@@ -156,20 +156,20 @@ function PostsFeed() {
     setIsFeedPostsLoading(true)
     await axios
       .get(
-        `http://localhost:5000/api/v1/feed-posts-engagements/${brandId}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}?page=${pageNumber}`
       ).then((response) => {
         setFeedPosts(response.data?.feedPosts);
         setFilteredFeedPosts(response.data?.feedPosts)
         getClientConnectData(brandId)
+        setNumberOfPages(response.data?.totalPages);
       })
       .catch((err) => {
         console.log(err);
       })
     setIsFeedPostsLoading(false)
 
-    const response = await axios.get(`http://localhost:5000/api/v1/feed-posts-engagements/${brandId}?page=${pageNumber}`);
+    // const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}?page=${pageNumber}`);
 
-    setNumberOfPages(response.data?.totalPages);
 
   };
 
@@ -181,7 +181,7 @@ function PostsFeed() {
   const fetchEngagements = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/api/v1/brand-engagements-np/${user?._id}`);
+      const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements-np/${user?._id}`);
       const { brandEngagements } = response.data;
 
       fetchBrandEngagementData(brandEngagements[0]?._id);
@@ -205,7 +205,7 @@ function PostsFeed() {
 
   useEffect(() => {
     const fetchStatusData = async () => {
-      const url = `http://localhost:5000/api/v1/total-client-connect-status/${user?._id}`;
+      const url = `https://seal-app-dk3kg.ondigitalocean.app/api/v1/total-client-connect-status/${user?._id}`;
       try {
         setIsLoading(true);
         const response = await axios.get(url);
@@ -243,8 +243,6 @@ function PostsFeed() {
   }, [isImage, isVideo]);
 
 
-
-
   useEffect(() => {
     getClientConnectData(selectedBrand)
     setPageNumber(0)
@@ -254,7 +252,7 @@ function PostsFeed() {
     try {
       // if (BrandEngagementID) {
       const response = await axios.get(
-        `http://localhost:5000/api/v1/check-connect-link-exists/${BrandEngagementID}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/check-connect-link-exists/${BrandEngagementID}`
       );
       setIsConnected(response.data?.hasConnectLinkURL);
       // }
@@ -278,7 +276,7 @@ function PostsFeed() {
   const handleLoadMore = async () => {
     setPageNumber(prevPageNumber => prevPageNumber + 1);  // Optimistically increment page number
     try {
-      const response = await axios.get(`http://localhost:5000/api/v1/feed-posts-engagements/${selectedBrand}?page=${pageNumber + 1}`);
+      const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${selectedBrand}?page=${pageNumber + 1}`);
       const newPosts = response.data?.feedPosts;
 
       setFilteredFeedPosts(prevFeedPosts => {
@@ -332,6 +330,8 @@ function PostsFeed() {
       observer.disconnect();
     };
   }, [handleLoadMore]); // Effect dependencies
+
+  console.log(selectedBrand)
 
   return (
     <div className="flex h-screen overflow-hidden">
