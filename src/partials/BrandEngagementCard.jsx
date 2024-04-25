@@ -148,6 +148,7 @@ function BrandEngagementCard({
             {/* <p className="font-bold  text-blue-600">
               {campaignTitle && campaignTitle}
             </p> */}
+
             {!isViewOnly &&
               <div className="relative flex">
                 <input
@@ -164,6 +165,7 @@ function BrandEngagementCard({
                 </button>
               </div>
             }
+
 
 
 
