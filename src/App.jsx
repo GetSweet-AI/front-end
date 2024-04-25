@@ -31,6 +31,7 @@ const ManageSubscription = lazy(() => import("./pages/ManageSubscriprion"));
 const PrivacyPolicy = lazy(() => import("./pages/privacy-policy"));
 const TermsOfService = lazy(() => import("./pages/terms-of-service"));
 const BrandEngagementDetails = lazy(() => import("./pages/BrandEngagementDetails"));
+const PreviewPage = lazy(() => import("./pages/PreviewPage"));
 
 function App() {
   const location = useLocation();
@@ -87,6 +88,7 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/confirm-email/:userId" element={<EmailConfirmed />} />
+        <Route path="/preview" element={<PreviewPage />} />
         <Route path="*" element={<NotFound />} />
         {user?.role === "admin" && <Route path="/users" element={<Users />} />}
       </Routes>

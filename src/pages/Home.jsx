@@ -3,7 +3,7 @@ import Header from "../partials/Header";
 import Footer from "../partials/Footer";
 import logo from "../images/logogetsweet.png";
 import { Link, useNavigate } from 'react-router-dom';
-
+import axios from 'axios'
 import { Helmet } from "react-helmet";
 import GAHandler from "../partials/ga_gtm_handler";
 const handleLinkClick = GAHandler();
@@ -158,15 +158,39 @@ export default function Home() {
   }, [])
 
 
+  // const [planInfos, setPlansInfo] = useState()
+  // const [isLoading, setIsLoading] = useState(false)
+  // const getPlanInfos = async () => {
+  //   //   setIsPlansLoading(true)
+  //   setIsLoading(true)
+  //   await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/plans`)
+  //     .then((res) => {
+  //       setPlanInfos(res?.data.planInfos)
+
+  //     })
+  //   //   setIsPlansLoading(false)
+  //   setIsLoading(false)
+  // }
+
+  // useEffect(() => {
+  //   getPlanInfos()
+  // }, [])
+
+  const handleClick = () => {
+    navigate('/signin')
+  }
+
+
   return (
     <div className="bg-white#">
       {/* embed videos script */}
-      <Helmet>
+      {/* <Helmet>
         <script
           src="https://static.elfsight.com/platform/platform.js"
           defer
         ></script>
-      </Helmet>
+      </Helmet> */}
+      <div class="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"><div class="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-fuchsia-400 opacity-20 blur-[100px]"></div></div>
       {/* Header */}
       <header className="absolute inset-x-0 top-0 z-50">
         <nav
@@ -196,7 +220,14 @@ export default function Home() {
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-          <div className="hidden lg:flex lg:gap-x-12">
+          <div className="hidden lg:flex lg:gap-x-12 lg:align-middle lg:justify-center lg:items-center">
+            {!isLoggedIn && <a
+              className="text-sm border-pink-400 border-[2px] rounded-md cursor-pointer  hover:bg-pink-500 hover:text-white px-2 py-1 font-semibold leading-6 text-gray-900"
+              // GA code
+              onClick={() => navigate('preview')}
+            >
+              Demo
+            </a>}
             {!isLoggedIn && navigation.map((item) => (
               <a
                 key={item.name}
@@ -209,8 +240,9 @@ export default function Home() {
 
               >
                 {item.name}
-              </a>
-            ))}
+              </a>))}
+
+
             {
               isLoggedIn && <a
                 href="/brand-engagement-builder"
@@ -329,6 +361,8 @@ export default function Home() {
           ></div>
         </div>
       </main>
+
+
       <Footer />
     </div>
   );

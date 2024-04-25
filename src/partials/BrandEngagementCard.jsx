@@ -35,7 +35,8 @@ function BrandEngagementCard({
   setSelectedOption,
   setEndDate,
   setEnabled,
-  campaignTitle
+  campaignTitle,
+  isViewOnly
 }) {
   const navigate = useNavigate();
 
@@ -147,20 +148,22 @@ function BrandEngagementCard({
             {/* <p className="font-bold  text-blue-600">
               {campaignTitle && campaignTitle}
             </p> */}
-            <div className="relative flex">
-              <input
-                type="text"
-                value={editedCampaignTitle}
-                onChange={handleCampaignTitleChange}
-                className="font-bold text-blue-600 outline-none border-none rounded-lg pr-10"
-              />
-              <button
-                onClick={handleSaveCampaignTitle}
-                className="absolute right-0 top-0 bottom-0 bg-blue-100 text-blue-600 cursor-pointer py-1 px-2 rounded-r-lg"
-              >
-                {isSaving ? "Saving..." : "Save"}
-              </button>
-            </div>
+            {!isViewOnly &&
+              <div className="relative flex">
+                <input
+                  type="text"
+                  value={editedCampaignTitle}
+                  onChange={handleCampaignTitleChange}
+                  className="font-bold text-blue-600 outline-none border-none rounded-lg pr-10"
+                />
+                <button
+                  onClick={handleSaveCampaignTitle}
+                  className="absolute right-0 top-0 bottom-0 bg-blue-100 text-blue-600 cursor-pointer py-1 px-2 rounded-r-lg"
+                >
+                  {isSaving ? "Saving..." : "Save"}
+                </button>
+              </div>
+            }
 
 
 
@@ -234,7 +237,7 @@ function BrandEngagementCard({
               </div>
             }
           </div>
-          {!isArchive &&
+          {!isArchive && !isViewOnly &&
             <footer className="mt-2 flex-col">
               <div className="flex justify-between space-x-2 items-center">
                 {

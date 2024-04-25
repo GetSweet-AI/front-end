@@ -980,6 +980,7 @@ function BrandEngagementBuilder() {
                         setSelectedOption={setSelectedOption}
                         lifeCycleStatus={item?.lifeCycleStatus}
                         setEnabled={setEnabled}
+                        isViewOnly={false}
                       />
                     );
                   })}

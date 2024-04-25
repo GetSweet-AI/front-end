@@ -152,7 +152,8 @@ function PricingTables({ planInfos }) {
 
           {/* Pricing tables */}
           {(user?.Plan === 'none' || (!hasSubscription && !isPlansLoading))
-            && <div className="max-w-xs mx-auto grid gap-6 sm:grid-cols-2
+            &&
+            <div className="max-w-xs mx-auto grid gap-6 sm:grid-cols-2
              lg:grid-cols-4 items-start sm:max-w-none md:max-w-2xl
               lg:max-w-none">
 
@@ -177,18 +178,7 @@ function PricingTables({ planInfos }) {
                 <div onClick={() => handleClick("Starter Plan")} className="mt-24">
                   <a className="btn-sm text-white bg-[#3b82f6] hover:bg-[#145aca] w-full" href="#0">Go Standard</a>
                 </div>
-                {isLoading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"> <Puff
-                  height="100"
-                  width="100"
-                  color="#4446e4"
-                  secondaryColor='#4446e4'
-                  radius='12.5'
-                  ariaLabel="mutating-dots-loading"
-                  wrapperStyle={{}}
-                  wrapperClass=""
-                  visible={true}
-                />
-                </div>}
+
               </div>
               {/* Pricing table 2 */}
               <div className="flex flex-col   h-full p-6 bg-gray-800 shadow border-4 border-[#3b82f6]"
@@ -212,18 +202,7 @@ function PricingTables({ planInfos }) {
                 <div onClick={() => handleClick("Growth")} className="mt-24">
                   <a className="btn-sm text-white bg-[#3b82f6] hover:bg-[#145aca] w-full" href="#0">Go Sweet Tooth</a>
                 </div>
-                {isLoading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"> <Puff
-                  height="100"
-                  width="100"
-                  color="#4446e4"
-                  secondaryColor='#4446e4'
-                  radius='12.5'
-                  ariaLabel="mutating-dots-loading"
-                  wrapperStyle={{}}
-                  wrapperClass=""
-                  visible={true}
-                />
-                </div>}
+
               </div>
               {/* Pricing table 3 */}
               <div className="flex flex-col h-full p-6 bg-gray-800 shadow border-2 border-[#3b82f6]"
@@ -248,18 +227,7 @@ function PricingTables({ planInfos }) {
                 <div onClick={() => handleClick("Business")} className="mt-24">
                   <a className="btn-sm text-white bg-[#3b82f6] hover:bg-[#145aca] w-full" href="#0">Go Ultra Sweet Tooth</a>
                 </div>
-                {isLoading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"> <Puff
-                  height="100"
-                  width="100"
-                  color="#4446e4"
-                  secondaryColor='#4446e4'
-                  radius='12.5'
-                  ariaLabel="mutating-dots-loading"
-                  wrapperStyle={{}}
-                  wrapperClass=""
-                  visible={true}
-                />
-                </div>}
+
               </div>
 
               {/* Pricing features */}
@@ -300,7 +268,8 @@ function PricingTables({ planInfos }) {
                 </ul>
               </div>
 
-            </div>}
+            </div>
+          }
 
         </div>
       </div>
@@ -309,8 +278,19 @@ function PricingTables({ planInfos }) {
         onConfirm={confirmCancelationModal}
         onCancel={closeModal}
         cancelMessage={cancelMessage !== null ? cancelMessage : " Cancel Subscription"}
-
       />
+      {isLoading && <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"> <Puff
+        height="100"
+        width="100"
+        color="#4446e4"
+        secondaryColor='#4446e4'
+        radius='12.5'
+        ariaLabel="mutating-dots-loading"
+        wrapperStyle={{}}
+        wrapperClass=""
+        visible={true}
+      />
+      </div>}
     </section>
   );
 }

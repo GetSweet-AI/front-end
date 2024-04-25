@@ -307,29 +307,39 @@ function PostsFeed() {
     }
   };
 
+  // Utility function to debounce any function
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
   useEffect(() => {
     const button = buttonRef.current;
     if (!button) return;
 
+    const debouncedHandleLoadMore = debounce(handleLoadMore, 300);
+
     const observer = new IntersectionObserver(entries => {
-      // When the button is visible in the viewport, trigger handleLoadMore
       if (entries[0].isIntersecting) {
-        handleLoadMore();
+        debouncedHandleLoadMore();
       }
     }, {
-      root: null, // Observe visibility in the viewport
+      root: null,
       rootMargin: '0px',
-      threshold: 0.1 // Trigger when 10% of the button is visible
+      threshold: 0.1
     });
 
-    // Start observing the button
     observer.observe(button);
 
-    // Clean up the observer on component unmount
-    return () => {
-      observer.disconnect();
-    };
-  }, [handleLoadMore]); // Effect dependencies
+    return () => observer.disconnect();
+  }, [handleLoadMore]); // Ensure debounce doesn't recreate on every render
 
   console.log(selectedBrand)
 
