@@ -3,7 +3,7 @@ import { Line } from "rc-progress"; // Assuming you're using rc-progress for the
 
 const ProgressBarWithMessages = ({ previewProgress, progressMessage }) => {
     return (
-        <div>
+        <div className="my-4">
             <Line percent={previewProgress} strokeWidth={1} strokeColor="#f60c9c" />
             <p className="text-center text-blue-600 mt-3 font-semibold">
                 {progressMessage} <span className="text-gray-500"> </span>

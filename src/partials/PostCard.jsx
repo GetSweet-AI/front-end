@@ -23,19 +23,17 @@ function PostCard({
   DownloadButton,
   unixTimestamp,
   fetchFeedPosts,
-  feedPostId
+  feedPostId,
+  isGuest
 }) {
+
   const parsedDate = parseISO(postDate);
   const localDate = utcToZonedTime(
     parsedDate,
     Intl.DateTimeFormat().resolvedOptions().timeZone
   );
 
-
-
   //https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/6509eb6b6a20f499452b2186
-
-
 
   let { id } = useParams();
 
@@ -204,6 +202,8 @@ function PostCard({
   // Check if the pathname starts with '/posts-feed'
   const isPostsFeed = currentPath.startsWith('/posts-feed');
 
+
+
   return (
     <div className="col-span-full sm:col-span-6 xl:col-span-4
      bg-white shadow-md rounded-md border relative
@@ -225,7 +225,7 @@ function PostCard({
           ) : (
             <div className="text-sm mb-2 text-blue-500 font-bold">
 
-              <button onClick={getClientConnect} className="hover:underline">
+              <button disabled={isGuest} onClick={getClientConnect} className="hover:underline">
                 Connect your socials to schedule this post
               </button>
 
@@ -255,26 +255,30 @@ function PostCard({
                   <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2" />
                 </svg>
               </div>
-              {!isEditing && <div className="mt-[3px]">
-                <button className="" onClick={handleEditClick}>
-                  <FontAwesomeIcon icon={faPencil} className="border-2 hover:border-[#00abfb] ml-1 p-[5px] w-[13.5px] h-[13.5px]  rounded-full" color='#00abfb' /></button>
-              </div>}
+              {!isEditing &&
+                <div className="mt-[3px]">
+                  <button disabled={isGuest} onClick={handleEditClick}>
+                    <FontAwesomeIcon icon={faPencil} className="border-2 hover:border-[#00abfb] ml-1 p-[5px] w-[13.5px] h-[13.5px]  rounded-full" color='#00abfb' /></button>
+                </div>
+              }
 
               {/* User click here, open modal and receive prompt  */}
-              {!isPostsFeed && <FontAwesomeIcon
-                icon={faMicrochip}
-                className="border-2 hover:border-[#00abfb] ml-1 p-[4.3px] mt-[2.7px] w-4 h-4  rounded-full"
-                color="#00abfb"
-                onClick={handleOpenModal}
-              />}
+              {!isPostsFeed &&
+                <button onClick={handleOpenModal} disabled={isGuest}>
+                  <FontAwesomeIcon
+                    icon={faMicrochip}
+                    className="border-2 hover:border-[#00abfb] ml-1 p-[4.3px] mt-[2.7px] w-4 h-4  rounded-full"
+                    color="#00abfb"
+
+                  />
+                </button>
+              }
             </div>
           </div>
         </header>
         <div className="grow mt-2">
 
           {/* condition socials connected */}
-
-
 
 
           <div className="text-sm  overflow-y-scroll font-medium mb-2">
@@ -287,7 +291,7 @@ function PostCard({
                   onChange={(e) => setCaption(e.target.value)}
                 />
                 <div className='flex'>
-                  <button className="bg-green-500 w-[15%] cursor-pointer
+                  <button disabled={isViewOnly} className="bg-green-500 w-[15%] cursor-pointer
                            text-center rounded-lg py-1 mr-2 text-white"
                     onClick={handleSaveClick}>Save</button>
                   <button className='text-red-400'
@@ -310,12 +314,7 @@ function PostCard({
             width={60} height={60} alt="thumbnail" />}
             controls={true} width="100%" url={MediaUrl} />}
           {isJpeg &&
-
-
-
             <img src={MediaUrl} className="h-[50vh]  w-full object-contain" />
-
-
           }
         </div>
         <EditCaptionModal
@@ -331,13 +330,14 @@ function PostCard({
         <div className="my-2">{/* Engagement card link */}</div>
         <footer className="mt-2">
           <div className="flex justify-between items-center">
-            <div
+            <button
+              disabled={isGuest}
               onClick={() => deleteFeedPost(feedPostId)}
               className="text-sm text-white rounded bg-[#ef3d22] p-2  cursor-pointer"
             >
               {/* Not Active */}
               <FontAwesomeIcon className="px-2" icon={faTrash} />
-            </div>
+            </button>
             {isMp4 ?
               <div
                 onClick={() => DownloadButton(MediaUrl)}
