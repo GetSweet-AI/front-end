@@ -14,7 +14,7 @@ import DashboardHeader from '../partials/DashboardHeader';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { MutatingDots, ThreeDots } from 'react-loader-spinner';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import PostCard from '../partials/PostCard';
 import CheckConnectedAccount from '../utils/ChechConnectedAccount';
 import { toast, ToastContainer } from "react-toastify";
@@ -56,7 +56,18 @@ const disclosureData = [
 // Usage:
 // <TheDisclosure data={disclosureData} />
 
+
+function useQuery() {
+    const { search } = useLocation();
+    return React.useMemo(() => new URLSearchParams(search), [search]);
+}
+
 function BrandEngagementDetails() {
+
+    const query = useQuery();
+    const isGuest = query.get('isGuest') === 'true' ? true : false;
+
+    // console.log(isGuest)
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -101,7 +112,14 @@ function BrandEngagementDetails() {
         setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
     };
 
+    const [intervalId, setIntervalId] = useState(null);
+
     const fetchFeedPosts = async () => {
+        if (feedPosts.length > 5) {
+            clearInterval(intervalId); // Stop the interval if 6 posts are loaded
+            return;
+        }
+
         setIsLoading(true)
         await axios
             .get(
@@ -137,8 +155,19 @@ function BrandEngagementDetails() {
 
     useEffect(() => {
         fetchEngagement();
+    }, []);
+
+    useEffect(() => {
         fetchFeedPosts()
     }, []);
+
+    useEffect(() => {
+        const newIntervalId = setInterval(fetchFeedPosts, 10000); // Set the interval to run every 10 seconds
+        setIntervalId(newIntervalId);
+
+        return () => clearInterval(newIntervalId); // Cleanup the interval on component unmount
+    }, [feedPosts?.length]); // Dependency on feedPosts.length to stop interval if it reaches 6
+
 
     const deletePostFeed = async (id) => {
         await axios
@@ -275,16 +304,20 @@ function BrandEngagementDetails() {
         <div className="flex h-screen overflow-hidden">
 
             {/* Sidebar */}
-            <Sidebar
-                sidebarOpen={sidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-            />
+            {
+                !isGuest && <Sidebar
+                    sidebarOpen={sidebarOpen}
+                    setSidebarOpen={setSidebarOpen}
+                />
+            }
 
             {/* Content area */}
             <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
 
                 {/*  Site header */}
-                <DashboardHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+                {
+                    !isGuest && <DashboardHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+                }
 
                 {showConfetti && <Confetti />}
                 <main>
@@ -340,14 +373,13 @@ function BrandEngagementDetails() {
                                 />}   </span>
                             </div>   {clientConnectData?.ConnectLinkURL ?
                                 <button
-                                    disabled={isLoadingCC}
+                                    disabled={isLoadingCC || isGuest}
                                     onClick={getClientConnect}
                                     className="text-sm font-medium md:mt-0 mt-3 flex justify-center 
                               text-white  hover:font-bold shadow-xl bg-blue-500 md:w-auto w-full  rounded  p-3 cursor-pointer"
                                 >
 
                                     {isLoadingCC ? "Connecting" : " Connect it to social media Account"} <FontAwesomeIcon className='mt-1 ml-1' icon={faLink} color="white" size={24} />
-
 
                                 </button> : <div className='text-center text-red-500 font-medium my-2'>
                                     This Brand Engagement has no ConnectUrl
@@ -403,6 +435,7 @@ function BrandEngagementDetails() {
                                             DownloadButton={downloadVideo}
                                             unixTimestamp={item.unixTimestamp}
                                             fetchFeedPosts={fetchFeedPosts}
+                                            isGuest={isGuest}
 
 
                                         />
@@ -416,8 +449,10 @@ function BrandEngagementDetails() {
                                 progressMessage={progressMessage}
                             />
                             : <></>}
+
+
                         {
-                            feedPosts.length > 0 && <div className="mt-8">
+                            feedPosts.length > 5 && <div className="mt-8">
                                 <div class="flex flex-wrap md:flex-nowrap  md:mx-4 items-center md:mt-4 overflow-x-scroll py-2  justify-center space-x-2">
                                     <button
                                         className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"

@@ -444,10 +444,10 @@ function PostsFeed() {
                 setIsFilterOne={setIsImage} setIsFilterTwo={setIsVideo} applyFilter={applyFilter}
                 filterOneLabel="Image" filterTwoLabel="Video"
               />
-              {/* <FilterComponent label="Status" isFilterOne={isScheduled} isFilterTwo={isArchived}
+              <FilterComponent label="Status" isFilterOne={isScheduled} isFilterTwo={isArchived}
                 setIsFilterOne={setIsScheduled} setIsFilterTwo={setIsArchived} applyFilter={applyFilter}
                 filterOneLabel="Scheduled" filterTwoLabel="Archived"
-              /> */}
+              />
 
             </div>
 

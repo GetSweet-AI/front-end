@@ -1,4 +1,4 @@
-import { format, isBefore, isAfter, isToday, isYesterday } from 'date-fns';
+import { format, isBefore, isAfter, isToday, addDays, isYesterday, isSameDay } from 'date-fns';
 
 export function dateUpdate(unixTimestamp) {
   // Convert Unix timestamp to a number
@@ -11,11 +11,15 @@ export function dateUpdate(unixTimestamp) {
 
   // Convert Unix timestamp to a Date object
   const date = new Date(timestamp);
+  // Determine if the date is 'Tomorrow'
+  const tomorrow = addDays(new Date(), 1);
 
   if (isToday(date)) {
     return 'Today';
   } else if (isYesterday(date)) {
     return 'Yesterday';
+  } else if (isSameDay(date, tomorrow)) {
+    return 'Tomorrow';
   } else {
     // Formatting the date to include seconds
     return format(date, "E, MMM d, 'at' h:mm:ss a");
