@@ -14,7 +14,7 @@ import DashboardHeader from '../partials/DashboardHeader';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { MutatingDots, ThreeDots } from 'react-loader-spinner';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import PostCard from '../partials/PostCard';
 import CheckConnectedAccount from '../utils/ChechConnectedAccount';
 import { toast, ToastContainer } from "react-toastify";
@@ -299,6 +299,16 @@ function BrandEngagementDetails() {
             setProgressMessage("Dancing through the algorithms... 💃🕺 Just a moment more!");
         }
     }, [previewProgress]);
+
+    const navigate = useNavigate()
+
+    const { isLoggedIn } = useSelector((state) => state.auth);
+    useEffect(() => {
+        // Check if the user is not logged in and not a guest
+        if (!isLoggedIn && !isGuest) {
+            navigate('/signin');
+        }
+    }, [isLoggedIn, isGuest, navigate]);
 
     return (
         <div className="flex h-screen overflow-hidden">
