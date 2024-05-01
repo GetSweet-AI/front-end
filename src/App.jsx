@@ -75,7 +75,7 @@ function App() {
         <Route path="/payment" element={isLoggedIn ? <Payment /> : <SignIn />} />
         <Route path="/payment/manage-subscription" element={isLoggedIn ? <ManageSubscription /> : <SignIn />} />
         <Route path="/success" element={isLoggedIn ? <Success /> : <SignIn />} />
-        <Route path="/brand-engagements/:id" element={isLoggedIn ? <BrandEngagementDetails /> : <SignIn />} />
+        <Route path="/brand-engagements/:id" element={<BrandEngagementDetails />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
