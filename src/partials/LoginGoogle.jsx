@@ -69,7 +69,7 @@ const LoginGoogle = (props) => {
         {" "}
         <GoogleLogin
           clientId={clientId}
-          buttonText="Sign-in with Google"
+          buttonText={props.title}
           onSuccess={responseGoogle}
           onFailure={responseGoogle}
           cookiePolicy={"single_host_origin"}

@@ -99,7 +99,7 @@ function SignIn() {
                     </a>{" "}
                   </h1>
                 </div>
-                <div className="justify-center flex items-center ">   <LoginGoogle /></div>
+                <div className="justify-center flex items-center ">   <LoginGoogle title="Sign-in with Google" /></div>
                 <hr className="max-w-sm mx-auto my-8" />
                 {/* Form */}
                 <div>

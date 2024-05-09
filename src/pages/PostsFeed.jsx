@@ -23,7 +23,6 @@ import Select from "../components/Select";
 import LazyLoadedFeedPosts from "../components/FeedPosts/LazyLoadedFeedPosts";
 import noData from '../images/NoData.svg'
 
-
 async function downloadVideo(url) {
   try {
     const response = await fetch(url);
@@ -66,6 +65,12 @@ function PostsFeed() {
   const [brandEngagementData, setBrandEngagementData] = useState('')
 
   const [isConnected, setIsConnected] = useState(false);
+
+
+  const [isImage, setIsImage] = useState(true)
+  const [isVideo, setIsVideo] = useState(true)
+  const [isScheduled, setIsScheduled] = useState(true)
+  const [isArchived, setIsArchived] = useState(false)
 
   //Fetch client connect data
   const [clientConnectData, setClientConnectData] = useState("")
@@ -156,27 +161,27 @@ function PostsFeed() {
     setIsFeedPostsLoading(true)
     await axios
       .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}?page=${pageNumber}`
-      ).then((response) => {
-        setFeedPosts(response.data?.feedPosts);
-        setFilteredFeedPosts(response.data?.feedPosts)
-        getClientConnectData(brandId)
-        setNumberOfPages(response.data?.totalPages);
-      })
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}?page=${pageNumber}&isArchived=${isArchived}&isScheduled=${isScheduled}`
+        , {
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        }).then((response) => {
+          setFeedPosts(response.data?.feedPosts);
+          setFilteredFeedPosts(response.data?.feedPosts)
+          getClientConnectData(brandId)
+          setNumberOfPages(response.data?.totalPages);
+        })
       .catch((err) => {
         console.log(err);
       })
     setIsFeedPostsLoading(false)
 
-    // const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}?page=${pageNumber}`);
-
-
   };
 
   useEffect(() => {
     fetchFeedPosts(selectedBrand)
-  }, [selectedBrand])
-
+  }, [selectedBrand, isArchived, isScheduled]);
 
   const fetchEngagements = async () => {
     setIsLoading(true);
@@ -220,16 +225,6 @@ function PostsFeed() {
     fetchStatusData();
   }, []);
 
-  // const [filterOptions, setFilterOptions] = useState({
-  //   isImage: true,
-  //   isVideo: true,
-  // });
-
-  const [isImage, setIsImage] = useState(true)
-  const [isVideo, setIsVideo] = useState(true)
-  const [isScheduled, setIsScheduled] = useState(true)
-  const [isArchived, setIsArchived] = useState(true)
-
   const applyFilter = () => {
     const shouldApplyFilter = isImage !== isVideo;
     shouldApplyFilter ? setFilteredFeedPosts(feedPosts.filter(post => {
@@ -265,11 +260,10 @@ function PostsFeed() {
     checkConnectLinkExists(selectedBrand);
   }, [selectedBrand]);
 
-
   // Use the find method to get the engagement with the matching _id
   const selectedEngagement = engagements.find(engagement => engagement._id === selectedBrand);
 
-  console.log(selectedEngagement)
+  // console.log(selectedEngagement)
 
   const buttonRef = useRef(null);
 
@@ -341,7 +335,7 @@ function PostsFeed() {
     return () => observer.disconnect();
   }, [handleLoadMore]); // Ensure debounce doesn't recreate on every render
 
-  console.log(selectedBrand)
+  console.log(" isArchived : " + isArchived + " isScheduled : " + isScheduled)
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -350,6 +344,7 @@ function PostsFeed() {
 
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden md:p-4">
+
         {/*  Site header */}
         <DashboardHeader
           sidebarOpen={sidebarOpen}

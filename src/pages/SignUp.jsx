@@ -7,6 +7,7 @@ import { Puff } from "react-loader-spinner";
 import EmailSentModal from "../partials/EmailSentModal";
 import { clearMessage } from "../redux/message";
 import logo from "../images/logogetsweet.png";
+import LoginGoogle from "../partials/LoginGoogle";
 
 
 const initialState = {
@@ -106,6 +107,9 @@ function SignUp() {
                     <h1 className=" font-cabinet-grotesk">Already have an account? <a href="/signin" className='underline pl-2 cursor-pointer'>Sign-in</a> </h1>
                   </div>
                 </div>
+
+                <div className="justify-center flex items-center ">   <LoginGoogle title='Sign-up with Google' /></div>
+                <hr className="max-w-sm mx-auto my-8" />
 
                 {/* Form */}
                 <div >
