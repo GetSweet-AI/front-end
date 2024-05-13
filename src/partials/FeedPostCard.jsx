@@ -225,7 +225,7 @@ function FeedPostCard({
             </div> */}
 
           </header>
-
+          <div className="h-[1px] my-1 bg-gray-200 md:mx-3 mx-1" />
           <section className="flex  md:space-x-2 flex-wrap py-1">
             {
               brandEngagementData?.campaignTitle && <div className="bg-gray-100 m-1 text-gray-700 py-1 px-2 text-sm  rounded-2xl w-max">
@@ -239,7 +239,7 @@ function FeedPostCard({
               {JSON.stringify(brandEngagementData.days.join(", "))}
             </div>}
           </section>
-
+          <div className="h-[1px] my-1 mx-1 md:mx-3 bg-gray-100" />
           <div className="grow mt-2 ">
             {/* condition socials connected */}
 
@@ -303,7 +303,7 @@ function FeedPostCard({
               }
             </div>
 
-            <div className="h-[1px] my-2 bg-gray-200" />
+
             <div className="text-sm overflow-y-scroll font-medium mb-2">
               {isEditing ? (
                 <div>

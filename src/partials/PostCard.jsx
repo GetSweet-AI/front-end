@@ -291,7 +291,7 @@ function PostCard({
                   onChange={(e) => setCaption(e.target.value)}
                 />
                 <div className='flex'>
-                  <button disabled={isViewOnly} className="bg-green-500 w-[15%] cursor-pointer
+                  <button disabled={isGuest} className="bg-green-500 w-[15%] cursor-pointer
                            text-center rounded-lg py-1 mr-2 text-white"
                     onClick={handleSaveClick}>Save</button>
                   <button className='text-red-400'

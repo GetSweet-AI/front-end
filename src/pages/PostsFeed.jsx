@@ -341,38 +341,37 @@ function PostsFeed() {
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden md:p-4">
-
         {/*  Site header */}
         <DashboardHeader
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
           header={`${enabled ? "Admin" : "My"} Feed Posts`}
         />
-
         <main>
 
-          {isLoading && enabled && (
-            <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
-              <Bars
-                height="100"
-                width="100"
-                color="#1c7aed"
-                secondaryColor="#3078fd"
-                radius="12.5"
-                ariaLabel="mutating-dots-loading"
-                wrapperStyle={{}}
-                wrapperClass=""
-                visible={true}
-              />
-            </div>
-          )}
+          {isLoading
+            && enabled && (
+              <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
+                <Bars
+                  height="100"
+                  width="100"
+                  color="#1c7aed"
+                  secondaryColor="#3078fd"
+                  radius="12.5"
+                  ariaLabel="mutating-dots-loading"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                  visible={true}
+                />
+              </div>
+            )}
           <div className="p-5">
             {/* Get brand engagement */}
-            <div className="flex justify-between bg-white border-[1px] border-gray-100 mx-auto py-4 bg-white-50 rounded-lg  p-2 ">
-              <div className="md:w-1/3 w-full">
+            <div className="flex md:flex-row flex-col  md:justify-between  bg-white border-[1px] border-gray-100 mx-auto py-4 bg-white-50 rounded-lg p-2 ">
+
+              <div className="md:w-1/3 w-full ">
                 <Select
                   options={engagements.map(brand => ({
                     value: brand._id,
@@ -382,11 +381,17 @@ function PostsFeed() {
                   onChange={handleBEChange}
                 />
               </div>
-              <div className="md:w-full">
 
+              <div className="border-[1px] md:mt-0 mt-3 py-2 hover:bg-gray-500 hover:text-white flex justify-center items-center px-3 rounded-lg text-center">
+                {/* Download Calendar */}
+                <button>
+                  Download Calendar
+                </button>
               </div>
 
             </div>
+
+
           </div>
           {isUserDataLoading && !enabled && (
             <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
@@ -432,13 +437,14 @@ function PostsFeed() {
           <div className="flex flex-col md:flex-row px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto ">
             {/* Page header */}
 
-            <div className="flex flex-col w-full h-full space-y-2  flex-[0.25] p-2">
+            <div className="flex flex-col w-full h-full md:space-y-2  flex-[0.25] p-2">
 
               {/* <FilterComponent options={statusOptions} label="Status" /> */}
               <FilterComponent label="Media Type" isFilterOne={isImage} isFilterTwo={isVideo}
                 setIsFilterOne={setIsImage} setIsFilterTwo={setIsVideo} applyFilter={applyFilter}
                 filterOneLabel="Image" filterTwoLabel="Video"
               />
+
               <FilterComponent label="Status" isFilterOne={isScheduled} isFilterTwo={isArchived}
                 setIsFilterOne={setIsScheduled} setIsFilterTwo={setIsArchived} applyFilter={applyFilter}
                 filterOneLabel="Scheduled" filterTwoLabel="Archived"
@@ -467,7 +473,6 @@ function PostsFeed() {
 
                 </div>
               </div>
-
               <div>
                 <ToastContainer />
 
@@ -550,7 +555,6 @@ function PostsFeed() {
         </main>
 
       </div>
-
     </div>
   );
 }
