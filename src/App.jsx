@@ -1,4 +1,4 @@
-import React, { useEffect, lazy, Suspense } from "react";
+import React, { useEffect, lazy, Suspense, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import "aos/dist/aos.css";
 import "./css/style.css";
@@ -8,7 +8,9 @@ import { Puff, ThreeDots } from "react-loader-spinner";
 import Archive from "./pages/Archive";
 import Settings from "./pages/Settings";
 import Assets from "./pages/Assets";
+import axios from 'axios'
 import PaymentFailed from "./pages/PaymentFailed";
+import TrialExpiredModal from "./components/Payment/TrialExpiredModal";
 
 const Home = lazy(() => import("./pages/Home"));
 const SignIn = lazy(() => import("./pages/SignIn"));
@@ -53,6 +55,29 @@ function App() {
 
   const { isLoggedIn, user } = useSelector((state) => state.auth);
 
+  const [isTrialExpired, setIsTrialExpired] = useState(false);
+  const hideModalPaths = ["/payment", "/preview", "/"];
+
+
+  useEffect(() => {
+    const checkFreeTrialStatus = async () => {
+      if (isLoggedIn) {
+        try {
+          const response = await axios.get(`http://localhost:5000/api/v1/auth/check-free-trial/${user?._id}`);
+          const data = response.data;
+
+          if (!data?.user.isTrialActive && data?.user.Plan === "Free") {
+            setIsTrialExpired(true);
+          }
+        } catch (error) {
+          console.error('Error checking free trial status:', error);
+        }
+      }
+    };
+
+    checkFreeTrialStatus();
+  }, [user]);
+
   return (
     <Suspense fallback={<div className="flex justify-center items-center min-h-screen"><ThreeDots
       height="100"
@@ -65,6 +90,10 @@ function App() {
       wrapperClass=""
       visible={true}
     /></div>}>
+
+      {isTrialExpired && !hideModalPaths.includes(location.pathname) && (
+        <TrialExpiredModal isVisible={true} onClose={() => setIsTrialExpired(false)} />
+      )}
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route path="/brand-engagements" element={isLoggedIn ? <BrandEngagements /> : <SignIn />} />

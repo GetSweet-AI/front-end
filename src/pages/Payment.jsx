@@ -25,7 +25,7 @@ function Payment() {
     const getPlanInfos = async () => {
         //   setIsPlansLoading(true)
         setIsLoading(true)
-        await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/plans`)
+        await axios.get(`http://localhost:5000/api/v1/plans`)
             .then((res) => {
                 setPlanInfos(res?.data.planInfos)
                 console.table(res?.data.planInfos)
@@ -57,7 +57,7 @@ function Payment() {
     const handleSwitchPlan = async () => {
         setSwitching(true)
         try {
-            const response = await axios.post("https://seal-app-dk3kg.ondigitalocean.app/api/v1/update-subscription", {
+            const response = await axios.post("http://localhost:5000/api/v1/update-subscription", {
                 customerId: user?.customerId,
                 currentSubscriptionId: user?.subscriptionId,
                 newPlanId: plan.id

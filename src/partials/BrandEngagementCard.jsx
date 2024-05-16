@@ -24,7 +24,6 @@ function BrandEngagementCard({
   fetchEngagements,
   relatedPostsStatus,
   postContent,
-  checkConnectLinkExistsByBrandEngagementID,
   isArchive,
   userId,
   setFormValues,
@@ -45,7 +44,7 @@ function BrandEngagementCard({
     setIsArchiveLoading(true)
     try {
       const response = await axios.delete(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${brandEngagementId}`
+        `http://localhost:5000/api/v1/brand-engagements/${brandEngagementId}`
       );
       console.log(response.data); // Success message or response data
       fetchEngagements();
@@ -82,17 +81,15 @@ function BrandEngagementCard({
 
   };
 
-
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(clearActiveBrandEngagement())
   }, [])
+
   const handleAttachAssets = () => {
     navigate('/assets')
     dispatch(setActiveBrandEngagement(id))
   }
-
-
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -111,13 +108,11 @@ function BrandEngagementCard({
     setEditedCampaignTitle(e.target.value);
   };
 
-
-
   const [isSaving, setIsSaving] = useState(false);
   const handleSaveCampaignTitle = async () => {
     setIsSaving(true);
     try {
-      const response = await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/update-campaign/${id}`, {
+      const response = await axios.put(`http://localhost:5000/api/v1/update-campaign/${id}`, {
         campaignTitle: editedCampaignTitle
       });
       // Assuming successful update, update campaign title locally
@@ -237,7 +232,8 @@ function BrandEngagementCard({
               </div>
             }
           </div>
-          {!isArchive &&
+          {
+            !isArchive &&
             <footer className="mt-2 flex-col">
               <div className="flex justify-between space-x-2 items-center">
                 {!isViewOnly && !isAdminPage &&
