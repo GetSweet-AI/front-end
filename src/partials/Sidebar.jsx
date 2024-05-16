@@ -137,10 +137,10 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           <div>
             <ul className="">
               <li>
-                <AvailableTokens
+                {/* <AvailableTokens
                   sideBarOpen={sidebarExpanded}
-                  availableTokens={user?.availableTokens}
-                />
+                  availableTokens={.availableTokens}
+                /> */}
               </li>
               {/* Home */}
               <li
