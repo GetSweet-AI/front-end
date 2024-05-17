@@ -30,7 +30,7 @@ function BrandEngagements() {
   const fetchEngagements = async () => {
     setIsLoading(true);
     try {
-      fetch(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+      fetch(`http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
         .then((response) => response.json())
         .then(({ totalPages, brandEngagements }) => {
           setEngagements(brandEngagements);
@@ -44,7 +44,7 @@ function BrandEngagements() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
+    fetch(`http://localhost:5000/api/v1/admin/brand-engagements?userId=${user?._id}&page=${pageNumber}`)
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
         setEngagements(brandEngagements);

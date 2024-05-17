@@ -24,7 +24,6 @@ function BrandEngagementCard({
   fetchEngagements,
   relatedPostsStatus,
   postContent,
-  checkConnectLinkExistsByBrandEngagementID,
   isArchive,
   userId,
   setFormValues,
@@ -45,7 +44,7 @@ function BrandEngagementCard({
     setIsArchiveLoading(true)
     try {
       const response = await axios.delete(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${brandEngagementId}`
+        `http://localhost:5000/api/v1/brand-engagements/${brandEngagementId}`
       );
       console.log(response.data); // Success message or response data
       fetchEngagements();
@@ -82,17 +81,15 @@ function BrandEngagementCard({
 
   };
 
-
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(clearActiveBrandEngagement())
   }, [])
+
   const handleAttachAssets = () => {
     navigate('/assets')
     dispatch(setActiveBrandEngagement(id))
   }
-
-
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -111,13 +108,11 @@ function BrandEngagementCard({
     setEditedCampaignTitle(e.target.value);
   };
 
-
-
   const [isSaving, setIsSaving] = useState(false);
   const handleSaveCampaignTitle = async () => {
     setIsSaving(true);
     try {
-      const response = await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/update-campaign/${id}`, {
+      const response = await axios.put(`http://localhost:5000/api/v1/update-campaign/${id}`, {
         campaignTitle: editedCampaignTitle
       });
       // Assuming successful update, update campaign title locally
@@ -165,8 +160,6 @@ function BrandEngagementCard({
                 </button>
               </div>
             }
-
-
 
 
             <div className="flex space-x-2 pt-2">{postType === "TextImagePost" && <FontAwesomeIcon icon={faImage} color="#0967eb" size="xl" />}
@@ -239,66 +232,52 @@ function BrandEngagementCard({
               </div>
             }
           </div>
-          {!isArchive && !isViewOnly &&
+          {
+            !isArchive &&
             <footer className="mt-2 flex-col">
               <div className="flex justify-between space-x-2 items-center">
-                {
-                  !isAdminPage &&
+                {!isViewOnly && !isAdminPage &&
                   <button
-
                     onClick={handleCloneClick}
-                    className="text-sm flex justify-center
-             items-center font-medium md:flex-[0.3]
-              flex-[0.3] bg-white hover:text-white text-blue-700 
-                p-2.5 cursor-pointer
-                    shadow-md rounded-lg
-               hover:bg-blue-700 hover:font-bold 
-               "
-
+                    className="text-sm flex justify-center items-center font-medium md:flex-[0.3] flex-[0.3] bg-white hover:text-white text-blue-700 p-2.5 cursor-pointer shadow-md rounded-lg hover:bg-blue-700 hover:font-bold"
                   >
-                    {/* Not Active */}
-
                     <FontAwesomeIcon className="mr-2" icon={faClone} /> Clone
                   </button>
                 }
                 <div
+                  onClick={() => {
+                    isViewOnly ? navigate(`/brand-engagements/${id}?isGuest=true`) : navigate(`/brand-engagements/${id}`)
+                  }}
+                  className={`text-sm flex justify-center items-center font-medium ${isViewOnly ? 'w-full' : 'md:flex-[0.3] flex-[0.3]'} bg-white text-blue-700 rounded-md p-2 cursor-pointer border-2 border-blue-600 hover:bg-blue-600 hover:text-white hover:font-bold`}
 
-                  onClick={() => navigate(`/brand-engagements/${id}`)}
-                  className="text-sm flex justify-center
-                  items-center font-medium md:flex-[0.3]
-                   flex-[0.3] bg-white text-blue-700
-                    rounded-md  p-2 cursor-pointer
-                    border-2 border-blue-600 hover:bg-blue-600
-                    hover:text-white hover:font-bold 
-                    "
                 >
-                  {/* Not Active */}
                   <FontAwesomeIcon className="mr-2" icon={faEye} />
                   View
                 </div>
 
-
-                <button
-                  onClick={toggleModal}
-                  className="text-sm text-white hover:font-bold rounded text-center bg-red-500 hover:bg-red-600 flex-[0.3] p-2 cursor-pointer"
-                >
-                  {isArchiveLoading ? "Archiving.." : <> <FontAwesomeIcon className="mr-2" icon={faTrash} />
-                    Archive</>}
-                </button>
+                {!isViewOnly &&
+                  <button
+                    onClick={toggleModal}
+                    className="text-sm text-white hover:font-bold rounded text-center bg-red-500 hover:bg-red-600 flex-[0.3] p-2 cursor-pointer"
+                  >
+                    {isArchiveLoading ? "Archiving.." : <> <FontAwesomeIcon className="mr-2" icon={faTrash} /> Archive</>}
+                  </button>
+                }
               </div>
-              <div className="mt-4 flex justify-center">
-                <button
-                  className="text-md flex justify-center items-center font-medium bg-white text-blue-700 rounded-md py-2 px-3 cursor-pointer hover:bg-blue-700 hover:text-white transition duration-300 ease-in-out"
-                  onClick={handleAttachAssets}
-                >
-                  Attach assets
-                  <FontAwesomeIcon className="ml-2" icon={faPaperclip} />
-                </button>
+              {!isViewOnly &&
+                <div className="mt-4 flex justify-center">
+                  <button
+                    className="text-md flex justify-center items-center font-medium bg-white text-blue-700 rounded-md py-2 px-3 cursor-pointer hover:bg-blue-700 hover:text-white transition duration-300 ease-in-out"
+                    onClick={handleAttachAssets}
+                  >
+                    Attach assets
+                    <FontAwesomeIcon className="ml-2" icon={faPaperclip} />
+                  </button>
+                </div>
+              }
+            </footer>
+          }
 
-              </div>
-
-
-            </footer>}
         </div>
       </div >
       <Transition appear show={isModalOpen} as={Fragment}>

@@ -26,7 +26,7 @@ export default function PreviewPage() {
     const [engagements, setEngagements] = useState([])
     const fetchEngagements = async () => {
         await fetch(
-            `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements-ex`
+            `http://localhost:5000/api/v1/brand-engagements-ex`
         )
             .then((response) => response.json())
             .then(({ totalPages, brandEngagements }) => {

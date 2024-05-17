@@ -29,7 +29,7 @@ const LoginGoogle = (props) => {
     // console.log(response)
     await axios
       .post(
-        "https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/googlelogin",
+        "http://localhost:5000/api/v1/auth/googlelogin",
         { idToken: response.tokenId }
       )
       .then((response) => {
