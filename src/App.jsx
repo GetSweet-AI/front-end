@@ -63,7 +63,7 @@ function App() {
     const checkFreeTrialStatus = async () => {
       if (isLoggedIn) {
         try {
-          const response = await axios.get(`http://localhost:5000/api/v1/auth/check-free-trial/${user?._id}`);
+          const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/check-free-trial/${user?._id}`);
           const data = response.data;
 
           if (!data?.user.isTrialActive && data?.user.Plan === "Free") {
