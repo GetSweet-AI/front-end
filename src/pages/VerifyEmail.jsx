@@ -30,7 +30,7 @@ function VerifyEmail() {
     const verifyVerificationCode = async () => {
         setLoading(true)
         try {
-            await axios.post("http://localhost:5000/api/v1/auth/verify-email", {
+            await axios.post("https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/verify-email", {
                 email: email,
                 verificationCode: parseInt(values.verificationCode, 10)
             });
