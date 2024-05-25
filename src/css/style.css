@@ -40,9 +40,142 @@
 }
 
 
-
 /* Tailwind CSS utility classes (example) */
 .container {
     @apply p-4;
     /* Add your Tailwind CSS utility classes here */
+}
+
+
+/* .highlight-red {
+    background-color: #ffcccc !important;
+} */
+
+.highlight-blue {
+    background-color: white;
+}
+
+.react-calendar__tile {
+    position: relative;
+}
+
+/* Optional: Style for selected days */
+.react-calendar__tile--active {
+    background: white !important;
+    /* Change background color */
+    border: 2px solid #4caf50;
+    /* Change border color */
+    color: white;
+    font-weight: bold;
+    /* Make the text bold */
+}
+
+/* Optional: Style for hover effect on selected days */
+.react-calendar__tile--active:hover {
+    background: rgb(70, 145, 230) !important;
+    /* Darken the background color on hover */
+    /* border: 2px solid rgb(70, 145, 230); */
+    /* Darken the border color on hover */
+    color: white !important;
+    border-radius: 10px;
+}
+
+/* Change the background color of today's date */
+.react-calendar__tile--now {
+    background: rgb(204, 219, 248) !important;
+    /* Yellow background for today */
+    color: blue;
+    /* Black text color */
+    font-weight: bold;
+    /* Make the text bold */
+}
+
+
+
+.custom-count {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1em;
+    font-weight: bold;
+    color: white;
+    background: rgb(70, 145, 230);
+    /* width: 20px; */
+    width: 30px;
+    border-radius: 10px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 6px;
+    padding-right: 6px;
+
+    /* Adjust the color as needed */
+}
+
+/* .highlight-green {
+    background-color: #ccffcc !important;
+} */
+
+/* CustomCalendar.css */
+
+/* Make the calendar fill the full width of its container */
+.react-calendar {
+    width: 90% !important;
+    /* Full width */
+    max-width: none;
+    /* Override max-width */
+    border: 1px solid white;
+    /* White border */
+    border-radius: 10px;
+    /* Border radius */
+    padding: 20px;
+    /* Optional: add padding */
+    background-color: #f9f9f9;
+    /* Optional: light background color */
+}
+
+/* Make the calendar tiles circular */
+.react-calendar__tile {
+    text-align: center;
+
+    /* Fixed height */
+
+    /* Make the tile circular */
+    display: flex;
+    /* Flexbox to center content */
+    align-items: center;
+    /* Vertically center content */
+    justify-content: center;
+    /* Horizontally center content */
+}
+
+
+/* Style for the calendar container to handle full-width */
+.calendar-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    /* Center the calendar horizontally */
+}
+
+/* Mobile specific styles */
+@media (max-width: 768px) {
+    .react-calendar__tile {
+        padding: 10px !important;
+        /* Adjust padding for mobile */
+        font-size: 12px;
+        /* Smaller font size for mobile */
+    }
+
+    .react-calendar__navigation button {
+        min-width: 30px;
+        /* Smaller buttons for navigation on mobile */
+        font-size: 14px;
+        /* Adjust font size */
+    }
+
+    .react-calendar__month-view__weekdays__weekday {
+        font-size: 12px;
+        /* Smaller font size for weekdays */
+    }
 }

@@ -18,10 +18,13 @@ import CheckConnectedAccount from '../utils/ChechConnectedAccount';
 import FeedPostCard from "../partials/FeedPostCard";
 import FilterComponent from "../components/FilterComponent";
 import PostBadge from "../components/PostBadge";
-import { faCalendar, faCalendarCheck, faCalendarXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCalendar, faCalendarCheck, faCalendarXmark, faBars } from "@fortawesome/free-solid-svg-icons";
 import Select from "../components/Select";
 import LazyLoadedFeedPosts from "../components/FeedPosts/LazyLoadedFeedPosts";
 import noData from '../images/NoData.svg'
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import CalendarView from "../components/FeedPosts/CalendarView";
 
 async function downloadVideo(url) {
   try {
@@ -49,6 +52,7 @@ function PostsFeed() {
   const { token, user } = useSelector((state) => state.auth);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [feedPosts, setFeedPosts] = useState([]);
+  const [scheduledFeedPosts, setScheduledFeedPosts] = useState([]);
   const [filteredFeedPosts, setFilteredFeedPosts] = useState([])
 
   const [isLoading, setIsLoading] = useState(false);
@@ -69,7 +73,7 @@ function PostsFeed() {
 
   const [isImage, setIsImage] = useState(true)
   const [isVideo, setIsVideo] = useState(true)
-  const [isScheduled, setIsScheduled] = useState(true)
+  const [isScheduled, setIsScheduled] = useState(false)
   const [isArchived, setIsArchived] = useState(false)
 
   //Fetch client connect data
@@ -237,7 +241,6 @@ function PostsFeed() {
     applyFilter();
   }, [isImage, isVideo]);
 
-
   useEffect(() => {
     getClientConnectData(selectedBrand)
     setPageNumber(0)
@@ -335,7 +338,34 @@ function PostsFeed() {
     return () => observer.disconnect();
   }, [handleLoadMore]); // Ensure debounce doesn't recreate on every render
 
-  console.log(" isArchived : " + isArchived + " isScheduled : " + isScheduled)
+  const [activeIcon, setActiveIcon] = useState(1);
+
+  const handleClick = (iconId) => {
+    setActiveIcon(activeIcon === iconId ? 1 : iconId); // Toggle active state
+  };
+
+
+  useEffect(() => {
+    const fetchFeedPosts = async () => {
+      try {
+        const response = await axios.get(
+          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${selectedBrand}?page=${pageNumber}&isArchived=false&isScheduled=true`,
+          {
+            headers: {
+              'Cache-Control': 'no-cache'
+            }
+          }
+        );
+        setScheduledFeedPosts(response.data?.feedPosts);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchFeedPosts();
+
+  }, [selectedBrand, pageNumber, activeIcon]);
+
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -454,10 +484,24 @@ function PostsFeed() {
 
             <div className="flex flex-col flex-[0.75]">
               <div className="flex flex-col md:flex-row justify-between  p-2 ">
-                <div className="mb-4 sm:mb-0 flex flex-col md:p-4">
-                  <h1 className="md:text-2xl text-xl mb-2 text-gray-700   font-bold" >
+                <div className="mb-4 w-full flex sm:mb-0 justify-between md:p-4">
+                  <h1 className="md:text-2xl flex-[0.8] text-xl mb-2 text-gray-700   font-bold" >
                     Your upcoming posts for <span className=''>{selectedEngagement?.BrandName}</span>
                   </h1>
+                  <div className="flex flex-[0.2] w-full items-end mb-4 justify-end space-x-3">
+                    <div
+                      className={`px-2 py-1 rounded ${activeIcon === 1 ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} shadow`}
+                      onClick={() => handleClick(1)}
+                    >
+                      <FontAwesomeIcon icon={faBars} className="w-5 h-5 pt-1" />
+                    </div>
+                    <div
+                      className={`px-2 py-1  rounded ${activeIcon === 2 ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} shadow`}
+                      onClick={() => handleClick(2)}
+                    >
+                      <FontAwesomeIcon icon={faCalendar} className="w-5 h-5 pt-1" />
+                    </div>
+                  </div>
                 </div>
                 <div className=" flex  items-center flex-row space-x-3 ">
 
@@ -475,56 +519,60 @@ function PostsFeed() {
               </div>
               <div>
                 <ToastContainer />
+                {activeIcon === 2 && <CalendarView feedPosts={scheduledFeedPosts} />}
 
-                <div className="">
-                  <div className="grid grid-cols-1 gap-3">
-                    {
-                      (filteredFeedPosts.length > 0) ?
-                        filteredFeedPosts?.map((item) => {
-                          return (
-                            <FeedPostCard
-                              feedPostId={item._id}
-                              key={item._id}
-                              id={item._id}
-                              MediaUrl={item.MediaUrl}
-                              deleteFeedPost={deletePostFeed}
-                              Caption={item.Caption}
-                              Date={item.Date}
-                              handleCopyText={handleCopyText}
-                              Accounts={item.Accounts}
-                              DownloadButton={downloadVideo}
-                              unixTimestamp={item.unixTimestamp}
-                              BrandEngagementID={item.BrandEngagementID}
-                              brandEngagementData={brandEngagementData}
-                              clientConnectData={clientConnectData}
+                {
+                  activeIcon === 1 &&
+                  <div className="">
+                    <div className="grid grid-cols-1 gap-3">
+                      {
+                        (filteredFeedPosts.length > 0) ?
+                          filteredFeedPosts?.map((item) => {
+                            return (
+                              <FeedPostCard
+                                feedPostId={item._id}
+                                key={item._id}
+                                id={item._id}
+                                MediaUrl={item.MediaUrl}
+                                deleteFeedPost={deletePostFeed}
+                                Caption={item.Caption}
+                                Date={item.Date}
+                                handleCopyText={handleCopyText}
+                                Accounts={item.Accounts}
+                                DownloadButton={downloadVideo}
+                                unixTimestamp={item.unixTimestamp}
+                                BrandEngagementID={item.BrandEngagementID}
+                                brandEngagementData={brandEngagementData}
+                                clientConnectData={clientConnectData}
 
 
-                            />
-                          );
-                        }) :
-                        <div className="flex flex-col justify-center items-center">
-                          <img src={noData} alt="no data" className="w-20 h-20" />
-                          <p className="p-3">No Feed posts Found</p>
-                        </div>
-                    }
-                  </div>
+                              />
+                            );
+                          }) :
+                          <div className="flex flex-col justify-center items-center">
+                            <img src={noData} alt="no data" className="w-20 h-20" />
+                            <p className="p-3">No Feed posts Found</p>
+                          </div>
+                      }
+                    </div>
 
-                  {pageNumber < numberOfPages - 1 && (
-                    <div className="flex justify-center items-center m-2">
-                      <div
-                        ref={buttonRef}
-                        // onClick={handleLoadMore}
-                        className="py-2.5 my-4 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none
+                    {pageNumber < numberOfPages - 1 && (
+                      <div className="flex justify-center items-center m-2">
+                        <div
+                          ref={buttonRef}
+                          // onClick={handleLoadMore}
+                          className="py-2.5 my-4 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none
                    hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100
                     ">
-                        Loading ...
+                          Loading ...
+                        </div>
+
                       </div>
+                    )
+                    }
 
-                    </div>
-                  )
-                  }
-
-                </div>
+                  </div>
+                }
 
 
                 {isFeedPostsLoading && (

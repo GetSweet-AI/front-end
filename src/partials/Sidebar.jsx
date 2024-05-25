@@ -8,6 +8,7 @@ import { faArchive, faBlog, faCog, faImage, faUsers } from "@fortawesome/free-so
 import axios from "axios";
 import { setUserData } from "../redux/auth";
 import AvailableTokens from "./AvailableTokens";
+import UserPlan from "./UserPlan";
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const { isLoggedIn } = useSelector((state) => state.auth);
@@ -141,6 +142,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   sideBarOpen={sidebarExpanded}
                   availableTokens={.availableTokens}
                 /> */}
+                <UserPlan planName={user?.Plan} sideBarOpen={sidebarExpanded} />
+                {/* {user?.Plan} */}
               </li>
               {/* Home */}
               <li
