@@ -236,7 +236,7 @@ function FeedPostCard({
               {brandEngagementData?.language}
             </div>
             {(brandEngagementData?.days)?.length > 0 && <div className="bg-gray-100 m-1 text-gray-700 py-1 px-2 text-sm  rounded-2xl w-max">
-              {JSON.stringify(brandEngagementData.days.join(", "))}
+              {brandEngagementData.days.join(", ")}
             </div>}
           </section>
           <div className="h-[1px] my-1 mx-1 md:mx-3 bg-gray-100" />
