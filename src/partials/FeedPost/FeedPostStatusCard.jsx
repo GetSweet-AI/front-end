@@ -11,12 +11,12 @@ const FeedPostStatusCard = ({ unixTimestamp, isAccountConnected }) => {
             case 'Post Scheduled':
                 return {
                     text: 'text-blue-400',
-                    bg: 'bg-blue-100',
+                    bg: 'bg-blue-50',
                     icon: faClock
                 };
             case 'Successfully Posted':
                 return {
-                    text: 'text-green-500',
+                    text: 'text-green-400',
                     bg: 'bg-green-50',
                     icon: faCheckCircle
                 };
