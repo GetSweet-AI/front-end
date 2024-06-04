@@ -16,7 +16,7 @@ const FilterComponent = ({ label, isFilterOne, isFilterTwo, setIsFilterOne, setI
     return (
         <div className="w-full  bg-white shadow-sm -mt-[8vh] md:mt-2 rounded-md">
             <div className=" w-full rounded-2xl bg-white p-3">
-                <Disclosure>
+                <Disclosure defaultOpen>
                     {({ open }) => (
                         <>
                             <Disclosure.Button className="flex w-full justify-between rounded-lg px-4 py-2 text-left text-sm font-medium text-gray-600 hover:bg-blue-100 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75">

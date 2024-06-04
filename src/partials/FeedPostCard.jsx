@@ -29,7 +29,8 @@ function FeedPostCard({
   feedPostId,
   BrandEngagementID,
   brandEngagementData,
-  clientConnectData
+  clientConnectData,
+  groupedPosts
 }) {
 
 
@@ -134,7 +135,6 @@ function FeedPostCard({
 
   const handleModalButtonClick = (promptInput) => {
     handleGenerateClick()
-
   };
 
   const handleOpenModal = () => {
@@ -153,8 +153,34 @@ function FeedPostCard({
 
   const hideDeleteAndArchive = postStatus(unixTimestamp, isAnAccountConnected)
 
+  const renderCase = (date, timestamp) => {
+    if (!(timestamp)) {
+      return (
+        <>
+          <span>Required: add social accounts to post</span>
+        </>
+      );
+    }
+
+    // const dayOfWeek = getDayOfWeek(timestamp);
+
+    if (timestamp < Date.now()) {
+      return (
+        <>
+          <span>Posted on {date}</span>
+        </>
+      );
+    } else {
+      return (
+        <p className=''>
+          Ready to post on  <span className='font-bold'> {date}</span>
+        </p>
+      );
+    }
+  };
+
   return (
-    <div className={`col-span-full sm:col-span-6 xl:col-span-4
+    <div className={`my-2 col-span-full sm:col-span-6 xl:col-span-4
      bg-white shadow-md rounded-md border 
     relative border-slate-200 hover:border-blue-500
      hover:shadow-xl`}>
@@ -187,12 +213,13 @@ function FeedPostCard({
               {isAnAccountConnected ? (
                 <>
                   <div className="flex items-center mb-2 md:mb-0 bg-gray-50 p-2">
-                    <svg className="w-6 h-6 text-pink-600 mr-1" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                    {/* <svg className="w-6 h-6 text-pink-600 mr-1" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                       <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                    </svg>
+                    </svg> */}
                     {/* <span className="font-medium p-1">Scheduled for</span> */}
-                    <p className="text-pink-500 text-sm font-bold rounded-lg ml-2 px-1 mt-[1px]">
-                      {dateUpdate(unixTimestamp)}
+                    <p className=" text-sm rounded-lg ml-2 px-1 mt-[1px]">
+                      {/* {dateUpdate(unixTimestamp)} */}
+                      {renderCase(dateUpdate(unixTimestamp), groupedPosts[dateUpdate(unixTimestamp)][0].unixTimestamp)}
                     </p>
                   </div>
                   <FeedPostStatusCard unixTimestamp={unixTimestamp} isAccountConnected={isAnAccountConnected} />
@@ -309,7 +336,7 @@ function FeedPostCard({
                 <div>
                   <textarea
                     name="caption"
-                    className='w-full text-sm'
+                    className='w-full text-sm '
                     value={caption}
                     onChange={(e) => setCaption(e.target.value)}
                   />
@@ -324,7 +351,7 @@ function FeedPostCard({
                 </div>
               ) : (
                 <div className='flex flex-col max-h-[90px] overflow-y-scroll'>
-                  <p className='pr-2'> {caption}
+                  <p className='px-4 leading-6 my-4 '> {caption}
                   </p>
                 </div>
               )}

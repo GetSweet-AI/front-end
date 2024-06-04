@@ -25,6 +25,8 @@ import noData from '../images/NoData.svg'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CalendarView from "../components/FeedPosts/CalendarView";
+import noEngagement from '../images/noengegement.png'
+import groupPostsByDate from "../utils/GroupPostsByDate";
 
 async function downloadVideo(url) {
   try {
@@ -69,7 +71,6 @@ function PostsFeed() {
   const [brandEngagementData, setBrandEngagementData] = useState('')
 
   const [isConnected, setIsConnected] = useState(false);
-
 
   const [isImage, setIsImage] = useState(true)
   const [isVideo, setIsVideo] = useState(true)
@@ -367,6 +368,8 @@ function PostsFeed() {
   }, [selectedBrand, pageNumber, activeIcon]);
 
 
+  const groupedPosts = groupPostsByDate(filteredFeedPosts);
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -379,10 +382,51 @@ function PostsFeed() {
           setSidebarOpen={setSidebarOpen}
           header={`${enabled ? "Admin" : "My"} Feed Posts`}
         />
-        <main>
 
-          {isLoading
-            && enabled && (
+        {engagements?.length !== 0 &&
+          <main>
+
+            {isLoading
+              && enabled && (
+                <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
+                  <Bars
+                    height="100"
+                    width="100"
+                    color="#1c7aed"
+                    secondaryColor="#3078fd"
+                    radius="12.5"
+                    ariaLabel="mutating-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                    visible={true}
+                  />
+                </div>
+              )}
+            <div className="p-5">
+              {/* Get brand engagement */}
+              <div className="flex md:flex-row flex-col  md:justify-between  bg-white border-[1px] border-gray-100 mx-auto py-4 bg-white-50 rounded-lg p-2 ">
+
+                <div className="md:w-1/3 w-full ">
+                  <Select
+                    options={engagements.map(brand => ({
+                      value: brand._id,
+                      label: brand.BrandName
+                    }))}
+                    value={selectedBrand}
+                    onChange={handleBEChange}
+                  />
+                </div>
+
+                <div className="border-[1px] md:mt-0 mt-3 py-2 hover:bg-gray-500 hover:text-white flex justify-center items-center px-3 rounded-lg text-center">
+                  {/* Download Calendar */}
+                  <button>
+                    Download Calendar
+                  </button>
+                </div>
+
+              </div>
+            </div>
+            {isUserDataLoading && !enabled && (
               <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
                 <Bars
                   height="100"
@@ -397,210 +441,217 @@ function PostsFeed() {
                 />
               </div>
             )}
-          <div className="p-5">
-            {/* Get brand engagement */}
-            <div className="flex md:flex-row flex-col  md:justify-between  bg-white border-[1px] border-gray-100 mx-auto py-4 bg-white-50 rounded-lg p-2 ">
+            <div className="flex justify-around space-x-2  w-full p-5">
+              <PostBadge
+                icon={faCalendarCheck}
+                number={staData?.totalPostsLive}
+                label="Posts are live"
+                iconColor="white"
+              />
 
-              <div className="md:w-1/3 w-full ">
-                <Select
-                  options={engagements.map(brand => ({
-                    value: brand._id,
-                    label: brand.BrandName
-                  }))}
-                  value={selectedBrand}
-                  onChange={handleBEChange}
+              <PostBadge
+                icon={faCalendar}
+                number={staData?.totalPostsScheduled}
+                label="Scheduled posts"
+                bgColor="blue-400"
+                iconColor="white"
+              />
+              <PostBadge
+                icon={faCalendarXmark}
+                number={staData?.totalPostsNeedSocial}
+                label="Posts need socials"
+                bgColor="red-400"
+                iconColor="white"
+              />
+
+              {/* Add more instances of PostBadge with different data as needed */}
+            </div>
+
+            <div className="flex flex-col md:flex-row px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto ">
+              {/* Page header */}
+
+              <div className="flex flex-col w-full h-full md:space-y-2  flex-[0.25] p-2">
+
+                {/* <FilterComponent options={statusOptions} label="Status" /> */}
+                <FilterComponent label="Media Type" isFilterOne={isImage} isFilterTwo={isVideo}
+                  setIsFilterOne={setIsImage} setIsFilterTwo={setIsVideo} applyFilter={applyFilter}
+                  filterOneLabel="Image" filterTwoLabel="Video"
                 />
+
+                <FilterComponent label="Status" isFilterOne={isScheduled} isFilterTwo={isArchived}
+                  setIsFilterOne={setIsScheduled} setIsFilterTwo={setIsArchived} applyFilter={applyFilter}
+                  filterOneLabel="Scheduled" filterTwoLabel="Archived"
+                />
+
               </div>
 
-              <div className="border-[1px] md:mt-0 mt-3 py-2 hover:bg-gray-500 hover:text-white flex justify-center items-center px-3 rounded-lg text-center">
-                {/* Download Calendar */}
-                <button>
-                  Download Calendar
-                </button>
-              </div>
-
-            </div>
-
-
-          </div>
-          {isUserDataLoading && !enabled && (
-            <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
-              <Bars
-                height="100"
-                width="100"
-                color="#1c7aed"
-                secondaryColor="#3078fd"
-                radius="12.5"
-                ariaLabel="mutating-dots-loading"
-                wrapperStyle={{}}
-                wrapperClass=""
-                visible={true}
-              />
-            </div>
-          )}
-          <div className="flex justify-around space-x-2  w-full p-5">
-            <PostBadge
-              icon={faCalendarCheck}
-              number={staData?.totalPostsLive}
-              label="Posts are live"
-              iconColor="white"
-            />
-
-            <PostBadge
-              icon={faCalendar}
-              number={staData?.totalPostsScheduled}
-              label="Scheduled posts"
-              bgColor="blue-400"
-              iconColor="white"
-            />
-            <PostBadge
-              icon={faCalendarXmark}
-              number={staData?.totalPostsNeedSocial}
-              label="Posts need socials"
-              bgColor="red-400"
-              iconColor="white"
-            />
-
-            {/* Add more instances of PostBadge with different data as needed */}
-          </div>
-
-          <div className="flex flex-col md:flex-row px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto ">
-            {/* Page header */}
-
-            <div className="flex flex-col w-full h-full md:space-y-2  flex-[0.25] p-2">
-
-              {/* <FilterComponent options={statusOptions} label="Status" /> */}
-              <FilterComponent label="Media Type" isFilterOne={isImage} isFilterTwo={isVideo}
-                setIsFilterOne={setIsImage} setIsFilterTwo={setIsVideo} applyFilter={applyFilter}
-                filterOneLabel="Image" filterTwoLabel="Video"
-              />
-
-              <FilterComponent label="Status" isFilterOne={isScheduled} isFilterTwo={isArchived}
-                setIsFilterOne={setIsScheduled} setIsFilterTwo={setIsArchived} applyFilter={applyFilter}
-                filterOneLabel="Scheduled" filterTwoLabel="Archived"
-              />
-
-            </div>
-
-            <div className="flex flex-col flex-[0.75]">
-              <div className="flex flex-col md:flex-row justify-between  p-2 ">
-                <div className="mb-4 w-full flex sm:mb-0 justify-between md:p-4">
-                  <h1 className="md:text-2xl flex-[0.8] text-xl mb-2 text-gray-700   font-bold" >
-                    Your upcoming posts for <span className=''>{selectedEngagement?.BrandName}</span>
-                  </h1>
-                  <div className="flex flex-[0.2] w-full items-end mb-4 justify-end space-x-3">
-                    <div
-                      className={`px-2 py-1 rounded ${activeIcon === 1 ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} shadow`}
-                      onClick={() => handleClick(1)}
-                    >
-                      <FontAwesomeIcon icon={faBars} className="w-5 h-5 pt-1" />
-                    </div>
-                    <div
-                      className={`px-2 py-1  rounded ${activeIcon === 2 ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} shadow`}
-                      onClick={() => handleClick(2)}
-                    >
-                      <FontAwesomeIcon icon={faCalendar} className="w-5 h-5 pt-1" />
+              <div className="flex flex-col flex-[0.75]">
+                <div className="flex flex-col md:flex-row justify-between  p-2 ">
+                  <div className="mb-4 w-full flex sm:mb-0 justify-between ">
+                    <h1 className="md:text-2xl flex-[0.8] text-xl mb-2 text-gray-700   font-bold" >
+                      Your upcoming posts for <span className=''>{selectedEngagement?.BrandName}</span>
+                    </h1>
+                    <div className="flex flex-[0.2] w-full items-end mb-4 justify-end space-x-3">
+                      <div
+                        className={`px-2 py-1 rounded ${activeIcon === 1 ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} shadow`}
+                        onClick={() => handleClick(1)}
+                      >
+                        <FontAwesomeIcon icon={faBars} className="w-5 h-5 pt-1" />
+                      </div>
+                      <div
+                        className={`px-2 py-1  rounded ${activeIcon === 2 ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} shadow`}
+                        onClick={() => handleClick(2)}
+                      >
+                        <FontAwesomeIcon icon={faCalendar} className="w-5 h-5 pt-1" />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className=" flex  items-center flex-row space-x-3 ">
+                  <div className=" flex  items-center flex-row space-x-3 ">
 
-                  <div
-                    className="flex justify-center items-center"> {user?.role === "admin" ? (
-                      <>
-                        {/* <SwitchButton enabled={enabled} setEnabled={setEnabled} /> */}
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-
-                </div>
-              </div>
-              <div>
-                <ToastContainer />
-                {activeIcon === 2 && <CalendarView feedPosts={scheduledFeedPosts} />}
-
-                {
-                  activeIcon === 1 &&
-                  <div className="">
-                    <div className="grid grid-cols-1 gap-3">
-                      {
-                        (filteredFeedPosts.length > 0) ?
-                          filteredFeedPosts?.map((item) => {
-                            return (
-                              <FeedPostCard
-                                feedPostId={item._id}
-                                key={item._id}
-                                id={item._id}
-                                MediaUrl={item.MediaUrl}
-                                deleteFeedPost={deletePostFeed}
-                                Caption={item.Caption}
-                                Date={item.Date}
-                                handleCopyText={handleCopyText}
-                                Accounts={item.Accounts}
-                                DownloadButton={downloadVideo}
-                                unixTimestamp={item.unixTimestamp}
-                                BrandEngagementID={item.BrandEngagementID}
-                                brandEngagementData={brandEngagementData}
-                                clientConnectData={clientConnectData}
-
-
-                              />
-                            );
-                          }) :
-                          <div className="flex flex-col justify-center items-center">
-                            <img src={noData} alt="no data" className="w-20 h-20" />
-                            <p className="p-3">No Feed posts Found</p>
-                          </div>
-                      }
+                    <div
+                      className="flex justify-center items-center"> {user?.role === "admin" ? (
+                        <>
+                          {/* <SwitchButton enabled={enabled} setEnabled={setEnabled} /> */}
+                        </>
+                      ) : (
+                        <></>
+                      )}
                     </div>
 
-                    {pageNumber < numberOfPages - 1 && (
-                      <div className="flex justify-center items-center m-2">
-                        <div
-                          ref={buttonRef}
-                          // onClick={handleLoadMore}
-                          className="py-2.5 my-4 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none
+                  </div>
+                </div>
+                <div>
+                  <ToastContainer />
+                  {activeIcon === 2 && <CalendarView feedPosts={scheduledFeedPosts} />}
+
+                  {
+                    activeIcon === 1 &&
+                    <div className="">
+                      <div className="flex flex-col gap-3">
+                        {
+                          Object.keys(groupedPosts).length > 0 ? (
+                            Object.keys(groupedPosts).map((date) => (
+                              <div key={date} className="flex flex-col gap-3">
+                                <h2 className="font-bold ml-2 text-gray-600 text-xl">{date}</h2>
+                                {
+                                  groupedPosts[date].map((item) => (
+                                    <FeedPostCard
+                                      groupedPosts={groupedPosts}
+                                      feedPostId={item._id}
+                                      key={item._id}
+                                      id={item._id}
+                                      MediaUrl={item.MediaUrl}
+                                      deleteFeedPost={deletePostFeed}
+                                      Caption={item.Caption}
+                                      Date={item.Date}
+                                      handleCopyText={handleCopyText}
+                                      Accounts={item.Accounts}
+                                      DownloadButton={downloadVideo}
+                                      unixTimestamp={item.unixTimestamp}
+                                      BrandEngagementID={item.BrandEngagementID}
+                                      brandEngagementData={brandEngagementData}
+                                      clientConnectData={clientConnectData}
+                                    />
+                                  ))
+                                }
+                              </div>
+                            ))
+                          ) : (
+                            <div className="flex flex-col justify-center items-center">
+                              <img src={noData} alt="no data" className="w-20 h-20" />
+                              <p className="p-3">No Feed posts Found</p>
+                            </div>
+                          )
+                        }
+                      </div>
+                      {/* <div className="grid grid-cols-1 gap-3">
+                        {
+                          (filteredFeedPosts.length > 0) ?
+                            filteredFeedPosts?.map((item) => {
+                              return (
+                                <FeedPostCard
+                                  feedPostId={item._id}
+                                  key={item._id}
+                                  id={item._id}
+                                  MediaUrl={item.MediaUrl}
+                                  deleteFeedPost={deletePostFeed}
+                                  Caption={item.Caption}
+                                  Date={item.Date}
+                                  handleCopyText={handleCopyText}
+                                  Accounts={item.Accounts}
+                                  DownloadButton={downloadVideo}
+                                  unixTimestamp={item.unixTimestamp}
+                                  BrandEngagementID={item.BrandEngagementID}
+                                  brandEngagementData={brandEngagementData}
+                                  clientConnectData={clientConnectData}
+
+
+                                />
+                              );
+                            }) :
+                            <div className="flex flex-col justify-center items-center">
+                              <img src={noData} alt="no data" className="w-20 h-20" />
+                              <p className="p-3">No Feed posts Found</p>
+                            </div>
+                        }
+                      </div> */}
+
+                      {pageNumber < numberOfPages - 1 && (
+                        <div className="flex justify-center items-center m-2">
+                          <div
+                            ref={buttonRef}
+                            // onClick={handleLoadMore}
+                            className="py-2.5 my-4 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none
                    hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100
                     ">
-                          Loading ...
+                            Loading ...
+                          </div>
+
                         </div>
+                      )
+                      }
 
-                      </div>
-                    )
-                    }
-
-                  </div>
-                }
+                    </div>
+                  }
 
 
-                {isFeedPostsLoading && (
-                  <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
-                    {" "}
-                    <Puff
-                      height="100"
-                      width="100"
-                      color="#eb22b2"
-                      secondaryColor="#4446e4"
-                      radius="12.5"
-                      ariaLabel="mutating-dots-loading"
-                      wrapperStyle={{}}
-                      wrapperClass=""
-                      visible={true}
-                    />
-                  </div>
-                )}
-                {/* <div className="flex flex-col justify-end items-center">
+                  {isFeedPostsLoading && (
+                    <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
+                      {" "}
+                      <Puff
+                        height="100"
+                        width="100"
+                        color="#eb22b2"
+                        secondaryColor="#4446e4"
+                        radius="12.5"
+                        ariaLabel="mutating-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                      />
+                    </div>
+                  )}
+                  {/* <div className="flex flex-col justify-end items-center">
                   <button ref={buttonRef} onClick={handleClick} className="p-4 bg-blue-500 text-white rounded">
                     Click Me
                   </button>
                 </div> */}
 
+                </div>
               </div>
             </div>
+          </main>}
+
+        {
+          engagements?.length === 0 &&
+          <div className="flex justify-center font-medium leading-7 flex-col items-center bg-blue-50 shadow-md p-8 md:mt-10">
+
+            You don't have any brand engagements yet. Get started by creating one here:
+            <Link to="/brand-engagement-builder"><span className='underline text-blue-500'>Create Brand Engagement</span> </Link>
+            <img src={noData} className='w-44 mt-5' />
           </div>
-        </main>
+        }
+
 
       </div>
     </div>
