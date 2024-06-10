@@ -234,7 +234,7 @@ function BrandEngagementBuilder() {
       });
   };
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     dispatch(clearMessage());
@@ -736,8 +736,9 @@ function BrandEngagementBuilder() {
                               Reset form
                             </button>
                             <button
+                              disabled={previewLoading}
                               type={!previewLoading ? "submit" : "button"}
-                              className="md:w-[80%] flex justify-center items-center w-full bg-purple-500 text-white rounded p-2 mt-2 md:mt-0 md:ml-2"
+                              className={`${previewLoading ? "cursor-not-allowed" : ""} md:w-[80%] flex justify-center items-center w-full bg-purple-500 text-white rounded p-2 mt-2 md:mt-0 md:ml-2`}
                             >
                               {previewLoading ? (
                                 <>

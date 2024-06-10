@@ -13,7 +13,6 @@ import CheckConnectedAccount from '../utils/ChechConnectedAccount';
 
 
 function PostCard({
-  
   MediaUrl,
   Caption,
   Date: postDate,
@@ -194,6 +193,7 @@ const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
           {/* condition socials connected */}
 
           {isAnAccountConnected ? (
+
           <div className="text-sm mb-2">
             <span className="font-medium">Scheduled for</span>{" "}
             <p className="text-pink-500 font-bold" target="_blank">
@@ -246,7 +246,6 @@ const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
             controls={true} width="100%" url={MediaUrl} />}
           {isJpeg &&
             <img src={MediaUrl} className="h-[50vh]  w-full object-contain" />
-
           }
         </div>
 
