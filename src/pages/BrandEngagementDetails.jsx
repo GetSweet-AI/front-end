@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from 'react';
-
 import Sidebar from '../partials/Sidebar';
 import Header from '../partials/Header';
 import SearchForm from '../partials/SearchForm';
 import FilterButton from '../components/DropdownFilter';
 import BrandEngagementCard from '../partials/BrandEngagementCard';
 import PaginationNumeric from '../partials/PaginationNumeric';
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFacebook, faTwitter, faInstagram, faPinterest, faSnapchat, faTiktok, faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { faArchive, faBlog, faFaceMehBlank, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faFacebook, faTwitter, faInstagram, faPinterest, faSnapchat, faTiktok, faYoutube, faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { faArchive, faBlog, faFaceMehBlank, faLink, faUsers } from "@fortawesome/free-solid-svg-icons";
 import Image01 from '../images/user-28-01.jpg';
 import Image02 from '../images/user-28-02.jpg';
 import DashboardHeader from '../partials/DashboardHeader';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { MutatingDots, ThreeDots } from 'react-loader-spinner';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import PostCard from '../partials/PostCard';
 import CheckConnectedAccount from '../utils/ChechConnectedAccount';
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Confetti from '../components/Confetti';
+import ProgressBarWithMessages from '../components/ProgressBarWithMessages';
 
 async function downloadVideo(url) {
     try {
@@ -55,7 +56,18 @@ const disclosureData = [
 // Usage:
 // <TheDisclosure data={disclosureData} />
 
+
+function useQuery() {
+    const { search } = useLocation();
+    return React.useMemo(() => new URLSearchParams(search), [search]);
+}
+
 function BrandEngagementDetails() {
+
+    const query = useQuery();
+    const isGuest = query.get('isGuest') === 'true' ? true : false;
+
+    // console.log(isGuest)
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -67,7 +79,6 @@ function BrandEngagementDetails() {
     const { token, user } = useSelector((state) => state.auth)
 
     let { id } = useParams();
-
 
     //Fetch brand engagements by ID
     const fetchEngagement = async () => {
@@ -101,20 +112,27 @@ function BrandEngagementDetails() {
         setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
     };
 
+    const [intervalId, setIntervalId] = useState(null);
+
     const fetchFeedPosts = async () => {
-        // setIsLoading(true)
+        if (feedPosts.length > 5) {
+            clearInterval(intervalId); // Stop the interval if 6 posts are loaded
+            return;
+        }
+
+        setIsLoading(true)
         await axios
             .get(
                 `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${id}?page=${pageNumber}`
             ).then((response) => {
                 setFeedPosts(response.data?.feedPosts);
                 setNumberOfPages(response.data?.totalPages)
-                // console.log("feedPosts" + JSON.stringify(res?.data))
+                console.log("feedPosts" + JSON.stringify(response?.data))
             })
             .catch((err) => {
                 console.log(err);
             });
-        // setIsLoading(false)
+        setIsLoading(false)
     };
 
     useEffect(() => {
@@ -137,8 +155,19 @@ function BrandEngagementDetails() {
 
     useEffect(() => {
         fetchEngagement();
+    }, []);
+
+    useEffect(() => {
         fetchFeedPosts()
     }, []);
+
+    useEffect(() => {
+        const newIntervalId = setInterval(fetchFeedPosts, 10000); // Set the interval to run every 10 seconds
+        setIntervalId(newIntervalId);
+
+        return () => clearInterval(newIntervalId); // Cleanup the interval on component unmount
+    }, [feedPosts?.length]); // Dependency on feedPosts.length to stop interval if it reaches 6
+
 
     const deletePostFeed = async (id) => {
         await axios
@@ -163,7 +192,9 @@ function BrandEngagementDetails() {
             );
             console.log("Client connect :" + response.data); // Success message or response data
             // Perform any additional actions after successful deletion
-            window.location.href = response.data?.ConnectLinkURL
+            // window.location.href = response.data?.ConnectLinkURL
+            // Open the URL in a new window or tab
+            window.open(response.data?.ConnectLinkURL, '_blank');
         } catch (error) {
             console.log(error); // Handle error
         }
@@ -172,7 +203,6 @@ function BrandEngagementDetails() {
 
     //Check if BE has connectURL or no
     const [hasConnectUrl, setHasConnectUrl] = useState(false)
-
     async function checkConnectLinkExistsByBrandEngagementID() {
         // setIsLoadingCC(true)
         try {
@@ -213,22 +243,95 @@ function BrandEngagementDetails() {
         getClientConnectData()
     }, [])
 
-
     const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
-    console.log("isAnAccountConnected :" + isAnAccountConnected)
+    // console.log("isAnAccountConnected :" + isAnAccountConnected)
+
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const [showConfetti, setShowConfetti] = useState(false); // Initialize as false
+    useEffect(() => {
+        // In the component where you render the modal, check for the modal parameter in the URL
+        const modalType = urlParams.get('modal');
+
+        // Then, conditionally render the modal based on the modalType
+        if (modalType === 'congratulations') {
+            // Render your congratulations modal
+            setShowConfetti(true)
+        }
+    }, [])
+
+    //  ProgressBarWithMessages 
+    const [previewProgress, setPreviewProgress] = useState(0);
+    const [progressMessage, setProgressMessage] = useState("Starting Generation Process");
+
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            // Increment progress every second until it reaches 100
+            setPreviewProgress(prevProgress =>
+                prevProgress < 100 ? prevProgress + 1 : prevProgress
+            );
+        }, 6000); // Delay to simulate the progress (6000 milliseconds = 6 seconds)
+
+        return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
+        if (previewProgress >= 90) {
+            setProgressMessage("Rounding up emojis and hashtags... 🚀 #AlmostThere");
+        } else if (previewProgress >= 80) {
+            setProgressMessage("Brewing some fresh content... ☕ Stay tuned!");
+        } else if (previewProgress >= 70) {
+            setProgressMessage("Gathering your likes and shares from the digital universe... 🌌");
+        } else if (previewProgress >= 60) {
+            setProgressMessage("Putting the final sparkle on your post... ✨ Almost done!");
+        } else if (previewProgress >= 50) {
+            setProgressMessage("Consulting the meme lords for inspiration... 🐸");
+        } else if (previewProgress >= 40) {
+            setProgressMessage("Mixing the perfect blend of wit and wisdom... 🧠💬");
+        } else if (previewProgress >= 30) {
+            setProgressMessage("Summoning viral vibes... 🌟 Your post is coming up!");
+        } else if (previewProgress >= 20) {
+            setProgressMessage("Charging up with social media magic... 🔮");
+        } else if (previewProgress >= 10) {
+            setProgressMessage("Crafting your post with care... 🛠️ Perfection takes time!");
+        } else {
+            setProgressMessage("Dancing through the algorithms... 💃🕺 Just a moment more!");
+        }
+    }, [previewProgress]);
+
+    const navigate = useNavigate()
+
+    const { isLoggedIn } = useSelector((state) => state.auth);
+    useEffect(() => {
+        // Check if the user is not logged in and not a guest
+        if (!isLoggedIn && !isGuest) {
+            navigate('/signin');
+        }
+    }, [isLoggedIn, isGuest, navigate]);
+
+    console.log(pageNumber)
+
     return (
         <div className="flex h-screen overflow-hidden">
 
             {/* Sidebar */}
-            <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+            {
+                !isGuest && <Sidebar
+                    sidebarOpen={sidebarOpen}
+                    setSidebarOpen={setSidebarOpen}
+                />
+            }
 
             {/* Content area */}
             <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
 
                 {/*  Site header */}
-                {/*  Site header */}
-                <DashboardHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+                {
+                    !isGuest && <DashboardHeader sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+                }
 
+                {showConfetti && <Confetti />}
                 <main>
                     <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
 
@@ -242,7 +345,6 @@ function BrandEngagementDetails() {
 
                             {/* Center */}
 
-
                             {/* Right: Actions */}
 
                             <div className={`grid grid-flow-col ${isAnAccountConnected && "bg-white shadow-md border-t-2 border-blue-400 border-l-2 "} rounded-lg p-3
@@ -253,48 +355,48 @@ function BrandEngagementDetails() {
                                     <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z" /></svg>
                                     <p>No socials connected</p>
                                 </div>}
-                                <span> {clientConnectData?.FacebookConnected !== "no" &&
-                                    <> <FontAwesomeIcon
-                                        className="text-[#3e4ef5]"
-                                        icon={faFacebook}
-                                    />
-                                    </>
-                                }  </span>
-                                <span> {clientConnectData?.TwitterConnected !== "no" && <FontAwesomeIcon
+                                <span>
+                                    {clientConnectData?.FacebookConnected && clientConnectData?.FacebookConnected !== "no" &&
+                                        <> <FontAwesomeIcon
+                                            className="text-[#3e4ef5]"
+                                            icon={faFacebook}
+                                        />
+                                        </>
+                                    }  </span>
+                                <span> {clientConnectData?.TwitterConnected && clientConnectData?.TwitterConnected !== "no" && <FontAwesomeIcon
                                     className="text-[#3b82f6]"
                                     icon={faTwitter}
                                 />}   </span>
-                                <span> {clientConnectData?.TikTokConnected !== "no" && <FontAwesomeIcon
+                                <span> {clientConnectData?.LinkedInConnected && clientConnectData?.LinkedInConnected !== "no" && <FontAwesomeIcon
+                                    className="text-[#3b82f6]"
+                                    icon={faLinkedin}
+                                />}   </span>
+                                <span> {clientConnectData?.TikTokConnected && clientConnectData?.TikTokConnected !== "no" && <FontAwesomeIcon
                                     className="text-[#3b82f6]"
                                     icon={faTiktok}
                                 />}   </span>
-                                <span> {clientConnectData?.YoutubeConnected !== "no" && <FontAwesomeIcon
+                                <span> {clientConnectData?.YoutubeConnected && clientConnectData?.YoutubeConnected !== "no" && <FontAwesomeIcon
                                     className="text-[#f63e3b]"
                                     icon={faYoutube}
                                 />}   </span>
-                                <span> {clientConnectData?.InstagramConnected !== "no" && <FontAwesomeIcon
+                                <span> {clientConnectData?.InstagramConnected && clientConnectData?.InstagramConnected !== "no" && <FontAwesomeIcon
                                     // className="text-[#3b82f6]"
                                     icon={faInstagram}
                                 />}   </span>
                             </div>   {clientConnectData?.ConnectLinkURL ?
                                 <button
-                                    disabled={isLoadingCC}
+                                    disabled={isLoadingCC || isGuest}
                                     onClick={getClientConnect}
                                     className="text-sm font-medium md:mt-0 mt-3 flex justify-center 
                               text-white  hover:font-bold shadow-xl bg-blue-500 md:w-auto w-full  rounded  p-3 cursor-pointer"
                                 >
 
-                                    {isLoadingCC ? "Connecting" : " Connect it to social media Account"}
-
+                                    {isLoadingCC ? "Connecting" : " Connect it to social media Account"} <FontAwesomeIcon className='mt-1 ml-1' icon={faLink} color="white" size={24} />
 
                                 </button> : <div className='text-center text-red-500 font-medium my-2'>
                                     This Brand Engagement has no ConnectUrl
                                 </div>}
-                            {/* :
-                                <div className="grid grid-flow-col bg-blue-100 rounded-lg p-2 hover:bg-blue-200 sm:auto-cols-max justify-start sm:justify-end gap-2">
-                                    <span className="font-medium text-red-400"> Not connected to any social media account</span></div>
 
-                            } */}
 
                         </div>
 
@@ -327,7 +429,7 @@ function BrandEngagementDetails() {
                         </div>
                         {feedPosts.length > 0 && <>
                             <div className='text-xl font-bold mt-2 mb-4  text-white'>
-                                <span className='bg-slate-500 w-auto p-3  '> Generated feed posts
+                                <span className='text-blue-600 w-auto p-3  '> Generated feed posts
                                 </span>
                             </div>
                             <div className="grid grid-cols-12 gap-6">
@@ -335,7 +437,7 @@ function BrandEngagementDetails() {
                                     return (
                                         <PostCard
                                             key={item._id}
-                                            id={item._id}
+                                            feedPostId={item._id}
                                             MediaUrl={item.MediaUrl}
                                             deleteFeedPost={deletePostFeed}
                                             Caption={item.Caption}
@@ -343,69 +445,93 @@ function BrandEngagementDetails() {
                                             handleCopyText={handleCopyText}
                                             Accounts={item.Accounts}
                                             DownloadButton={downloadVideo}
+                                            unixTimestamp={item.unixTimestamp}
+                                            fetchFeedPosts={fetchFeedPosts}
+                                            isGuest={isGuest}
+
+
                                         />
                                     );
                                 })}
                             </div>
                         </>}
+                        {engagement?.relatedPostsStatus === "Posts generating..." ?
+                            <ProgressBarWithMessages
+                                previewProgress={previewProgress}
+                                progressMessage={progressMessage}
+                            />
+                            :
+                            <></>
+                        }
 
-                        <div className="mt-8">
-                            <div class="flex flex-wrap md:flex-nowrap  md:mx-4 items-center md:mt-4 overflow-x-scroll py-2  justify-center space-x-2">
-                                <button
-                                    className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
-                                    onClick={gotoPrevious}
-                                >
-                                    Previous
-                                </button>
+                        {
+                            feedPosts.length > 5 && <div className="mt-8">
+                                <div class="flex flex-wrap md:flex-nowrap  md:mx-4 items-center md:mt-4 overflow-x-scroll py-2  justify-center space-x-2">
+                                    <button
+                                        className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                                        onClick={gotoPrevious}
+                                    >
+                                        Previous
+                                    </button>
 
-                                <select
-                                    value={pageNumber}
-                                    onChange={(e) => setPageNumber(parseInt(e.target.value))}
-                                    className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
-                                >
-                                    {pages.map((pageIndex) => (
-                                        <option
-                                            key={pageIndex}
-                                            value={pageIndex}
-                                            className="text-black"
-                                        >
-                                            {pageIndex + 1}
-                                        </option>
-                                    ))}
-                                </select>
-
-
-                                <button
-                                    className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
-                                    onClick={gotoNext}
-                                >
-                                    Next
-                                </button>
+                                    <select
+                                        value={pageNumber}
+                                        onChange={(e) => setPageNumber(parseInt(e.target.value))}
+                                        className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
+                                    >
+                                        {pages.map((pageIndex) => (
+                                            <option
+                                                key={pageIndex}
+                                                value={pageIndex}
+                                                className="text-black"
+                                            >
+                                                {pageIndex + 1}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <button
+                                        className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                                        onClick={gotoNext}
+                                    >
+                                        Next
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        {(engagement?.relatedPostsStatus === "Posts generating..." && isCloseVisible) ?
-                            <div id="toast-success" className="flex items-center w-full p-4 mt-8 mb-4 text-gray-600 bg-gray-800 text-white rounded-lg shadow  " role="alert">
+                        }
 
-                                <ThreeDots
-                                    height="10"
-                                    width="40"
-                                    radius="9"
-                                    color="#f725b6"
-                                    ariaLabel="three-dots-loading"
-                                    wrapperStyle={{}}
-                                    wrapperClassName=""
-                                    visible={true}
-                                />
-                                <div className="ml-3 text-sm font-medium">New posts are currently generating</div>
-                            </div>
-                            : <></>}
 
                     </div>
 
 
                 </main>
-
+                < ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                />
             </div>
+            {isLoading && (
+                <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
+                    <MutatingDots
+                        height="100"
+                        width="100"
+                        color="#1c7aed"
+                        secondaryColor="#3078fd"
+                        radius="12.5"
+                        ariaLabel="mutating-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        visible={true}
+                    />
+                </div>
+            )}
 
         </div>
     );

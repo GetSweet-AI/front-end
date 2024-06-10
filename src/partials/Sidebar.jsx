@@ -8,6 +8,7 @@ import { faArchive, faBlog, faCog, faImage, faUsers } from "@fortawesome/free-so
 import axios from "axios";
 import { setUserData } from "../redux/auth";
 import AvailableTokens from "./AvailableTokens";
+import UserPlan from "./UserPlan";
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const { isLoggedIn } = useSelector((state) => state.auth);
@@ -137,10 +138,12 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           <div>
             <ul className="">
               <li>
-                <AvailableTokens
+                {/* <AvailableTokens
                   sideBarOpen={sidebarExpanded}
-                  availableTokens={user?.availableTokens}
-                />
+                  availableTokens={.availableTokens}
+                /> */}
+                <UserPlan planName={user?.Plan} sideBarOpen={sidebarExpanded} />
+                {/* {user?.Plan} */}
               </li>
               {/* Home */}
               <li
@@ -271,7 +274,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 </NavLink>
               </li>
               {/* profile */}
-              <li
+              {/* <li
                 className={`px-3 py-3 last:mb-0 ${pathname === "/profile" ? "bg-white rounded-l-full" : ""
                   }`}
               >
@@ -311,7 +314,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
                   </div>
                 </NavLink>
-              </li>
+              </li> */}
               {/*Assets page    */}
               <li
                 className={`px-3 ml-1 py-3 last:mb-0 ${pathname === "/assets" ? "bg-white rounded-l-full" : ""
@@ -325,7 +328,6 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 >
                   <div>
                     <FontAwesomeIcon icon={faImage} color={`${pathname === "/assets" ? 'blue' : 'white'}`} size={24} />
-
                   </div>
                   <div className="flex items-center overflow-hidden">
                     <span
@@ -405,7 +407,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                           "text-[#3b82f6]"
                           }`}
                       >
-                        {sidebarExpanded ? "Brand engagements" : ""}
+                        {sidebarExpanded ? "All Brands" : ""}
 
                       </span>
                     </div>

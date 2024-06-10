@@ -1,14 +1,16 @@
-import React, { useEffect, lazy, Suspense } from "react";
+import React, { useEffect, lazy, Suspense, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import "aos/dist/aos.css";
 import "./css/style.css";
 import AOS from "aos";
 import { useSelector } from "react-redux";
-import { Puff } from "react-loader-spinner";
+import { Puff, ThreeDots } from "react-loader-spinner";
 import Archive from "./pages/Archive";
 import Settings from "./pages/Settings";
 import Assets from "./pages/Assets";
+import axios from 'axios'
 import PaymentFailed from "./pages/PaymentFailed";
+import TrialExpiredModal from "./components/Payment/TrialExpiredModal";
 
 const Home = lazy(() => import("./pages/Home"));
 const SignIn = lazy(() => import("./pages/SignIn"));
@@ -31,6 +33,7 @@ const ManageSubscription = lazy(() => import("./pages/ManageSubscriprion"));
 const PrivacyPolicy = lazy(() => import("./pages/privacy-policy"));
 const TermsOfService = lazy(() => import("./pages/terms-of-service"));
 const BrandEngagementDetails = lazy(() => import("./pages/BrandEngagementDetails"));
+const PreviewPage = lazy(() => import("./pages/PreviewPage"));
 
 function App() {
   const location = useLocation();
@@ -52,8 +55,31 @@ function App() {
 
   const { isLoggedIn, user } = useSelector((state) => state.auth);
 
+  const [isTrialExpired, setIsTrialExpired] = useState(false);
+  const hideModalPaths = ["/payment", "/preview", "/"];
+
+
+  useEffect(() => {
+    const checkFreeTrialStatus = async () => {
+      if (isLoggedIn) {
+        try {
+          const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/check-free-trial/${user?._id}`);
+          const data = response.data;
+
+          if (!data?.user.isTrialActive && data?.user.Plan === "Free") {
+            setIsTrialExpired(true);
+          }
+        } catch (error) {
+          console.error('Error checking free trial status:', error);
+        }
+      }
+    };
+
+    checkFreeTrialStatus();
+  }, [user]);
+
   return (
-    <Suspense fallback={<div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]"><Puff
+    <Suspense fallback={<div className="flex justify-center items-center min-h-screen"><ThreeDots
       height="100"
       width="100"
       color="#4446e4"
@@ -64,6 +90,10 @@ function App() {
       wrapperClass=""
       visible={true}
     /></div>}>
+
+      {isTrialExpired && !hideModalPaths.includes(location.pathname) && (
+        <TrialExpiredModal isVisible={true} onClose={() => setIsTrialExpired(false)} />
+      )}
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route path="/brand-engagements" element={isLoggedIn ? <BrandEngagements /> : <SignIn />} />
@@ -74,7 +104,7 @@ function App() {
         <Route path="/payment" element={isLoggedIn ? <Payment /> : <SignIn />} />
         <Route path="/payment/manage-subscription" element={isLoggedIn ? <ManageSubscription /> : <SignIn />} />
         <Route path="/success" element={isLoggedIn ? <Success /> : <SignIn />} />
-        <Route path="/brand-engagements/:id" element={isLoggedIn ? <BrandEngagementDetails /> : <SignIn />} />
+        <Route path="/brand-engagements/:id" element={<BrandEngagementDetails />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
@@ -87,6 +117,7 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/confirm-email/:userId" element={<EmailConfirmed />} />
+        <Route path="/preview" element={<PreviewPage />} />
         <Route path="*" element={<NotFound />} />
         {user?.role === "admin" && <Route path="/users" element={<Users />} />}
       </Routes>

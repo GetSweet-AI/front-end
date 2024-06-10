@@ -29,8 +29,9 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MutatingDots } from "react-loader-spinner";
 import AddNewUserModal from "../partials/AddNewUserModal";
-import { formatReadableDate } from "../utils/formatReadableDate";
+import { formatReadableDate, formatTimeSince } from "../utils/formatReadableDate";
 import { setUserData, switchLoginStatus } from "../redux/auth";
+import userPic from "../images/user.png";
 
 function Users() {
   const dispatch = useDispatch();
@@ -42,7 +43,6 @@ function Users() {
   const [result, setResult] = useState(null);
   const { token, user } = useSelector((state) => state.auth);
   const { message } = useSelector((state) => state.message);
-
   const [isLoading, setIsLoading] = useState(false);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -137,8 +137,7 @@ function Users() {
         <DashboardHeader
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
-          fullName={user.fullName}
-          picture={user.picture}
+          header="Users"
         />
 
         <main>
@@ -163,29 +162,32 @@ function Users() {
 
               {/* Left: Title */}
               <div className="mb-4 sm:mb-0 flex md:justify-between md:flex-row flex-col">
-                <h1 className="text-2xl md:text-3xl text-blue-600 font-bold">
+                <h1 className="text-xl md:hidden text-blue-600 font-bold">
                   Users
                 </h1>
                 <button
-                  className="px-2 md:py-1 py-2 bg-blue-600 md:mt-0 mt-2  text-center text-white rounded text-sm flex items-center font-medium"
+                  className="px-3 py-2 bg-blue-600 md:mt-0 mt-2  text-center text-white rounded text-sm flex items-center font-medium"
                   onClick={() => setIsOpen(true)}
                 >
                   <FontAwesomeIcon icon={faPlus} className="mr-1 w-4 h-4 mb-[2px]" />
                   Add New User
                 </button>
-                <input
+                {/* <input
                   type="text"
                   name="search"
                   placeholder="Search by name or email"
                   onChange={handleChange}
                   className="form-input focus:border-slate-300 mb-1"
-                />
+                /> */}
               </div>
               <div className="w-full h-auto mt-10 overflow-x-auto scrollbar-thin scrollbar-thumb-blue-600 scrollbar-track-blue-300 overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
                 <table className="min-w-full">
                   <thead>
                     <tr className="bg-blue-600 text-white">
                       <th className="py-3 px-6 text-left rounded-tl-lg">
+
+                      </th>
+                      <th className="py-3 px-6 text-left ">
                         Name
                       </th>
                       <th className="py-3 px-6 text-left">Email</th>
@@ -223,9 +225,20 @@ function Users() {
                           }
                         >
                           <td className="py-4 px-6 md:px-8 border-b">
+                            {client.picture ? <img
+                              className="h-8 w-8 rounded-full"
+                              src={client.picture}
+                              alt="/user.png"
+                            /> : <img
+                              className="h-8 w-8 rounded-full"
+                              src={userPic}
+                              alt="/user.png"
+                            />}
+                          </td> <td className="py-4 px-6 md:px-8 border-b">
                             {client.fullName}
                           </td>
-                          <td className="py-4 px-2 border-b">{client.email}1</td>
+
+                          <td className="py-4 px-2 border-b">{client.email}</td>
                           <td className="py-4 px-6 border-b">{client.company}</td>
                           <td className="py-4 px-6 border-b">{client.Plan}</td>
                           <td className="py-4 px-6 border-b text-center">
@@ -246,7 +259,7 @@ function Users() {
                               />
                             </span>
                           </td>
-                          <td className="py-4 px-6 border-b">     {client?.lastLoggedIn && formatReadableDate(client?.lastLoggedIn)}</td>
+                          <td className="py-4 px-6 border-b">     {client?.lastLoggedIn && formatTimeSince(client?.lastLoggedIn)}</td>
                           <td className="py-4 px-6 border-b">     {client?.countBrandEngagements}</td>
                           <td className="py-4 flex flex-col px-6 border-b">
                             {/* <span

@@ -6,26 +6,13 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Puff } from "react-loader-spinner";
+// import { convertBase64 } from "../utils/convertBase64";
 
 export default function UploadImage({ brandEngagementId, fetchEngagements }) {
-    const [loading, setLoading] = useState(false);
     const [url, setUrl] = useState("");
     const [urls, setUrls] = useState([]);
+    const [loading, setLoading] = useState(false);
 
-    const convertBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-
-            fileReader.onload = () => {
-                resolve(fileReader.result);
-            };
-
-            fileReader.onerror = (error) => {
-                reject(error);
-            };
-        });
-    };
 
     // we need to keep a reference of the toastId to be able to update it
     // const toastId = React.useRef(null);
@@ -58,7 +45,20 @@ export default function UploadImage({ brandEngagementId, fetchEngagements }) {
     // }
 
     const [toastId, setToastId] = useState(null);
+    const convertBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
 
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            };
+
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
+    };
     async function uploadSingleImage(base64) {
         try {
             setLoading(true);

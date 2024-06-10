@@ -5,6 +5,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import AvatarEditor from "react-avatar-editor";
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 //funcion actualizar foto
 export const updateUserPicture = async (newPictureUrl) => {
   try {
@@ -47,7 +50,14 @@ export const deleteUserPicture = async () => {
   }
 };
 
-function ChangePic({ isOpen, setIsOpenPic, picture }) {
+function ChangePic({ isOpen, setIsOpenPic, picture, userId, fetchUserData }) {
+
+
+  const [croppedImageUrl, setCroppedImageUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [toastId, setToastId] = useState(null);
+
+
   const [selectedImage, setSelectedImage] = useState(null);
   const userPic = picture || userPicture;
   const editorRef = useRef(null);
@@ -61,17 +71,74 @@ function ChangePic({ isOpen, setIsOpenPic, picture }) {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setSelectedImage(URL.createObjectURL(file));
-    console.log("Nueva URL picture: ", newPictureUrl);
+    // console.log("Nueva URL picture: ", newPictureUrl);
   };
+
+  console.log("selectedImage :" + selectedImage)
+
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  //Upload user picture
+  async function uploadSingleImage(imageUrl) {
+    const base64 = await convertBase64(imageUrl)
+    try {
+      setLoading(true);
+
+      // Check if we already displayed a toast
+      if (toastId === null) {
+        setToastId(toast('Upload in Progress'));
+      }
+
+      const res = await axios.post("https://seal-app-dk3kg.ondigitalocean.app/api/user-profile",
+        { image: base64, userId: userId }, {
+        onUploadProgress: (progressEvent) => {
+          const progress = (progressEvent.loaded / progressEvent.total) * 100;
+          toast.update(toastId, { progress });
+        }
+      });
+      window.location.reload();
+
+      setIsOpenPic(false)
+      toast.success("Image uploaded Successfully");
+      setToastId(null)
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Error uploading image");
+      setToastId(null)
+    } finally {
+      setLoading(false);
+
+      // Upload is done!
+      // The remaining progress bar will be filled up
+      // The toast will be closed when the transition ends
+      toast.done(toastId);
+      setToastId(null)
+    }
+  }
 
   const handleCropImage = () => {
     if (editorRef.current) {
-      const croppedImageURL = editorRef.current
-        .getImage()
-        .toBlob((blob) => {}, "image/jpeg", 1);
-      console.log("imagen recortada : ", croppedImageURL);
+      editorRef.current.getImage().toBlob((blob) => {
+        uploadSingleImage(blob); // Pass the blob directly
+        const url = URL.createObjectURL(blob);
+        setCroppedImageUrl(url); // Set the state with the URL
+      }, "image/jpeg", 1);
     }
   };
+
 
   const handleDeleteImage = async () => {
     const success = await deleteUserPicture();
@@ -91,8 +158,10 @@ function ChangePic({ isOpen, setIsOpenPic, picture }) {
   return (
     <>
       {isOpen && (
+
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
           <div className="bg-white rounded-lg p-6 mx-auto max-w-md">
+
             <div className="flex justify-end">
               <button
                 onClick={handleCloseChanger}
@@ -120,6 +189,7 @@ function ChangePic({ isOpen, setIsOpenPic, picture }) {
               <input
                 type="file"
                 accept="image/"
+                name="selectedImage"
                 id="profilePic"
                 className="hidden"
                 onChange={handleImageChange}
@@ -127,7 +197,7 @@ function ChangePic({ isOpen, setIsOpenPic, picture }) {
               <div className="flex flex-col items center ">
                 <label
                   htmlFor="profilePic"
-                  className="mt-2 cursor-pointer bg-blue-500 hover:bg-blue-800 text-white py-2 px-2 rounded-lg mt-2 w-full"
+                  className="mt-2 cursor-pointer bg-blue-500 hover:bg-blue-800 text-white py-2 px-2 rounded-lg  w-full"
                 >
                   Select Image
                 </label>
