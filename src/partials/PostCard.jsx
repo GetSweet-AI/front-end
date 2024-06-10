@@ -245,8 +245,8 @@ const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
             width={60} height={60} alt="thumbnail" />}
             controls={true} width="100%" url={MediaUrl} />}
           {isJpeg &&
+            <img src={MediaUrl} className="h-[50vh]  w-full object-contain" />
 
-            <img src={MediaUrl} className="h-[52vh]  w-full object-contain" />
           }
         </div>
 

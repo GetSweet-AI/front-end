@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import DashboardHeader from "../partials/DashboardHeader";
 import Sidebar from "../partials/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +14,7 @@ import MyModal from "../partials/Modal";
 import PostCard from "../partials/PostCard";
 import Video from "../partials/Video";
 import SwitchButton from "../partials/SwitchButton";
+import CheckConnectedAccount from '../utils/ChechConnectedAccount';
 
 async function downloadVideo(url) {
   try {
@@ -45,6 +46,11 @@ function PostsFeed() {
   const [isUserDataLoading, setIsUserDataLoading] = useState(false);
 
   const [isAdmin, setIsAdmin] = useState(false);
+
+
+  let { id } = useParams();
+  console.log("ID:", id);
+
 
   // const fetchUserFeedPosts = async () => {
   //   setIsUserDataLoading(true);
@@ -169,6 +175,11 @@ function PostsFeed() {
   };
 
 
+  const [clientConnectData, setClientConnectData] = useState("")
+    
+
+  const isAnAccountConnected = CheckConnectedAccount(clientConnectData)
+  console.log("isAnAccountConnected :" + isAnAccountConnected)
 
   return (
     <div className="flex h-screen overflow-hidden">
