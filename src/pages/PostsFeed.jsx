@@ -75,6 +75,7 @@ function PostsFeed() {
   const [isImage, setIsImage] = useState(true)
   const [isVideo, setIsVideo] = useState(true)
   const [isScheduled, setIsScheduled] = useState(false)
+  const [isNotScheduled, setIsNotScheduled] = useState(false)
   const [isArchived, setIsArchived] = useState(false)
 
   //Fetch client connect data
@@ -166,7 +167,8 @@ function PostsFeed() {
     setIsFeedPostsLoading(true)
     await axios
       .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}?page=${pageNumber}&isArchived=${isArchived}&isScheduled=${isScheduled}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}?page=${pageNumber}
+        &isArchived=${isArchived}&isScheduled=${isScheduled}&isNonScheduled=${isNotScheduled}`
         , {
           headers: {
             'Cache-Control': 'no-cache'
@@ -238,9 +240,9 @@ function PostsFeed() {
     })) : setFilteredFeedPosts(feedPosts)
   };
 
-  useEffect(() => {
-    applyFilter();
-  }, [isImage, isVideo]);
+  // useEffect(() => {
+  //   applyFilter();
+  // }, [isImage, isVideo]);
 
   useEffect(() => {
     getClientConnectData(selectedBrand)
@@ -345,7 +347,6 @@ function PostsFeed() {
     setActiveIcon(activeIcon === iconId ? 1 : iconId); // Toggle active state
   };
 
-
   useEffect(() => {
     const fetchFeedPosts = async () => {
       try {
@@ -366,7 +367,6 @@ function PostsFeed() {
     fetchFeedPosts();
 
   }, [selectedBrand, pageNumber, activeIcon]);
-
 
   const groupedPosts = groupPostsByDate(filteredFeedPosts);
 
@@ -473,14 +473,22 @@ function PostsFeed() {
               <div className="flex flex-col w-full h-full md:space-y-2  flex-[0.25] p-2">
 
                 {/* <FilterComponent options={statusOptions} label="Status" /> */}
-                <FilterComponent label="Media Type" isFilterOne={isImage} isFilterTwo={isVideo}
+                {/* <FilterComponent label="Media Type" isFilterOne={isImage} isFilterTwo={isVideo}
                   setIsFilterOne={setIsImage} setIsFilterTwo={setIsVideo} applyFilter={applyFilter}
                   filterOneLabel="Image" filterTwoLabel="Video"
-                />
+                /> */}
 
-                <FilterComponent label="Status" isFilterOne={isScheduled} isFilterTwo={isArchived}
-                  setIsFilterOne={setIsScheduled} setIsFilterTwo={setIsArchived} applyFilter={applyFilter}
-                  filterOneLabel="Scheduled" filterTwoLabel="Archived"
+                <FilterComponent
+                  label="Status"
+                  isFilterOne={isScheduled}
+                  isFilterTwo={isArchived}
+                  setIsFilterOne={setIsScheduled}
+                  setIsFilterTwo={setIsArchived}
+                  applyFilter={applyFilter}
+                  filterOneLabel="Scheduled"
+                  filterTwoLabel="Archived"
+                  setIsScheduled={setIsScheduled}
+                  setIsNonScheduled={setIsNotScheduled}
                 />
 
               </div>
@@ -564,37 +572,6 @@ function PostsFeed() {
                           )
                         }
                       </div>
-                      {/* <div className="grid grid-cols-1 gap-3">
-                        {
-                          (filteredFeedPosts.length > 0) ?
-                            filteredFeedPosts?.map((item) => {
-                              return (
-                                <FeedPostCard
-                                  feedPostId={item._id}
-                                  key={item._id}
-                                  id={item._id}
-                                  MediaUrl={item.MediaUrl}
-                                  deleteFeedPost={deletePostFeed}
-                                  Caption={item.Caption}
-                                  Date={item.Date}
-                                  handleCopyText={handleCopyText}
-                                  Accounts={item.Accounts}
-                                  DownloadButton={downloadVideo}
-                                  unixTimestamp={item.unixTimestamp}
-                                  BrandEngagementID={item.BrandEngagementID}
-                                  brandEngagementData={brandEngagementData}
-                                  clientConnectData={clientConnectData}
-
-
-                                />
-                              );
-                            }) :
-                            <div className="flex flex-col justify-center items-center">
-                              <img src={noData} alt="no data" className="w-20 h-20" />
-                              <p className="p-3">No Feed posts Found</p>
-                            </div>
-                        }
-                      </div> */}
 
                       {pageNumber < numberOfPages - 1 && (
                         <div className="flex justify-center items-center m-2">
@@ -614,7 +591,6 @@ function PostsFeed() {
                     </div>
                   }
 
-
                   {isFeedPostsLoading && (
                     <div className="z-50 absolute top-[50%] left-[50%] -translate-x-[50%]">
                       {" "}
@@ -631,11 +607,7 @@ function PostsFeed() {
                       />
                     </div>
                   )}
-                  {/* <div className="flex flex-col justify-end items-center">
-                  <button ref={buttonRef} onClick={handleClick} className="p-4 bg-blue-500 text-white rounded">
-                    Click Me
-                  </button>
-                </div> */}
+
 
                 </div>
               </div>

@@ -33,6 +33,7 @@ import DayPicker from "../components/DaysPicker";
 import { Dialog, Flex, Text, Button, TextField } from "@radix-ui/themes";
 import { Callout } from '@radix-ui/themes';
 import { Link, useNavigate } from "react-router-dom";
+import AddNewBrandModal from "../partials/brand-engagments/AddNewBrandModal";
 
 function BrandEngagementBuilder() {
   const dispatch = useDispatch();
@@ -56,7 +57,6 @@ function BrandEngagementBuilder() {
   const [isVisible, setIsVisible] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState('HasEndDate');
-
 
   // Create a new Date object for the current date
   const currentDate = new Date();
@@ -134,20 +134,16 @@ function BrandEngagementBuilder() {
 
   // console.log('selectedPostType :' + selectedPostType)
 
-  const handlePreview = async (e) => {
-    e.preventDefault();
+  const [brandName, setBrandName] = useState("");
+  const [brandDescription, setBrandDescription] = useState("");
+  const handlePreview = async () => {
     setResult("");
-    dispatch(clearMessage())
-    const { brandName, brandTone, companySector, timeZone, targetAudience } = values;
+    dispatch(clearMessage());
 
-    if (!brandTone) {
-      dispatch(setMessage("Please provide the brand tone"));
-    } else if (!companySector) {
-      dispatch(setMessage("Please provide the company sector"));
-    } else if (!brandName) {
+    if (!brandName) {
       dispatch(setMessage("Please provide the brand name"));
-    } else if (!timeZone) {
-      dispatch(setMessage("Please provide the time zone"));
+    } else if (!brandDescription) {
+      dispatch(setMessage("Please provide the company sector"));
     } else {
       setPreviewLoading(true);
       setPreviewProgress(0);
@@ -177,10 +173,8 @@ function BrandEngagementBuilder() {
         const res = await axios.post(
           "https://seal-app-dk3kg.ondigitalocean.app/api/v1/generate-blog-post",
           {
-            tone: brandTone?.value,
             brandName: brandName,
-            CompanySector: companySector,
-            targetAudience: targetAudience?.value
+            companySector: brandDescription,
           }
         );
         setResult(res.data.postContent);
@@ -195,64 +189,54 @@ function BrandEngagementBuilder() {
     }
   };
 
-
   const navigate = useNavigate()
   const handleSave = async () => {
     setSaveLoading(true);
 
-    const { brandName, brandTone, timeZone, companySector, websiteUrl } =
-      values;
-    if (!brandTone | !companySector | !brandName) {
+    if (!brandName || !brandDescription) {
       dispatch(setMessage("Please provide all values "));
       setSaveLoading(false);
-    } else if (selectedOption === "HasEndDate" && endDate === "") {
-      dispatch(setMessage("Please provide End Date "));
-      setSaveLoading(false);
-    } else {
-      await axios
-        .post(
-          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/save-brand-engagement/${user?._id}`,
-          postData
-        )
-        .then((res) => {
-          getUserData();
-          handleReset();
-          setSaveLoading(false);
-
-
-          //This tost should be in the other page
-          toast.success("Brand Engagement saved successfully");
-          // console.log(res.data);
-          axios.get(
-            `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
-          )
-            .then((response) => {
-              const { totalPages, brandEngagements } = response.data; // Accessing response data directly
-              setEngagements(brandEngagements);
-              setNumberOfPages(totalPages);
-              //Redirect the user to the newly created branch
-              navigate(`/brand-engagements/${brandEngagements[0]?._id}?modal=congratulations`)
-
-            });
-          fetchEngagements()
-          dispatch(clearMessage());
-          // dispatch("")
-        })
-        .catch((error) => {
-          setSaveLoading(false);
-          // console.log("err :" + error.message);
-          if (error.message === "Request failed with status code 400") {
-            dispatch(setMessage('BrandName must be unique'))
-
-          } else {
-            dispatch(setMessage('An error occurred'))
-          }
-
-        });
+      return;
     }
 
-    setSaveLoading(false);
-    // alert(JSON.stringify(values))
+    const postData = {
+      BrandName: brandName,
+      CompanySector: brandDescription,
+      postContent: result
+
+      // include other required fields here if necessary
+    };
+
+    try {
+      const response = await axios.post(
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/save-brand-engagement/${user?._id}`,
+        postData
+      );
+
+      getUserData();
+      handleReset();
+      setSaveLoading(false);
+      toast.success("Brand Engagement saved successfully");
+
+      const engagementResponse = await axios.get(
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+      );
+
+      const { totalPages, brandEngagements } = engagementResponse.data;
+      setEngagements(brandEngagements);
+      setNumberOfPages(totalPages);
+
+      navigate(`/brand-engagements/${brandEngagements[0]?._id}?modal=congratulations`);
+      fetchEngagements();
+      dispatch(clearMessage());
+    } catch (error) {
+      setSaveLoading(false);
+      if (error.message === "Request failed with status code 400") {
+        dispatch(setMessage('BrandName must be unique'));
+      } else {
+        dispatch(setMessage('An error occurred'));
+      }
+    }
   };
 
   const handleReset = () => {
@@ -310,7 +294,6 @@ function BrandEngagementBuilder() {
   };
 
   //Handle notification on payment 
-  // console.log("user.notificationMessage : " + user.notificationMessage)
   const handleNotificationClose = async () => {
 
     try {
@@ -339,7 +322,7 @@ function BrandEngagementBuilder() {
       });
   };
 
-  let [isOpen, setIsOpen] = useState(true);
+  let [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
     setIsOpen(false);
@@ -394,23 +377,6 @@ function BrandEngagementBuilder() {
     }));
   };
 
-
-  //Get target audiences
-  const [targetAudiences, setTargetAudiences] = useState([])
-  const getTargetAudiences = async () => {
-    try {
-      await axios.post(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/generate-ta-options`, {
-        companySector: values.companySector
-      }).then((res) => {
-        setTargetAudiences(res.data.targetAudiences)
-        console.log('targetAudiences :' + res.data.targetAudiences)
-      })
-
-    } catch (error) {
-      console.log('error :' + error)
-    }
-  }
-
   const handleTargetAudienceInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -423,7 +389,6 @@ function BrandEngagementBuilder() {
     }));
   };
 
-
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value);
   };
@@ -431,10 +396,10 @@ function BrandEngagementBuilder() {
   const handleEndDateChange = (e) => {
     setEndDate(e.target.value);
   };
+
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
   };
-
 
   const [enabled, setEnabled] = useState(true);
   useEffect(() => {
@@ -470,7 +435,6 @@ function BrandEngagementBuilder() {
     setResult(event.target.value);
   };
 
-
   const disableFirstLogin = async () => {
     try {
 
@@ -481,25 +445,108 @@ function BrandEngagementBuilder() {
     }
   }
 
-
-
-
   useEffect(() => {
     console.log("Selected Days:", selectedDays);
   }, [selectedDays]);
 
-  useEffect(() => {
-    setIsVisible(!(engagements.length > 0));
-  }, [engagements]);
+  // useEffect(() => {
+  //   setIsVisible(!(engagements.length > 0));
+  // }, [engagements]);
+
+  function closeModal() {
+    setIsOpen(false)
+  }
+
+  console.log(brandName)
+  console.log(brandDescription)
 
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
+      <AddNewBrandModal
+        isOpen={isOpen}
+        onCancel={closeModal}
+        handlePreview={handlePreview}
+        brandName={brandName}
+        setBrandName={setBrandName}
+        brandDescription={brandDescription}
+        setBrandDescription={setBrandDescription}
+      >
+        <div className="flex flex-wrap bg-blue-50 md:p-4 rounded-lg mt-2">
+
+          {result &&
+            <div className="w-full flex-col mt-2 md:mx-4  text-white md:px-4  bg-[#333333] rounded-lg p-4">
+              {result && (
+                <div className="flex justify-end mb-4">
+                  {!isEditing && <button className="bg-green-500 w-[15%] cursor-pointer
+                         text-center rounded-lg py-1 mr-2" onClick={handleEditClick}>Edit</button>}
+                  <div
+                    onClick={handleCopyText}
+                    className="bg-slate-600 w-[15%] cursor-pointer text-center  rounded-lg py-1 "
+                  >
+                    <p className=" ">
+
+                      Copy
+                    </p>
+                  </div>
+                </div>
+              )}
+              <div className=" md:space-y-3 md:mt-0 mt-2">
+                {isEditing ? (
+                  <div>
+                    <textarea
+                      value={result}
+                      rows={10}
+                      onChange={handleResultChange}
+                      className="text-white bg-[#333333] w-full"
+                    />
+                    <div className="flex mt-3">  <button className="bg-green-500 w-[15%] cursor-pointer
+                         text-center rounded-lg py-1 mr-2" onClick={handleSaveClick}>Save</button>
+                      <button className="text-red-400" onClick={handleCancelClick}>Cancel</button></div>
+                  </div>
+                ) : (
+                  <pre className="whitespace-pre-wrap font-medium">
+                    {result !== null ? ReactHtmlParser(result) : "Results will be added here."}
+
+                  </pre>
+                )}
+              </div>
+            </div>
+          }
+          {(result && !previewLoading) ?
+            <div className="w-full px-2 mt-2 mx-2">
+              <button
+                type="button"
+                onClick={() => {
+                  !saveLoading && handleSave();
+                }}
+                className="flex justify-center items-center w-full hover:bg-green-600 hover:font-bold bg-green-500 text-white rounded p-2"
+              >
+                {saveLoading ? (
+                  <>
+                    <img
+                      className="mr-2"
+                      width={20}
+                      src={rolling}
+                    />
+                    Saving...
+                  </>
+                ) : (
+                  "Save your brand "
+                )}
+                <FontAwesomeIcon className="ml-2" icon={faSave} color="white" size={24} />
+              </button>
+            </div>
+            :
+            <></>
+          }
+        </div>
+      </AddNewBrandModal>
+
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-        {/*  Site header */}
         {/*  Site header */}
         <DashboardHeader
           sidebarOpen={sidebarOpen}
@@ -519,64 +566,22 @@ function BrandEngagementBuilder() {
                 </h1>
                 <button
                   className="px-2 py-2.5 bg-pink-500 md:mt-0 mt-2  text-center text-white rounded text-sm flex items-center font-normal"
-                  onClick={() => setIsVisible(!isVisible)}
+                  onClick={() => setIsOpen(true)}
                 >
                   <FontAwesomeIcon icon={faPlus} className="mr-2 text-pink-500 text-center  bg-white py-1 px-[5px] mb-[1px] rounded-full" />
                   <span className="hover:font-bold"> Add Brands</span>
                 </button>
               </div>
 
-              {/* <Dialog.Root>
-                <Dialog.Trigger>
-                  <Button>Edit profile</Button>
-                </Dialog.Trigger>
 
-                <Dialog.Content style={{ maxWidth: 450 }}>
-                  <Dialog.Title>Edit profile</Dialog.Title>
-                  <Dialog.Description size="2" mb="4">
-                    Make changes to your profile.
-                  </Dialog.Description>
-
-                  <Flex direction="column" gap="3">
-                    <label>
-                      <Text as="div" size="2" mb="1" weight="bold">
-                        Name
-                      </Text>
-                      <TextField.Input
-                        defaultValue="Freja Johnsen"
-                        placeholder="Enter your full name"
-                      />
-                    </label>
-                    <label>
-                      <Text as="div" size="2" mb="1" weight="bold">
-                        Email
-                      </Text>
-                      <TextField.Input
-                        defaultValue="freja@example.com"
-                        placeholder="Enter your email"
-                      />
-                    </label>
-                  </Flex>
-
-                  <Flex gap="3" mt="4" justify="end">
-                    <Dialog.Close>
-                      <Button variant="soft" color="gray">
-                        Cancel
-                      </Button>
-                    </Dialog.Close>
-                    <Dialog.Close>
-                      <Button>Save</Button>
-                    </Dialog.Close>
-                  </Flex>
-                </Dialog.Content>
-              </Dialog.Root> */}
               <div className="my-4 sm:mb-8 flex flex-col">  {/* Increased the bottom margin to mb-8 */}
                 {user.notificationMessage !== 'none' &&
                   <PaymentSuccessMessage
                     onClose={handleNotificationClose}
                     text={(user.notificationMessage === 'payment_failed') ? 'Payment Failed!' : user.notificationMessage === 'payment_succeeded' ? "Payment succeeded" : ""} />
                 }                <p className="text-slate-800">
-                  Welcome to <span className='text-pink-600 font-medium'>Get Sweet’s brand engagement builder</span>, your home for building your voice as a company and will empower your input to be transformed into actual posts for your social media platforms.
+                  Welcome to
+                  <span className='text-pink-600 font-medium'>Get Sweet’s brand engagement builder</span>, your home for building your voice as a company and will empower your input to be transformed into actual posts for your social media platforms.
                   Be sure to be specific about what your brand offers and the overall objective you would like to get out of your brand.
                 </p>
                 {
@@ -607,14 +612,11 @@ function BrandEngagementBuilder() {
               </div>
 
               {/* Element that will be shown/hidden */}
-              <div className={isVisible ? "" : "hidden"}>
+              <div className="hidden">
 
                 {/*Brand Engagement Card Form*/}
-                {user?.availableTokens === 0 ? (
-                  // <a
-                  //   className="flex justify-center items-center md:text-xl p-3 text-red-600 my-4"
-                  //   href="/payment"
-                  // >
+                {/* {user?.availableTokens === 0 ? (
+
                   <div className=''>
                     <Callout.Root color="red">
                       <Callout.Icon>
@@ -626,320 +628,12 @@ function BrandEngagementBuilder() {
                     </Callout.Root>
                   </div>
 
-                  // </a>
-                ) : (
-                  <div id="Brand_Form" className="flex flex-wrap bg-blue-50 md:p-4 rounded-lg sm:mb-12">
-                    <div className="w-full ">
-                      {/* Form goes here */}
-                      <form className="rounded px-4" onSubmit={handlePreview}>
-                        <div className="  flex-col rounded-md  flex flex-wrap">
-                          <label htmlFor="select3" className="block pl-2  mb-2">
-                            Post type
-                          </label>
-                          <div className="w-full flex flex-wrap">
-                            <RadioButton
-                              id="TextImagePost"
-                              value="TextImagePost"
-                              checked={selectedPostType === 'TextImagePost'}
-                              onChange={handlePostTypeChange}
-                              label="Text-Image Posts"
-                              img={image}
-                            />
+                ) : ( */}
 
-                            <RadioButton
-                              id="TextVideoPost"
-                              value="TextVideoPost"
-                              checked={selectedPostType === 'TextVideoPost'}
-                              onChange={handlePostTypeChange}
-                              label="Text-Video Posts"
-                              img={video}
-                            />
-                            <RadioButton
-                              type="radio"
-                              id="Both"
-                              value="Both"
-                              checked={selectedPostType === 'Both'}
-                              onChange={handlePostTypeChange}
-                              label="Mixed Media Posts"
-                              img={image}
-                              imgTwo={video}
-                            />
-                          </div>
-                        </div>
-
-                        <div className="flex flex-wrap">
-                          <div className="w-full md:w-1/2 p-2">
-                            <label htmlFor="input1" className="block mb-1">
-                              Brand Name
-                            </label>
-                            <input
-                              id="input1"
-                              className="w-full border-gray-300 rounded p-2"
-                              type="text"
-                              name="brandName"
-                              placeholder="Brand Name"
-                              value={values.brandName}
-                              onChange={handleInputChange}
-                            />
-                          </div>
-                          <div className="w-full md:w-1/2 p-2">
-                            <label htmlFor="select3" className="block mb-1">
-                              Brand Tone
-                            </label>
-                            <Select
-                              id="select3"
-                              className="w-full"
-                              placeholder="Brand Tone"
-                              name="brandTone"
-                              value={values.brandTone}
-                              onChange={(selectedOption) =>
-                                handleSelectChange("brandTone", selectedOption)
-                              }
-                              options={brandTones}
-                            />
-                          </div>
-                          <div className="w-full  p-2">
-                            <label htmlFor="select2" className="block mb-1">
-                              Brand Description
-                            </label>
-                            {/* Brand Description Text Box */}
-                            <textarea
-                              // id="input1"
-                              className="w-full border-gray-300 rounded p-2"
-                              type="text"
-                              rows={2}
-                              name="companySector"
-                              placeholder="Enter your brand description "
-                              value={values.companySector}
-                              onChange={handleTargetAudienceInputChange}
-                            />
-
-                          </div>
-                          {/* {targetAudiences.length > 0 && <div className="w-full  p-2">
-                            <label htmlFor="select1" className="block mb-1">
-                              Target Audience -<span className="text-blue-300 text-sm"> Generated with ai</span>
-                            </label>
-                            <Select
-                              className="w-full"
-                              placeholder="choose your Target Audience"
-                              value={values.targetAudience}
-                              onChange={(selectedOption) =>
-                                handleSelectChange("targetAudience", selectedOption)
-                              }
-                              options={targetAudiences && JSON.parse(targetAudiences)}
-                            />
-                          </div>} */}
-
-                          <div className="w-full md:w-1/2 p-2">
-                            <label htmlFor="input2" className="block mb-1">
-                              Web or Social URL <span className="text-gray-500 text-sm">Optional</span>
-                            </label>
-                            <input
-                              id="input2"
-                              className="w-full border-gray-300 rounded p-2"
-                              type="text"
-                              name="websiteUrl"
-                              placeholder="Website URL"
-                              value={values.websiteUrl}
-                              onChange={handleInputChange}
-                            />
-                          </div>
-                          <div className="w-full md:w-1/2 p-2">
-                            <label htmlFor="select1" className="block mb-1">
-                              Time Zone
-                            </label>
-                            <Select
-                              id="timeZone"
-                              className="w-full"
-                              // name="timeZone"
-                              placeholder="Time Zone"
-                              value={values.timeZone}
-                              onChange={(selectedOption) =>
-                                handleSelectChange("timeZone", selectedOption)
-                              }
-                              options={timeZoneOptions}
-                            />
-                          </div>
-                          <div className="w-full p-2 mb-1">
-                            <label htmlFor="select1" className="block mb-1">
-                              Posts language
-                            </label>
-                            <Select
-                              id="language"
-                              className="w-full"
-                              // name="timeZone"
-                              placeholder="Language of the posts"
-                              value={values.language}
-                              onChange={(selectedOption) =>
-                                handleSelectChange("language", selectedOption)
-                              }
-                              options={languageOptions}
-                            />
-                          </div>
-                          <div className="  flex-col w-full  rounded-md  flex flex-wrap">
-                            <label htmlFor="select3" className="block pl-2">
-                              Schedule
-                            </label>
-                            <DayPicker selectedDays={selectedDays} setSelectedDays={setSelectedDays} />
-
-
-                          </div>
-
-                          <div className="w-full   p-2">
-                            {selectedOption === 'HasEndDate' && (
-                              <div className="flex md:flex-row flex-col md:space-x-2">
-                                <div className="md:w-1/2 w-full">
-                                  <label className="block text-md  ">
-                                    Start Date
-                                  </label>
-                                  <input
-                                    type="date"
-                                    className="mt-1 p-2 border border-gray-300 rounded w-full focus:ring-indigo-500 focus:border-indigo-500"
-                                    value={startDate} // Bind the input value to endDate state
-                                    onChange={handleStartDateChange} // Update the endDate state
-                                  />
-                                </div>
-                                <div className="md:w-1/2 w-full">
-                                  <label className="block text-md  ">
-                                    End Date
-                                  </label>
-                                  <input
-                                    type="date"
-                                    className="mt-1 p-2 border border-gray-300 rounded w-full focus:ring-indigo-500 focus:border-indigo-500"
-                                    value={endDate} // Bind the input value to endDate state
-                                    onChange={handleEndDateChange} // Update the endDate state
-                                  />
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                          <div className=" mt-2 flex w-full justify-center items-center p-2">
-                            <label className={`mr-4 ${selectedOption === 'RunForEver' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
-                              <span className="mr-2 text-md  font-medium">Run forever</span>
-                            </label>
-
-                            <SwitchButton enabled={enabled} setEnabled={setEnabled} />
-
-                            <label className={`ml-4 ${selectedOption === 'HasEndDate' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
-                              <span className="ml-2 text-md  font-medium">Set Date Range</span>
-                            </label>
-                          </div>
-
-
-
-                          <div className="flex w-full justify-center items-center">
-                            <p className="text-red-500 text-sm my-2  text-center">
-                              {message ? message : ""}
-                            </p>
-                          </div>
-
-                          {previewLoading ?
-                            <div className="flex flex-col w-full p-2">
-                              <Line percent={previewProgress} strokeWidth={1} strokeColor="#f60c9c" />
-                              <p className="text-center text-blue-600 mt-3 font-semibold">
-                                {progressMessage} <span className="text-gray-500"> </span>
-                                <span className="text-pink-500 font-bold">{previewProgress}%</span>
-                              </p>
-                              {/* Display the message */}</div> : <div className="md:flex w-full p-2">
-                              <button
-                                type="reset"
-                                onClick={handleReset}
-                                className="md:w-[40%] w-full bg-blue-500 hover:font-bold  text-white rounded p-2"
-                              >
-                                <span className="mr-2">Reset form</span>
-                                <FontAwesomeIcon icon={faRefresh} color="white" size={24} />
-                              </button>
-                              <button
-                                disabled={previewLoading}
-                                type={!previewLoading ? "submit" : "button"}
-                                className={`${previewLoading ? "cursor-not-allowed" : ""} md:w-[80%] flex justify-center items-center w-full
-                               bg-pink-500 text-white rounded hover:font-bold  
-                                p-2 mt-2 md:mt-0 md:ml-2`}
-                              >
-
-                                <span className="mr-2"> Preview
-                                </span>
-                                <FontAwesomeIcon icon={faEye} color="white" size={24} />
-                              </button>
-                            </div>}
-
-                        </div>
-
-                      </form>
-                    </div>
-                    {result &&
-                      <div className="w-full flex-col mt-2 md:mx-4  text-white md:px-4  bg-[#333333] rounded-lg p-4">
-                        {result && (
-                          <div className="flex justify-end mb-4">
-                            {!isEditing && <button className="bg-green-500 w-[15%] cursor-pointer
-                           text-center rounded-lg py-1 mr-2" onClick={handleEditClick}>Edit</button>}
-                            <div
-                              onClick={handleCopyText}
-                              className="bg-slate-600 w-[15%] cursor-pointer text-center  rounded-lg py-1 "
-                            >
-                              <p className=" ">
-
-                                Copy
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                        <div className=" md:space-y-3 md:mt-0 mt-2">
-                          {isEditing ? (
-                            <div>
-                              <textarea
-                                value={result}
-                                rows={10}
-                                onChange={handleResultChange}
-                                className="text-white bg-[#333333] w-full"
-                              />
-                              <div className="flex mt-3">  <button className="bg-green-500 w-[15%] cursor-pointer
-                           text-center rounded-lg py-1 mr-2" onClick={handleSaveClick}>Save</button>
-                                <button className="text-red-400" onClick={handleCancelClick}>Cancel</button></div>
-                            </div>
-                          ) : (
-                            <pre className="whitespace-pre-wrap font-medium">
-                              {result !== null ? ReactHtmlParser(result) : "Results will be added here."}
-
-                            </pre>
-                          )}
-                        </div>
-                      </div>
-                    }
-                    {(result && !previewLoading) ?
-
-                      <div className="w-full px-2 mt-2 mx-2">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            !saveLoading && handleSave();
-                          }}
-                          className="flex justify-center items-center w-full hover:bg-green-600 hover:font-bold bg-green-500 text-white rounded p-2"
-                        >
-                          {saveLoading ? (
-                            <>
-                              <img
-                                className="mr-2"
-                                width={20}
-                                src={rolling}
-                              />
-                              Saving...
-                            </>
-                          ) : (
-                            "Save your brand "
-                          )}
-                          <FontAwesomeIcon className="ml-2" icon={faSave} color="white" size={24} />
-                        </button>
-                      </div>
-                      :
-                      <></>
-                    }
-                  </div>
-                )}
+                {/* )} */}
               </div>
               {/* Element that will be shown/hidden */}
             </div>
-            {/*End Brand Engagement Card Form*/}
 
             {/* OnBoarding */}
             {user?.firstLogin && <Onboarding

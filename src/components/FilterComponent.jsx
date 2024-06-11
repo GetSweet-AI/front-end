@@ -3,19 +3,23 @@ import { Disclosure } from '@headlessui/react';
 import { faUpDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const FilterComponent = ({ label, isFilterOne, isFilterTwo, setIsFilterOne, setIsFilterTwo, applyFilter, filterOneLabel, filterTwoLabel }) => {
+const FilterComponent = ({ label, isScheduled, isNonScheduled, isArchived, setIsScheduled, setIsNonScheduled, setIsArchived, applyFilter }) => {
 
-    const handle1stInputChange = (event) => {
-        setIsFilterOne(event.target.checked);
+    const handleScheduledChange = (event) => {
+        setIsScheduled(event.target.checked);
     };
 
-    const handleNdVideoChange = (event) => {
-        setIsFilterTwo(event.target.checked);
+    const handleNonScheduledChange = (event) => {
+        setIsNonScheduled(event.target.checked);
+    };
+
+    const handleArchivedChange = (event) => {
+        setIsArchived(event.target.checked);
     };
 
     return (
-        <div className="w-full  bg-white shadow-sm -mt-[8vh] md:mt-2 rounded-md">
-            <div className=" w-full rounded-2xl bg-white p-3">
+        <div className="w-full bg-white shadow-sm -mt-[8vh] md:mt-2 rounded-md">
+            <div className="w-full rounded-2xl bg-white p-3">
                 <Disclosure defaultOpen>
                     {({ open }) => (
                         <>
@@ -33,21 +37,36 @@ const FilterComponent = ({ label, isFilterOne, isFilterTwo, setIsFilterOne, setI
                                     <label className="mb-2">
                                         <input
                                             type="checkbox"
-                                            checked={isFilterOne}
-                                            onChange={handle1stInputChange}
+                                            checked={isScheduled}
+                                            onChange={handleScheduledChange}
                                             className="mr-2 text-sm"
                                         />
-                                        {filterOneLabel}
+                                        Scheduled
+                                    </label>
+                                    <label className="mb-2 hidden">
+                                        <input
+                                            type="checkbox"
+                                            checked={isNonScheduled}
+                                            onChange={handleNonScheduledChange}
+                                            className="mr-2 text-sm"
+                                        />
+                                        Non-Scheduled
                                     </label>
                                     <label className="mb-2">
                                         <input
                                             type="checkbox"
-                                            checked={isFilterTwo}
-                                            onChange={handleNdVideoChange}
+                                            checked={isArchived}
+                                            onChange={handleArchivedChange}
                                             className="mr-2 text-sm"
                                         />
-                                        {filterTwoLabel}
+                                        Archived
                                     </label>
+                                    {/* <button
+                                        onClick={applyFilter}
+                                        className="mt-2 inline-flex justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    >
+                                        Apply Filter
+                                    </button> */}
                                 </div>
                             </Disclosure.Panel>
                         </>

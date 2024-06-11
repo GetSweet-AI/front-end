@@ -166,9 +166,9 @@ function FeedPostCard({
 
     if (timestamp < Date.now()) {
       return (
-        <>
-          <span>Posted on {date}</span>
-        </>
+        <p>
+          Posted on<span className='font-bold'> {date}</span>
+        </p>
       );
     } else {
       return (
