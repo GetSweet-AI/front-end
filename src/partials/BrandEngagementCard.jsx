@@ -177,7 +177,7 @@ function BrandEngagementCard({
           {/* </div> */}
 
           <div className="grow mt-2">
-            {websiteUrl ?
+            {/* {websiteUrl ?
               <div className="text-sm mb-2 ">
                 <span className="font-medium">websiteUrl</span> :{" "}
                 <a
@@ -190,12 +190,12 @@ function BrandEngagementCard({
               </div>
               :
               <div className="text-sm mb-2"></div>
-            }
-            <div className="text-sm mb-2 ">
+            } */}
+            {/* <div className="text-sm mb-2 ">
               <span className="font-medium">Time Zone</span>: {timeZone}
-            </div>
+            </div> */}
             {" "}
-            <div className="text-sm mb-2 ">
+            <div className="text-sm mb-2 mt-4 ">
               <span className="font-medium">Brand Tone</span>: {brandTone}
             </div>
             <div className="text-sm mb-2 h-12 overflow-y-hidden">
