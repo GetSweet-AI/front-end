@@ -163,7 +163,7 @@ export default function Home() {
   // const getPlanInfos = async () => {
   //   //   setIsPlansLoading(true)
   //   setIsLoading(true)
-  //   await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/plans`)
+  //   await axios.get(`http://localhost:5000/api/v1/plans`)
   //     .then((res) => {
   //       setPlanInfos(res?.data.planInfos)
 

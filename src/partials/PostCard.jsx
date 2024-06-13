@@ -33,7 +33,7 @@ function PostCard({
     Intl.DateTimeFormat().resolvedOptions().timeZone
   );
 
-  //https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/6509eb6b6a20f499452b2186
+  //http://localhost:5000/api/v1/client-connect/6509eb6b6a20f499452b2186
 
   let { id } = useParams();
 
@@ -45,7 +45,7 @@ function PostCard({
     try {
       if (id) {
         const response = await axios.get(
-          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/check-connect-link-exists/${id}`
+          `http://localhost:5000/api/v1/check-connect-link-exists/${id}`
         );
         setIsConnected(response.data?.hasConnectLinkURL);
       }
@@ -67,7 +67,7 @@ function PostCard({
   const getClientConnectData = async () => {
     try {
       const response = await axios.get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`
+        `http://localhost:5000/api/v1/client-connect/${id}`
       );
       console.log("Client connect data :" + JSON.stringify(response.data)); // Success message or response data
       // Perform any additional actions after successful deletion
@@ -87,7 +87,7 @@ function PostCard({
       setIsLoadingCC(true);
 
       try {
-        const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`);
+        const response = await axios.get(`http://localhost:5000/api/v1/client-connect/${id}`);
 
         if (response.status === 200) {
           console.log("Client connect: ", response.data);
@@ -119,7 +119,7 @@ function PostCard({
     // //Update caption on the backend + setSaving(true)
     try {
       const response = await axios.put(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${feedPostId}`,
+        `http://localhost:5000/api/v1/feed-posts/${feedPostId}`,
         {
           NewCaption: caption
         });
@@ -151,7 +151,7 @@ function PostCard({
     setIsLoading(true)
     try {
       const response = await axios.post(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/new-caption`,
+        `http://localhost:5000/api/v1/new-caption`,
         {
           prompt: promptInput,
           caption: Caption
@@ -162,7 +162,7 @@ function PostCard({
 
       // Update the feed post with the new caption
       await axios.put(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${feedPostId}`,
+        `http://localhost:5000/api/v1/feed-posts/${feedPostId}`,
         {
           NewCaption: response.data.newCaption
         }

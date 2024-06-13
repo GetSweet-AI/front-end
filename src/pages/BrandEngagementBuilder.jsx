@@ -74,7 +74,7 @@ function BrandEngagementBuilder() {
 
   useEffect(() => {
     fetch(
-      `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+      `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
@@ -86,7 +86,7 @@ function BrandEngagementBuilder() {
   const getUserData = async () => {
     await axios
       .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         dispatch(setUserData(res?.data.user));
@@ -171,13 +171,14 @@ function BrandEngagementBuilder() {
 
       try {
         const res = await axios.post(
-          "https://seal-app-dk3kg.ondigitalocean.app/api/v1/generate-blog-post",
+          "http://localhost:5000/api/v1/generate-blog-post",
           {
             brandName: brandName,
             companySector: brandDescription,
           }
         );
         setResult(res.data.postContent);
+
       } catch (err) {
         console.error(err);
         dispatch(setMessage("An error occurred"));
@@ -203,13 +204,12 @@ function BrandEngagementBuilder() {
       BrandName: brandName,
       CompanySector: brandDescription,
       postContent: result
-
       // include other required fields here if necessary
     };
 
     try {
       const response = await axios.post(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/save-brand-engagement/${user?._id}`,
+        `http://localhost:5000/api/v1/save-brand-engagement/${user?._id}`,
         postData
       );
 
@@ -219,7 +219,7 @@ function BrandEngagementBuilder() {
       toast.success("Brand Engagement saved successfully");
 
       const engagementResponse = await axios.get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+        `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
       );
 
       const { totalPages, brandEngagements } = engagementResponse.data;
@@ -229,6 +229,9 @@ function BrandEngagementBuilder() {
       navigate(`/brand-engagements/${brandEngagements[0]?._id}?modal=congratulations`);
       fetchEngagements();
       dispatch(clearMessage());
+      setBrandDescription('')
+      setBrandName('')
+      setIsOpen(false)
     } catch (error) {
       setSaveLoading(false);
       if (error.message === "Request failed with status code 400") {
@@ -255,7 +258,7 @@ function BrandEngagementBuilder() {
 
   const fetchEngagements = async () => {
     await fetch(
-      `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
+      `http://localhost:5000/api/v1/brand-engagements/${user?._id}?page=${pageNumber}`
     )
       .then((response) => response.json())
       .then(({ totalPages, brandEngagements }) => {
@@ -299,7 +302,7 @@ function BrandEngagementBuilder() {
     try {
       // Make a POST request to update the notificationMessage in the backend using Axios
       // Replace 'YOUR_UPDATE_NOTIFICATION_ENDPOINT' with your actual endpoint
-      await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/update-notification-message/${user._id}`, {
+      await axios.put(`http://localhost:5000/api/v1/auth/update-notification-message/${user._id}`, {
         notificationMessage: 'none',
       }).then((res) => {
         fetchUserData()
@@ -312,7 +315,7 @@ function BrandEngagementBuilder() {
   const fetchUserData = async () => {
     await axios
       .get(
-        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`
+        `http://localhost:5000/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         dispatch(setUserData(res.data.user));
@@ -355,7 +358,7 @@ function BrandEngagementBuilder() {
   const [templates, setTemplates] = useState([])
   const getTemplates = async () => {
     try {
-      await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
+      await axios.get(`http://localhost:5000/api/v1/admin/templates?userId=${user?._id}`).then((res) => {
         setTemplates(res.data.templates)
         console.log(res.data.templates)
       })
@@ -412,7 +415,6 @@ function BrandEngagementBuilder() {
     }
   }, [enabled])
 
-
   const handlePostTypeChange = (event) => {
     setSelectedPostType(event.target.value);
   };
@@ -438,7 +440,7 @@ function BrandEngagementBuilder() {
   const disableFirstLogin = async () => {
     try {
 
-      await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/disable-first-login/${user?._id}`);
+      await axios.put(`http://localhost:5000/api/v1/auth/users/disable-first-login/${user?._id}`);
 
     } catch (error) {
       console.log(error)
@@ -459,6 +461,12 @@ function BrandEngagementBuilder() {
 
   console.log(brandName)
   console.log(brandDescription)
+  console.log({
+    BrandName: brandName,
+    CompanySector: brandDescription,
+    postContent: result
+    // include other required fields here if necessary
+  })
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -473,8 +481,10 @@ function BrandEngagementBuilder() {
         setBrandName={setBrandName}
         brandDescription={brandDescription}
         setBrandDescription={setBrandDescription}
+        isLoading={previewLoading}
+        userId={user?._id}
       >
-        <div className="flex flex-wrap bg-blue-50 md:p-4 rounded-lg mt-2">
+        <div className="flex flex-wrap bg-blue-50  rounded-lg mt-2">
 
           {result &&
             <div className="w-full flex-col mt-2 md:mx-4  text-white md:px-4  bg-[#333333] rounded-lg p-4">
@@ -507,7 +517,7 @@ function BrandEngagementBuilder() {
                       <button className="text-red-400" onClick={handleCancelClick}>Cancel</button></div>
                   </div>
                 ) : (
-                  <pre className="whitespace-pre-wrap font-medium">
+                  <pre className="whitespace-pre-wrap font-medium h-60 overflow-y-scroll">
                     {result !== null ? ReactHtmlParser(result) : "Results will be added here."}
 
                   </pre>
@@ -516,7 +526,7 @@ function BrandEngagementBuilder() {
             </div>
           }
           {(result && !previewLoading) ?
-            <div className="w-full px-2 mt-2 mx-2">
+            <div className="w-full   mt-2">
               <button
                 type="button"
                 onClick={() => {

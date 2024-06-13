@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import React from "react";
-
+import TemplateSelector from "./TemplateSelector"; // Import the new component
 
 function AddNewBrandModal({
   isOpen,
@@ -12,8 +12,39 @@ function AddNewBrandModal({
   setBrandName,
   brandDescription,
   setBrandDescription,
+  isLoading,
+  userId
 }) {
+  const [errors, setErrors] = useState({ brandName: "", brandDescription: "" });
 
+  const validateForm = () => {
+    let hasErrors = false;
+    let errorMessages = { brandName: "", brandDescription: "" };
+
+    if (!brandName.trim()) {
+      errorMessages.brandName = "Brand name is required.";
+      hasErrors = true;
+    }
+
+    if (!brandDescription.trim()) {
+      errorMessages.brandDescription = "Brand description is required.";
+      hasErrors = true;
+    }
+
+    setErrors(errorMessages);
+    return !hasErrors;
+  };
+
+  const handlePreviewClick = () => {
+    if (validateForm()) {
+      handlePreview(); // Assuming this is the save function
+    }
+  };
+
+  const handleSelectTemplate = (template) => {
+    setBrandName(template.Title);
+    setBrandDescription(template.CompanySector); // Adjust based on how you want to map template fields
+  };
 
   return (
     <>
@@ -42,10 +73,14 @@ function AddNewBrandModal({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <div className={`modal ${isOpen ? "visible" : "hidden"}`}>
-                    <div className="modal-content">
+                <Dialog.Panel className="w-full md:w-1/3 transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <div className={`modal ${isOpen ? "visible" : "hidden"} `}>
+                    <div className="modal-content ">
                       <h2 className="font-bold text-lg my-4">Add New Brand</h2>
+
+                      <TemplateSelector userId={userId} onSelectTemplate={handleSelectTemplate} />
+
+                      {/* <div className="h-[2px] mr-2 bg-gray-200  mb-2" /> */}
 
                       <div>
                         <div className="mb-4">
@@ -58,6 +93,7 @@ function AddNewBrandModal({
                             onChange={(e) => setBrandName(e.target.value)}
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                           />
+                          {errors.brandName && <p className="text-red-500 text-xs italic">{errors.brandName}</p>}
                         </div>
 
                         <div className="mb-4">
@@ -69,6 +105,7 @@ function AddNewBrandModal({
                             onChange={(e) => setBrandDescription(e.target.value)}
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                           />
+                          {errors.brandDescription && <p className="text-red-500 text-xs italic">{errors.brandDescription}</p>}
                         </div>
                       </div>
                       <div className="mt-5 flex justify-between">
@@ -79,15 +116,17 @@ function AddNewBrandModal({
                           Cancel
                         </button>
                         <button
-                          onClick={handlePreview}
+                          disabled={isLoading}
+                          onClick={handlePreviewClick}
                           className="inline-flex justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                          Save
+                          {isLoading ? "Loading ..." : "Preview"}
                         </button>
                       </div>
                     </div>
 
                     {children}
+
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

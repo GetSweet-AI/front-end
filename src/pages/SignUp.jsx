@@ -48,10 +48,10 @@ function SignUp() {
   const registerUser = async (currentUser) => {
     setLoading(true)
     try {
-      const { data } = await axios.post("https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/register", currentUser);
+      const { data } = await axios.post("http://localhost:5000/api/v1/auth/register", currentUser);
       const { user, token } = data;
       console.log("Data : " + data)
-      axios.post(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}/send-email-verification`, {
+      axios.post(`http://localhost:5000/api/v1/auth/users/${user?._id}/send-email-verification`, {
         email: user?.email
       }).then((re) => {
         navigate('/check-email')
