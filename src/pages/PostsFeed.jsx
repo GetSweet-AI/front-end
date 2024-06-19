@@ -84,7 +84,7 @@ function PostsFeed() {
   const deletePostFeed = async (id) => {
     await axios
       .delete(
-        `http://localhost:5000/api/v1/feed-posts/${id}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${id}`
       )
       .then((res) => {
         fetchFeedPosts(selectedBrand)
@@ -112,7 +112,7 @@ function PostsFeed() {
   // Function to fetch brand engagement data
   const fetchBrandEngagementData = async (BrandEngagementID) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/v1/brand-engagement/${BrandEngagementID}`);
+      const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagement/${BrandEngagementID}`);
       setBrandEngagementData(response.data.brandEngagement);
     } catch (error) {
       console.error("Error fetching brand engagement data: ", error);
@@ -132,7 +132,7 @@ function PostsFeed() {
   const fetchCampaigns = async (BrandEngagementId) => {
     if (BrandEngagementId) {
       try {
-        const response = await axios.get(`http://localhost:5000/api/v1/campaign-titles/${BrandEngagementId}`); // replace userId with the actual user ID
+        const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/campaign-titles/${BrandEngagementId}`); // replace userId with the actual user ID
         setCampaigns(response.data);
         console.log(response.data)
       } catch (error) {
@@ -149,7 +149,7 @@ function PostsFeed() {
   const getClientConnectData = async (selectedBrand) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/v1/client-connect/${selectedBrand}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${selectedBrand}`
       );
       console.log("Client connect data :" + JSON.stringify(response.data)); // Success message or response data
       // Perform any additional actions after successful deletion
@@ -167,7 +167,7 @@ function PostsFeed() {
     setIsFeedPostsLoading(true)
     await axios
       .get(
-        `http://localhost:5000/api/v1/feed-posts-engagements/${brandId}?page=${pageNumber}
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${brandId}?page=${pageNumber}
         &isArchived=${isArchived}&isScheduled=${isScheduled}&isNonScheduled=${isNotScheduled}`
         , {
           headers: {
@@ -193,7 +193,7 @@ function PostsFeed() {
   const fetchEngagements = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/api/v1/brand-engagements-np/${user?._id}`);
+      const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements-np/${user?._id}`);
       const { brandEngagements } = response.data;
 
       fetchBrandEngagementData(brandEngagements[0]?._id);
@@ -217,7 +217,7 @@ function PostsFeed() {
 
   useEffect(() => {
     const fetchStatusData = async () => {
-      const url = `http://localhost:5000/api/v1/total-client-connect-status/${user?._id}`;
+      const url = `https://seal-app-dk3kg.ondigitalocean.app/api/v1/total-client-connect-status/${user?._id}`;
       try {
         setIsLoading(true);
         const response = await axios.get(url);
@@ -253,7 +253,7 @@ function PostsFeed() {
     try {
       // if (BrandEngagementID) {
       const response = await axios.get(
-        `http://localhost:5000/api/v1/check-connect-link-exists/${BrandEngagementID}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/check-connect-link-exists/${BrandEngagementID}`
       );
       setIsConnected(response.data?.hasConnectLinkURL);
       // }
@@ -276,7 +276,7 @@ function PostsFeed() {
   const handleLoadMore = async () => {
     setPageNumber(prevPageNumber => prevPageNumber + 1);  // Optimistically increment page number
     try {
-      const response = await axios.get(`http://localhost:5000/api/v1/feed-posts-engagements/${selectedBrand}?page=${pageNumber + 1}`);
+      const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${selectedBrand}?page=${pageNumber + 1}`);
       const newPosts = response.data?.feedPosts;
 
       setFilteredFeedPosts(prevFeedPosts => {
@@ -351,7 +351,7 @@ function PostsFeed() {
     const fetchFeedPosts = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/v1/feed-posts-engagements/${selectedBrand}?page=${pageNumber}&isArchived=false&isScheduled=true`,
+          `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${selectedBrand}?page=${pageNumber}&isArchived=false&isScheduled=true`,
           {
             headers: {
               'Cache-Control': 'no-cache'
@@ -441,6 +441,7 @@ function PostsFeed() {
                 />
               </div>
             )}
+
             <div className="flex justify-around space-x-2  w-full p-5">
               <PostBadge
                 icon={faCalendarCheck}
@@ -467,16 +468,11 @@ function PostsFeed() {
               {/* Add more instances of PostBadge with different data as needed */}
             </div>
 
-            <div className="flex flex-col md:flex-row px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto ">
+            <div className="flex flex-col  px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto ">
               {/* Page header */}
 
-              <div className="flex flex-col w-full h-full md:space-y-2  flex-[0.25] p-2">
+              {/* <div className="flex flex-col w-full h-full md:space-y-2   p-2">
 
-                {/* <FilterComponent options={statusOptions} label="Status" /> */}
-                {/* <FilterComponent label="Media Type" isFilterOne={isImage} isFilterTwo={isVideo}
-                  setIsFilterOne={setIsImage} setIsFilterTwo={setIsVideo} applyFilter={applyFilter}
-                  filterOneLabel="Image" filterTwoLabel="Video"
-                /> */}
 
                 <FilterComponent
                   label="Status"
@@ -491,9 +487,9 @@ function PostsFeed() {
                   setIsNonScheduled={setIsNotScheduled}
                 />
 
-              </div>
+              </div> */}
 
-              <div className="flex flex-col flex-[0.75]">
+              <div className="flex flex-col ">
                 <div className="flex flex-col md:flex-row justify-between  p-2 ">
                   <div className="mb-4 w-full flex sm:mb-0 justify-between ">
                     <h1 className="md:text-2xl flex-[0.8] text-xl mb-2 text-gray-700   font-bold" >
@@ -512,6 +508,20 @@ function PostsFeed() {
                       >
                         <FontAwesomeIcon icon={faCalendar} className="w-5 h-5 pt-1" />
                       </div>
+                    </div>
+                    <div>
+                      <FilterComponent
+                        label="Status"
+                        isFilterOne={isScheduled}
+                        isFilterTwo={isArchived}
+                        setIsFilterOne={setIsScheduled}
+                        setIsFilterTwo={setIsArchived}
+                        applyFilter={applyFilter}
+                        filterOneLabel="Scheduled"
+                        filterTwoLabel="Archived"
+                        setIsScheduled={setIsScheduled}
+                        setIsNonScheduled={setIsNotScheduled}
+                      />
                     </div>
                   </div>
                   <div className=" flex  items-center flex-row space-x-3 ">

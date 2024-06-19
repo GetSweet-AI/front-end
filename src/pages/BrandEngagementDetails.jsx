@@ -85,7 +85,7 @@ function BrandEngagementDetails() {
         setIsLoading(true)
         await axios
             .get(
-                `http://localhost:5000/api/v1/brand-engagement/${id}`
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagement/${id}`
             )
             .then((res) => {
                 setEngagement(res.data?.brandEngagement);
@@ -123,7 +123,7 @@ function BrandEngagementDetails() {
         setIsLoading(true)
         await axios
             .get(
-                `http://localhost:5000/api/v1/feed-posts-engagements/${id}?page=${pageNumber}`
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts-engagements/${id}?page=${pageNumber}`
             ).then((response) => {
                 setFeedPosts(response.data?.feedPosts);
                 setNumberOfPages(response.data?.totalPages)
@@ -172,7 +172,7 @@ function BrandEngagementDetails() {
     const deletePostFeed = async (id) => {
         await axios
             .delete(
-                `http://localhost:5000/api/v1/feed-posts/${id}`
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${id}`
             )
             .then((res) => {
                 console.log("Post feed deleted")
@@ -188,7 +188,7 @@ function BrandEngagementDetails() {
         setIsLoadingCC(true)
         try {
             const response = await axios.get(
-                `http://localhost:5000/api/v1/client-connect/${id}`
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`
             );
             console.log("Client connect :" + response.data); // Success message or response data
             // Perform any additional actions after successful deletion
@@ -207,7 +207,7 @@ function BrandEngagementDetails() {
         // setIsLoadingCC(true)
         try {
             // Make a request to the endpoint to get the ConnectLinkURL
-            const response = await axios.get(`http://localhost:5000/api/v1/check-connect-link-exists/${id}`);
+            const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/check-connect-link-exists/${id}`);
 
             // Extract the hasConnectLinkURL from the response
             setHasConnectUrl(response.data?.hasConnectLinkURL)
@@ -228,7 +228,7 @@ function BrandEngagementDetails() {
     const getClientConnectData = async () => {
         try {
             const response = await axios.get(
-                `http://localhost:5000/api/v1/client-connect/${id}`
+                `https://seal-app-dk3kg.ondigitalocean.app/api/v1/client-connect/${id}`
             );
             console.log("Client connect data :" + JSON.stringify(response.data)); // Success message or response data
             // Perform any additional actions after successful deletion
@@ -407,12 +407,9 @@ function BrandEngagementDetails() {
                           focus-visible:ring-blue-500 focus-visible:ring-opacity-75'>
                             {/* {id} */}
 
-                            <div className='bg-blue-100 h-12 flex justify-between p-3 rounded-xl'>     <p className='font-bold'>Website</p>
-                                <a className='underline text-blue-600' href={engagement?.WebSite}> {engagement?.WebSite}</a>
-                            </div>
-                            <div className='bg-blue-100 flex h-12 justify-between p-3 rounded-xl'><span className='font-bold'>Brand Tone</span>   <p> {engagement?.BrandTone}</p></div>
 
-                            <div className='bg-blue-100 flex h-12 justify-between p-3 rounded-xl'><p className='font-bold'>Timezone</p> <p> {engagement?.Timezone}</p></div>
+                            <div className='bg-blue-100 flex h-20 justify-between p-3 rounded-xl'><span className='font-bold'>Brand Tone</span>   <p> {engagement?.BrandTone}</p></div>
+
                             <div className='bg-blue-100 flex flex-col h-20 overflow-y-scroll  justify-between p-3 rounded-xl'>
                                 <p className='font-bold'>Brand Description</p>
                                 <p> {engagement?.CompanySector}</p></div>
@@ -423,10 +420,7 @@ function BrandEngagementDetails() {
                             {engagement.WebSite}
                         </div> */}
 
-                        {/* Pagination */}
-                        <div className="mt-8">
-                            {/* <PaginationNumeric /> */}
-                        </div>
+
                         {feedPosts.length > 0 && <>
                             <div className='text-xl font-bold mt-2 mb-4  text-white'>
                                 <span className='text-blue-600 w-auto p-3  '> Generated feed posts

@@ -44,7 +44,7 @@ function BrandEngagementCard({
     setIsArchiveLoading(true)
     try {
       const response = await axios.delete(
-        `http://localhost:5000/api/v1/brand-engagements/${brandEngagementId}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/brand-engagements/${brandEngagementId}`
       );
       console.log(response.data); // Success message or response data
       fetchEngagements();
@@ -112,7 +112,7 @@ function BrandEngagementCard({
   const handleSaveCampaignTitle = async () => {
     setIsSaving(true);
     try {
-      const response = await axios.put(`http://localhost:5000/api/v1/update-campaign/${id}`, {
+      const response = await axios.put(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/update-campaign/${id}`, {
         campaignTitle: editedCampaignTitle
       });
       // Assuming successful update, update campaign title locally

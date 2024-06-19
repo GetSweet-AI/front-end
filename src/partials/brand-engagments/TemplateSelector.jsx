@@ -7,7 +7,7 @@ const TemplateSelector = ({ userId, onSelectTemplate }) => {
     useEffect(() => {
         const fetchTemplates = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/v1/admin/templates?userId=${userId}`);
+                const response = await axios.get(`https://seal-app-dk3kg.ondigitalocean.app/api/v1/admin/templates?userId=${userId}`);
                 setTemplates(response.data.templates);
             } catch (error) {
                 console.error("Error fetching templates:", error);

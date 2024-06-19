@@ -67,7 +67,7 @@ function FeedPostCard({
     // //Update caption on the backend + setSaving(true)
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/v1/feed-posts/${feedPostId}`,
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${feedPostId}`,
         {
           NewCaption: Caption
         });
@@ -98,7 +98,7 @@ function FeedPostCard({
     setIsLoading(true)
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/v1/new-caption`,
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/new-caption`,
         {
           prompt: promptInput,
           caption: Caption
@@ -109,7 +109,7 @@ function FeedPostCard({
 
       // Update the feed post with the new caption
       await axios.put(
-        `http://localhost:5000/api/v1/feed-posts/${feedPostId}`,
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/feed-posts/${feedPostId}`,
         {
           NewCaption: response.data.newCaption
         }

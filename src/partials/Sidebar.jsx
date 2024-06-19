@@ -31,7 +31,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const fetchUserData = async () => {
     await axios
       .get(
-        `http://localhost:5000/api/v1/auth/users/${user?._id}`
+        `https://seal-app-dk3kg.ondigitalocean.app/api/v1/auth/users/${user?._id}`
       )
       .then((res) => {
         setUser(res.data);
