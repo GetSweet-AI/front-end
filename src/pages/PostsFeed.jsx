@@ -441,6 +441,7 @@ function PostsFeed() {
                 />
               </div>
             )}
+
             <div className="flex justify-around space-x-2  w-full p-5">
               <PostBadge
                 icon={faCalendarCheck}
@@ -467,16 +468,11 @@ function PostsFeed() {
               {/* Add more instances of PostBadge with different data as needed */}
             </div>
 
-            <div className="flex flex-col md:flex-row px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto ">
+            <div className="flex flex-col  px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto ">
               {/* Page header */}
 
-              <div className="flex flex-col w-full h-full md:space-y-2  flex-[0.25] p-2">
+              {/* <div className="flex flex-col w-full h-full md:space-y-2   p-2">
 
-                {/* <FilterComponent options={statusOptions} label="Status" /> */}
-                {/* <FilterComponent label="Media Type" isFilterOne={isImage} isFilterTwo={isVideo}
-                  setIsFilterOne={setIsImage} setIsFilterTwo={setIsVideo} applyFilter={applyFilter}
-                  filterOneLabel="Image" filterTwoLabel="Video"
-                /> */}
 
                 <FilterComponent
                   label="Status"
@@ -491,9 +487,9 @@ function PostsFeed() {
                   setIsNonScheduled={setIsNotScheduled}
                 />
 
-              </div>
+              </div> */}
 
-              <div className="flex flex-col flex-[0.75]">
+              <div className="flex flex-col ">
                 <div className="flex flex-col md:flex-row justify-between  p-2 ">
                   <div className="mb-4 w-full flex sm:mb-0 justify-between ">
                     <h1 className="md:text-2xl flex-[0.8] text-xl mb-2 text-gray-700   font-bold" >
@@ -512,6 +508,20 @@ function PostsFeed() {
                       >
                         <FontAwesomeIcon icon={faCalendar} className="w-5 h-5 pt-1" />
                       </div>
+                    </div>
+                    <div>
+                      <FilterComponent
+                        label="Status"
+                        isFilterOne={isScheduled}
+                        isFilterTwo={isArchived}
+                        setIsFilterOne={setIsScheduled}
+                        setIsFilterTwo={setIsArchived}
+                        applyFilter={applyFilter}
+                        filterOneLabel="Scheduled"
+                        filterTwoLabel="Archived"
+                        setIsScheduled={setIsScheduled}
+                        setIsNonScheduled={setIsNotScheduled}
+                      />
                     </div>
                   </div>
                   <div className=" flex  items-center flex-row space-x-3 ">

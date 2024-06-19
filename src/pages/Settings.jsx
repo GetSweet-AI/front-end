@@ -223,8 +223,8 @@ function Settings() {
                                     <Text size="2"> Add New Template</Text>
 
 
-                                    <div className="max-w-8xl my-2 bg-blue-50 pb-2
-                                         md:mx-auto  md:px-6 ">
+                                    <div className="md:w-2/3 w-full my-2 bg-blue-50 pb-2
+                                           ">
 
 
                                         <form className="rounded-xl shadow-md  md:py-4 md:px-4  "
@@ -268,7 +268,7 @@ function Settings() {
 
                                                 </div>
 
-                                                <div className="w-full md:w-1/2 p-2">
+                                                <div className="w-full md:w-1/2 p-2 hidden">
                                                     <label htmlFor="select3" className="block mb-1">
                                                         Brand Tone
                                                     </label>
@@ -284,7 +284,7 @@ function Settings() {
                                                         options={brandTones}
                                                     />
                                                 </div>
-                                                <div className="w-full mt-3 md:w-1/2 p-2">
+                                                <div className="w-full mt-3 md:w-1/2 p-2 hidden">
                                                     <div className=" mt-2 flex w-full justify-center items-center p-2">
                                                         <label className={`mr-4 ${selectedOption === 'RunForEver' ? 'text-[#3b82f6]' : 'text-gray-700'}`}>
                                                             <span className="mr-2 text-md  font-medium">Run forever</span>
