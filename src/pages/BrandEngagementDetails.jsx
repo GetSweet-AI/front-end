@@ -383,7 +383,8 @@ function BrandEngagementDetails() {
                                     // className="text-[#3b82f6]"
                                     icon={faInstagram}
                                 />}   </span>
-                            </div>   {clientConnectData?.ConnectLinkURL ?
+                            </div>
+                            {clientConnectData?.ConnectLinkURL ?
                                 <button
                                     disabled={isLoadingCC || isGuest}
                                     onClick={getClientConnect}
@@ -399,103 +400,103 @@ function BrandEngagementDetails() {
 
 
                         </div>
+                        <div className='flex w-full space-x-2'>
+                            <div className='w-full md:flex-[0.7]'>
+
+                                {feedPosts.length > 0 && <>
+                                    <div className='text-xl font-bold mt-2 mb-4  text-white'>
+                                        <span className='text-blue-600 w-auto p-3  '> Generated feed posts
+                                        </span>
+                                    </div>
+                                    <div className="grid grid-cols-12 gap-6">
+                                        {feedPosts.map((item) => {
+                                            return (
+                                                <PostCard
+                                                    key={item._id}
+                                                    feedPostId={item._id}
+                                                    MediaUrl={item.MediaUrl}
+                                                    deleteFeedPost={deletePostFeed}
+                                                    Caption={item.Caption}
+                                                    Date={item.Date}
+                                                    handleCopyText={handleCopyText}
+                                                    Accounts={item.Accounts}
+                                                    DownloadButton={downloadVideo}
+                                                    unixTimestamp={item.unixTimestamp}
+                                                    fetchFeedPosts={fetchFeedPosts}
+                                                    isGuest={isGuest}
 
 
-                        <div className='my-2  grid grid-cols-1  md:grid-cols-2 gap-3
+                                                />
+                                            );
+                                        })}
+                                    </div>
+                                </>}
+
+                                {engagement?.relatedPostsStatus === "Posts generating..." ?
+                                    <div className='flex justify-center items-center'>
+                                        <ProgressBarWithMessages
+                                            previewProgress={previewProgress}
+                                            progressMessage={progressMessage}
+                                        /></div>
+                                    :
+                                    <></>
+                                }
+
+                                {
+                                    feedPosts.length > 5 && <div className="mt-8">
+                                        <div class="flex flex-wrap md:flex-nowrap  md:mx-4 items-center md:mt-4 overflow-x-scroll py-2  justify-center space-x-2">
+                                            <button
+                                                className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
+                                                onClick={gotoPrevious}
+                                            >
+                                                Previous
+                                            </button>
+
+                                            <select
+                                                value={pageNumber}
+                                                onChange={(e) => setPageNumber(parseInt(e.target.value))}
+                                                className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
+                                            >
+                                                {pages.map((pageIndex) => (
+                                                    <option
+                                                        key={pageIndex}
+                                                        value={pageIndex}
+                                                        className="text-black"
+                                                    >
+                                                        {pageIndex + 1}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <button
+                                                className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
+                                                onClick={gotoNext}
+                                            >
+                                                Next
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+
+
+                            </div>
+                            <div className='my-2 w-full grid grid-cols-1 flex-[0.3]  gap-3
                          text-lg  text-sm font-medium
                          text-blue-900focus:outline-none focus-visible:ring
                           focus-visible:ring-blue-500 focus-visible:ring-opacity-75'>
-                            {/* {id} */}
+                                {/* {id} */}
 
 
-                            <div className='bg-blue-100 flex h-20 justify-between p-3 rounded-xl'><span className='font-bold'>Brand Tone</span>   <p> {engagement?.BrandTone}</p></div>
+                                <div className='bg-blue-100 flex h-20 justify-between p-3 rounded-xl'><span className='font-bold'>Brand Tone</span>   <p> {engagement?.BrandTone}</p></div>
 
-                            <div className='bg-blue-100 flex flex-col h-20 overflow-y-scroll  justify-between p-3 rounded-xl'>
-                                <p className='font-bold'>Brand Description</p>
-                                <p> {engagement?.CompanySector}</p></div>
-                            {/*                            <p><span className='font-bold'>PostType:</span> {engagement?.PostType}</p>
-                            <p><span className='font-bold'>Target audience:</span> {engagement?.TargetAudience}</p>*/}
+                                <div className='bg-blue-100 flex flex-col h-20 overflow-y-scroll  justify-between p-3 rounded-xl'>
+                                    <p className='font-bold'>Brand Description</p>
+                                    <p> {engagement?.CompanySector}</p></div>
+                            </div>
+
+
                         </div>
-                        {/* <div className="bg-white bg-opacity-10 px-2 shadow-2xl py-5 opacity-90 md:w-[70%] lg:w-[45%] w-full rounded-xl">
-                            {engagement.WebSite}
-                        </div> */}
-
-
-                        {feedPosts.length > 0 && <>
-                            <div className='text-xl font-bold mt-2 mb-4  text-white'>
-                                <span className='text-blue-600 w-auto p-3  '> Generated feed posts
-                                </span>
-                            </div>
-                            <div className="grid grid-cols-12 gap-6">
-                                {feedPosts.map((item) => {
-                                    return (
-                                        <PostCard
-                                            key={item._id}
-                                            feedPostId={item._id}
-                                            MediaUrl={item.MediaUrl}
-                                            deleteFeedPost={deletePostFeed}
-                                            Caption={item.Caption}
-                                            Date={item.Date}
-                                            handleCopyText={handleCopyText}
-                                            Accounts={item.Accounts}
-                                            DownloadButton={downloadVideo}
-                                            unixTimestamp={item.unixTimestamp}
-                                            fetchFeedPosts={fetchFeedPosts}
-                                            isGuest={isGuest}
-
-
-                                        />
-                                    );
-                                })}
-                            </div>
-                        </>}
-                        {engagement?.relatedPostsStatus === "Posts generating..." ?
-                            <ProgressBarWithMessages
-                                previewProgress={previewProgress}
-                                progressMessage={progressMessage}
-                            />
-                            :
-                            <></>
-                        }
-
-                        {
-                            feedPosts.length > 5 && <div className="mt-8">
-                                <div class="flex flex-wrap md:flex-nowrap  md:mx-4 items-center md:mt-4 overflow-x-scroll py-2  justify-center space-x-2">
-                                    <button
-                                        className="bg-blue-500 text-sm hover:bg-blue-600 text-white px-2 py-1 rounded-lg"
-                                        onClick={gotoPrevious}
-                                    >
-                                        Previous
-                                    </button>
-
-                                    <select
-                                        value={pageNumber}
-                                        onChange={(e) => setPageNumber(parseInt(e.target.value))}
-                                        className="rounded-md h-9 bg-white border border-gray-300 text-gray-600 "
-                                    >
-                                        {pages.map((pageIndex) => (
-                                            <option
-                                                key={pageIndex}
-                                                value={pageIndex}
-                                                className="text-black"
-                                            >
-                                                {pageIndex + 1}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <button
-                                        className="bg-blue-500 hover:bg-blue-600 text-sm text-white px-2 py-1 rounded-lg"
-                                        onClick={gotoNext}
-                                    >
-                                        Next
-                                    </button>
-                                </div>
-                            </div>
-                        }
-
 
                     </div>
-
 
                 </main>
                 < ToastContainer
