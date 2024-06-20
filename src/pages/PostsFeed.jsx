@@ -490,26 +490,27 @@ function PostsFeed() {
               </div> */}
 
               <div className="flex flex-col ">
-                <div className="flex flex-col md:flex-row justify-between  p-2 ">
-                  <div className="mb-4 w-full flex sm:mb-0 justify-between ">
-                    <h1 className="md:text-2xl flex-[0.8] text-xl mb-2 text-gray-700   font-bold" >
-                      Your upcoming posts for <span className=''>{selectedEngagement?.BrandName}</span>
-                    </h1>
-                    <div className="flex flex-[0.2] w-full items-end mb-4 justify-end space-x-3">
+                <div className="flex flex-col  p-2 ">
+                  <h1 className="md:text-2xl w-full text-xl mb-4 text-gray-700   font-bold" >
+                    Your upcoming posts for <span className=''>{selectedEngagement?.BrandName}</span>
+                  </h1>
+
+
+                  <div className="flex  w-full justify-between bg-white  md:p-5 p-2 rounded-md md:mb-4 mb-6">
+                    <div className="flex space-x-2">
                       <div
-                        className={`px-2 py-1 rounded ${activeIcon === 1 ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} shadow`}
+                        className={`px-2 py-1 h-9 rounded ${activeIcon === 1 ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} shadow`}
                         onClick={() => handleClick(1)}
                       >
                         <FontAwesomeIcon icon={faBars} className="w-5 h-5 pt-1" />
                       </div>
                       <div
-                        className={`px-2 py-1  rounded ${activeIcon === 2 ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} shadow`}
+                        className={`px-2 py-1 h-9 rounded ${activeIcon === 2 ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'} shadow`}
                         onClick={() => handleClick(2)}
                       >
                         <FontAwesomeIcon icon={faCalendar} className="w-5 h-5 pt-1" />
                       </div>
-                    </div>
-                    <div>
+                    </div>   <div>
                       <FilterComponent
                         label="Status"
                         isFilterOne={isScheduled}
@@ -523,20 +524,12 @@ function PostsFeed() {
                         setIsNonScheduled={setIsNotScheduled}
                       />
                     </div>
-                  </div>
-                  <div className=" flex  items-center flex-row space-x-3 ">
 
-                    <div
-                      className="flex justify-center items-center"> {user?.role === "admin" ? (
-                        <>
-                          {/* <SwitchButton enabled={enabled} setEnabled={setEnabled} /> */}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
 
                   </div>
+
+
+
                 </div>
                 <div>
                   <ToastContainer />
