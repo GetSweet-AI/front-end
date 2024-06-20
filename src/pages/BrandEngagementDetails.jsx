@@ -400,8 +400,20 @@ function BrandEngagementDetails() {
 
 
                         </div>
-                        <div className='flex w-full space-x-2'>
-                            <div className='w-full md:flex-[0.7]'>
+                        <div className='flex flex-col w-full space-x-2'>
+                            <div className='my-2 w-full grid md:grid-cols-2 grid-cols-1   gap-3
+                         text-lg  text-sm font-medium
+                         text-blue-900focus:outline-none focus-visible:ring
+                          focus-visible:ring-blue-500 focus-visible:ring-opacity-75'>
+                                {/* {id} */}
+
+
+                                <div className='bg-blue-100 flex h-20 justify-between p-3 rounded-xl'><span className='font-bold'>Brand Tone</span>   <p> {engagement?.BrandTone}</p></div>
+
+                                <div className='bg-blue-100 flex flex-col h-20 overflow-y-scroll  justify-between p-3 rounded-xl'>
+                                    <p className='font-bold'>Brand Description</p>
+                                    <p> {engagement?.CompanySector}</p></div>
+                            </div> <div className='w-full '>
 
                                 {feedPosts.length > 0 && <>
                                     <div className='text-xl font-bold mt-2 mb-4  text-white'>
@@ -479,19 +491,7 @@ function BrandEngagementDetails() {
 
 
                             </div>
-                            <div className='my-2 w-full grid grid-cols-1 flex-[0.3]  gap-3
-                         text-lg  text-sm font-medium
-                         text-blue-900focus:outline-none focus-visible:ring
-                          focus-visible:ring-blue-500 focus-visible:ring-opacity-75'>
-                                {/* {id} */}
 
-
-                                <div className='bg-blue-100 flex h-20 justify-between p-3 rounded-xl'><span className='font-bold'>Brand Tone</span>   <p> {engagement?.BrandTone}</p></div>
-
-                                <div className='bg-blue-100 flex flex-col h-20 overflow-y-scroll  justify-between p-3 rounded-xl'>
-                                    <p className='font-bold'>Brand Description</p>
-                                    <p> {engagement?.CompanySector}</p></div>
-                            </div>
 
 
                         </div>

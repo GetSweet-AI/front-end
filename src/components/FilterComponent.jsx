@@ -23,16 +23,18 @@ const FilterComponent = ({ label, isScheduled, isNonScheduled, isArchived, setIs
                 <Disclosure defaultOpen>
                     {({ open }) => (
                         <>
-                            <Disclosure.Button className="flex w-full justify-between rounded-lg px-4 py-2 text-left text-sm font-medium text-gray-600 hover:bg-blue-100 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75">
+                            <Disclosure.Button className="flex w-full mb-4 bg-white  justify-between rounded-lg px-6 py-2
+                             text-left text-sm font-medium text-gray-600 hover:bg-blue-100
+                             focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75">
                                 <span className="mr-2">{label}</span>
                                 <FontAwesomeIcon
                                     className='mt-1 text-gray-500'
                                     icon={faUpDown}
                                 />
                             </Disclosure.Button>
-                            <div className='h-[1px] bg-gray-300 mb-2 w-full ' />
+                            {/* <div className='h-[1px] bg-gray-300 mb-2 w-full ' /> */}
 
-                            <Disclosure.Panel className="absolutepx-4 pb-2 pt-4 text-sm text-gray-500">
+                            <Disclosure.Panel className="absolute bg-white px-4 pb-2 pt-4 text-sm text-gray-500">
                                 <div className="flex flex-col">
                                     <label className="mb-2">
                                         <input
