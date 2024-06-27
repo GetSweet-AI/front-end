@@ -1,206 +1,139 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Dropdown from '../utils/Dropdown';
-import Transition from '../utils/Transition';
-import logo from '../images/logogetsweet.png'
-import { useDispatch, useSelector } from 'react-redux';
-import GAHandler from '../partials/ga_gtm_handler'
+import { useSelector } from 'react-redux';
+import logo from '../images/logogetsweet.png';
+import { Dialog } from '@headlessui/react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import GAHandler from '../partials/ga_gtm_handler';
+
 const handleLinkClick = GAHandler();
 
 function Header() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const { isLoggedIn } = useSelector((state) => state.auth)
-  const dispatch = useDispatch()
-  const logout = () => {
-    // await signOut(auth);
-    dispatch(switchLoginStatus(false))
-  };
+  // Handle scroll event
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const trigger = useRef(null);
-  const mobileNav = useRef(null);
-
-  // close the mobile menu on click outside
   useEffect(() => {
-    const clickHandler = ({ target }) => {
-      if (!mobileNav.current || !trigger.current) return;
-      if (!mobileNavOpen || mobileNav.current.contains(target) || trigger.current.contains(target)) return;
-      setMobileNavOpen(false);
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      setIsScrolled(offset > 100);
     };
-    document.addEventListener('click', clickHandler);
-    return () => document.removeEventListener('click', clickHandler);
-  });
 
-  // close the mobile menu if the esc key is pressed
-  useEffect(() => {
-    const keyHandler = ({ keyCode }) => {
-      if (!mobileNavOpen || keyCode !== 27) return;
-      setMobileNavOpen(false);
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
     };
-    document.addEventListener('keydown', keyHandler);
-    return () => document.removeEventListener('keydown', keyHandler);
-  });
+  }, []);
 
-  // Handle light modes
-  const [darkMode, setDarkMode] = useState(() => {
-    const dark = localStorage.getItem('dark-mode');
-    if (dark === null) {
-      return true;
-    } else {
-      return dark === 'true';
-    }
-  });
-
-  // useEffect(() => {
-  //   localStorage.setItem('dark-mode', darkMode)
-  //   if (darkMode) {
-  //     document.documentElement.classList.add('dark')
-  //   } else {
-  //     document.documentElement.classList.remove('dark')
-  //   }
-  // }, [darkMode]);
-
-  console.log("isLoggedIn :" + isLoggedIn)
-
-  const navigate = useNavigate()
+  // Default navigation array to prevent errors if it's not defined
+  const navigation = [
+    // { name: 'Home', href: '/' },
+    // { name: 'Features', href: '/features' },
+    // { name: 'Pricing', href: '/pricing' },
+    // { name: 'About', href: '/about' },
+    { name: 'Sign up', href: '/signup' },
+    { name: 'Sign in', href: '/signin' },
+  ];
 
   return (
-    <header className=" shadow-xl shadow-gray-100 fixed     w-full z-30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-20">
-
-          {/* Site branding */}
-          <div className="shrink-0 mr-5">
-            {/* Logo */}
-            <Link to="/" className="block" aria-label="Cruip">
-              <div className='flex space-x-3'>
-                <img src={logo} alt="logo" className="w-10 h-10" />
-                <p className='flex justify-center mt-2 items-center text-xl font-bold text-blue-900'>
-                  GetSweet.AI
-                </p>
-              </div>
-
-            </Link>
-          </div>
-
-          {/* Desktop navigation */}
-          <nav className="hidden md:flex  justify-between   ">
-            {/* Desktop sign in links */}
-            {!isLoggedIn &&
-              <ul className="flex md:justify-end md:flex-wrap items-center">
-                <li>
-                  <Link
-                    // GA code
-                    onClick={() => gaHandler.handleLinkClick('header_sign_in_btn')}
-                    className="font-medium text-gray-600 decoration-blue-500 decoration-2 underline-offset-2 hover:underline px-3 lg:px-5 py-2 flex items-center transition duration-150 ease-in-out"
-                    to="/signin"
-                  >
-                    Sign in
-                  </Link>
-                </li>
-                <li className="ml-3">
-                  <Link
-                    // GA code
-                    onClick={() => gaHandler.handleLinkClick('header_create_account_btn')}
-                    className="btn-sm text-white bg-purple-500 hover:bg-blue-600 w-full shadow-sm" to="/signup">
-                    Create Account
-                  </Link>
-                </li>
-              </ul>}
-            {isLoggedIn &&
-              <ul className="flex md:justify-end md:flex-wrap items-center">
-                <li className="ml-3">
-                  <Link
-                    onClick={() => gaHandler.handleLinkClick('header_get_started_btn')}
-                    className="btn-sm text-white bg-blue-500 hover:bg-blue-600 w-full shadow-sm" to="/brand-engagement-builder">
-                    Get started
-                  </Link>
-                </li>
-              </ul>}
-          </nav>
-
-          {/* Mobile menu */}
-          <div className="inline-flex md:hidden">
-
-            {/* Hamburger button */}
-            <button
-              ref={trigger}
-              className={`hamburger ${mobileNavOpen && 'active'}`}
-              aria-controls="mobile-nav"
-              aria-expanded={mobileNavOpen}
-              onClick={() => setMobileNavOpen(!mobileNavOpen)}
-            >
-              <span className="sr-only">Menu</span>
-              <svg
-                className="w-6 h-6 fill-current text-primary-600 hover:animate-pulse text-gray-600 dark:hover:text-gray-700 transition duration-150 ease-in-out"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect y="4" width="24" height="2" rx="1" />
-                <rect y="11" width="24" height="2" rx="1" />
-                <rect y="18" width="24" height="2" rx="1" />
-              </svg>
-            </button>
-
-            {/*Mobile navigation */}
-            <Transition
-              show={mobileNavOpen}
-              tag="ul"
-              className="fixed top-0 h-screen -50 left-0 w-full  -ml-16 overflow-scroll   shadow-lg"
-              enter="transition ease-out duration-200 transform"
-              enterStart="opacity-0 -translate-x-full"
-              enterEnd="opacity-100 translate-x-0"
-              leave="transition ease-out duration-200"
-              leaveStart="opacity-100"
-              leaveEnd="opacity-0"
-            >
-              <nav
-                id="mobile-nav"
-                ref={mobileNav}
-                className="fixed top-0 h-screen z-10 left-0 w-full   -ml-16   bg-gray-900 shadow-lg no-scrollbar"
-              >
-
-                <div className="py-6  pl-[64px]">
-                  {/* Logo */}
-                  <Link to="/" className="flex justify-center py-6 my-4" aria-label="Cruip">
-                    <img src={logo} alt="logo" className="w-12 h-12" />
-                  </Link>
-                  {/* Links */}
-                  <ul className='space-y-4'>
-                    <li>
-                      <Link
-                        onClick={() => gaHandler.handleLinkClick('mobile_header_sign_in_btn')}
-                        className="text-sm flex font-medium ml-3 text-gray-200 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 py-2"
-                        to="/signin"
-                      >
-                        Sign in
-                      </Link>
-                    </li>
-                    <li className="ml-3">
-                      <Link
-                        onClick={() => gaHandler.handleLinkClick('mobile_header_create_account_btn')}
-                        className="text-sm flex font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 py-2" to="/signup">
-                        Create Account
-                      </Link>
-                    </li>
-
-                    {isLoggedIn &&
-                      <li className="ml-3">
-                        <Link
-                          onClick={() => navigate("brand-engagement-builder")}
-                          className="text-sm flex font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 py-2" to="/signup">
-                          Get Started
-                        </Link>
-                      </li>}
-
-                  </ul>
-                </div>
-              </nav>
-            </Transition>
-          </div>
+    <header className={`fixed inset-x-0 top-0 z-50 transition duration-300 ease-in-out ${isScrolled ? 'bg-white/80 text-pink-600 shadow-xl' : 'bg-transparent text-gray-900/80'}`}>
+      <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
+        <div className="flex lg:flex-1">
+          <a href="#" className="flex items-center -m-1.5 p-1.5">
+            <img className="h-10 w-auto mr-2" src={logo} alt="GetSweet.AI logo icon" />
+            <span className={`font-bold text-xl ${isScrolled ? ' text-pink-600' : 'text-gray-900'}`}>GetSweet.AI</span>
+          </a>
         </div>
-      </div>
-    </header >
+        <div className="flex lg:hidden">
+          <button
+            type="button"
+            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            onClick={() => setMobileMenuOpen(true)}
+          >
+            <span className="sr-only">Open main menu</span>
+            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+          </button> 
+        </div>
+        <div className="hidden lg:flex lg:gap-x-12 lg:align-middle lg:justify-center lg:items-center">
+          {!isLoggedIn && (
+            <a
+              className={`text-sm border-pink-400 border-[2px] rounded-md cursor-pointer px-2 py-1 font-semibold leading-6 ${isScrolled ? 'hover:bg-pink-500 text-pink-600  hover:text-white' : 'text-gray-900 hover:bg-pink-500 hover:text-white'}`}
+              onClick={() => navigate('preview')}
+            >
+              Demo
+            </a>
+          )}
+          {!isLoggedIn && navigation.map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              className={`text-sm font-semibold leading-6 ${isScrolled ? ' text-pink-600' : 'text-gray-900'}`}
+              onClick={(e) => handleLinkClick(item.gtmtrigger)}
+            >
+              {item.name}
+            </a>
+          ))}
+          {isLoggedIn && (
+            <a
+              href="/brand-engagement-builder"
+              className={`text-sm font-semibold leading-6 border-2 p-2 rounded-xl ${isScrolled ? 'border-white text-white hover:bg-white hover:text-pink-600' : 'border-gray-400 text-gray-900 hover:bg-pink-600 hover:text-white'}`}
+            >
+              Get Started
+            </a>
+          )}
+        </div>
+      </nav>
+      <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
+        <div className="fixed inset-0 z-50" />
+        <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+          <div className="flex items-center justify-between">
+            <a href="#" className="-m-1.5 p-1.5">
+              <span className="sr-only">GetSweet.AI</span>
+              <img className="h-8 w-auto" src={logo} alt="" />
+            </a>
+            <button
+              type="button"
+              className="-m-2.5 rounded-md p-2.5 text-gray-700"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <span className="sr-only">Close menu</span>
+              <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+            </button>
+          </div>
+          <div className="mt-6 flow-root">
+            {!isLoggedIn ? (
+              <div className="-my-6 divide-y divide-gray-500/10">
+                <div className="space-y-2 py-6">
+                  {navigation.map((item) => (
+                    <a
+                      key={item.name}
+                      href={item.href}
+                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-200"
+                      onClick={(e) => handleLinkClick('mobile_' + item.gtmtrigger)}
+                    >
+                      {item.name}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2 py-6">a
+                <a
+                  href="/brand-engagement-builder"
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-200"
+                >
+                  Get Started
+                </a>
+              </div>
+            )}
+          </div>
+        </Dialog.Panel>
+      </Dialog>
+    </header>
   );
 }
 
