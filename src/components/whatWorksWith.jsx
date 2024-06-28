@@ -1,13 +1,10 @@
-// Importa los íconos específicos de FontAwesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faYoutube, faLinkedin, faFacebook, faInstagram, faWhatsapp, faPinterest, faTiktok, faGoogle, faGoogleDrive } from '@fortawesome/free-brands-svg-icons';
-
-// Importa Slick Carousel y sus estilos
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-// Configuración del carrusel de Slick
+// Carousel Settings
 const settings = {
   dots: true,
   infinite: true,
@@ -38,7 +35,7 @@ const settings = {
   ]
 };
 
-// Array de aplicaciones con sus íconos y colores
+
 const applications = [
   {
     name: "YouTube",
@@ -60,10 +57,11 @@ const applications = [
 //     name: "WhatsApp",
 //     icon: <FontAwesomeIcon icon={faWhatsapp} size="4x" color="#25d366" />,
 //   },
+  // {
+  //   name: "Pinterest",
+  //   icon: <FontAwesomeIcon icon={faPinterest} size="4x" color="#bd081c" />,
+  // }, 
   {
-    name: "Pinterest",
-    icon: <FontAwesomeIcon icon={faPinterest} size="4x" color="#bd081c" />,
-  }, {
     name: "TikTok",
     icon: <FontAwesomeIcon icon={faTiktok} size="4x" color="#000000" />,
   },
