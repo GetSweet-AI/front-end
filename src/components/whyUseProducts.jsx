@@ -34,12 +34,12 @@ const WhyUseOurProduct = () => {
     <div className="bg-white py-12">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-base font-semibold leading-7 text-pink-600">Discover the Sweetest Features</h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-pink-600 sm:text-4xl">
-            Why You'll Love GetSweet.AI
+          <h2 className="text-base font-semibold leading-7 text-pink-600">Discover the sweetest features</h2>
+          <p className="mt-2 text-3xl tracking-tight text-gray-900 sm:text-4xl">
+          Why you’ll love GetSweet.AI
           </p>
         </div>
-        <div className="mt-10 space-y-10">
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
           {reasons.map((reason, index) => (
             <Reason key={index} {...reason} />
           ))}
@@ -58,9 +58,9 @@ const Reason = ({ name, description, icon: Icon, color }) => {
   return (
     <div
       ref={ref}
-      className={`relative flex items-center justify-between space-x-4 transition-all duration-700 ease-in-out ${inView ? 'opacity-100' : 'opacity-0 transform translate-y-8'}`}
+      className={`flex flex-col items-center shadow-xl rounded-xl py-5 text-center transition-all duration-700 ease-in-out ${inView ? 'opacity-100' : 'opacity-0 transform translate-y-8'}`}
     >
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 mb-4">
         <Icon className={`h-10 w-10 ${color}`} aria-hidden="true" />
       </div>
       <div className="flex-1 min-w-0">

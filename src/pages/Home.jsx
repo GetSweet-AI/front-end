@@ -27,6 +27,7 @@ import { CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { useSelector } from "react-redux";
 import Onboarding from "../components/OnBoarding/Onboarding";
 import WhyUseOurProduct from "../components/whyUseProducts";
+import WhatItWorksWith from "../components/whatWorksWith";
 
 const navigation = [
   { name: 'Sign up', href: '/signup', gtmtrigger: 'header_create_account_btn' },
@@ -246,6 +247,7 @@ export default function Home() {
           ></div>
           <div>
           <WhyUseOurProduct/>
+          <WhatItWorksWith/>
           </div>
         </div>
       </main>
