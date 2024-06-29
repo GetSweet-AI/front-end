@@ -13,7 +13,6 @@ export function dateUpdate(unixTimestamp) {
   const date = new Date(timestamp);
   // Determine if the date is 'Tomorrow'
   const tomorrow = addDays(new Date(), 1);
-
   if (isToday(date)) {
     return 'Today';
   } else if (isYesterday(date)) {
