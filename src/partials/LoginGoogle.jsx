@@ -44,6 +44,7 @@ const LoginGoogle = (props) => {
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
     setLoading(false);
   };

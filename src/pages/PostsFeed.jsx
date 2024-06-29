@@ -417,7 +417,7 @@ function PostsFeed() {
                   />
                 </div>
 
-                <div className="border-[1px] md:mt-0 mt-3 py-2 hover:bg-gray-500 hover:text-white flex justify-center items-center px-3 rounded-lg text-center">
+                <div className="border-[1px] hidden md:mt-0 mt-3 py-2 hover:bg-gray-500 hover:text-white flex justify-center items-center px-3 rounded-lg text-center">
                   {/* Download Calendar */}
                   <button>
                     Download Calendar
@@ -510,7 +510,8 @@ function PostsFeed() {
                       >
                         <FontAwesomeIcon icon={faCalendar} className="w-5 h-5 pt-1" />
                       </div>
-                    </div>   <div>
+                    </div>  
+                     <div>
                       <FilterComponent
                         label="Status"
                         isFilterOne={isScheduled}

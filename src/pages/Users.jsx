@@ -224,7 +224,7 @@ function Users() {
                               : "bg-blue-100 rounded-full"
                           }
                         >
-                          <td className="py-4 px-6 md:px-8 border-b">
+                          <td className="py-4 w-full pl-2 border-b">
                             {client.picture ? <img
                               className="h-8 w-8 rounded-full"
                               src={client.picture}
