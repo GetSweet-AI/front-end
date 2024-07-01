@@ -20,7 +20,7 @@ const FilterComponent = ({ label, isScheduled, isNonScheduled, isArchived, setIs
     return (
         <div className="">
             <div className="mx-2">
-                <Disclosure defaultOpen>
+                <Disclosure >
                     {({ open }) => (
                         <>
                             <Disclosure.Button className="flex w-full mb-4 bg-white  justify-between rounded-lg px-6 py-2
