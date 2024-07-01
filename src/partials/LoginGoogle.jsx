@@ -11,7 +11,7 @@ import "../index.css";
 
 const LoginGoogle = (props) => {
   const clientId =
-    "181452812828-uslduiqspmak4k0red5o3he2qphqa234.apps.googleusercontent.com";
+    "412157038681-c8tqkiqhgdp0ki166q1njst9uombe7gh.apps.googleusercontent.com";
   useEffect(() => {
     gapi.load("client:auth2", () => {
       gapi.auth2.init({ clientId: clientId });
